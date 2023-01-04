@@ -1,20 +1,34 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+
 import { Button, List } from 'antd';
-import DashboardLayout from '../../../components/layout';
 import {
 	ArrowLeftOutlined,
 	CheckCircleOutlined,
 	CloseCircleOutlined,
 } from '@ant-design/icons';
-import { Image } from 'antd';
-import { useRouter } from 'next/router';
-import Loading from '../../../components/loading';
 
-const Product = ({ product }) => {
+import Loading from '../../../components/loading';
+import { getProductById } from '../../../services/products';
+import DashboardLayout from '../../../components/layout';
+
+const Product = () => {
 	const router = useRouter();
+	const { id } = router.query;
 
 	const handleReturn = () => {
 		router.push('/dashboard/products');
 	};
+
+	const [product, setProduct] = useState();
+	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		setLoading(true);
+		//setProduct(getProductById(id));
+		setLoading(false);
+	}, []);
 
 	return (
 		<DashboardLayout>
@@ -37,11 +51,17 @@ const Product = ({ product }) => {
 					}}
 				>
 					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem' }}
+						style={{ fontSize: '1.5rem', color: 'white' }}
 						onClick={handleReturn}
 					/>
-					<h1 style={{ textAlign: 'center', fontSize: '2rem' }}>
-						Nombre del Producto
+					<h1
+						style={{
+							textAlign: 'center',
+							fontSize: '2rem',
+							color: 'white',
+						}}
+					>
+						{product?.name}
 					</h1>
 					<div></div>
 				</div>
@@ -101,7 +121,12 @@ const Product = ({ product }) => {
 						<p>{product?.stock}</p>
 					</List.Item>
 				</List>
-				<Image src="" />
+				<Image
+					src={product?.image}
+					height={400}
+					width={400}
+					alt="Producto"
+				/>
 			</div>
 		</DashboardLayout>
 	);

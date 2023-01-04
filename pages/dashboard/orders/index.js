@@ -72,12 +72,19 @@ export default function OrdersPage() {
 				style={{
 					margin: '1rem',
 					display: 'flex',
-					alignItems: 'center',
 					flexDirection: 'column',
 				}}
 			>
-				<h1 style={{ fontSize: '2rem' }}>Pedidos</h1>
-				<Collapse style={{ width: '100%' }}>
+				<h1
+					style={{
+						fontSize: '2rem',
+						color: '#fff',
+						textAlign: 'center',
+					}}
+				>
+					Pedidos
+				</h1>
+				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
 						<Form style={{ maxWidth: '900px' }}>
 							<Row
@@ -117,8 +124,8 @@ export default function OrdersPage() {
 						</Form>
 					</Collapse.Panel>
 				</Collapse>
+				<Table columns={columns} dataSource={data} />
 			</div>
-			<Table columns={columns} dataSource={data} />
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}

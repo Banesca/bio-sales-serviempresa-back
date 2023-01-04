@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import { Layout, Menu } from 'antd';
 import {
@@ -10,6 +11,7 @@ import {
 } from '@ant-design/icons';
 
 import Loading from './loading';
+import logo from '../public/assets/logo.svg';
 
 const { Header, Content, Sider } = Layout;
 
@@ -26,8 +28,8 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(ShopOutlined),
 		},
 		{
-			key: '/dashboard/sellers',
-			label: 'Vendedores',
+			key: '/dashboard/users',
+			label: 'Usuarios',
 			icon: React.createElement(UserOutlined),
 		},
 		{
@@ -48,13 +50,7 @@ export default function DashboardLayout({ children }) {
 	const [actualKey, setActualKey] = useState();
 
 	useEffect(() => {
-		let key = localStorage.getItem('key');
-		if (!key) {
-			localStorage.setItem('key', router.pathname);
-			setActualKey(localStorage.getItem('key'));
-		} else {
-			setActualKey(localStorage.getItem('key'));
-		}
+		setActualKey(router.pathname);
 	}, [router.pathname]);
 
 	const handleNavigation = (e) => {
@@ -68,17 +64,26 @@ export default function DashboardLayout({ children }) {
 
 	return (
 		<Layout style={{ height: '100vh' }}>
-			<Header style={{ backgroundColor: 'white' }}>Logo</Header>
-			<Layout>
+			<Header
+				style={{
+					background: '#111',
+					display: 'flex',
+					justifyContent: 'start',
+					alignItems: 'center',
+				}}
+			>
+				<Image src={logo} width={100} height={50} alt={'logo'} />
+			</Header>
+			<Layout style={{ minHeight: 'fit-content' }}>
 				<Sider theme="light">
 					<Menu
 						mode="inline"
 						items={sidebarLinks}
 						onSelect={(e) => handleNavigation(e)}
-						style={{ height: '100%' }}
+						style={{ height: '100vh' }}
 					/>
 				</Sider>
-				<Content>{children}</Content>
+				<Content style={{ heigh: '100vh' }}>{children}</Content>
 			</Layout>
 			<Loading isLoading={loading} />
 		</Layout>

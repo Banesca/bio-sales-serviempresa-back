@@ -1,12 +1,13 @@
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Input } from 'antd';
-import { Button, Space } from 'antd';
+import { Space } from 'antd';
+import { Button, Table } from 'antd';
+import { useEffect, useState } from 'react';
+import { profiles } from '../../pages/dashboard/users';
+import { getAdmins, getFullAccess, getSellers } from '../../services/users';
 import { Modal } from 'antd';
-import { Table } from 'antd';
-import { useState } from 'react';
-import DashboardLayout from '../../components/layout';
+import { Input } from 'antd';
 
-export default function Sellers() {
+const UsersTable = ({ profile }) => {
 	const columns = [
 		{
 			title: 'Nombre',
@@ -57,16 +58,21 @@ export default function Sellers() {
 		},
 	];
 
-	const data = [
-		{
-			key: 1,
-			firstName: 'Andre',
-			lastName: 'Izarra',
-			email: 'aizarra2015@gmail.com',
-			business: 'Innova',
-			orders: 52,
-		},
-	];
+	console.log('Table component', profile);
+
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState([]);
+	useEffect(() => {
+		setLoading(true);
+		if (profile === profiles.seller) {
+			//setData(getSellers());
+		} else if (profile === profiles.fullAccess) {
+			//setData(getFullAccess());
+		} else if (profile === profiles.admin) {
+			//setData(getAdmins());
+		}
+		setLoading(false);
+	}, [profile]);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -79,22 +85,17 @@ export default function Sellers() {
 	};
 
 	return (
-		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					alignItems: 'center',
-					flexDirection: 'column',
-				}}
+		<div>
+			<h1
+				style={{ fontSize: '2rem', color: '#fff', textAlign: 'center' }}
 			>
-				<h1 style={{ fontSize: '2rem' }}>Vendedores</h1>
-				<Input.Search
-					placeholder="Buscar vendedor"
-					style={{ maxWidth: '400px', marginBottom: '1rem' }}
-				/>
-			</div>
-			<Table columns={columns} dataSource={data} />
+				{profile === profiles.admin
+					? 'Administradores'
+					: profile === profiles.seller
+					? 'Vendedores'
+					: 'Full acceso'}
+			</h1>
+			<Table columns={columns} dataSource={data} loading={loading} />
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}
@@ -105,6 +106,8 @@ export default function Sellers() {
 				<p>Some contents...</p>
 				<p>Some contents...</p>
 			</Modal>
-		</DashboardLayout>
+		</div>
 	);
-}
+};
+
+export default UsersTable;

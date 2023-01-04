@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import { Table } from 'antd';
 import { useState } from 'react';
 import DashboardLayout from '../../../components/layout';
+import { Form } from 'antd';
 
 export default function ClientsPage() {
 	const columns = [
@@ -28,9 +29,6 @@ export default function ClientsPage() {
 					<Button type="primary" onClick={() => handleSeeModal()}>
 						<EyeTwoTone />
 					</Button>
-					<Button type="primary">
-						<EditOutlined />
-					</Button>
 					<Button type="primary" danger>
 						<DeleteOutlined />
 					</Button>
@@ -41,6 +39,7 @@ export default function ClientsPage() {
 
 	const data = [
 		{
+			key: 1,
 			id: 1,
 			rut: 'Hermanos Perez CA',
 			rif: 'V-26986902-0',
@@ -63,17 +62,33 @@ export default function ClientsPage() {
 				style={{
 					margin: '1rem',
 					display: 'flex',
-					alignItems: 'center',
 					flexDirection: 'column',
 				}}
 			>
-				<h1 style={{ fontSize: '2rem' }}>Clientes</h1>
-				<Input.Search
-					placeholder="Buscar cliente"
-					style={{ maxWidth: '400px', marginBottom: '1rem' }}
-				/>
+				<h1
+					style={{
+						textAlign: 'center',
+						fontSize: '2rem',
+						color: '#fff',
+					}}
+				>
+					Clientes
+				</h1>
+				<div style={{ display: 'flex', justifyContent: 'center' }}>
+					<Form
+						labelCol={{ span: '4' }}
+						style={{ width: '600px' }}
+					>
+						<Form.Item name="rut" label="Razon social">
+							<Input.Search />
+						</Form.Item>
+						<Form.Item name="rif" label="Rif">
+							<Input.Search />
+						</Form.Item>
+					</Form>
+				</div>
+				<Table columns={columns} dataSource={data} />
 			</div>
-			<Table columns={columns} dataSource={data} />
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}

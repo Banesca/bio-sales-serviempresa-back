@@ -1,88 +1,31 @@
 import { useEffect, useState } from 'react';
-import { Col, Input, Row, Table, Space, Button, Select, Collapse } from 'antd';
-import { Form } from 'antd';
-import { Modal } from 'antd';
-import { Divider } from 'antd';
 
-import DashboardLayout from '../../../components/layout';
-import DetailProductModal from '../../../components/products/detailProductModal';
-import EditProductModal from '../../../components/products/editProductModal';
-import { columns } from '../../../components/products/util/tableColumns';
+import {
+	Col,
+	Input,
+	Row,
+	Table,
+	Space,
+	Button,
+	Select,
+	Collapse,
+	Form,
+	Modal,
+} from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
 	DeleteOutlined,
-	EditOutlined,
 	EyeTwoTone,
 } from '@ant-design/icons';
 
-const data = [
-	{
-		key: 1,
-		name: 'Keyboard Kumara',
-		code: '23415125415',
-		price: 14.99,
-		category: 'Tech',
-		business: 'Innova',
-		brand: 'Redragon',
-		provider: 'Redragon',
-		isOnPromotion: true,
-		promotionPrice: 11.99,
-		stock: 15,
-	},
-	{
-		key: 2,
-		name: 'Mouse',
-		code: '23415125415',
-		price: 14.99,
-		category: 'Tech',
-		brand: 'Redragon',
-		business: 'Innova',
-		provider: 'Redragon',
-		isOnPromotion: false,
-		promotionPrice: 11.99,
-		stock: 10,
-	},
-];
+import DashboardLayout from '../../../components/layout';
+import { data } from '../../../components/products/util/data';
+import { getProducts } from '../../../services/products';
+import { useRouter } from 'next/router';
 
 export default function Products() {
-	// loading
-	const [loading, setLoading] = useState(true);
-
-	// Data
-	const [products, setProducts] = useState([]);
-
-	useEffect(() => {
-		// request data
-		setProducts(data);
-		setLoading(false);
-	}, []);
-
-	// Modal
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	// which modal component
-	const [isDetailModal, setIsDetailModal] = useState();
-	const [currentProduct, setCurrentProduct] = useState();
-
-	const handleCloseModal = (data) => {
-		setIsModalOpen(false);
-	};
-
-	const handleOpenModal = ({ detail, product }) => {
-		if (detail) {
-			setIsDetailModal(true);
-		} else {
-			setIsDetailModal(false);
-		}
-		setCurrentProduct(product);
-		setIsModalOpen(true);
-	};
-
-	const handleDelete = () => {
-	};
-
+	const router = useRouter();
 	const columns = [
 		{
 			title: 'Nombre',
@@ -105,20 +48,8 @@ export default function Products() {
 			),
 		},
 		{
-			title: 'Categoría',
-			dataIndex: 'category',
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
-		{
 			title: 'Empresa',
 			dataIndex: 'business',
-			key: 5,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Proveedor',
-			dataIndex: 'provider',
 			key: 5,
 			render: (text) => <p>{text}</p>,
 		},
@@ -142,32 +73,23 @@ export default function Products() {
 				);
 			},
 		},
-
 		{
 			title: 'Acciones',
 			key: 6,
-			render: (_, index) => (
+			render: (product, index) => (
 				<Space size="middle">
 					<Button
 						type="primary"
-						onClick={() =>
-							handleOpenModal({ detail: true, product: _ })
-						}
+						onClick={() => {
+							router.push(`/dashboard/products/${product.id}`);
+						}}
 					>
 						<EyeTwoTone />
 					</Button>
 					<Button
 						type="primary"
-						onClick={() =>
-							handleOpenModal({ detail: false, product: _ })
-						}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
 						danger
-						onClick={() => setDeleteModalOpen(true)}
+						onClick={() => handleOpenDeleteModal(product)}
 					>
 						<DeleteOutlined />
 					</Button>
@@ -175,6 +97,48 @@ export default function Products() {
 			),
 		},
 	];
+	// loading
+	const [loading, setLoading] = useState(true);
+
+	// Data
+	const [products, setProducts] = useState([]);
+
+	useEffect(() => {
+		// request data
+		// setProducts(getProducts())
+		// end request data
+		setProducts(data);
+		setLoading(false);
+	}, []);
+
+	// Delete Modal
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+	// which modal component
+	const [currentProduct, setCurrentProduct] = useState();
+
+	const handleOpenDeleteModal = (product) => {
+		setCurrentProduct(product);
+		setDeleteModalOpen(true);
+	};
+
+	const handleDelete = () => {
+		// request delete product
+		console.log(currentProduct.id);
+		setDeleteModalOpen(false);
+	};
+
+	const onSubmit = (values) => {
+		setLoading(true);
+		for (const v of Object.keys(values)) {
+			if (!values[v]) {
+				delete values[v];
+			}
+		}
+		const products = getProducts(values);
+		//setProducts(products);
+		setLoading(false);
+	};
 
 	return (
 		<DashboardLayout>
@@ -182,110 +146,121 @@ export default function Products() {
 				style={{
 					margin: '1rem',
 					display: 'flex',
-					alignItems: 'center',
 					flexDirection: 'column',
 				}}
 			>
-				<h1 style={{ fontSize: '2rem' }}>Productos</h1>
-				<Collapse style={{ width: '100%' }}>
+				<h1 style={{ fontSize: '2rem', color: '#fff' }}>Productos</h1>
+				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
 						<Row style={{ justifyContent: 'center' }}>
-							<Form style={{ maxWidth: '900px' }}>
+							<Form
+								style={{ maxWidth: '900px' }}
+								name="productFilters"
+								onFinish={onSubmit}
+								labelCol={{ span: 10 }}
+							>
 								<Row>
-									<Col span={24}>
+									<Col span={12}>
 										<Form.Item
-											label="Nombre o Código"
+											label="Nombre"
+											style={{ padding: '0 .5rem' }}
+											name="name"
+										>
+											<Input allowClear />
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											label="Código"
+											name="code"
 											style={{ padding: '0 .5rem' }}
 										>
-											<Input.Search
-												allowClear
-												placeholder="nombre o código"
-											/>
+											<Input allowClear />
 										</Form.Item>
 									</Col>
 								</Row>
-								<Divider />
 								<Row>
 									<Col span={12}>
 										<Form.Item
 											label="Precio mínimo"
+											name="minPrice"
 											style={{
 												padding: '0 .5rem',
 											}}
 										>
-											<Input
-												type="number"
-												placeholder="Precio mínimo"
-												allowClear
-											/>
+											<Input type="number" allowClear />
 										</Form.Item>
 									</Col>
 									<Col span={12}>
 										<Form.Item
 											label="Precio máximo"
+											name="maxPrice"
 											style={{
 												padding: '0 .5rem',
 											}}
 										>
-											<Input
-												type="number"
-												placeholder="Precio máximo"
-												allowClear
-											/>
+											<Input type="number" allowClear />
 										</Form.Item>
 									</Col>
 								</Row>
-								<Row
-									style={{
-										justifyContent: 'space-between',
-									}}
-								>
-									<Col span={8}>
+								<Row>
+									<Col span={12}>
 										<Form.Item
 											label="Categoría"
+											name="category"
 											style={{
 												padding: '0 .5rem',
 											}}
 										>
-											<Select
-												allowClear
-												placeholder="Categoría"
-											>
+											<Select allowClear>
 												<Select.Option value="hello">
 													Hello
 												</Select.Option>
 											</Select>
 										</Form.Item>
 									</Col>
-									<Col span={8}>
+									<Col span={12}>
 										<Form.Item
 											label="Marca"
+											name="brand"
 											style={{
 												padding: '0 .5rem',
 											}}
 										>
-											<Select
-												allowClear
-												placeholder="Marca"
-											></Select>
-										</Form.Item>
-									</Col>
-									<Col span={8}>
-										<Form.Item
-											label="Proveedor"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Select
-												allowClear
-												placeholder="Proveedor"
-											></Select>
+											<Select allowClear></Select>
 										</Form.Item>
 									</Col>
 								</Row>
-								<Form.Item>
-									<Button htmlType="submit" type="primary">
+								<Row>
+									<Col span={12}>
+										<Form.Item
+											label="Proveedor"
+											name="provider"
+											style={{
+												padding: '0 .5rem',
+											}}
+										>
+											<Select allowClear></Select>
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											label="Empresa"
+											name="business"
+											style={{
+												padding: '0 .5rem',
+											}}
+										>
+											<Select allowClear></Select>
+										</Form.Item>
+									</Col>
+								</Row>
+								<Form.Item wrapperCol={{ span: 6, offset: 9 }}>
+									<Button
+										htmlType="submit"
+										type="primary"
+										block
+									>
 										Buscar
 									</Button>
 								</Form.Item>
@@ -293,21 +268,12 @@ export default function Products() {
 						</Row>
 					</Collapse.Panel>
 				</Collapse>
+				<Table
+					columns={columns}
+					dataSource={products}
+					loading={loading}
+				/>
 			</div>
-			<Table columns={columns} dataSource={products} loading={loading} />
-			<Modal
-				open={isModalOpen}
-				onCancel={() => handleCloseModal({ accept: false })}
-				onOk={() => handleCloseModal({ accept: true })}
-				okText={setIsDetailModal ? 'Aceptar' : 'Editar'}
-				cancelText={setIsDetailModal ? false : 'Cancelar'}
-			>
-				{isDetailModal ? (
-					<DetailProductModal product={currentProduct} />
-				) : (
-					<EditProductModal />
-				)}
-			</Modal>
 			<Modal
 				title="Eliminar"
 				open={deleteModalOpen}
