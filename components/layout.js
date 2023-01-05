@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Layout, Menu } from 'antd';
 import {
 	CarryOutOutlined,
+	ImportOutlined,
 	ShopOutlined,
 	UserOutlined,
 	UsergroupAddOutlined,
@@ -42,6 +43,11 @@ export default function DashboardLayout({ children }) {
 			label: 'Pedidos',
 			icon: React.createElement(UserOutlined),
 		},
+		{
+			key: '/login',
+			label: 'Cerrar Sesión',
+			icon: React.createElement(ImportOutlined),
+		},
 	];
 
 	const router = useRouter();
@@ -56,6 +62,10 @@ export default function DashboardLayout({ children }) {
 	const handleNavigation = (e) => {
 		if (e.key === actualKey) {
 			return;
+		}
+		// logout
+		if (e.key === '/login') {
+			
 		}
 		localStorage.setItem('key', e.key);
 		router.push(e.key);

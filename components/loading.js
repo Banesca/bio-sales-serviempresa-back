@@ -1,5 +1,6 @@
-import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 
 const Loading = ({ isLoading }) => {
 	if (!isLoading) {
@@ -24,6 +25,10 @@ const Loading = ({ isLoading }) => {
 			<LoadingOutlined style={{ fontSize: '4rem', color: 'white' }} />
 		</div>
 	);
+};
+
+Loading.propTypes = {
+	isLoading: PropTypes.bool.isRequired,
 };
 
 export default Loading;

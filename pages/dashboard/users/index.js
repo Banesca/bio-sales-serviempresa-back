@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Input, Modal, Tabs } from 'antd';
+import { Tabs } from 'antd';
 
 import DashboardLayout from '../../../components/layout';
 import UsersTable from '../../../components/users/table';
@@ -31,24 +30,6 @@ export default function Users() {
 		},
 	];
 
-	const data = [
-		{
-			key: 1,
-			firstName: 'Andre',
-			lastName: 'Izarra',
-			email: 'aizarra2015@gmail.com',
-			business: 'Innova',
-			orders: 52,
-		},
-	];
-
-	useEffect(() => {}, []);
-
-
-	const onTabChange = (key) => {
-		console.log(key);
-	};
-
 	return (
 		<DashboardLayout>
 			<div
@@ -62,7 +43,6 @@ export default function Users() {
 				<Tabs
 					style={{ width: '100%' }}
 					defaultActiveKey="1"
-					onChange={onTabChange}
 					items={tabs}
 				/>
 			</div>

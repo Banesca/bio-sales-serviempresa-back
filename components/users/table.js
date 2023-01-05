@@ -1,11 +1,12 @@
-import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Space } from 'antd';
-import { Button, Table } from 'antd';
 import { useEffect, useState } from 'react';
+
+import { DeleteOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Space, Button, Table, Modal, Pagination } from 'antd';
+import PropTypes from 'prop-types';
+
 import { profiles } from '../../pages/dashboard/users';
 import { getAdmins, getFullAccess, getSellers } from '../../services/users';
-import { Modal } from 'antd';
-import { Input } from 'antd';
+import { setKeys } from '../../util/setKeys';
 
 const UsersTable = ({ profile }) => {
 	const columns = [
@@ -34,21 +35,12 @@ const UsersTable = ({ profile }) => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Pedidos',
-			dataIndex: 'orders',
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
-		{
 			title: 'Acciones',
 			key: 5,
 			render: (_, index) => (
 				<Space size="middle">
 					<Button type="primary" onClick={() => handleSeeModal()}>
 						<EyeTwoTone />
-					</Button>
-					<Button type="primary">
-						<EditOutlined />
 					</Button>
 					<Button type="primary" danger>
 						<DeleteOutlined />
@@ -58,21 +50,31 @@ const UsersTable = ({ profile }) => {
 		},
 	];
 
-	console.log('Table component', profile);
-
 	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
+	const [data, setData] = useState();
+	const [page, setPage] = useState();
+
 	useEffect(() => {
 		setLoading(true);
 		if (profile === profiles.seller) {
-			//setData(getSellers());
+			getSellers(null, page).then((response) => {
+				setKeys(response.docs);
+				setPage(response.page);
+				setData(response);
+			});
 		} else if (profile === profiles.fullAccess) {
-			//setData(getFullAccess());
+			getFullAccess().then((response) => {
+				setKeys(response.docs);
+				setData(response);
+			});
 		} else if (profile === profiles.admin) {
-			//setData(getAdmins());
+			getAdmins().then((response) => {
+				setKeys(response.docs);
+				setData(response);
+			});
 		}
 		setLoading(false);
-	}, [profile]);
+	}, [profile, page]);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -83,6 +85,8 @@ const UsersTable = ({ profile }) => {
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
+
+	console.log(data);
 
 	return (
 		<div>
@@ -95,7 +99,16 @@ const UsersTable = ({ profile }) => {
 					? 'Vendedores'
 					: 'Full acceso'}
 			</h1>
-			<Table columns={columns} dataSource={data} loading={loading} />
+			<Table
+				columns={columns}
+				dataSource={data?.docs}
+				loading={loading}
+				pagination={{
+					defaultCurrent: page || 1,
+					total: data?.totalPages * 10,
+				}}
+				onChange={(some) => setPage(some.current)}
+			/>
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}
@@ -108,6 +121,10 @@ const UsersTable = ({ profile }) => {
 			</Modal>
 		</div>
 	);
+};
+
+UsersTable.propTypes = {
+	profile: PropTypes.string.isRequired,
 };
 
 export default UsersTable;

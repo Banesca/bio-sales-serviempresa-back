@@ -3,19 +3,54 @@ import logoImage from '../public/assets/logo.svg';
 
 import { Input, Form, Button, Layout } from 'antd';
 import { useRouter } from 'next/router';
+import { login } from '../services/auth';
+import { message } from 'antd';
+import { useState } from 'react';
+
+import Loading from '../components/loading';
 
 const { Content } = Layout;
 
 export default function Login() {
 	const router = useRouter();
 
-	const onSubmit = (values) => {
+	const [messageApi, contextHolder] = message.useMessage();
+	const [loading, setLoading] = useState(false);
+
+	const handleLoginError = (error) => {
+		messageApi.error(error);
+	};
+
+	const handleLoginSuccess = () => {
+		messageApi.success('Inicio de sesión exitoso');
+	};
+
+	const onSubmit = async (values) => {
+		setLoading(true);
 		// Login endpoint
+		const res = await login(values);
+		if (res.isLeft()) {
+			const error = res.value.getErrorValue();
+			console.log('ERROR', error);
+			setLoading(false);
+			switch (error.status) {
+				case 400:
+					return handleLoginError(error.data.error);
+				case 500:
+					return handleLoginError(error.data.error);
+			}
+		}
+		console.log(res.value.getValue());
+		localStorage.setItem('accessToken', res.value.getValue().accessToken);
+		localStorage.setItem('refreshToken', res.value.getValue().refreshToken);
+		handleLoginSuccess();
+		setLoading(false);
 		router.push('/dashboard/products');
 	};
 
 	return (
 		<>
+			{contextHolder}
 			<Layout>
 				<Content
 					style={{
@@ -70,7 +105,7 @@ export default function Login() {
 						>
 							<Input.Password />
 						</Form.Item>
-						<Form.Item>
+						<Form.Item wrapperCol={{ span: 8, offset: 8 }}>
 							<Button type="primary" htmlType="submit" block>
 								Aceptar
 							</Button>
@@ -78,6 +113,7 @@ export default function Login() {
 					</Form>
 				</Content>
 			</Layout>
+			<Loading isLoading={loading} />
 		</>
 	);
 }
