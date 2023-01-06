@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { profiles } from '../../pages/dashboard/users';
 import { getAdmins, getFullAccess, getSellers } from '../../services/users';
-import { setKeys } from '../../util/setKeys';
+import { addKeys } from '../../util/setKeys';
 
 const UsersTable = ({ profile }) => {
 	const columns = [
@@ -58,18 +58,18 @@ const UsersTable = ({ profile }) => {
 		setLoading(true);
 		if (profile === profiles.seller) {
 			getSellers(null, page).then((response) => {
-				setKeys(response.docs);
+				addKeys(response.docs);
 				setPage(response.page);
 				setData(response);
 			});
 		} else if (profile === profiles.fullAccess) {
 			getFullAccess().then((response) => {
-				setKeys(response.docs);
+				addKeys(response.docs);
 				setData(response);
 			});
 		} else if (profile === profiles.admin) {
 			getAdmins().then((response) => {
-				setKeys(response.docs);
+				addKeys(response.docs);
 				setData(response);
 			});
 		}

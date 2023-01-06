@@ -42,8 +42,8 @@ export class Result {
 		return new Result(true, null, value);
 	}
 
-	static fail(error) {
-		return new Result(false, error);
+	static fail(error = 'Ha ocurrido un error') {
+		return new Result(false, error, {});
 	}
 
 	static combine(results) {

@@ -23,6 +23,7 @@ import DashboardLayout from '../../../components/layout';
 import { data } from '../../../components/products/util/data';
 import { getProducts } from '../../../services/products';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Products() {
 	const router = useRouter();
@@ -149,7 +150,18 @@ export default function Products() {
 					flexDirection: 'column',
 				}}
 			>
-				<h1 style={{ fontSize: '2rem', color: '#fff' }}>Productos</h1>
+				<Row style={{ alignItems: 'center' }}>
+					<Col span={18}>
+						<h1 style={{ fontSize: '2rem', color: '#fff' }}>
+							Productos
+						</h1>
+					</Col>
+					<Col span={6}>
+						<Button>
+							<Link href="products/import">Importar</Link>
+						</Button>
+					</Col>
+				</Row>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
 						<Row style={{ justifyContent: 'center' }}>
@@ -278,7 +290,7 @@ export default function Products() {
 				title="Eliminar"
 				open={deleteModalOpen}
 				onCancel={() => setDeleteModalOpen(false)}
-				onOk={() => handleDelete()}
+				onOk={handleDelete}
 				okText="Eliminar"
 				cancelText="Cancelar"
 			>
