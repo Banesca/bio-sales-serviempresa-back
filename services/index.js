@@ -14,7 +14,6 @@ export class Api {
 	static async post(route, data) {
 		try {
 			const response = await axios.post(route, data);
-			console.log(response);
 			return right(Result.ok(response.data));
 		} catch (error) {
 			return left(Result.fail(error.response));
