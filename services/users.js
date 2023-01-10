@@ -13,9 +13,25 @@ export const getSellers = async (limit = 50, page = 1) => {
 };
 
 export const getAdmins = async () => {
-	return await Api.get('/back-office/users/admin');
+	try {
+		const users = await Api.get('/back-office/users/admin', {
+			limit,
+			page,
+		});
+		return users;
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 export const getFullAccess = async () => {
-	return await Api.get('/back-office/users/full-access');
+	try {
+		const users = await Api.get('/back-office/users/admin', {
+			limit,
+			page,
+		});
+		return users;
+	} catch (error) {
+		console.log(error);
+	}
 };

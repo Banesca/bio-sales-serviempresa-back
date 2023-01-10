@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import { DeleteOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Space, Button, Table, Modal, Pagination } from 'antd';
@@ -7,6 +8,7 @@ import PropTypes from 'prop-types';
 import { profiles } from '../../pages/dashboard/users';
 import { getAdmins, getFullAccess, getSellers } from '../../services/users';
 import { addKeys } from '../../util/setKeys';
+import { users } from '../../util/database';
 
 const UsersTable = ({ profile }) => {
 	const columns = [
@@ -39,7 +41,13 @@ const UsersTable = ({ profile }) => {
 			key: 5,
 			render: (_, index) => (
 				<Space size="middle">
-					<Button type="primary" onClick={() => handleSeeModal()}>
+					<Button
+						type="primary"
+						onClick={() => {
+							router.push(`users/${_.id}`);
+							setLoading(true);
+						}}
+					>
 						<EyeTwoTone />
 					</Button>
 					<Button type="primary" danger>
@@ -50,6 +58,8 @@ const UsersTable = ({ profile }) => {
 		},
 	];
 
+	const router = useRouter();
+
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState();
 	const [page, setPage] = useState();
@@ -57,24 +67,25 @@ const UsersTable = ({ profile }) => {
 	useEffect(() => {
 		setLoading(true);
 		if (profile === profiles.seller) {
-			getSellers(null, page).then((response) => {
-				addKeys(response.docs);
-				setPage(response.page);
-				setData(response);
-			});
+			addKeys(users);
+			setData(users);
+			// getSellers(null, page).then((response) => {
+			// 	//setPage(response.page);
+			// });
 		} else if (profile === profiles.fullAccess) {
-			getFullAccess().then((response) => {
-				addKeys(response.docs);
-				setData(response);
-			});
+			addKeys(users);
+			setData(users);
+			// getFullAccess().then((response) => {});
 		} else if (profile === profiles.admin) {
-			getAdmins().then((response) => {
-				addKeys(response.docs);
-				setData(response);
-			});
+			addKeys(users);
+			setData(users);
+			// getAdmins().then((response) => {});
 		}
 		setLoading(false);
 	}, [profile, page]);
+
+	console.log(data, 'Dataa');
+	console.log(users, 'Users');
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -101,12 +112,12 @@ const UsersTable = ({ profile }) => {
 			</h1>
 			<Table
 				columns={columns}
-				dataSource={data?.docs}
+				dataSource={data}
 				loading={loading}
-				pagination={{
-					defaultCurrent: page || 1,
-					total: data?.totalPages * 10,
-				}}
+				// pagination={{
+				// 	defaultCurrent: page || 1,
+				// 	total: data?.totalPages * 10,
+				// }}
 				onChange={(some) => setPage(some.current)}
 			/>
 			<Modal

@@ -6,6 +6,8 @@ import { Table } from 'antd';
 import { useState } from 'react';
 import DashboardLayout from '../../../components/layout';
 import { Form } from 'antd';
+import Router, { useRouter } from 'next/router';
+import { clients } from '../../../util/database';
 
 export default function ClientsPage() {
 	const columns = [
@@ -26,7 +28,10 @@ export default function ClientsPage() {
 			key: 5,
 			render: (_, index) => (
 				<Space size="middle">
-					<Button type="primary" onClick={() => handleSeeModal()}>
+					<Button
+						type="primary"
+						onClick={() => router.push(`clients/${_.id}`)}
+					>
 						<EyeTwoTone />
 					</Button>
 					<Button type="primary" danger>
@@ -37,14 +42,7 @@ export default function ClientsPage() {
 		},
 	];
 
-	const data = [
-		{
-			key: 1,
-			id: 1,
-			rut: 'Hermanos Perez CA',
-			rif: 'V-26986902-0',
-		},
-	];
+	const router = useRouter();
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -75,10 +73,7 @@ export default function ClientsPage() {
 					Clientes
 				</h1>
 				<div style={{ display: 'flex', justifyContent: 'center' }}>
-					<Form
-						labelCol={{ span: '4' }}
-						style={{ width: '600px' }}
-					>
+					<Form labelCol={{ span: '4' }} style={{ width: '600px' }}>
 						<Form.Item name="rut" label="Razon social">
 							<Input.Search />
 						</Form.Item>
@@ -87,7 +82,7 @@ export default function ClientsPage() {
 						</Form.Item>
 					</Form>
 				</div>
-				<Table columns={columns} dataSource={data} />
+				<Table columns={columns} dataSource={clients} />
 			</div>
 			<Modal
 				title={'Detail'}
