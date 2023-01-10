@@ -11,6 +11,7 @@ export const merchantId = '182323';
 export const idClient = '9c9e8b37-5edb-454f-a6a8-b8db16349abe';
 export const ServidorFacturacionSeniat = 'http://localhost:8080';
 export const urlSeniat = 'http://localhost';
+export const ip = 'http://tumenudelivery.com';
 
 export const environment = {
 	production: true,

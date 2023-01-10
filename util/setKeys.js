@@ -15,3 +15,10 @@ export const removeKeys = (rows) => {
 	}
 	return rows;
 };
+
+export const setTabs = (rows) => {
+	for (const row of rows) {
+		row.label = row.nombre;
+		row.key = row.idSucursal;
+	}
+};

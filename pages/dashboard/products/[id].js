@@ -12,6 +12,7 @@ import {
 import Loading from '../../../components/loading';
 import { getProductById } from '../../../services/products';
 import DashboardLayout from '../../../components/layout';
+import { useRequest } from '../../../hooks/useRequest';
 
 const Product = () => {
 	const router = useRouter();
@@ -21,12 +22,22 @@ const Product = () => {
 		router.push('/dashboard/products');
 	};
 
+	const { requestHandler } = useRequest();
+
+	const getProductRequest = async (id) => {
+		const res = await requestHandler.get(`/api/v2/product/get/${id}`);
+		if (res.isLeft()) {
+			return console.log('ERROR', res.value.getErrorValue());
+		}
+		setProduct(res.value.getValue().data);
+	};
+
 	const [product, setProduct] = useState();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		setLoading(true);
-		//setProduct(getProductById(id));
+		getProductRequest(id);
 		setLoading(false);
 	}, []);
 
@@ -54,37 +65,24 @@ const Product = () => {
 						style={{ fontSize: '1.5rem', color: 'white' }}
 						onClick={handleReturn}
 					/>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: 'white',
-						}}
-					>
-						{product?.name}
-					</h1>
 					<div></div>
 				</div>
 				<List style={{ width: '600px' }}>
 					<List.Item>
+						<p>Nombre</p>
+						<p>{product?.nameProduct}</p>
+					</List.Item>
+					<List.Item>
 						<p>Código</p>
-						<p>{product?.code}</p>
+						<p>{product?.barCode}</p>
 					</List.Item>
 					<List.Item>
 						<p>Precio</p>
-						<p>{product?.price}</p>
-					</List.Item>
-					<List.Item>
-						<p>Marca</p>
-						<p>{product?.brand}</p>
+						<p>{product?.priceSale}</p>
 					</List.Item>
 					<List.Item>
 						<p>Categoría</p>
 						<p>{product?.category}</p>
-					</List.Item>
-					<List.Item>
-						<p>Proveedor</p>
-						<p>{product?.provider}</p>
 					</List.Item>
 					<List.Item>
 						<p>En Promoción</p>
@@ -95,7 +93,7 @@ const Product = () => {
 								height: '100%',
 							}}
 						>
-							{product?.isOnPromotion ? (
+							{product?.isPromo != 0 ? (
 								<CheckCircleOutlined
 									style={{
 										fontSize: '1.5rem',

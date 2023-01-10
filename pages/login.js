@@ -4,20 +4,23 @@ import Image from 'next/image';
 
 import { Input, Form, Button, Layout, message } from 'antd';
 
-import { login, setBusiness } from '../services/auth';
+import { login } from '../services/auth';
 import logoImage from '../public/assets/logo.svg';
 import Loading from '../components/loading';
 import { GeneralContext } from './_app';
-import { ipBackOffice } from '../util/environment';
+import { useRequest } from '../hooks/useRequest';
+import { useBusinessProvider } from '../hooks/useBusinessProvider';
+import { ip } from '../util/environment';
 
 const { Content } = Layout;
 
 export default function Login() {
 	const router = useRouter();
 
-	const [messageApi, contextHolder] = message.useMessage();
-	const [loading, setLoading] = useState(false);
+	const { requestHandler } = useRequest();
 
+	// display message
+	const [messageApi, contextHolder] = message.useMessage();
 	const handleLoginError = (error) => {
 		messageApi.error(error);
 	};
@@ -26,10 +29,19 @@ export default function Login() {
 		messageApi.success('Inicio de sesión exitoso');
 	};
 
+	const [loading, setLoading] = useState(false);
+
+	// business Context
+	const businessContext = useBusinessProvider();
+	console.log(businessContext);
+
+	const handleLoginRequest = async (data) => {
+		return await requestHandler.post('/api/v1/validator/login', data);
+	};
+
 	const onSubmit = async (values) => {
 		setLoading(true);
-		// Login endpoint
-		const res = await login(localStorage.getItem('apiURL'), values);
+		const res = await handleLoginRequest(values);
 		console.log(res);
 		if (res.isLeft()) {
 			const error = res.value.getErrorValue();
@@ -50,7 +62,15 @@ export default function Login() {
 			setLoading(false);
 			return handleLoginError('Usuario con contraseña incorrectos');
 		}
-		localStorage.setItem('accessToken', res.value.getValue().data[0].token);
+		const value = res.value.getValue().data[0];
+		localStorage.setItem('accessToken', value.token);
+		localStorage.setItem('business', JSON.stringify(value.branch));
+		localStorage.setItem(
+			'selectedBusiness',
+			JSON.stringify(value.branch[0])
+		);
+		businessContext.handleSetBusiness(value.branch);
+		businessContext.handleSetSelectedBusiness(value.branch);
 		setLoading(false);
 		handleLoginSuccess();
 		router.push('/dashboard/products');
@@ -61,7 +81,7 @@ export default function Login() {
 	useEffect(() => {
 		localStorage.setItem(
 			'apiURL',
-			`http://tumenudelivery.com:${generalContext.api_port}`
+			`${ip}:${generalContext.api_port}`
 		);
 	}, [generalContext.api_port]);
 

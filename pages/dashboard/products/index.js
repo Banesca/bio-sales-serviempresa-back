@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import {
 	Col,
@@ -20,29 +20,33 @@ import {
 } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/layout';
-import { data } from '../../../components/products/util/data';
-import { getProducts } from '../../../services/products';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useRequest } from '../../../hooks/useRequest';
+import { GeneralContext } from '../../_app';
+import { addKeys } from '../../../util/setKeys';
+import SelectBusiness from '../../../components/business/selectBusiness';
+import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
+import Loading from '../../../components/loading';
 
 export default function Products() {
 	const router = useRouter();
 	const columns = [
 		{
 			title: 'Nombre',
-			dataIndex: 'name',
+			dataIndex: 'nameProduct',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Código',
-			dataIndex: 'code',
+			dataIndex: 'barCode',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Precio',
-			dataIndex: 'price',
+			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) => (
 				<p>{record.isOnPromotion ? record.promotionPrice : text}$</p>
@@ -50,18 +54,19 @@ export default function Products() {
 		},
 		{
 			title: 'Empresa',
-			dataIndex: 'business',
 			key: 5,
-			render: (text) => <p>{text}</p>,
+			render: (text) => (
+				<p>{JSON.parse(localStorage.getItem('business'))[0].nombre}</p>
+			),
 		},
 		{
 			title: 'Promoción',
-			dataIndex: 'isOnPromotion',
+			dataIndex: 'isPromo',
 			key: 5,
-			render: (bool) => {
+			render: (text) => {
 				return (
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool ? (
+						{text != 0 ? (
 							<CheckCircleOutlined
 								style={{ fontSize: '1.5rem', color: 'green' }}
 							/>
@@ -82,7 +87,9 @@ export default function Products() {
 					<Button
 						type="primary"
 						onClick={() => {
-							router.push(`/dashboard/products/${product.id}`);
+							router.push(
+								`/dashboard/products/${product.idProduct}`
+							);
 						}}
 					>
 						<EyeTwoTone />
@@ -101,16 +108,57 @@ export default function Products() {
 	// loading
 	const [loading, setLoading] = useState(true);
 
+	const generalContext = useContext(GeneralContext);
+
 	// Data
+	const [totalProducts, setTotalProducts] = useState([]);
 	const [products, setProducts] = useState([]);
+
+	const [categories, setCategories] = useState([]);
+
+	const { requestHandler } = useRequest();
+
+	const handleListProductRequest = async (
+		pFamily = 0,
+		pSubFamily = 0,
+		business = 1
+	) => {
+		const response = await requestHandler.get(
+			`/api/v2/product/list/lite/${pFamily}/${pSubFamily}/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().data;
+		addKeys(value);
+		setTotalProducts(value);
+		setProducts(value);
+	};
+
+	const categoryListRequest = async (business = 1) => {
+		const response = await requestHandler.get(`/api/v2/family/list/1`);
+		if (response.isLeft()) {
+			return;
+		}
+		console.log(response.value.getValue());
+		const value = response.value.getValue().response;
+		setCategories(value);
+	};
+
+	const businessContext = useBusinessProvider();
 
 	useEffect(() => {
 		// request data
-		// setProducts(getProducts())
-		// end request data
-		setProducts(data);
-		setLoading(false);
-	}, []);
+		setLoading(true);
+		if (generalContext) {
+			const business = businessContext.selectedBusiness;
+			console.log(business);
+			handleListProductRequest(0, 0, business?.idSucursal || 1);
+			categoryListRequest(business?.idSucursal || 1);
+			setLoading(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [generalContext, businessContext.selectedBusiness]);
 
 	// Delete Modal
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -136,9 +184,52 @@ export default function Products() {
 				delete values[v];
 			}
 		}
-		const products = getProducts(values);
-		//setProducts(products);
+		console.log(values);
+		let productsToFilter = totalProducts;
+		if (values.nameProduct) {
+			console.log('filter name');
+			productsToFilter = productsToFilter.filter((p) =>
+				p.nameProduct.includes(values.nameProduct)
+			);
+		}
+		if (values.barCode) {
+			console.log('filter code');
+			productsToFilter = productsToFilter.filter((p) => {
+				if (!p.barCode) {
+					return;
+				}
+				return p.barCode.includes(values.barCode);
+			});
+		}
+		if (values.minPrice) {
+			console.log('filter min');
+			productsToFilter = productsToFilter.filter(
+				(p) => p.priceSale > Number(values.minPrice)
+			);
+		}
+		if (values.maxPrice) {
+			console.log('filter max');
+			productsToFilter = productsToFilter.filter(
+				(p) => p.priceSale < Number(values.maxPrice)
+			);
+		}
+		if (values.nameSubFamily) {
+			console.log('filter category');
+			productsToFilter = productsToFilter.filter(
+				(p) => p.nameSubFamily === values.nameSubFamily
+			);
+		}
+		console.log(productsToFilter);
+		console.log('submit');
+		setProducts(productsToFilter);
 		setLoading(false);
+	};
+
+	const [form] = Form.useForm();
+
+	const onReset = () => {
+		setProducts(totalProducts);
+		form.resetFields();
 	};
 
 	return (
@@ -151,21 +242,38 @@ export default function Products() {
 				}}
 			>
 				<Row style={{ alignItems: 'center' }}>
-					<Col span={18}>
-						<h1 style={{ fontSize: '2rem', color: '#fff' }}>
+					<Col offset={6} span={12}>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '2rem',
+								color: '#fff',
+							}}
+						>
 							Productos
 						</h1>
 					</Col>
-					<Col span={6}>
-						<Button>
+					<Col
+						span={6}
+						style={{
+							justifyContent: 'center',
+							display: 'flex',
+						}}
+					>
+						<Button style={{ marginRight: '1rem' }}>
 							<Link href="products/import">Importar</Link>
+						</Button>
+						<Button>
+							<Link href="products/add">Agregar</Link>
 						</Button>
 					</Col>
 				</Row>
+				<SelectBusiness />
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
 						<Row style={{ justifyContent: 'center' }}>
 							<Form
+								form={form}
 								style={{ maxWidth: '900px' }}
 								name="productFilters"
 								onFinish={onSubmit}
@@ -176,7 +284,7 @@ export default function Products() {
 										<Form.Item
 											label="Nombre"
 											style={{ padding: '0 .5rem' }}
-											name="name"
+											name="nameProduct"
 										>
 											<Input allowClear />
 										</Form.Item>
@@ -184,7 +292,7 @@ export default function Products() {
 									<Col span={12}>
 										<Form.Item
 											label="Código"
-											name="code"
+											name="barCode"
 											style={{ padding: '0 .5rem' }}
 										>
 											<Input allowClear />
@@ -219,63 +327,58 @@ export default function Products() {
 									<Col span={12}>
 										<Form.Item
 											label="Categoría"
-											name="category"
+											name="nameSubFamily"
 											style={{
 												padding: '0 .5rem',
 											}}
 										>
 											<Select allowClear>
-												<Select.Option value="hello">
-													Hello
-												</Select.Option>
+												{categories &&
+													categories.map((c, i) => (
+														<Select.Option
+															key={
+																c.idProductFamily
+															}
+															value={c.name}
+														>
+															{c.name}
+														</Select.Option>
+													))}
 											</Select>
-										</Form.Item>
-									</Col>
-									<Col span={12}>
-										<Form.Item
-											label="Marca"
-											name="brand"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Select allowClear></Select>
 										</Form.Item>
 									</Col>
 								</Row>
 								<Row>
 									<Col span={12}>
 										<Form.Item
-											label="Proveedor"
-											name="provider"
-											style={{
-												padding: '0 .5rem',
+											wrapperCol={{
+												span: 12,
+												offset: 12,
 											}}
 										>
-											<Select allowClear></Select>
+											<Button
+												type="primary"
+												block
+												onClick={onReset}
+											>
+												Limpiar
+											</Button>
 										</Form.Item>
 									</Col>
 									<Col span={12}>
 										<Form.Item
-											label="Empresa"
-											name="business"
-											style={{
-												padding: '0 .5rem',
-											}}
+											wrapperCol={{ span: 12, offset: 0 }}
 										>
-											<Select allowClear></Select>
+											<Button
+												htmlType="submit"
+												type="primary"
+												block
+											>
+												Buscar
+											</Button>
 										</Form.Item>
 									</Col>
 								</Row>
-								<Form.Item wrapperCol={{ span: 6, offset: 9 }}>
-									<Button
-										htmlType="submit"
-										type="primary"
-										block
-									>
-										Buscar
-									</Button>
-								</Form.Item>
 							</Form>
 						</Row>
 					</Collapse.Panel>
@@ -296,6 +399,7 @@ export default function Products() {
 			>
 				<p>Estas seguro de que deseas eliminar este producto</p>
 			</Modal>
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 }

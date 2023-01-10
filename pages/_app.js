@@ -1,11 +1,12 @@
+import '../styles/globals.css';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { ConfigProvider, theme } from 'antd';
 import axios from 'axios';
 
-import '../styles/globals.css';
 import { ipBackOffice } from '../util/environment';
 import Loading from '../components/loading';
+import { BusinessProvider } from '../hooks/useBusinessProvider';
 
 export const GeneralContext = createContext();
 
@@ -28,6 +29,8 @@ function MyApp({ Component, pageProps }) {
 		setLoading(false);
 	}, []);
 
+	console.log(generalData);
+
 	return (
 		<ConfigProvider
 			theme={{
@@ -35,8 +38,10 @@ function MyApp({ Component, pageProps }) {
 			}}
 		>
 			<GeneralContext.Provider value={generalData}>
-				<Component {...pageProps} />
-				<Loading isLoading={loading} />
+				<BusinessProvider>
+					<Component {...pageProps} />
+					<Loading isLoading={loading} />
+				</BusinessProvider>
 			</GeneralContext.Provider>
 		</ConfigProvider>
 	);

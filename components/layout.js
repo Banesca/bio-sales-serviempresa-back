@@ -24,11 +24,6 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(CarryOutOutlined),
 		},
 		{
-			key: '/dashboard/business',
-			label: 'Empresas',
-			icon: React.createElement(ShopOutlined),
-		},
-		{
 			key: '/dashboard/users',
 			label: 'Usuarios',
 			icon: React.createElement(UserOutlined),
