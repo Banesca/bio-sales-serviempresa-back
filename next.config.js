@@ -10,6 +10,9 @@ const nextConfig = {
 			},
 		];
 	},
+	images: {
+		domains: ['tumenudelivery.com']
+	},
 };
 
 module.exports = nextConfig;

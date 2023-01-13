@@ -84,8 +84,6 @@ const UsersTable = ({ profile }) => {
 		setLoading(false);
 	}, [profile, page]);
 
-	console.log(data, 'Dataa');
-	console.log(users, 'Users');
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -97,7 +95,6 @@ const UsersTable = ({ profile }) => {
 		setIsModalOpen(false);
 	};
 
-	console.log(data);
 
 	return (
 		<div>

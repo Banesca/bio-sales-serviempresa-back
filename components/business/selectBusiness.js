@@ -8,20 +8,7 @@ const SelectBusiness = () => {
 	const { business, handleSetSelectedBusiness, selectedBusiness } =
 		useBusinessProvider();
 
-	// const [business, setBusiness] = useState([]);
-	// const [selectedBusiness, setSelectedBusiness] = useState(null);
-
 	const [messageApi, contextHolder] = message.useMessage();
-
-	// useEffect(() => {
-	// 	let business = JSON.parse(localStorage.getItem('business'));
-	// 	let selectedBusiness = JSON.parse(
-	// 		localStorage.getItem('selectedBusiness')
-	// 	);
-	// 	setTabs(business);
-	// 	setBusiness(business);
-	// 	setSelectedBusiness(selectedBusiness);
-	// }, []);
 
 	const handleMessage = (name) => {
 		messageApi.info(`Ambiente de empresarial ${name} seleccionado`);
@@ -30,15 +17,12 @@ const SelectBusiness = () => {
 	const onChange = (key) => {
 		const filterBusiness = business.filter((b) => b.idSucursal === key)[0];
 		handleSetSelectedBusiness(filterBusiness);
-		// setSelectedBusiness(filterBusiness);
-		// localStorage.setItem(
-		// 	'selectedBusiness',
-		// 	JSON.stringify(filterBusiness)
-		// );
+		localStorage.setItem(
+			'selectedBusiness',
+			JSON.stringify(filterBusiness)
+		);
 		handleMessage(filterBusiness.nombre);
 	};
-
-	console.log(business);
 
 	return (
 		<Row>

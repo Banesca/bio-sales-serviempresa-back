@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { Tabs } from 'antd';
 
 import DashboardLayout from '../../../components/layout';
 import UsersTable from '../../../components/users/table';
+import { useRequest } from '../../../hooks/useRequest';
+import { GeneralContext } from '../../_app';
 
 export const profiles = {
 	seller: 'seller',
@@ -12,6 +14,26 @@ export const profiles = {
 };
 
 export default function Users() {
+	const { requestHandler } = useRequest();
+
+	const getUsersRequest = async () => {
+		const res = await requestHandler.get(`/api/v2/user`);
+		if (res.isLeft()) {
+			console.log(res.value.getErrorValue());
+			return
+		}
+		const value = res.value.getValue();
+		console.log(value);
+	};
+
+	const generalContext = useContext(GeneralContext);
+
+	useEffect(() => {
+		if (generalContext) {
+			getUsersRequest();
+		}
+	}, []);
+
 	const tabs = [
 		{
 			label: `Vendedores`,

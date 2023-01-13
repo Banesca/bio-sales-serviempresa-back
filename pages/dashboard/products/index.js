@@ -16,6 +16,7 @@ import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
 	DeleteOutlined,
+	EditOutlined,
 	EyeTwoTone,
 } from '@ant-design/icons';
 
@@ -28,6 +29,7 @@ import { addKeys } from '../../../util/setKeys';
 import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/loading';
+import { message } from 'antd';
 
 export default function Products() {
 	const router = useRouter();
@@ -49,14 +51,19 @@ export default function Products() {
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) => (
-				<p>{record.isOnPromotion ? record.promotionPrice : text}$</p>
+				<p>${record.isOnPromotion ? record.promotionPrice : text}</p>
 			),
 		},
 		{
 			title: 'Empresa',
 			key: 5,
 			render: (text) => (
-				<p>{JSON.parse(localStorage.getItem('business'))[0].nombre}</p>
+				<p>
+					{
+						JSON.parse(localStorage.getItem('selectedBusiness'))
+							.nombre
+					}
+				</p>
 			),
 		},
 		{
@@ -95,6 +102,15 @@ export default function Products() {
 						<EyeTwoTone />
 					</Button>
 					<Button
+						onClick={() => {
+							router.push(
+								`/dashboard/products/update/${product.idProduct}`
+							);
+						}}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
 						type="primary"
 						danger
 						onClick={() => handleOpenDeleteModal(product)}
@@ -115,6 +131,7 @@ export default function Products() {
 	const [products, setProducts] = useState([]);
 
 	const [categories, setCategories] = useState([]);
+	const [brands, setBrands] = useState([]);
 
 	const { requestHandler } = useRequest();
 
@@ -124,41 +141,71 @@ export default function Products() {
 		business = 1
 	) => {
 		const response = await requestHandler.get(
-			`/api/v2/product/list/lite/${pFamily}/${pSubFamily}/${business}`
+			`/api/v2/product/list/${pFamily}/${pSubFamily}/${business}`
 		);
 		if (response.isLeft()) {
+			setLoading(false);
 			return;
 		}
 		const value = response.value.getValue().data;
 		addKeys(value);
 		setTotalProducts(value);
 		setProducts(value);
+		setLoading(false);
 	};
 
 	const categoryListRequest = async (business = 1) => {
-		const response = await requestHandler.get(`/api/v2/family/list/1`);
+		const response = await requestHandler.get(
+			`/api/v2/family/list/${business}`
+		);
 		if (response.isLeft()) {
 			return;
 		}
-		console.log(response.value.getValue());
 		const value = response.value.getValue().response;
 		setCategories(value);
 	};
 
-	const businessContext = useBusinessProvider();
+	const brandListRequest = async (business = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/subfamily/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		console.log('BRAND', response.value.getValue());
+		const value = response.value.getValue().response;
+		setBrands(value);
+	};
+
+	const deleteProductRequest = async (id) => {
+		setLoading(true);
+		const res = await requestHandler.delete(`/api/v2/product/delete/${id}`);
+		if (res.isLeft()) {
+			console.log(res.value.getErrorValue());
+			message.error('Ha ocurrido un error');
+			setLoading(false);
+			return;
+		}
+		const value = res.value.getValue().response;
+		console.log(value);
+		handleListProductRequest(0, 0, selectedBusiness.idSucursal);
+		message.success('Product Eliminado');
+	};
+
+	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
 		// request data
+		setProducts([]);
 		setLoading(true);
-		if (generalContext) {
-			const business = businessContext.selectedBusiness;
-			console.log(business);
-			handleListProductRequest(0, 0, business?.idSucursal || 1);
-			categoryListRequest(business?.idSucursal || 1);
-			setLoading(false);
+		if (generalContext && selectedBusiness) {
+			console.log('products');
+			categoryListRequest(selectedBusiness.idSucursal);
+			brandListRequest(selectedBusiness.idSucursal);
+			handleListProductRequest(0, 0, selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [generalContext, businessContext.selectedBusiness]);
+	}, [generalContext, selectedBusiness]);
 
 	// Delete Modal
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -173,7 +220,8 @@ export default function Products() {
 
 	const handleDelete = () => {
 		// request delete product
-		console.log(currentProduct.id);
+		console.log(currentProduct.idProduct);
+		deleteProductRequest(currentProduct.idProduct);
 		setDeleteModalOpen(false);
 	};
 
@@ -184,16 +232,16 @@ export default function Products() {
 				delete values[v];
 			}
 		}
-		console.log(values);
+		console.log('VALUES', values);
 		let productsToFilter = totalProducts;
 		if (values.nameProduct) {
-			console.log('filter name');
 			productsToFilter = productsToFilter.filter((p) =>
-				p.nameProduct.includes(values.nameProduct)
+				p.nameProduct
+					.toLowerCase()
+					.includes(values.nameProduct.toLowerCase())
 			);
 		}
 		if (values.barCode) {
-			console.log('filter code');
 			productsToFilter = productsToFilter.filter((p) => {
 				if (!p.barCode) {
 					return;
@@ -202,21 +250,26 @@ export default function Products() {
 			});
 		}
 		if (values.minPrice) {
-			console.log('filter min');
 			productsToFilter = productsToFilter.filter(
 				(p) => p.priceSale > Number(values.minPrice)
 			);
 		}
 		if (values.maxPrice) {
-			console.log('filter max');
 			productsToFilter = productsToFilter.filter(
 				(p) => p.priceSale < Number(values.maxPrice)
 			);
 		}
-		if (values.nameSubFamily) {
+		if (values.nameFamily) {
 			console.log('filter category');
 			productsToFilter = productsToFilter.filter(
-				(p) => p.nameSubFamily === values.nameSubFamily
+				(p) => p.idProductFamily === values.nameFamily
+			);
+		}
+		if (values.nameSubFamily) {
+			console.log('filter brand');
+			console.log(values.nameFamily);
+			productsToFilter = productsToFilter.filter(
+				(p) => p.idProductSubFamily === values.nameSubFamily
 			);
 		}
 		console.log(productsToFilter);
@@ -327,7 +380,7 @@ export default function Products() {
 									<Col span={12}>
 										<Form.Item
 											label="Categoría"
-											name="nameSubFamily"
+											name="nameFamily"
 											style={{
 												padding: '0 .5rem',
 											}}
@@ -339,9 +392,36 @@ export default function Products() {
 															key={
 																c.idProductFamily
 															}
-															value={c.name}
+															value={
+																c.idProductFamily
+															}
 														>
 															{c.name}
+														</Select.Option>
+													))}
+											</Select>
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											label="Marca"
+											name="nameSubFamily"
+											style={{
+												padding: '0 .5rem',
+											}}
+										>
+											<Select allowClear>
+												{brands &&
+													brands.map((b, i) => (
+														<Select.Option
+															key={
+																b.idProductSubFamily
+															}
+															value={
+																b.idProductSubFamily
+															}
+														>
+															{b.nameSubFamily}
 														</Select.Option>
 													))}
 											</Select>
@@ -356,11 +436,7 @@ export default function Products() {
 												offset: 12,
 											}}
 										>
-											<Button
-												type="primary"
-												block
-												onClick={onReset}
-											>
+											<Button block onClick={onReset}>
 												Limpiar
 											</Button>
 										</Form.Item>
@@ -394,12 +470,22 @@ export default function Products() {
 				open={deleteModalOpen}
 				onCancel={() => setDeleteModalOpen(false)}
 				onOk={handleDelete}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setDeleteOpen(false)}
+					/>,
+					<Button key="delete" onClick={handleDelete} />,
+				]}
 				okText="Eliminar"
 				cancelText="Cancelar"
 			>
-				<p>Estas seguro de que deseas eliminar este producto</p>
+				<p>
+					Estas seguro de que deseas eliminar
+					{` ${currentProduct?.nameProduct}`}
+				</p>
 			</Modal>
-			<Loading isLoading={loading} />
+			{/* <Loading isLoading={loading} /> */}
 		</DashboardLayout>
 	);
 }

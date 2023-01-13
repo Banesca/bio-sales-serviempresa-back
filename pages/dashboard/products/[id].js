@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
@@ -13,8 +13,12 @@ import Loading from '../../../components/loading';
 import { getProductById } from '../../../services/products';
 import DashboardLayout from '../../../components/layout';
 import { useRequest } from '../../../hooks/useRequest';
+import { GeneralContext } from '../../_app';
+import { ip } from '../../../util/environment';
 
 const Product = () => {
+	const generalContext = useContext(GeneralContext);
+
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -22,24 +26,67 @@ const Product = () => {
 		router.push('/dashboard/products');
 	};
 
+	const [product, setProduct] = useState(null);
+	const [productImage, setProductImage] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [brand, setBrand] = useState(null);
+	const [category, setCategory] = useState(null);
+
 	const { requestHandler } = useRequest();
+
+	const getImageRequest = async (image) => {
+		const res = await requestHandler.get(`/product/${image}`);
+		if (res.isLeft()) {
+			setLoading(false);
+			return console.log('error');
+		}
+		console.log(res.value.getValue());
+		setLoading(false);
+		//set(res.value.getValue().data);
+	};
+
+	const getCategoryRequest = async (id) => {
+		const res = await requestHandler.get(`/api/v2/family/get/${id}`);
+		if (res.isLeft()) {
+			return console.log('error');
+		}
+		const value = res.value.getValue().data;
+		console.log('Category', value);
+		setCategory(value);
+		//set(res.value.getValue().data);
+	};
+
+	const getBrandRequest = async (id) => {
+		const res = await requestHandler.get(`/api/v2/subfamily/get/${id}`);
+		if (res.isLeft()) {
+			return console.log('error');
+		}
+		const value = res.value.getValue().data;
+		console.log('Brand', value);
+		setBrand(value);
+		//set(res.value.getValue().data);
+	};
 
 	const getProductRequest = async (id) => {
 		const res = await requestHandler.get(`/api/v2/product/get/${id}`);
 		if (res.isLeft()) {
+			setLoading(false);
 			return console.log('ERROR', res.value.getErrorValue());
 		}
-		setProduct(res.value.getValue().data);
+		const value = res.value.getValue().data;
+		console.log('PRODUCT', value);
+		setProduct(value);
+		getCategoryRequest(value.idProductFamilyFk);
+		getBrandRequest(value.idProductSubFamilyFk);
+		getImageRequest(res.value.getValue().data.urlImagenProduct);
 	};
 
-	const [product, setProduct] = useState();
-	const [loading, setLoading] = useState(true);
-
 	useEffect(() => {
-		setLoading(true);
-		getProductRequest(id);
-		setLoading(false);
-	}, []);
+		if (generalContext) {
+			setLoading(true);
+			getProductRequest(id);
+		}
+	}, [generalContext]);
 
 	return (
 		<DashboardLayout>
@@ -65,9 +112,12 @@ const Product = () => {
 						style={{ fontSize: '1.5rem', color: 'white' }}
 						onClick={handleReturn}
 					/>
+					<h1 style={{ color: 'white', fontSize: '2rem' }}>
+						Detalles
+					</h1>
 					<div></div>
 				</div>
-				<List style={{ width: '600px' }}>
+				<List style={{ width: '500px' }} bordered>
 					<List.Item>
 						<p>Nombre</p>
 						<p>{product?.nameProduct}</p>
@@ -82,7 +132,11 @@ const Product = () => {
 					</List.Item>
 					<List.Item>
 						<p>Categoría</p>
-						<p>{product?.category}</p>
+						<p>{category?.name}</p>
+					</List.Item>
+					<List.Item>
+						<p>Marca</p>
+						<p>{brand?.nameSubFamily}</p>
 					</List.Item>
 					<List.Item>
 						<p>En Promoción</p>
@@ -118,14 +172,24 @@ const Product = () => {
 						<p>Stock</p>
 						<p>{product?.stock}</p>
 					</List.Item>
+					<List.Item
+						style={{
+							display: 'flex',
+							justifyContent: 'center',
+						}}
+					>
+						{product && (
+							<Image
+								src={`${ip}:${generalContext?.api_port}/product/${product?.urlImagenProduct}`}
+								height={300}
+								width={300}
+								alt="Producto"
+							/>
+						)}
+					</List.Item>
 				</List>
-				<Image
-					src={product?.image}
-					height={400}
-					width={400}
-					alt="Producto"
-				/>
 			</div>
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 };

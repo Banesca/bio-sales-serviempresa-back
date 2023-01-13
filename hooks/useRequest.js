@@ -3,13 +3,18 @@ import { useContext } from 'react';
 import { GeneralContext } from '../pages/_app';
 import { ip } from '../util/environment';
 import { Result, left, right } from '../util/result';
+import https from 'https';
 
 export function useRequest() {
 	const generalContext = useContext(GeneralContext);
 
 	const requestHandler = {
 		get: async (route, params) => {
+			console.log(route);
 			try {
+				const httpsAgent = new https.Agent({
+					rejectUnauthorized: false,
+				});
 				const response = await axios.get(
 					`${ip}:${generalContext.api_port}${route}`,
 					{
@@ -17,12 +22,15 @@ export function useRequest() {
 							Authorization: `Bearer ${localStorage.getItem(
 								'accessToken'
 							)}`,
+							'Access-Control-Allow-Origin': '*',
 						},
+						httpsAgent,
 					}
 				);
 
 				return right(Result.ok(response.data));
 			} catch (error) {
+				console.log(error);
 				return left(Result.fail(error));
 			}
 		},
@@ -33,7 +41,9 @@ export function useRequest() {
 					data,
 					{
 						headers: {
-							Authorization: localStorage.getItem('accessToken'),
+							Authorization: `Bearer ${localStorage.getItem(
+								'accessToken'
+							)}`,
 						},
 					}
 				);
@@ -50,9 +60,10 @@ export function useRequest() {
 					data,
 					{
 						headers: {
-							Authorization: localStorage.getItem('accessToken'),
+							Authorization: `Bearer ${localStorage.getItem(
+								'accessToken'
+							)}`,
 						},
-						params,
 					}
 				);
 
@@ -67,7 +78,9 @@ export function useRequest() {
 					`${ip}:${generalContext.api_port}${route}`,
 					{
 						headers: {
-							Authorization: localStorage.getItem('accessToken'),
+							Authorization: `Bearer ${localStorage.getItem(
+								'accessToken'
+							)}`,
 						},
 						params,
 					}
@@ -84,9 +97,10 @@ export function useRequest() {
 					`${ip}:${generalContext.api_port}${route}`,
 					{
 						headers: {
-							Authorization: localStorage.getItem('accessToken'),
+							Authorization: `Bearer ${localStorage.getItem(
+								'accessToken'
+							)}`,
 						},
-						params,
 					}
 				);
 
