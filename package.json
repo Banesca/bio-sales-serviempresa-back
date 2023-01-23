@@ -16,6 +16,7 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
     "fs": "0.0.1-security",
+    "moment": "^2.29.4",
     "next": "13.0.6",
     "primereact": "^8.7.3",
     "prop-types": "^15.8.1",

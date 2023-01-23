@@ -29,8 +29,6 @@ function MyApp({ Component, pageProps }) {
 		setLoading(false);
 	}, []);
 
-	console.log(generalData);
-
 	return (
 		<ConfigProvider
 			theme={{

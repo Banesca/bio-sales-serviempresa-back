@@ -37,7 +37,7 @@ const ProductForm = (props) => {
 		idUnitMeasureSaleFk: props.product.idUnitMeasureSaleFk || '',
 		idTypeProductFk: '1',
 		idAdicionalCategoryFk: '0',
-		idRestaurantFk: props.product.idSucursal,
+		idRestaurantFk: 1,
 		is5050: '0',
 		efectivo: '0',
 		isPromo: props.product.isPromo || '0',
@@ -165,21 +165,6 @@ const ProductForm = (props) => {
 		setUnitMeasure(value);
 	};
 
-	// const addProductRequest = async (data) => {
-	// 	const res = await requestHandler.post('/api/v2/product/add', data);
-	// 	console.log('RESPONSE', res);
-	// 	if (res.isLeft()) {
-	// 		console.log(res.value.getErrorValue());
-	// 		message.error('Ha ocurrido un error');
-	// 		setLoading(false);
-	// 		return;
-	// 	}
-	// 	setLoading(false);
-	// 	const value = response.value.getValue().response;
-	// 	console.log(value);
-	// 	message.error('Producto agregado');
-	// };
-
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 
@@ -199,41 +184,7 @@ const ProductForm = (props) => {
 
 	const onSubmit = async () => {
 		setLoading(true);
-		//console.log(values);
 		const formData = new FormData();
-		// const product = {
-		// 	idProductFamilyFk: values.idProductFamilyFk,
-		// 	idProductSubFamilyFk: values.idProductSubFamilyFk,
-		// 	nameProduct: values.nameProduct,
-		// 	pricePurchase: '0',
-		// 	priceSale: values.priceSale,
-		// 	idUnitMeasurePurchaseFk: undefined,
-		// 	idUnitMeasureSaleFk: values.idUnitMeasurePurchaseFk,
-		// 	recipe: [],
-		// 	adicionals: [],
-		// 	idTypeProductFk: '1',
-		// 	idAdicionalCategoryFk: '0',
-		// 	idRestaurantFk: selectedBusiness.idSucursal,
-		// 	is5050: '0',
-		// 	efectivo: '0',
-		// 	isPromo: String(hasPromotion ? 1 : 0),
-		// 	linkPago: '0',
-		// 	minStock: '0',
-		// 	isheavy: '0',
-		// 	maxProducVenta: '0',
-		// 	maxAditionals: '0',
-		// 	minAditionals: '0',
-		// 	marketPrice: hasPromotion ? values.marketPrice : '0',
-		// 	percentageOfProfit: '0',
-		// 	nameKitchen: '',
-		// 	barCode: values.barCode,
-		// 	tax: '',
-		// 	cantidadvendida: '',
-		// 	starts: '5',
-		// 	idSucursalFk: selectedBusiness.idSucursal,
-		// 	//urlImagenProduct: '',
-		// };
-		console.log(product);
 		for (const field of Object.entries(product)) {
 			if (!props.update && field[0] == 'idProduct') {
 				continue;
@@ -243,7 +194,6 @@ const ProductForm = (props) => {
 		if (file) {
 			const imgName = file.name.replace(' ', '-');
 			formData.append('image', file, imgName);
-			//formData.set('urlImagenProduct', imgName);
 		}
 		await props.handleRequest(formData);
 		setLoading(false);

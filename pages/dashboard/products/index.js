@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import {
 	Col,
@@ -30,6 +30,7 @@ import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/loading';
 import { message } from 'antd';
+import ProductFilter from '../../../components/products/productFilter';
 
 export default function Products() {
 	const router = useRouter();
@@ -51,18 +52,8 @@ export default function Products() {
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) => (
-				<p>${record.isOnPromotion ? record.promotionPrice : text}</p>
-			),
-		},
-		{
-			title: 'Empresa',
-			key: 5,
-			render: (text) => (
-				<p>
-					{
-						JSON.parse(localStorage.getItem('selectedBusiness'))
-							.nombre
-					}
+				<p style={{ color: record.isPromo == '1' && 'green' }}>
+					${record.isPromo == '1' ? record.marketPrice : text}
 				</p>
 			),
 		},
@@ -127,11 +118,21 @@ export default function Products() {
 	const generalContext = useContext(GeneralContext);
 
 	// Data
-	const [totalProducts, setTotalProducts] = useState([]);
 	const [products, setProducts] = useState([]);
 
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
+
+	const INITIAL_QUERY_VALUES = {
+		nameProduct: '',
+		barCode: '',
+		minPrice: 0,
+		maxPrice: 0,
+		nameFamily: '',
+		nameSubFamily: '',
+	};
+
+	const [query, setQuery] = useState(INITIAL_QUERY_VALUES);
 
 	const { requestHandler } = useRequest();
 
@@ -149,7 +150,6 @@ export default function Products() {
 		}
 		const value = response.value.getValue().data;
 		addKeys(value);
-		setTotalProducts(value);
 		setProducts(value);
 		setLoading(false);
 	};
@@ -196,7 +196,6 @@ export default function Products() {
 
 	useEffect(() => {
 		// request data
-		setProducts([]);
 		setLoading(true);
 		if (generalContext && selectedBusiness) {
 			console.log('products');
@@ -225,65 +224,42 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
-	const onSubmit = (values) => {
-		setLoading(true);
-		for (const v of Object.keys(values)) {
-			if (!values[v]) {
-				delete values[v];
-			}
-		}
-		console.log('VALUES', values);
-		let productsToFilter = totalProducts;
-		if (values.nameProduct) {
-			productsToFilter = productsToFilter.filter((p) =>
+	const productsList = useMemo(() => {
+		let list = products;
+		if (query.nameProduct) {
+			list = list.filter((p) =>
 				p.nameProduct
 					.toLowerCase()
-					.includes(values.nameProduct.toLowerCase())
+					.includes(query.nameProduct.toLowerCase())
 			);
 		}
-		if (values.barCode) {
-			productsToFilter = productsToFilter.filter((p) => {
+		if (query.barCode) {
+			list = list.filter((p) => {
 				if (!p.barCode) {
 					return;
 				}
-				return p.barCode.includes(values.barCode);
+				return p.barCode.includes(query.barCode);
 			});
 		}
-		if (values.minPrice) {
-			productsToFilter = productsToFilter.filter(
-				(p) => p.priceSale > Number(values.minPrice)
-			);
+		if (query.minPrice) {
+			list = list.filter((p) => p.priceSale > Number(query.minPrice));
 		}
-		if (values.maxPrice) {
-			productsToFilter = productsToFilter.filter(
-				(p) => p.priceSale < Number(values.maxPrice)
-			);
+		if (query.maxPrice) {
+			list = list.filter((p) => p.priceSale < Number(query.maxPrice));
 		}
-		if (values.nameFamily) {
+		if (query.nameFamily) {
 			console.log('filter category');
-			productsToFilter = productsToFilter.filter(
-				(p) => p.idProductFamily === values.nameFamily
+			list = list.filter((p) => p.idProductFamily === query.nameFamily);
+		}
+		if (query.nameSubFamily) {
+			list = list.filter(
+				(p) => p.idProductSubFamily === query.nameSubFamily
 			);
 		}
-		if (values.nameSubFamily) {
-			console.log('filter brand');
-			console.log(values.nameFamily);
-			productsToFilter = productsToFilter.filter(
-				(p) => p.idProductSubFamily === values.nameSubFamily
-			);
-		}
-		console.log(productsToFilter);
-		console.log('submit');
-		setProducts(productsToFilter);
-		setLoading(false);
-	};
+		return list;
+	}, [products, query]);
 
-	const [form] = Form.useForm();
-
-	const onReset = () => {
-		setProducts(totalProducts);
-		form.resetFields();
-	};
+	console.log('Lista', productsList);
 
 	return (
 		<DashboardLayout>
@@ -313,155 +289,25 @@ export default function Products() {
 							display: 'flex',
 						}}
 					>
-						<Button style={{ marginRight: '1rem' }}>
+						<Button style={{ marginRight: '1rem' }} type="primary">
 							<Link href="products/import">Importar</Link>
 						</Button>
-						<Button>
+						<Button type="primary">
 							<Link href="products/add">Agregar</Link>
 						</Button>
 					</Col>
 				</Row>
 				<SelectBusiness />
-				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
-					<Collapse.Panel header="Filtros">
-						<Row style={{ justifyContent: 'center' }}>
-							<Form
-								form={form}
-								style={{ maxWidth: '900px' }}
-								name="productFilters"
-								onFinish={onSubmit}
-								labelCol={{ span: 10 }}
-							>
-								<Row>
-									<Col span={12}>
-										<Form.Item
-											label="Nombre"
-											style={{ padding: '0 .5rem' }}
-											name="nameProduct"
-										>
-											<Input allowClear />
-										</Form.Item>
-									</Col>
-									<Col span={12}>
-										<Form.Item
-											label="Código"
-											name="barCode"
-											style={{ padding: '0 .5rem' }}
-										>
-											<Input allowClear />
-										</Form.Item>
-									</Col>
-								</Row>
-								<Row>
-									<Col span={12}>
-										<Form.Item
-											label="Precio mínimo"
-											name="minPrice"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Input type="number" allowClear />
-										</Form.Item>
-									</Col>
-									<Col span={12}>
-										<Form.Item
-											label="Precio máximo"
-											name="maxPrice"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Input type="number" allowClear />
-										</Form.Item>
-									</Col>
-								</Row>
-								<Row>
-									<Col span={12}>
-										<Form.Item
-											label="Categoría"
-											name="nameFamily"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Select allowClear>
-												{categories &&
-													categories.map((c, i) => (
-														<Select.Option
-															key={
-																c.idProductFamily
-															}
-															value={
-																c.idProductFamily
-															}
-														>
-															{c.name}
-														</Select.Option>
-													))}
-											</Select>
-										</Form.Item>
-									</Col>
-									<Col span={12}>
-										<Form.Item
-											label="Marca"
-											name="nameSubFamily"
-											style={{
-												padding: '0 .5rem',
-											}}
-										>
-											<Select allowClear>
-												{brands &&
-													brands.map((b, i) => (
-														<Select.Option
-															key={
-																b.idProductSubFamily
-															}
-															value={
-																b.idProductSubFamily
-															}
-														>
-															{b.nameSubFamily}
-														</Select.Option>
-													))}
-											</Select>
-										</Form.Item>
-									</Col>
-								</Row>
-								<Row>
-									<Col span={12}>
-										<Form.Item
-											wrapperCol={{
-												span: 12,
-												offset: 12,
-											}}
-										>
-											<Button block onClick={onReset}>
-												Limpiar
-											</Button>
-										</Form.Item>
-									</Col>
-									<Col span={12}>
-										<Form.Item
-											wrapperCol={{ span: 12, offset: 0 }}
-										>
-											<Button
-												htmlType="submit"
-												type="primary"
-												block
-											>
-												Buscar
-											</Button>
-										</Form.Item>
-									</Col>
-								</Row>
-							</Form>
-						</Row>
-					</Collapse.Panel>
-				</Collapse>
+
+				<ProductFilter
+					setQuery={setQuery}
+					initialValues={INITIAL_QUERY_VALUES}
+					categories={categories}
+					brands={brands}
+				/>
 				<Table
 					columns={columns}
-					dataSource={products}
+					dataSource={productsList}
 					loading={loading}
 				/>
 			</div>
@@ -471,14 +317,18 @@ export default function Products() {
 				onCancel={() => setDeleteModalOpen(false)}
 				onOk={handleDelete}
 				footer={[
+					<Button key="cancel" onClick={() => setDeleteOpen(false)}>
+						Cancelar
+					</Button>,
 					<Button
-						key="cancel"
-						onClick={() => setDeleteOpen(false)}
-					/>,
-					<Button key="delete" onClick={handleDelete} />,
+						key="delete"
+						danger
+						type="primary"
+						onClick={handleDelete}
+					>
+						Eliminar
+					</Button>,
 				]}
-				okText="Eliminar"
-				cancelText="Cancelar"
 			>
 				<p>
 					Estas seguro de que deseas eliminar

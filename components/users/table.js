@@ -1,32 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { DeleteOutlined, EyeTwoTone } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Space, Button, Table, Modal, Pagination } from 'antd';
 import PropTypes from 'prop-types';
 
 import { profiles } from '../../pages/dashboard/users';
-import { getAdmins, getFullAccess, getSellers } from '../../services/users';
 import { addKeys } from '../../util/setKeys';
 import { users } from '../../util/database';
+import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 
-const UsersTable = ({ profile }) => {
+const UsersTable = ({ users }) => {
 	const columns = [
 		{
 			title: 'Nombre',
-			dataIndex: 'firstName',
+			dataIndex: 'fullname',
 			key: 0,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Apellido',
-			dataIndex: 'lastName',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
 			title: 'Correo',
-			dataIndex: 'email',
+			dataIndex: 'mail',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
@@ -34,7 +28,7 @@ const UsersTable = ({ profile }) => {
 			title: 'Empresa',
 			dataIndex: 'business',
 			key: 3,
-			render: (text) => <p>{text}</p>,
+			render: () => <p>{selectedBusiness.nombre}</p>,
 		},
 		{
 			title: 'Acciones',
@@ -44,14 +38,20 @@ const UsersTable = ({ profile }) => {
 					<Button
 						type="primary"
 						onClick={() => {
-							router.push(`users/${_.id}`);
+							router.push(`users/${_.idUser}`);
 							setLoading(true);
 						}}
 					>
 						<EyeTwoTone />
 					</Button>
-					<Button type="primary" danger>
-						<DeleteOutlined />
+					<Button
+						onClick={() => {
+							router.push(
+								`/dashboard/users/update/${_.idUser}`
+							);
+						}}
+					>
+						<EditOutlined />
 					</Button>
 				</Space>
 			),
@@ -60,30 +60,9 @@ const UsersTable = ({ profile }) => {
 
 	const router = useRouter();
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState();
 	const [page, setPage] = useState();
-
-	useEffect(() => {
-		setLoading(true);
-		if (profile === profiles.seller) {
-			addKeys(users);
-			setData(users);
-			// getSellers(null, page).then((response) => {
-			// 	//setPage(response.page);
-			// });
-		} else if (profile === profiles.fullAccess) {
-			addKeys(users);
-			setData(users);
-			// getFullAccess().then((response) => {});
-		} else if (profile === profiles.admin) {
-			addKeys(users);
-			setData(users);
-			// getAdmins().then((response) => {});
-		}
-		setLoading(false);
-	}, [profile, page]);
-
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -95,26 +74,20 @@ const UsersTable = ({ profile }) => {
 		setIsModalOpen(false);
 	};
 
+	const { selectedBusiness } = useBusinessProvider();
+
+	useEffect(() => {
+		if (users) {
+			setLoading(false);
+		}
+	}, [users]);
 
 	return (
 		<div>
-			<h1
-				style={{ fontSize: '2rem', color: '#fff', textAlign: 'center' }}
-			>
-				{profile === profiles.admin
-					? 'Administradores'
-					: profile === profiles.seller
-					? 'Vendedores'
-					: 'Full acceso'}
-			</h1>
 			<Table
 				columns={columns}
-				dataSource={data}
+				dataSource={users}
 				loading={loading}
-				// pagination={{
-				// 	defaultCurrent: page || 1,
-				// 	total: data?.totalPages * 10,
-				// }}
 				onChange={(some) => setPage(some.current)}
 			/>
 			<Modal
@@ -132,7 +105,7 @@ const UsersTable = ({ profile }) => {
 };
 
 UsersTable.propTypes = {
-	profile: PropTypes.string.isRequired,
+	users: PropTypes.array,
 };
 
 export default UsersTable;

@@ -10,7 +10,7 @@ export function useRequest() {
 
 	const requestHandler = {
 		get: async (route, params) => {
-			console.log(route);
+			console.log(`${ip}:${generalContext.api_port}${route}`);
 			try {
 				const httpsAgent = new https.Agent({
 					rejectUnauthorized: false,
@@ -30,7 +30,6 @@ export function useRequest() {
 
 				return right(Result.ok(response.data));
 			} catch (error) {
-				console.log(error);
 				return left(Result.fail(error));
 			}
 		},
@@ -50,6 +49,7 @@ export function useRequest() {
 
 				return right(Result.ok(response.data));
 			} catch (error) {
+				console.log(error);
 				return left(Result.fail(error));
 			}
 		},

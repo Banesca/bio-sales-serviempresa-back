@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-import { Button, List } from 'antd';
+import { List } from 'antd';
 import {
 	ArrowLeftOutlined,
 	CheckCircleOutlined,
@@ -10,7 +10,6 @@ import {
 } from '@ant-design/icons';
 
 import Loading from '../../../components/loading';
-import { getProductById } from '../../../services/products';
 import DashboardLayout from '../../../components/layout';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
@@ -36,45 +35,45 @@ const Product = () => {
 
 	const getImageRequest = async (image) => {
 		const res = await requestHandler.get(`/product/${image}`);
+		console.log('Image', res);
 		if (res.isLeft()) {
 			setLoading(false);
-			return console.log('error');
+			return;
 		}
-		console.log(res.value.getValue());
 		setLoading(false);
 		//set(res.value.getValue().data);
 	};
 
 	const getCategoryRequest = async (id) => {
 		const res = await requestHandler.get(`/api/v2/family/get/${id}`);
+		console.log('Category', res);
 		if (res.isLeft()) {
-			return console.log('error');
+			return;
 		}
 		const value = res.value.getValue().data;
-		console.log('Category', value);
 		setCategory(value);
 		//set(res.value.getValue().data);
 	};
 
 	const getBrandRequest = async (id) => {
 		const res = await requestHandler.get(`/api/v2/subfamily/get/${id}`);
+		console.log('Brands', res);
 		if (res.isLeft()) {
-			return console.log('error');
+			return;
 		}
 		const value = res.value.getValue().data;
-		console.log('Brand', value);
 		setBrand(value);
 		//set(res.value.getValue().data);
 	};
 
 	const getProductRequest = async (id) => {
 		const res = await requestHandler.get(`/api/v2/product/get/${id}`);
+		console.log('Product', res);
 		if (res.isLeft()) {
 			setLoading(false);
-			return console.log('ERROR', res.value.getErrorValue());
+			return;
 		}
 		const value = res.value.getValue().data;
-		console.log('PRODUCT', value);
 		setProduct(value);
 		getCategoryRequest(value.idProductFamilyFk);
 		getBrandRequest(value.idProductSubFamilyFk);
@@ -87,6 +86,16 @@ const Product = () => {
 			getProductRequest(id);
 		}
 	}, [generalContext]);
+
+	useEffect(() => {
+		console.log(product);
+	}, [product]);
+
+	if (loading) {
+		<DashboardLayout>
+			<Loading isLoading={loading} />
+		</DashboardLayout>;
+	}
 
 	return (
 		<DashboardLayout>
@@ -128,7 +137,7 @@ const Product = () => {
 					</List.Item>
 					<List.Item>
 						<p>Precio</p>
-						<p>{product?.priceSale}</p>
+						<p>$ {product?.priceSale}</p>
 					</List.Item>
 					<List.Item>
 						<p>Categoría</p>
@@ -162,15 +171,15 @@ const Product = () => {
 						</div>
 					</List.Item>
 
-					{product?.isOnPromotion && (
+					{product?.isPromo == '1' && (
 						<List.Item>
 							<p>Precio de Promoción</p>
-							<p>{product?.promotionPrice}</p>
+							<p>$ {product.marketPrice}</p>
 						</List.Item>
 					)}
 					<List.Item>
 						<p>Stock</p>
-						<p>{product?.stock}</p>
+						<p>{product?.stock.length > 0 ? product.stock[0].stock : '0'}</p>
 					</List.Item>
 					<List.Item
 						style={{

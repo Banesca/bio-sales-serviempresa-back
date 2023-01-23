@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import {
 	CheckCircleOutlined,
@@ -14,64 +14,57 @@ import DashboardLayout from '../../../components/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
 import Loading from '../../../components/loading';
 import { importProducts } from '../../../services/products';
+import { GeneralContext } from '../../_app';
+import { useRequest } from '../../../hooks/useRequest';
+import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
+import { notification } from 'antd';
+import { useRouter } from 'next/router';
 
 const ImportProducts = () => {
 	const columns = [
 		{
 			title: 'Nombre',
-			dataIndex: 'name',
+			dataIndex: 'nameProduct',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Código',
-			dataIndex: 'code',
+			dataIndex: 'barCode',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Precio',
-			dataIndex: 'price',
+			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) =>
-				record.isOnPromotion ? (
-					<p style={{ color: 'green' }}>{text.toFixed(2)}$</p>
+				record.isPromo == '1' ? (
+					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
 				) : (
-					<p>{text.toFixed(2)}$</p>
+					<p>$ {text}</p>
 				),
 		},
 		{
-			title: 'Empresa',
-			dataIndex: 'business',
-			key: 4,
+			title: 'Categoria',
+			dataIndex: 'nameFamily',
+			key: 5,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Marca',
-			dataIndex: 'brand',
+			dataIndex: 'nameSubFamily',
 			key: 5,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Proveedor',
-			dataIndex: 'provider',
-			key: 6,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Stock',
-			dataIndex: 'stock',
-			key: 6,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Promoción',
-			dataIndex: 'isOnPromotion',
+			dataIndex: 'isPromo',
 			key: 5,
 			render: (bool) => {
 				return (
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool ? (
+						{bool == '1' ? (
 							<CheckCircleOutlined
 								style={{ fontSize: '1.5rem', color: 'green' }}
 							/>
@@ -86,12 +79,12 @@ const ImportProducts = () => {
 		},
 		{
 			title: 'Destacado',
-			dataIndex: 'isFeature',
+			dataIndex: 'is5050',
 			key: 5,
 			render: (bool) => {
 				return (
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool ? (
+						{bool == '1' ? (
 							<CheckCircleOutlined
 								style={{ fontSize: '1.5rem', color: 'green' }}
 							/>
@@ -135,19 +128,6 @@ const ImportProducts = () => {
 		});
 	};
 
-	// Product to delete
-	const [currentProduct, setCurrentProduct] = useState();
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	// control files
-	const [fileList, setFileList] = useState([]);
-	const [selectedFile, setSelectedFile] = useState(null);
-
-	// Table's Data
-	const [data, setData] = useState([]);
-
-	const [loading, setLoading] = useState(false);
-
 	const handleSeeModal = (product = null) => {
 		setCurrentProduct(product);
 		if (!product) {
@@ -166,21 +146,139 @@ const ImportProducts = () => {
 		handleSeeModal();
 	};
 
+	const generalContext = useContext(GeneralContext);
+	const { selectedBusiness } = useBusinessProvider();
+	const { requestHandler } = useRequest();
+
+	// Product to delete
+	const [currentProduct, setCurrentProduct] = useState();
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+	//Notification
+	const [notificationOpen, setNotificationOpen] = useState(false);
+
+	// control files
+	const [fileList, setFileList] = useState([]);
+	const [selectedFile, setSelectedFile] = useState(null);
+
+	// Table's Data
+	const [data, setData] = useState([]);
+
+	const [loading, setLoading] = useState(false);
+
+	const [categories, setCategories] = useState([]);
+	const [brands, setBrands] = useState([]);
+
+	const [rejectedBrands, setRejectedBrands] = useState([]);
+	const [rejectedCategories, setRejectedCategories] = useState([]);
+
+	const [api, contextHolder] = notification.useNotification();
+
+	const categoryListRequest = async (business = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/family/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().response;
+		setCategories(value);
+	};
+
+	const brandListRequest = async (business = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/subfamily/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		console.log('BRAND', response.value.getValue());
+		const value = response.value.getValue().response;
+		setBrands(value);
+	};
+
+	useEffect(() => {
+		if (selectedBusiness && generalContext) {
+			setLoading(true);
+			categoryListRequest(selectedBusiness.idSucursal);
+			brandListRequest(selectedBusiness.idSucursal);
+			setLoading(false);
+		}
+	}, [selectedBusiness, generalContext]);
+
 	const getFileExtension = (filename) => {
 		return filename.split('.').pop();
+	};
+
+	const convertExcelDataToAPI = (rows) => {
+		let uploadData = [];
+		for (const row of rows) {
+			let valid = true;
+			if (!existCategory(row.categoria)) {
+				setRejectedCategories((prev) => [...prev, row.categoria]);
+				valid = false;
+			}
+			if (!existBrand(row.marca)) {
+				// rejectedBrands.push(row.marca);
+				setRejectedBrands((prev) => [...prev, row.marca]);
+				valid = false;
+			}
+			if (!valid) {
+				return;
+			}
+			const obj = {
+				nameFamily: row.categoria,
+				nameSubFamily: row.marca,
+				nameProduct: row.nombre,
+				pricePurchase: 0,
+				priceSale: row.precio,
+				marketPrice: row.precio_promocion,
+				idSucursalFk: selectedBusiness.idSucursal,
+				idTypeProductFk: 1,
+				isPromo: row.en_promocion ? '1' : '0',
+				is5050: row.destacado ? '1' : '0',
+				linkPago: '',
+				apply_inventory: true,
+				barCode: String(row.codigo),
+				nameKitchen: 'descripcion',
+				idProductFamily: 1,
+				idProductSubFamily: 1,
+			};
+			uploadData.push(obj);
+		}
+		return uploadData;
+	};
+
+	const existCategory = (name) => {
+		const filter = categories.filter(
+			(c) => c.name.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
+	};
+
+	const existBrand = (name) => {
+		const filter = brands.filter(
+			(b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
 	};
 
 	const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });
 		let reader = new FileReader();
 		reader.readAsArrayBuffer(file);
-		reader.onload = (e) => {
+		reader.onload = async (e) => {
 			const workbox = XLSX.read(e.target.result, { type: 'buffer' });
 			const worksheetName = workbox.SheetNames[0];
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
-			addKeys(data);
-			setData(data);
+			const uploadData = await convertExcelDataToAPI(data);
+			// if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
+			// 	setNotificationOpen(true);
+			// }
+			addKeys(uploadData);
+			setData(uploadData);
+			console.log('DATA', uploadData);
 		};
 	};
 
@@ -203,7 +301,7 @@ const ImportProducts = () => {
 		if (newFileList[0].status == 'done') {
 			setLoading(true);
 			handleConvertFileToJson([selectedFile]);
-			message.success(`${newFileList[0].name} ha sido cargado`);
+			//message.success(`${newFileList[0].name} ha sido cargado`);
 		} else if (newFileList[0].status == 'error') {
 			message.error('Ha ocurrido un error');
 		}
@@ -220,17 +318,28 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log('format', formatData);
 
-		const response = await importProducts(formatData);
-
-		if (response.isLeft()) {
-			const error = response.value;
-			return message.error(error.getErrorValue());
+		setLoading(true);
+		const res = await requestHandler.post(`/api/v2/product/add/masive`, {
+			lista: formatData,
+		});
+		console.log(res);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
 		}
-
-		message.success(response.value.message);
+		message.success('Productos agregados exitosamente');
+		setData([]);
+		setRejectedBrands([]);
+		setRejectedCategories([]);
+		setFileList([]);
+		setLoading(false);
 	};
+
+	useEffect(() => {
+		if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
+			setNotificationOpen(true);
+		}
+	}, [rejectedBrands, rejectedCategories]);
 
 	return (
 		<>
@@ -276,7 +385,7 @@ const ImportProducts = () => {
 							}}
 						>
 							<Button
-								disabled={!data.length > 0}
+								disabled={!data?.length > 0}
 								onClick={handleSendData}
 							>
 								Cargar Datos
@@ -294,6 +403,41 @@ const ImportProducts = () => {
 					cancelText="Cancelar"
 				>
 					<p>Estas seguro de que deseas eliminar este producto</p>
+				</Modal>
+				<Modal
+					title="Notificación"
+					open={notificationOpen}
+					footer={[
+						<Button
+							onClick={() => setNotificationOpen(false)}
+							key="confirmar"
+							type="primary"
+						>
+							Confirmar
+						</Button>,
+					]}
+				>
+					<p>
+						Algunos productos no han sido cargados, ya que, hay
+						categorías y/o marcas que no están registradas, créalas
+						para cargar todos los productos.
+					</p>
+					{rejectedCategories && (
+						<p>
+							Crea las siguientes categorías{' '}
+							<strong style={{ color: 'red' }}>
+								{rejectedCategories.join(', ')}
+							</strong>
+						</p>
+					)}
+					{rejectedBrands && (
+						<p>
+							Crea las siguientes marcas{' '}
+							<strong style={{ color: 'red' }}>
+								{rejectedBrands.join(', ')}
+							</strong>
+						</p>
+					)}
 				</Modal>
 				<Loading isLoading={loading} />
 			</DashboardLayout>

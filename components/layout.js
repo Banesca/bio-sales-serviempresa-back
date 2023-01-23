@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 
 import { Layout, Menu } from 'antd';
 import {
-	CarryOutOutlined,
 	ImportOutlined,
-	ShopOutlined,
+	ProfileOutlined,
+	ShoppingCartOutlined,
+	ShoppingOutlined,
 	UserOutlined,
 	UsergroupAddOutlined,
 } from '@ant-design/icons';
 
 import Loading from './loading';
-import logo from '../public/assets/logo.svg';
 
 const { Header, Content, Sider } = Layout;
 
@@ -21,7 +20,17 @@ export default function DashboardLayout({ children }) {
 		{
 			key: '/dashboard/products',
 			label: 'Productos',
-			icon: React.createElement(CarryOutOutlined),
+			icon: React.createElement(ShoppingOutlined),
+		},
+		{
+			key: '/dashboard/categories',
+			label: 'Categorías',
+			icon: React.createElement(ProfileOutlined),
+		},
+		{
+			key: '/dashboard/brands',
+			label: 'Marcas',
+			icon: React.createElement(ProfileOutlined),
 		},
 		{
 			key: '/dashboard/users',
@@ -36,7 +45,7 @@ export default function DashboardLayout({ children }) {
 		{
 			key: '/dashboard/orders',
 			label: 'Pedidos',
-			icon: React.createElement(UserOutlined),
+			icon: React.createElement(ShoppingCartOutlined),
 		},
 		{
 			key: '/login',
@@ -60,7 +69,6 @@ export default function DashboardLayout({ children }) {
 		}
 		// logout
 		if (e.key === '/login') {
-			
 		}
 		localStorage.setItem('key', e.key);
 		router.push(e.key);
@@ -77,7 +85,9 @@ export default function DashboardLayout({ children }) {
 					alignItems: 'center',
 				}}
 			>
-				<Image src={logo} width={100} height={50} alt={'logo'} />
+				<p style={{ fontWeight: 'bolder', fontSize: '1.5rem' }}>
+					SiempreOL
+				</p>
 			</Header>
 			<Layout style={{ minHeight: 'fit-content' }}>
 				<Sider theme="light">

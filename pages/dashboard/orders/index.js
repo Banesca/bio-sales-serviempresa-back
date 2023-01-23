@@ -1,62 +1,94 @@
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Col, Collapse, Row } from 'antd';
-import { Button, Space } from 'antd';
-import { Modal } from 'antd';
-import { Table } from 'antd';
-import { useState } from 'react';
+import {
+	Col,
+	Collapse,
+	Row,
+	Button,
+	Space,
+	Modal,
+	Table,
+	Form,
+	Select,
+	DatePicker,
+} from 'antd';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/layout';
-import { Form } from 'antd';
-import { Select } from 'antd';
-import { DatePicker } from 'antd';
+import { useRequest } from '../../../hooks/useRequest';
+import { GeneralContext } from '../../_app';
+import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
+import Loading from '../../../components/loading';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import moment from 'moment';
 
 export default function OrdersPage() {
 	const columns = [
 		{
 			title: 'Numero de Orden',
-			dataIndex: 'rut',
+			dataIndex: 'numberOrden',
 			key: 0,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Vendedor',
-			dataIndex: 'rif',
+			dataIndex: 'fullname',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Cliente',
-			dataIndex: 'rif',
+			dataIndex: 'fullNameClient',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Estado',
-			dataIndex: 'rif',
+			title: 'Total',
+			dataIndex: 'totalBot',
 			key: 1,
-			render: (text) => <p>{text}</p>,
+			render: (text) => <p>$ {text || 0}</p>,
 		},
 		{
 			title: 'Acciones',
 			key: 5,
-			render: (_, index) => (
+			render: (_, record) => (
 				<Space size="middle">
-					<Button type="primary" onClick={() => handleSeeModal()}>
+					<Button
+						type="primary"
+						onClick={() =>
+							router.push(`/dashboard/orders/${_.idOrderH}`)
+						}
+					>
 						<EyeTwoTone />
 					</Button>
-					<Button type="primary">
-						<EditOutlined />
-					</Button>
-					<Button type="primary" danger>
-						<DeleteOutlined />
-					</Button>
+					{record.idStatusOrder !== 2 &&
+						record.idStatusOrder !== 4 && (
+							<Button
+								onClick={() =>
+									router.push(
+										`/dashboard/orders/update/${_.idOrderH}`
+									)
+								}
+							>
+								<EditOutlined />
+							</Button>
+						)}
 				</Space>
 			),
 		},
 	];
 
-	const data = [];
+	const router = useRouter();
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [environmentList, setEnvironmentList] = useState([]);
+	const [orders, setOrders] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	const [query, setQuery] = useState({
+		idStatusOrder: 0,
+		startDate: null,
+		endDate: null,
+	});
 
 	const handleSeeModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -65,6 +97,130 @@ export default function OrdersPage() {
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
+
+	const { requestHandler } = useRequest();
+
+	const { selectedBusiness } = useBusinessProvider();
+
+	const listByBusiness = async (id) => {
+		setLoading(true);
+		const res = await requestHandler.get(
+			`/api/v2/environment/listarPorSucursal/${id}`
+		);
+		if (res.isLeft()) {
+			setLoading(false);
+			return;
+		}
+		const value = res.value.getValue().data;
+		setEnvironmentList(value);
+		let dateStart = new Date(2023, 0, 1);
+		let dateEnd = new Date();
+		console.log(value[0]);
+		await getOrdersRequest({
+			idBranchFk: `${value[0]?.idBranchFk}`,
+			dateStart,
+			dateEnd,
+		});
+		setLoading(false);
+	};
+
+	const getOrdersRequest = async (data) => {
+		setLoading(true);
+		const res = await requestHandler.post('/api/v2/order/lite', data);
+		if (res.isLeft()) {
+			setLoading(false);
+			return;
+		}
+		const value = res.value.getValue().data;
+		setOrders(value);
+		setLoading(false);
+	};
+
+	const generalContext = useContext(GeneralContext);
+
+	useEffect(() => {
+		if (generalContext && selectedBusiness) {
+			listByBusiness(selectedBusiness.idSucursal);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [generalContext, selectedBusiness]);
+
+	// useEffect(() => {
+	// 	if (environmentList) {
+	// 		getOrdersRequest({
+	// 			idBranchFk: environmentList[0]?.idBranchFk,
+	// 			dateStart: new Date('2023-1-15'),
+	// 			dateEnd: new Date(),
+	// 		});
+	// 		getOrderStatus();
+	// 	}
+	// }, [environmentList]);
+
+	// get order status
+	const getOrderStatus = async () => {
+		const res = await requestHandler.get(`/api/v2/order/getStatusOrder`);
+		// console.log('Order Status', res);
+	};
+
+	const orderStatusToUse = [
+		{ idStatusOrder: 1, statusOrder: 'Recibido' },
+		{ idStatusOrder: 2, statusOrder: 'Cerrada' },
+		{ idStatusOrder: 3, statusOrder: 'Listo' },
+		{ idStatusOrder: 4, statusOrder: 'Cancelado' },
+	];
+
+	// Filters
+	const [filterForm] = Form.useForm();
+
+	const onReset = () => {
+		let dateStart = new Date(2023, 0, 1);
+		let dateEnd = new Date();
+		getOrdersRequest({
+			idBranchFk: `${environmentList[0].idBranchFk}`,
+			dateStart,
+			dateEnd,
+		});
+		setQuery({
+			idStatusOrder: 0,
+			startDate: null,
+			endDate: null,
+		});
+		filterForm.resetFields();
+	};
+
+	const handleSearch = async (values) => {
+		console.log('values', values);
+		//console.log('Dates', values.date[0].$d, values.date[0].$d);
+		setQuery({
+			idStatusOrder: values.idStatusOrder || 0,
+			startDate: values.date ? values.date[0]?.$d : null,
+			endDate: values.date ? values.date[1]?.$d : null,
+		});
+
+		if (values.date) {
+			console.log(environmentList, 'Env list');
+			await getOrdersRequest({
+				idBranchFk: `${environmentList[0].idBranchFk}`,
+				dateStart: values.date[0].$d,
+				dateEnd: values.date[1].$d,
+			});
+		}
+	};
+
+	const ordersList = useMemo(() => {
+		let list = orders;
+		if (query.idStatusOrder) {
+			list = list.filter((o) => o.idStatusOrder === query.idStatusOrder);
+		}
+		return list;
+	}, [query, orders]);
+
+	useEffect(() => {
+		// console.log('OrderList', ordersList);
+		// console.log('query', query);
+	}, [ordersList, query]);
+
+	// End Filters
 
 	return (
 		<DashboardLayout>
@@ -75,18 +231,38 @@ export default function OrdersPage() {
 					flexDirection: 'column',
 				}}
 			>
-				<h1
-					style={{
-						fontSize: '2rem',
-						color: '#fff',
-						textAlign: 'center',
-					}}
-				>
-					Pedidos
-				</h1>
+				<Row style={{ alignItems: 'center' }}>
+					<Col offset={6} span={12}>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '2rem',
+								color: '#fff',
+							}}
+						>
+							Pedidos
+						</h1>
+					</Col>
+					<Col
+						span={6}
+						style={{
+							justifyContent: 'center',
+							display: 'flex',
+						}}
+					>
+						<Button type="primary">
+							<Link href="orders/add">Agregar</Link>
+						</Button>
+					</Col>
+				</Row>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
-						<Form style={{ maxWidth: '900px' }}>
+						<Form
+							form={filterForm}
+							onFinish={handleSearch}
+							style={{ maxWidth: '900px' }}
+							labelCol={{ span: 8 }}
+						>
 							<Row
 								style={{
 									justifyContent: 'space-between',
@@ -94,37 +270,72 @@ export default function OrdersPage() {
 							>
 								<Col span={12}>
 									<Form.Item
-										label="Empresa"
+										label="Estado"
+										name="idStatusOrder"
 										style={{
 											padding: '0 .5rem',
 										}}
 									>
-										<Select
-											allowClear
-											placeholder="Empresa"
-										></Select>
+										<Select>
+											{orderStatusToUse.map((o) => (
+												<Select.Option
+													key={o.idStatusOrder}
+													value={o.idStatusOrder}
+												>
+													{o.statusOrder}
+												</Select.Option>
+											))}
+										</Select>
 									</Form.Item>
 								</Col>
 								<Col span={12}>
 									<Form.Item
 										label="Fecha"
+										name="date"
 										style={{
 											padding: '0 .5rem',
 										}}
 									>
-										<DatePicker.RangePicker></DatePicker.RangePicker>
+										<DatePicker.RangePicker />
 									</Form.Item>
 								</Col>
 							</Row>
-							<Form.Item>
-								<Button htmlType="submit" type="primary">
-									Buscar
-								</Button>
-							</Form.Item>
+							<Row>
+								<Col span={12}>
+									<Form.Item
+										wrapperCol={{ offset: 8, span: 12 }}
+									>
+										<Button
+											htmlType="submit"
+											block
+											onClick={onReset}
+										>
+											Limpiar
+										</Button>
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item
+										wrapperCol={{ offset: 8, span: 12 }}
+									>
+										<Button
+											htmlType="submit"
+											type="primary"
+											block
+										>
+											Buscar
+										</Button>
+									</Form.Item>
+								</Col>
+							</Row>
 						</Form>
 					</Collapse.Panel>
 				</Collapse>
-				<Table columns={columns} dataSource={data} />
+				<Table
+					columns={columns}
+					dataSource={ordersList}
+					loading={loading}
+				/>
 			</div>
 			<Modal
 				title={'Detail'}
@@ -136,6 +347,7 @@ export default function OrdersPage() {
 				<p>Some contents...</p>
 				<p>Some contents...</p>
 			</Modal>
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 }

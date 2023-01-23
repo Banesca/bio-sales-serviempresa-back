@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
@@ -15,7 +14,7 @@ const Loading = ({ isLoading }) => {
 				position: 'absolute',
 				display: 'flex',
 				width: '100%',
-				height: '100%',
+				height: '100vh',
 				top: 0,
 				left: 0,
 				alignItems: 'center',

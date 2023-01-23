@@ -4,7 +4,6 @@ import Image from 'next/image';
 
 import { Input, Form, Button, Layout, message } from 'antd';
 
-import { login } from '../services/auth';
 import logoImage from '../public/assets/logo.svg';
 import Loading from '../components/loading';
 import { GeneralContext } from './_app';
@@ -63,6 +62,7 @@ export default function Login() {
 			return handleLoginError('Usuario con contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
+		localStorage.setItem('userId', value.idUser);
 		localStorage.setItem('accessToken', value.token);
 		localStorage.setItem('business', JSON.stringify(value.branch));
 		localStorage.setItem(
@@ -79,10 +79,7 @@ export default function Login() {
 	const generalContext = useContext(GeneralContext);
 
 	useEffect(() => {
-		localStorage.setItem(
-			'apiURL',
-			`${ip}:${generalContext.api_port}`
-		);
+		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
 	}, [generalContext.api_port]);
 
 	return (
@@ -100,14 +97,17 @@ export default function Login() {
 						paddingInline: '1rem',
 					}}
 				>
-					<Image
+					{/* <Image
 						src={logoImage}
 						width={300}
 						height={150}
 						alt="logo"
 						style={{ marginBottom: '2rem' }}
-					></Image>
-					<h1 style={{ color: 'white' }}>Iniciar Sesión</h1>
+					></Image> */}
+					<h1 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+						SiempreOL
+					</h1>
+					<h2 style={{ color: 'white' }}>Iniciar Sesión</h2>
 					<Form
 						name="login"
 						autoComplete="off"

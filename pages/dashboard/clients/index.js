@@ -1,31 +1,52 @@
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Input } from 'antd';
-import { Button, Space } from 'antd';
-import { Modal } from 'antd';
-import { Table } from 'antd';
-import { useState } from 'react';
+import {
+	Col,
+	Collapse,
+	Input,
+	Row,
+	Button,
+	Space,
+	Modal,
+	Table,
+	Form,
+} from 'antd';
+import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/layout';
-import { Form } from 'antd';
-import Router, { useRouter } from 'next/router';
-import { clients } from '../../../util/database';
+import { useRouter } from 'next/router';
+import { useRequest } from '../../../hooks/useRequest';
+import { GeneralContext } from '../../_app';
+import Link from 'next/link';
+import Loading from '../../../components/loading';
 
 export default function ClientsPage() {
 	const columns = [
 		{
 			title: 'Razón social',
-			dataIndex: 'rut',
+			dataIndex: 'fullNameClient',
 			key: 0,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Rif',
-			dataIndex: 'rif',
+			title: 'Nombre',
+			dataIndex: 'nameClient',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
+			title: 'Dirección',
+			dataIndex: 'address',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Teléfono',
+			dataIndex: 'phoneClient',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
 			title: 'Acciones',
-			key: 5,
+			key: 4,
 			render: (_, index) => (
 				<Space size="middle">
 					<Button
@@ -44,7 +65,17 @@ export default function ClientsPage() {
 
 	const router = useRouter();
 
+	const [loading, setLoading] = useState(true);
+	// Modal
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	// clients
+	const [clients, setClients] = useState([]);
+	const [query, setQuery] = useState({
+		fullNameClient: '',
+		phoneClient: '',
+		address: '',
+	});
 
 	const handleSeeModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -52,6 +83,61 @@ export default function ClientsPage() {
 
 	const handleOk = () => {
 		setIsModalOpen(false);
+	};
+
+	const { requestHandler } = useRequest();
+	const generalContext = useContext(GeneralContext);
+
+	const getClientsRequest = async () => {
+		setLoading(true);
+		const res = await requestHandler.post(
+			'/api/v2/order/get/clientsAll',
+			{}
+		);
+		if (res.isLeft()) {
+			setLoading(false);
+			return;
+		}
+		setClients(res.value.getValue().response);
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		if (generalContext) {
+			getClientsRequest();
+		}
+	}, [generalContext]);
+
+	const [form] = Form.useForm();
+
+	const onReset = () => {
+		setQuery({
+			fullNameClient: '',
+			phoneClient: '',
+			address: '',
+		});
+		form.resetFields();
+	};
+
+	const clientsList = useMemo(() => {
+		let list = clients;
+		for (const [key, value] of Object.entries(query)) {
+			console.log([key, value]);
+			if (value) {
+				list = list.filter((c) =>
+					c[key]?.toLowerCase().includes(query[key].toLowerCase())
+				);
+			}
+		}
+		return list;
+	}, [query, clients]);
+
+	const handleSearch = (values) => {
+		setQuery({
+			fullNameClient: values.fullNameClient || '',
+			phoneClient: values.phoneClient || '',
+			address: values.address || '',
+		});
 	};
 
 	return (
@@ -63,26 +149,96 @@ export default function ClientsPage() {
 					flexDirection: 'column',
 				}}
 			>
-				<h1
-					style={{
-						textAlign: 'center',
-						fontSize: '2rem',
-						color: '#fff',
-					}}
-				>
-					Clientes
-				</h1>
-				<div style={{ display: 'flex', justifyContent: 'center' }}>
-					<Form labelCol={{ span: '4' }} style={{ width: '600px' }}>
-						<Form.Item name="rut" label="Razon social">
-							<Input.Search />
-						</Form.Item>
-						<Form.Item name="rif" label="Rif">
-							<Input.Search />
-						</Form.Item>
-					</Form>
-				</div>
-				<Table columns={columns} dataSource={clients} />
+				<Row style={{ alignItems: 'center' }}>
+					<Col offset={6} span={12}>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '2rem',
+								color: '#fff',
+							}}
+						>
+							Clientes
+						</h1>
+					</Col>
+				</Row>
+				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
+					<Collapse.Panel header="Filtros">
+						<Row style={{ justifyContent: 'center' }}>
+							<Form
+								labelCol={{ span: 8 }}
+								style={{ width: '800px' }}
+								form={form}
+								onFinish={handleSearch}
+							>
+								<Row>
+									<Col span={12}>
+										<Form.Item
+											name="fullNameClient"
+											label="Razon social"
+										>
+											<Input type="text" />
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											name="phoneClient"
+											label="Teléfono"
+										>
+											<Input type="text" />
+										</Form.Item>
+									</Col>
+								</Row>
+								<Row>
+									<Col span={12}>
+										<Form.Item
+											name="address"
+											label="Dirección"
+										>
+											<Input type="text" />
+										</Form.Item>
+									</Col>
+									{/* <Col span={12}>
+										<Form.Item name="rif" label="Rif">
+											<Input type="text" />
+										</Form.Item>
+									</Col> */}
+								</Row>
+								<Row>
+									<Col span={12}>
+										<Form.Item
+											wrapperCol={{
+												span: 12,
+												offset: 8,
+											}}
+										>
+											<Button onClick={onReset} block>
+												Limpiar
+											</Button>
+										</Form.Item>
+									</Col>
+									<Col span={12}>
+										<Form.Item
+											wrapperCol={{
+												span: 12,
+												offset: 8,
+											}}
+										>
+											<Button
+												htmlType="submit"
+												type="primary"
+												block
+											>
+												Buscar
+											</Button>
+										</Form.Item>
+									</Col>
+								</Row>
+							</Form>
+						</Row>
+					</Collapse.Panel>
+				</Collapse>
+				<Table columns={columns} dataSource={clientsList} />
 			</div>
 			<Modal
 				title={'Detail'}
@@ -94,6 +250,7 @@ export default function ClientsPage() {
 				<p>Some contents...</p>
 				<p>Some contents...</p>
 			</Modal>
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 }
