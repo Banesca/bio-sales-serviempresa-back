@@ -69,6 +69,7 @@ export default function DashboardLayout({ children }) {
 		}
 		// logout
 		if (e.key === '/login') {
+			localStorage.removeItem('accessToken');
 		}
 		localStorage.setItem('key', e.key);
 		router.push(e.key);

@@ -1,10 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-
 import { Input, Form, Button, Layout, message } from 'antd';
-
-import logoImage from '../public/assets/logo.svg';
 import Loading from '../components/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -97,17 +93,18 @@ export default function Login() {
 						paddingInline: '1rem',
 					}}
 				>
-					{/* <Image
-						src={logoImage}
-						width={300}
-						height={150}
-						alt="logo"
-						style={{ marginBottom: '2rem' }}
-					></Image> */}
-					<h1 style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+					<h1
+						style={{
+							fontWeight: 'bold',
+							fontSize: '4rem',
+							color: '#eee',
+						}}
+					>
 						SiempreOL
 					</h1>
-					<h2 style={{ color: 'white' }}>Iniciar Sesión</h2>
+					<h2 style={{ color: 'white', fontSize: '2rem' }}>
+						Iniciar Sesión
+					</h2>
 					<Form
 						name="login"
 						autoComplete="off"

@@ -3,11 +3,11 @@ import { Select } from 'antd';
 import { Col, Form } from 'antd';
 import { Collapse, Row } from 'antd';
 
-const ProductFilter = ({ setQuery, initialValues, categories, brands }) => {
+const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 	const [form] = Form.useForm();
 
 	const onReset = () => {
-		setQuery(initialValues);
+		clean();
 		form.resetFields();
 	};
 

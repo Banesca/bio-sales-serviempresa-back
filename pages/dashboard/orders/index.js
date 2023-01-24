@@ -38,13 +38,30 @@ export default function OrdersPage() {
 		{
 			title: 'Cliente',
 			dataIndex: 'fullNameClient',
-			key: 1,
+			key: 2,
 			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Estado',
+			dataIndex: 'statusOrder',
+			key: 3,
+			render: (text, record) => {
+				switch(record.idStatusOrder) {
+					case 1:
+						return <p style={{ color: '#0984e3'}} >{text}</p>
+					case 2:
+						return <p style={{ color: '#00b894'}} >{text}</p>
+					case 3:
+						return <p style={{ color: '#0984e3'}} >{text}</p>
+					case 4:
+						return <p style={{ color: '#d63031'}} >{text}</p>
+				}
+			},
 		},
 		{
 			title: 'Total',
 			dataIndex: 'totalBot',
-			key: 1,
+			key: 4,
 			render: (text) => <p>$ {text || 0}</p>,
 		},
 		{

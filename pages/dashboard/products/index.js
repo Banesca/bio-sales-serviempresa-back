@@ -1,17 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-
-import {
-	Col,
-	Input,
-	Row,
-	Table,
-	Space,
-	Button,
-	Select,
-	Collapse,
-	Form,
-	Modal,
-} from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import { Col, Row, Table, Space, Button, Modal } from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -28,9 +16,9 @@ import { GeneralContext } from '../../_app';
 import { addKeys } from '../../../util/setKeys';
 import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
-import Loading from '../../../components/loading';
 import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
+import { useProductFilter } from '../../../components/products/useProductFilter';
 
 export default function Products() {
 	const router = useRouter();
@@ -118,21 +106,10 @@ export default function Products() {
 	const generalContext = useContext(GeneralContext);
 
 	// Data
-	const [products, setProducts] = useState([]);
-
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
 
-	const INITIAL_QUERY_VALUES = {
-		nameProduct: '',
-		barCode: '',
-		minPrice: 0,
-		maxPrice: 0,
-		nameFamily: '',
-		nameSubFamily: '',
-	};
-
-	const [query, setQuery] = useState(INITIAL_QUERY_VALUES);
+	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
 	const { requestHandler } = useRequest();
 
@@ -150,7 +127,7 @@ export default function Products() {
 		}
 		const value = response.value.getValue().data;
 		addKeys(value);
-		setProducts(value);
+		setProduct(value);
 		setLoading(false);
 	};
 
@@ -224,43 +201,6 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
-	const productsList = useMemo(() => {
-		let list = products;
-		if (query.nameProduct) {
-			list = list.filter((p) =>
-				p.nameProduct
-					.toLowerCase()
-					.includes(query.nameProduct.toLowerCase())
-			);
-		}
-		if (query.barCode) {
-			list = list.filter((p) => {
-				if (!p.barCode) {
-					return;
-				}
-				return p.barCode.includes(query.barCode);
-			});
-		}
-		if (query.minPrice) {
-			list = list.filter((p) => p.priceSale > Number(query.minPrice));
-		}
-		if (query.maxPrice) {
-			list = list.filter((p) => p.priceSale < Number(query.maxPrice));
-		}
-		if (query.nameFamily) {
-			console.log('filter category');
-			list = list.filter((p) => p.idProductFamily === query.nameFamily);
-		}
-		if (query.nameSubFamily) {
-			list = list.filter(
-				(p) => p.idProductSubFamily === query.nameSubFamily
-			);
-		}
-		return list;
-	}, [products, query]);
-
-	console.log('Lista', productsList);
-
 	return (
 		<DashboardLayout>
 			<div
@@ -301,13 +241,13 @@ export default function Products() {
 
 				<ProductFilter
 					setQuery={setQuery}
-					initialValues={INITIAL_QUERY_VALUES}
+					clean={clean}
 					categories={categories}
 					brands={brands}
 				/>
 				<Table
 					columns={columns}
-					dataSource={productsList}
+					dataSource={filtered()}
 					loading={loading}
 				/>
 			</div>

@@ -7,12 +7,14 @@ import axios from 'axios';
 import { ipBackOffice } from '../util/environment';
 import Loading from '../components/loading';
 import { BusinessProvider } from '../hooks/useBusinessProvider';
+import { useRouter } from 'next/router';
 
 export const GeneralContext = createContext();
 
 function MyApp({ Component, pageProps }) {
 	const [generalData, setGeneralData] = useState({});
 	const [loading, setLoading] = useState(true);
+	const router = useRouter();
 
 	useEffect(() => {
 		async function setBusiness(business = 'demo') {
@@ -28,6 +30,14 @@ function MyApp({ Component, pageProps }) {
 		setBusiness();
 		setLoading(false);
 	}, []);
+
+	useEffect(() => {
+		const path = router.pathname;
+		if (path.includes('/dashboard')) {
+			const token = localStorage.getItem('accessToken');
+			!token && router.push('/login');
+		}
+	}, [router.pathname]);
 
 	return (
 		<ConfigProvider

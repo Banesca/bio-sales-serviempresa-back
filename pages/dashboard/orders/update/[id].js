@@ -1,23 +1,38 @@
 import { useRouter } from 'next/router';
-import DashboardLayout from '../../../../components/layout';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { GeneralContext } from '../../../_app';
-import { useRequest } from '../../../../hooks/useRequest';
+import {
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useReducer,
+	useState,
+} from 'react';
 import {
 	ArrowLeftOutlined,
-	BorderBottomOutlined,
 	DeleteOutlined,
+	ExceptionOutlined,
+	ExclamationCircleFilled,
 } from '@ant-design/icons';
-import { Button, Col, Collapse, Row, Table } from 'antd';
-import { Typography } from 'antd';
-import { Form } from 'antd';
-import { Input } from 'antd';
-import { Select } from 'antd';
+import {
+	Button,
+	Col,
+	Row,
+	Table,
+	Form,
+	Input,
+	Space,
+	message,
+	Typography,
+} from 'antd';
+import DashboardLayout from '../../../../components/layout';
+import { GeneralContext } from '../../../_app';
+import { useRequest } from '../../../../hooks/useRequest';
 import ProductFilter from '../../../../components/products/productFilter';
 import { useBusinessProvider } from '../../../../hooks/useBusinessProvider';
 import { addKeys } from '../../../../util/setKeys';
-import { Space } from 'antd';
-import { message } from 'antd';
+import { Modal } from 'antd';
+import { useProductFilter } from '../../../../components/products/useProductFilter';
+import { List } from 'antd';
 
 const UpdateOrderPage = () => {
 	const AddColumns = [
@@ -83,7 +98,7 @@ const UpdateOrderPage = () => {
 						onChange={(e) => {
 							let obj = order;
 							obj.body[index].weight = e.target.value;
-							setOrder({...obj});
+							setOrder({ ...obj });
 						}}
 					/>
 					<Button
@@ -98,9 +113,13 @@ const UpdateOrderPage = () => {
 		{
 			title: 'Acciones',
 			key: 3,
-			render: () => (
+			render: (record) => (
 				<Space>
-					<Button type="primary" danger>
+					<Button
+						onClick={() => deleteModalOpen(record)}
+						type="primary"
+						danger
+					>
 						<DeleteOutlined />
 					</Button>
 				</Space>
@@ -111,22 +130,18 @@ const UpdateOrderPage = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
-	const INITIAL_QUERY_VALUES = {
-		nameProduct: '',
-		barCode: '',
-		minPrice: 0,
-		maxPrice: 0,
-		nameFamily: '',
-		nameSubFamily: '',
-	};
+	const { filtered, clean, setProduct, setQuery } = useProductFilter();
 
 	const [order, setOrder] = useState();
 	const [user, setUser] = useState();
 	const [loading, setLoading] = useState(true);
 	const [brands, setBrands] = useState([]);
 	const [categories, setCategories] = useState([]);
-	const [products, setProducts] = useState([]);
-	const [query, setQuery] = useState(INITIAL_QUERY_VALUES);
+	const [deleteOpen, setDeleteOpen] = useState(false);
+	const [currentProduct, setCurrentProduct] = useState();
+	const [total, setTotal] = useState(0);
+	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
+	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 
 	const handleReturn = () => {
 		router.push('/dashboard/orders');
@@ -191,13 +206,26 @@ const UpdateOrderPage = () => {
 		}
 		const value = response.value.getValue().data;
 		addKeys(value);
-		setProducts(value);
+		//dispatch({ type: FILTER_ACTIONS.GET_PRODUCTS, payload: value });
+		setProduct(value);
 		setLoading(false);
+	};
+
+	const calculateTotalRequest = async () => {
+		const res = await requestHandler.get(
+			`/api/v2/order/calculate/total/${id}`
+		);
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value.getValue();
+		setTotal(value.message[0].TOTAL);
 	};
 
 	const generalContext = useContext(GeneralContext);
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
+
 	useEffect(() => {
 		if (generalContext && selectedBusiness) {
 			getOrderRequest(id);
@@ -207,44 +235,14 @@ const UpdateOrderPage = () => {
 		}
 	}, [generalContext, id, selectedBusiness]);
 
-	const productsList = useMemo(() => {
-		let list = products;
-		if (query.nameProduct) {
-			list = list.filter((p) =>
-				p.nameProduct
-					.toLowerCase()
-					.includes(query.nameProduct.toLowerCase())
-			);
+	useEffect(() => {
+		if (generalContext) {
+			calculateTotalRequest();
 		}
-		if (query.barCode) {
-			list = list.filter((p) => {
-				if (!p.barCode) {
-					return;
-				}
-				return p.barCode.includes(query.barCode);
-			});
-		}
-		if (query.minPrice) {
-			list = list.filter((p) => p.priceSale > Number(query.minPrice));
-		}
-		if (query.maxPrice) {
-			list = list.filter((p) => p.priceSale < Number(query.maxPrice));
-		}
-		if (query.nameFamily) {
-			console.log('filter category');
-			list = list.filter((p) => p.idProductFamily === query.nameFamily);
-		}
-		if (query.nameSubFamily) {
-			list = list.filter(
-				(p) => p.idProductSubFamily === query.nameSubFamily
-			);
-		}
-		return list;
-	}, [products, query]);
+	}, [order]);
 
 	const handleUpdateProduct = async (record) => {
 		setLoading(true);
-		console.log(record);
 		const res = await requestHandler.post(
 			`/api/v2/order/product/setweight`,
 			{ idOrderB: record.idOrderB, weight: record.weight }
@@ -259,6 +257,24 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAddProduct = async (record) => {
+		let index = 0;
+		let found = false;
+		if (order.body) {
+			for (const o of order.body) {
+				if (o.idProduct === record.idProduct) {
+					found = true;
+					break;
+				}
+				index += 1;
+			}
+			if (found) {
+				let obj = order;
+				obj.body[index].weight += 1;
+				await handleUpdateProduct(obj.body[index]);
+				return;
+			}
+		}
+		setLoading(true);
 		const res = await requestHandler.post(`/api/v2/order/product/add`, {
 			idOrderHFk: id,
 			idProductFk: record.idProduct,
@@ -267,9 +283,94 @@ const UpdateOrderPage = () => {
 			priceProductOrder: record.priceSale,
 			quantityProduct: 1,
 		});
-		console.log(res);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
+		}
 		await getOrderRequest(id);
+		message.success('Producto agregado');
+		setLoading(false);
 	};
+
+	const handleRemoveProduct = async (record) => {
+		setLoading(true);
+		const idUser = localStorage.getItem('userId');
+		const res = await requestHandler.delete(
+			`/api/v2/order/product/delete/${record.idOrderB}/${idUser}`
+		);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
+		}
+		await getOrderRequest(id);
+		setLoading(false);
+		message.success('Producto removido');
+	};
+
+	const deleteModalOpen = (product) => {
+		setCurrentProduct(product);
+		setDeleteOpen(true);
+	};
+
+	const handleDelete = async () => {
+		await handleRemoveProduct(currentProduct);
+		setDeleteOpen(false);
+	};
+
+	const handleCloseOrder = async () => {
+		setLoading(true);
+		const res = await requestHandler.put(`/api/v2/order/close/${id}`, {
+			comments: '',
+			mpCash: total,
+			mpCreditCard: 0,
+			mpDebitCard: 0,
+			mpTranferBack: 0,
+			totalBot: total,
+			mpMpago: 0,
+			idCurrencyFk: 1,
+			listPaymentMethod: [],
+			isAfip: '0',
+			mpRappi: 0,
+			mpGlovo: 0,
+			mpUber: 0,
+			mpPedidosya: 0,
+			mpJust: 0,
+			mpWabi: 0,
+			mpOtro2: 0,
+			mpPedidosyacash: 0,
+			mpPersonal: 0,
+			mpRapicash: 0,
+			mpPresent: 0,
+			mpPaypal: 0,
+			mpZelle: 0,
+			mpBofa: 0,
+			mpYumi: 0,
+			waste: 0,
+			isPrintBillin: 0,
+		});
+		console.log(res);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
+		}
+		setLoading(false);
+		router.push(`/dashboard/orders/${id}`);
+	};
+
+	const handleCancelOrder = async () => {
+		setLoading(true);
+		const res = await requestHandler.get(`/api/v2/order/satus/${id}/4`);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
+		}
+		setIsCancelOrderModal(false);
+		await getOrderRequest(id);
+		setLoading(false);
+		message.success('Orden cancelada');
+	};
+
+	useEffect(() => {
+		if (order && order.idStatusOrder !== 1) {
+			router.push(`/dashboard/orders/${id}`);
+		}
+	}, [id, order]);
 
 	return (
 		<DashboardLayout>
@@ -277,9 +378,7 @@ const UpdateOrderPage = () => {
 				style={{
 					margin: '1rem',
 					display: 'flex',
-					alignItems: 'center',
 					flexDirection: 'column',
-					justifyContent: 'center',
 				}}
 			>
 				<div
@@ -304,7 +403,23 @@ const UpdateOrderPage = () => {
 					>
 						Actualizar Orden
 					</h1>
-					<div></div>
+					<div>
+						<Button
+							onClick={() => setIsCloseOrderModal(true)}
+							type="primary"
+							style={{ marginRight: '1rem' }}
+							disabled={!order?.body}
+						>
+							Facturar
+						</Button>
+						<Button
+							onClick={() => setIsCancelOrderModal(true)}
+							type="primary"
+							danger
+						>
+							Anular
+						</Button>
+					</div>
 				</div>
 				<Row style={{ height: '100vh', width: '100%' }}>
 					<Col span={12} style={{ paddingRight: '.5rem' }}>
@@ -312,10 +427,10 @@ const UpdateOrderPage = () => {
 							brands={brands}
 							setQuery={setQuery}
 							categories={categories}
-							initialValues={INITIAL_QUERY_VALUES}
+							clean={clean}
 						/>
 						<Table
-							dataSource={productsList}
+							dataSource={filtered()}
 							columns={AddColumns}
 							loading={loading}
 						/>
@@ -340,6 +455,86 @@ const UpdateOrderPage = () => {
 					</Col>
 				</Row>
 			</div>
+			<Modal
+				title="Eliminar"
+				open={deleteOpen}
+				onCancel={() => setDeleteOpen(false)}
+				onOk={handleDelete}
+				footer={[
+					<Button key="cancel" onClick={() => setDeleteOpen(false)}>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						danger
+						type="primary"
+						onClick={handleDelete}
+					>
+						Eliminar
+					</Button>,
+				]}
+			>
+				<p>
+					Estas seguro de que deseas eliminar
+					{` ${currentProduct?.nameProduct}`}
+				</p>
+			</Modal>
+			<Modal
+				title="Facturar"
+				open={closeOrderModal}
+				onCancel={() => setIsCloseOrderModal(false)}
+				onOk={() => handleCloseOrder()}
+				cancelText="Cancelar"
+				okText="Facturar"
+			>
+				<List
+					dataSource={order?.body}
+					renderItem={(item) => (
+						<List.Item>
+							<List.Item.Meta
+								title={item.nameProduct}
+								description={`Cantidad: ${
+									item.weight
+								} | Precio: $${item.priceSale.toFixed(2)}`}
+							/>
+							<p>SubTotal: ${item.weight * item.priceSale}</p>
+						</List.Item>
+					)}
+				>
+					<List.Item style={{ borderTop: '1px solid #eee' }}>
+						<p>
+							<strong>TOTAL</strong>
+						</p>
+						<p>
+							<strong>${total}</strong>
+						</p>
+					</List.Item>
+				</List>
+			</Modal>
+			<Modal
+				title="Anular Orden"
+				open={cancelOrderModal}
+				onCancel={() => setIsCancelOrderModal(false)}
+				onOk={handleCancelOrder}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsCancelOrderModal(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						danger
+						type="primary"
+						onClick={handleCancelOrder}
+					>
+						Anular
+					</Button>,
+				]}
+			>
+				<p>Estas seguro de que deseas anular esta orden?</p>
+			</Modal>
 		</DashboardLayout>
 	);
 };

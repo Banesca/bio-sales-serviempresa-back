@@ -115,17 +115,25 @@ const UserDetail = () => {
 	};
 
 	const closeModal = async (bool) => {
-		if (!bool) {
-			setLoading(false)
+		const alreadyExist = businessByUser.filter(
+			(b) => b.idSucursalFk === businessToAdd
+		);
+		if (alreadyExist.length > 0) {
+			setLoading(false);
 			setIsModalOpen(false);
-			return
+			return message.info('El usuario ya cuenta con acceso');
+		}
+		if (!bool) {
+			setLoading(false);
+			setIsModalOpen(false);
+			return;
 		}
 		await handleAsigne();
 		setIsModalOpen(false);
 	};
 
 	const handleRemoveBusiness = async () => {
-		setLoading(true)
+		setLoading(true);
 		const res = await requestHandler.delete(
 			`/api/v2/user/delete/${businessToRemove.idUserBranch}`
 		);
@@ -135,7 +143,7 @@ const UserDetail = () => {
 		}
 		await getUserBusiness(id);
 		setLoading(false);
-		setConfirmDelete(false)
+		setConfirmDelete(false);
 		message.success('Acceso removido');
 	};
 

@@ -25,12 +25,6 @@ const UsersTable = ({ users }) => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Empresa',
-			dataIndex: 'business',
-			key: 3,
-			render: () => <p>{selectedBusiness.nombre}</p>,
-		},
-		{
 			title: 'Acciones',
 			key: 5,
 			render: (_, index) => (

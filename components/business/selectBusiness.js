@@ -24,6 +24,13 @@ const SelectBusiness = () => {
 		handleMessage(filterBusiness.nombre);
 	};
 
+	const [form] = Form.useForm();
+	useEffect(() => {
+		if (selectedBusiness) {
+			form.setFieldValue('business', selectedBusiness.nombre);
+		}
+	}, [selectedBusiness]);
+
 	return (
 		<Row>
 			{contextHolder}
@@ -31,26 +38,24 @@ const SelectBusiness = () => {
 				<h3 style={{ color: 'white', textAlign: 'center' }}>
 					Ambiente Empresarial
 				</h3>
-				<Form.Item wrapperCol={{ span: 6, offset: 9 }}>
-					<Select
-						defaultValue={
-							selectedBusiness
-								? selectedBusiness.nombre
-								: 'Elige una empresa'
-						}
-						onChange={onChange}
+				<Form form={form}>
+					<Form.Item
+						wrapperCol={{ span: 6, offset: 9 }}
+						name="business"
 					>
-						{business &&
-							business.map((b) => (
-								<Select.Option
-									key={b.idSucursal}
-									value={b.idSucursal}
-								>
-									{b.nombre}
-								</Select.Option>
-							))}
-					</Select>
-				</Form.Item>
+						<Select onChange={onChange}>
+							{business &&
+								business.map((b) => (
+									<Select.Option
+										key={b.idSucursal}
+										value={b.idSucursal}
+									>
+										{b.nombre}
+									</Select.Option>
+								))}
+						</Select>
+					</Form.Item>
+				</Form>
 			</Col>
 		</Row>
 	);
