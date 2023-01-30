@@ -15,21 +15,14 @@ import DashboardLayout from '../../../components/layout';
 import { useRouter } from 'next/router';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
-import Link from 'next/link';
 import Loading from '../../../components/loading';
 
 export default function ClientsPage() {
 	const columns = [
 		{
 			title: 'Razón social',
-			dataIndex: 'fullNameClient',
-			key: 0,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Nombre',
 			dataIndex: 'nameClient',
-			key: 1,
+			key: 0,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -51,7 +44,7 @@ export default function ClientsPage() {
 				<Space size="middle">
 					<Button
 						type="primary"
-						onClick={() => router.push(`clients/${_.id}`)}
+						onClick={() => router.push(`clients/${_.idClient}`)}
 					>
 						<EyeTwoTone />
 					</Button>
@@ -72,8 +65,8 @@ export default function ClientsPage() {
 	// clients
 	const [clients, setClients] = useState([]);
 	const [query, setQuery] = useState({
-		fullNameClient: '',
-		phoneClient: '',
+		nameClient: '',
+		phone: '',
 		address: '',
 	});
 
@@ -90,10 +83,7 @@ export default function ClientsPage() {
 
 	const getClientsRequest = async () => {
 		setLoading(true);
-		const res = await requestHandler.post(
-			'/api/v2/order/get/clientsAll',
-			{}
-		);
+		const res = await requestHandler.get('/api/v2/client/list');
 		if (res.isLeft()) {
 			setLoading(false);
 			return;
@@ -134,8 +124,8 @@ export default function ClientsPage() {
 
 	const handleSearch = (values) => {
 		setQuery({
-			fullNameClient: values.fullNameClient || '',
-			phoneClient: values.phoneClient || '',
+			nameClient: values.fullNameClient || '',
+			phone: values.phoneClient || '',
 			address: values.address || '',
 		});
 	};

@@ -19,7 +19,6 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/loading';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import moment from 'moment';
 
 export default function OrdersPage() {
 	const columns = [
@@ -46,15 +45,15 @@ export default function OrdersPage() {
 			dataIndex: 'statusOrder',
 			key: 3,
 			render: (text, record) => {
-				switch(record.idStatusOrder) {
+				switch (record.idStatusOrder) {
 					case 1:
-						return <p style={{ color: '#0984e3'}} >{text}</p>
+						return <p style={{ color: '#0984e3' }}>{text}</p>;
 					case 2:
-						return <p style={{ color: '#00b894'}} >{text}</p>
+						return <p style={{ color: '#00b894' }}>{text}</p>;
 					case 3:
-						return <p style={{ color: '#0984e3'}} >{text}</p>
+						return <p style={{ color: '#0984e3' }}>{text}</p>;
 					case 4:
-						return <p style={{ color: '#d63031'}} >{text}</p>
+						return <p style={{ color: '#d63031' }}>{text}</p>;
 				}
 			},
 		},
@@ -120,6 +119,7 @@ export default function OrdersPage() {
 	const { selectedBusiness } = useBusinessProvider();
 
 	const listByBusiness = async (id) => {
+		console.log(id);
 		setLoading(true);
 		const res = await requestHandler.get(
 			`/api/v2/environment/listarPorSucursal/${id}`
@@ -132,12 +132,14 @@ export default function OrdersPage() {
 		setEnvironmentList(value);
 		let dateStart = new Date(2023, 0, 1);
 		let dateEnd = new Date();
-		console.log(value[0]);
-		await getOrdersRequest({
-			idBranchFk: `${value[0]?.idBranchFk}`,
-			dateStart,
-			dateEnd,
-		});
+		console.log(value, 'value', 'id', id);
+		if (value) {
+			await getOrdersRequest({
+				idBranchFk: selectedBusiness.idSucursal,
+				dateStart,
+				dateEnd,
+			});
+		}
 		setLoading(false);
 	};
 
@@ -157,6 +159,13 @@ export default function OrdersPage() {
 
 	useEffect(() => {
 		if (generalContext && selectedBusiness) {
+			let dateStart = new Date(2023, 0, 1);
+			let dateEnd = new Date();
+			getOrdersRequest({
+				idBranchFk: selectedBusiness.idSucursal,
+				dateStart,
+				dateEnd,
+			});
 			listByBusiness(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,7 +216,7 @@ export default function OrdersPage() {
 
 	const handleSearch = async (values) => {
 		console.log('values', values);
-		//console.log('Dates', values.date[0].$d, values.date[0].$d);
+		console.log('Dates', values.date[0].$d, values.date[0].$d);
 		setQuery({
 			idStatusOrder: values.idStatusOrder || 0,
 			startDate: values.date ? values.date[0]?.$d : null,

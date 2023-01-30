@@ -126,7 +126,7 @@ const Product = () => {
 					</h1>
 					<div></div>
 				</div>
-				<List style={{ width: '500px' }} bordered>
+				<List style={{ width: '100%', paddingInline: '2rem' }}>
 					<List.Item>
 						<p>Nombre</p>
 						<p>{product?.nameProduct}</p>
@@ -179,7 +179,11 @@ const Product = () => {
 					)}
 					<List.Item>
 						<p>Stock</p>
-						<p>{product?.stock.length > 0 ? product.stock[0].stock : '0'}</p>
+						<p>
+							{product?.stock.length > 0
+								? product.stock[0].stock
+								: '0'}
+						</p>
 					</List.Item>
 					<List.Item
 						style={{

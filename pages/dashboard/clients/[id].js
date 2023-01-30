@@ -1,44 +1,53 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { List } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/layout';
-import { clients } from '../../../util/database';
 import Loading from '../../../components/loading';
+import { GeneralContext } from '../../_app';
+import { useRequest } from '../../../hooks/useRequest';
+import { message } from 'antd';
 
 const ClientDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
 	const handleReturn = () => {
-		router.push('/dashboard/users');
+		router.push('/dashboard/clients');
 		setLoading(true);
 	};
 
 	const [client, setClient] = useState();
 	const [loading, setLoading] = useState(true);
 
+	const generalContext = useContext(GeneralContext);
+	const { requestHandler } = useRequest();
+
+	const getClientRequest = async () => {
+		setLoading(true);
+		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
+		if (res.isLeft()) {
+			setLoading(false);
+			return message.error('Ha ocurrido un error');
+		}
+		const value = res.value.getValue();
+		if (!value.data) {
+			setLoading(false);
+			return message.error('Ha ocurrido un error');
+		}
+		setClient(value.data)
+		setLoading(false)
+	};
+
 	useEffect(() => {
 		setLoading(true);
 		// handle Request
-		const filterClient = clients.filter((u) => u.id == id)[0];
-		console.log(filterClient, 'Filter');
-		setClient(filterClient);
-		// End handle Request
-		setLoading(false);
-	}, [id]);
-
-	if (!loading && !client) {
-		return (
-			<DashboardLayout>
-				<h1 style={{ color: 'white' }}>Not found</h1>
-			</DashboardLayout>
-		);
-	}
-
-	console.log(client);
+		if (generalContext) {
+			getClientRequest();
+		}
+	}, [id, generalContext]);
 
 	return (
 		<DashboardLayout>
@@ -71,7 +80,7 @@ const ClientDetail = () => {
 							color: 'white',
 						}}
 					>
-						{client?.rut}
+						{client?.nameClient}
 					</h1>
 					<div></div>
 				</div>
@@ -81,12 +90,24 @@ const ClientDetail = () => {
 						color: 'white',
 					}}
 				>
-					Informacion General
+					Información General
 				</h3>
 				<List style={{ width: '600px' }}>
 					<List.Item>
 						<p>Rif</p>
-						<p>{client?.rif}</p>
+						<p>{client?.numberDocument}</p>
+					</List.Item>
+					<List.Item>
+						<p>Teléfono</p>
+						<p>{client?.phone}</p>
+					</List.Item>
+					<List.Item>
+						<p>Estado</p>
+						<p>{client?.statusName}</p>
+					</List.Item>
+					<List.Item>
+						<p>Dirección</p>
+						<p>{client?.address}</p>
 					</List.Item>
 				</List>
 				<h3

@@ -1,21 +1,27 @@
 import PropTypes from 'prop-types';
 import { Button, Col, Row, Form, Input, Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import Loading from '../loading';
+import { Router, useRouter } from 'next/router';
+import { useRequest } from '../../hooks/useRequest';
 
-const UserForm = ({ user, update, requestHandler }) => {
+const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
+	const { requestHandler } = useRequest();
+
 	const [userData, setUserData] = useState({
 		fullname: user.fullname || '',
 		mail: user.mail || '',
 		pin: user.pin || '',
 		idProfileFk: user.idProfileFk || null,
 	});
+
 	const [loading, setLoading] = useState(false);
+	const [businessByUser, setBusinessByUser] = useState(userBusiness);
 
 	const profileList = [
 		{ name: 'Administrador', id: 1 },
-		{ name: 'Full Acceso', id: 2 },
+		{ name: 'Facturador', id: 2 },
 		{ name: 'Vendedor', id: 3 },
 	];
 
@@ -32,19 +38,44 @@ const UserForm = ({ user, update, requestHandler }) => {
 			fullname: '',
 			mail: '',
 			pin: '',
-			idProfileFk: null
-		})
+			idProfileFk: null,
+		});
 		form.resetFields();
 	};
 
+	const router = useRouter();
+
+	// User business
+	const handleAsigne = async (userId, businessId) => {
+		const res = await requestHandler.post(`/api/v2/user/branch/add`, {
+			idUserFk: userId,
+			idSucursalFk: businessId,
+		});
+		if (res.isLeft()) {
+			setLoading(false);
+			message.error('Ha ocurrido un error al asignar empresa');
+		}
+	};
+	// User business End
+
+	useEffect(() => {
+		console.log(businessByUser);
+	}, [businessByUser]);
+
 	const onSubmit = async () => {
 		setLoading(true);
-		await requestHandler(userData);
-		message.success(update ? 'Usuario actualizado' : 'Usuario agregado');
+		await submitFunction(userData);
 		if (!update) {
+			// for (const business of businessByUser) {
+			// 	await handleAsigne(user.idUser, business);
+			// }
 			onReset();
+			setLoading(false);
+			return;
 		}
+		message.success(update ? 'Usuario actualizado' : 'Usuario agregado');
 		setLoading(false);
+		router.push('/dashboard/users');
 	};
 
 	if (!user && update) {
@@ -78,6 +109,7 @@ const UserForm = ({ user, update, requestHandler }) => {
 						mail: userData.mail,
 						idProfileFk: userData.idProfileFk,
 						pin: userData.pin,
+						business: userBusiness,
 					}}
 					form={form}
 				>
@@ -91,7 +123,6 @@ const UserForm = ({ user, update, requestHandler }) => {
 						<Input
 							type="text"
 							name="fullname"
-							defaultValue={userData.fullname}
 							value={userData.fullname}
 							onChange={handleChange}
 						/>
@@ -114,7 +145,6 @@ const UserForm = ({ user, update, requestHandler }) => {
 							type="text"
 							name="mail"
 							value={userData.mail}
-							defaultValue={userData.mail}
 							onChange={handleChange}
 						/>
 					</Form.Item>
@@ -133,7 +163,6 @@ const UserForm = ({ user, update, requestHandler }) => {
 								type="password"
 								name="pin"
 								value={userData.pin}
-								defaultValue={userData.pin}
 								onChange={handleChange}
 							/>
 						</Form.Item>
@@ -150,7 +179,6 @@ const UserForm = ({ user, update, requestHandler }) => {
 					>
 						<Select
 							value={userData.idProfileFk}
-							defaultValue={userData.idProfileFk}
 							onChange={(value) =>
 								setUserData((prev) => ({
 									...prev,
@@ -165,6 +193,24 @@ const UserForm = ({ user, update, requestHandler }) => {
 							))}
 						</Select>
 					</Form.Item>
+					{!update && (
+						<Form.Item label="Empresas" name="business">
+							<Select
+								value={businessByUser}
+								mode="multiple"
+								onChange={(value) => setBusinessByUser(value)}
+							>
+								{business.map((p) => (
+									<Select.Option
+										key={p.idSucursal}
+										value={p.idSucursal}
+									>
+										{p.nombre}
+									</Select.Option>
+								))}
+							</Select>
+						</Form.Item>
+					)}
 					<Row>
 						<Col span={12}>
 							<Form.Item
@@ -196,7 +242,8 @@ const UserForm = ({ user, update, requestHandler }) => {
 UserForm.propTypes = {
 	update: PropTypes.bool.isRequired,
 	user: PropTypes.object,
-	requestHandler: PropTypes.func.isRequired,
+	submitFunction: PropTypes.func.isRequired,
+	userBusiness: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default UserForm;

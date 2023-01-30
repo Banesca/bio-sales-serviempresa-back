@@ -55,7 +55,7 @@ export default function Login() {
 		}
 		if (!res.value.getValue()) {
 			setLoading(false);
-			return handleLoginError('Usuario con contraseña incorrectos');
+			return handleLoginError('Usuario o contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
 		localStorage.setItem('userId', value.idUser);

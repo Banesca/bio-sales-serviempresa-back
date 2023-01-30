@@ -1,5 +1,5 @@
 import '../styles/globals.css';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 import { ConfigProvider, theme } from 'antd';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { ipBackOffice } from '../util/environment';
 import Loading from '../components/loading';
 import { BusinessProvider } from '../hooks/useBusinessProvider';
 import { useRouter } from 'next/router';
+import { CategoriesProvider } from '../hooks/useCategoriesProvider';
 
 export const GeneralContext = createContext();
 
@@ -47,8 +48,10 @@ function MyApp({ Component, pageProps }) {
 		>
 			<GeneralContext.Provider value={generalData}>
 				<BusinessProvider>
-					<Component {...pageProps} />
-					<Loading isLoading={loading} />
+					<CategoriesProvider>
+						<Component {...pageProps} />
+						<Loading isLoading={loading} />
+					</CategoriesProvider>
 				</BusinessProvider>
 			</GeneralContext.Provider>
 		</ConfigProvider>

@@ -9,6 +9,7 @@ import { GeneralContext } from '../../_app';
 import Link from 'next/link';
 import Loading from '../../../components/loading';
 import UserFilters from '../../../components/users/filters';
+import { message } from 'antd';
 
 export default function Users() {
 	const { requestHandler } = useRequest();
@@ -61,13 +62,37 @@ export default function Users() {
 		return usersList;
 	}, [query, users]);
 
-	if (loading) {
-		return (
-			<DashboardLayout>
-				<Loading isLoading={loading} />
-			</DashboardLayout>
+	// Delete product modal
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [currentUser, setCurrentUser] = useState();
+
+	const handleOpenModal = (data) => {
+		setCurrentUser(data);
+		setIsModalOpen(true);
+	};
+
+	const handleCloseModal = async (bool) => {
+		setLoading(true);
+		if (!bool) {
+			setLoading(false);
+			setIsModalOpen(false);
+			return
+		}
+		setIsModalOpen(false);
+		await handleDelete();
+		await getUsersRequest()
+	};
+
+	const handleDelete = async () => {
+		const res = await requestHandler.put(
+			`/api/v2/user/change/status/${currentUser.idUser}/3`
 		);
-	}
+		console.log(res)
+		setLoading(false)
+		return message.success(
+			`El usuario ${currentUser.fullname} ha sido eliminado`
+		);
+	};
 
 	return (
 		<DashboardLayout>
@@ -103,7 +128,14 @@ export default function Users() {
 					</Col>
 				</Row>
 				<UserFilters setQuery={setQuery} />
-				<UsersTable users={usersList} />
+				<UsersTable
+					users={usersList}
+					handleCloseModal={handleCloseModal}
+					handleOpenModal={handleOpenModal}
+					isModalOpen={isModalOpen}
+					currentUser={currentUser}
+				/>
+				<Loading isLoading={loading} />
 			</div>
 		</DashboardLayout>
 	);

@@ -19,6 +19,7 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
+import Loading from '../../../components/loading';
 
 export default function Products() {
 	const router = useRouter();
@@ -73,6 +74,7 @@ export default function Products() {
 					<Button
 						type="primary"
 						onClick={() => {
+							setLoading(true);
 							router.push(
 								`/dashboard/products/${product.idProduct}`
 							);
@@ -82,6 +84,7 @@ export default function Products() {
 					</Button>
 					<Button
 						onClick={() => {
+							setLoading(true);
 							router.push(
 								`/dashboard/products/update/${product.idProduct}`
 							);
@@ -257,7 +260,10 @@ export default function Products() {
 				onCancel={() => setDeleteModalOpen(false)}
 				onOk={handleDelete}
 				footer={[
-					<Button key="cancel" onClick={() => setDeleteOpen(false)}>
+					<Button
+						key="cancel"
+						onClick={() => setDeleteModalOpen(false)}
+					>
 						Cancelar
 					</Button>,
 					<Button
@@ -275,7 +281,7 @@ export default function Products() {
 					{` ${currentProduct?.nameProduct}`}
 				</p>
 			</Modal>
-			{/* <Loading isLoading={loading} /> */}
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 }

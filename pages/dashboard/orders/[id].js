@@ -159,7 +159,7 @@ const OrderDetail = () => {
 					</List.Item>
 					<List.Item>
 						<p>Fecha de creación</p>
-						<p>{order.created_at}</p>
+						<p>{new Date(order.fechaEntrega).toLocaleDateString()}</p>
 					</List.Item>
 				</List>
 				<Table

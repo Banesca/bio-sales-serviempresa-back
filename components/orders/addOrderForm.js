@@ -20,10 +20,7 @@ const AddOrderForm = (props) => {
 
 	const getClientsRequest = async () => {
 		setLoading(true);
-		const res = await requestHandler.post(
-			'/api/v2/order/get/clientsAll',
-			{}
-		);
+		const res = await requestHandler.get('/api/v2/client/list');
 		if (res.isLeft()) {
 			setLoading(false);
 			return;
@@ -39,6 +36,18 @@ const AddOrderForm = (props) => {
 	}, [generalContext, selectedBusiness]);
 
 	const [form] = Form.useForm();
+	
+	const createClient = async (data) => {
+		const res = await requestHandler.post(`/api/v2/client/add`, {
+			nameClient: data.fullNameClient,
+			phone: data.phoneClient,
+			numberDocument: data.rif,
+			address: data.address,
+			idStatusFK: 1,
+			observacion: data.comments
+		})
+		console.log(res)
+	}
 
 	const onSubmit = async (values) => {
 		setLoading(true);
@@ -58,6 +67,9 @@ const AddOrderForm = (props) => {
 			moso: null,
 			phoneClient: isNewClient ? values.phoneClient : null,
 		};
+		if (isNewClient) {
+			await createClient(values)
+		}
 		console.log(data);
 		await props.handleRequest(data);
 		setLoading(false);
@@ -120,10 +132,10 @@ const AddOrderForm = (props) => {
 										{clients &&
 											clients.map((c, i) => (
 												<Select.Option
-													value={c.fullNameClient}
+													value={c.nameClient}
 													key={i}
 												>
-													{c.fullNameClient}
+													{c.nameClient}
 												</Select.Option>
 											))}
 									</Select>
@@ -166,9 +178,9 @@ const AddOrderForm = (props) => {
 								</Col>
 							</Row>
 							<Row>
-								<Col span={24}>
+								<Col span={12}>
 									<Form.Item
-										labelCol={{ span: 4 }}
+										labelCol={{ span: 8 }}
 										label="Dirección"
 										rules={[
 											{
@@ -178,6 +190,22 @@ const AddOrderForm = (props) => {
 											},
 										]}
 										name="address"
+									>
+										<Input type="text" />
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item
+										labelCol={{ span: 8 }}
+										label="Rif"
+										rules={[
+											{
+												required: isNewClient,
+												message:
+													'Ingresa el rif del cliente',
+											},
+										]}
+										name="rif"
 									>
 										<Input type="text" />
 									</Form.Item>

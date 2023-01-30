@@ -13,12 +13,10 @@ import * as XLSX from 'xlsx';
 import DashboardLayout from '../../../components/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
 import Loading from '../../../components/loading';
-import { importProducts } from '../../../services/products';
 import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
-import { useRouter } from 'next/router';
 
 const ImportProducts = () => {
 	const columns = [
@@ -60,26 +58,6 @@ const ImportProducts = () => {
 		{
 			title: 'Promoción',
 			dataIndex: 'isPromo',
-			key: 5,
-			render: (bool) => {
-				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool == '1' ? (
-							<CheckCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'green' }}
-							/>
-						) : (
-							<CloseCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'red' }}
-							/>
-						)}
-					</div>
-				);
-			},
-		},
-		{
-			title: 'Destacado',
-			dataIndex: 'is5050',
 			key: 5,
 			render: (bool) => {
 				return (
@@ -213,19 +191,19 @@ const ImportProducts = () => {
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
 		for (const row of rows) {
-			let valid = true;
-			if (!existCategory(row.categoria)) {
-				setRejectedCategories((prev) => [...prev, row.categoria]);
-				valid = false;
-			}
-			if (!existBrand(row.marca)) {
-				// rejectedBrands.push(row.marca);
-				setRejectedBrands((prev) => [...prev, row.marca]);
-				valid = false;
-			}
-			if (!valid) {
-				return;
-			}
+			// let valid = true;
+			// if (!existCategory(row.categoria)) {
+			// 	setRejectedCategories((prev) => [...prev, row.categoria]);
+			// 	valid = false;
+			// }
+			// if (!existBrand(row.marca)) {
+			// 	// rejectedBrands.push(row.marca);
+			// 	setRejectedBrands((prev) => [...prev, row.marca]);
+			// 	valid = false;
+			// }
+			// if (!valid) {
+			// 	return;
+			// }
 			const obj = {
 				nameFamily: row.categoria,
 				nameSubFamily: row.marca,
@@ -241,8 +219,8 @@ const ImportProducts = () => {
 				apply_inventory: true,
 				barCode: String(row.codigo),
 				nameKitchen: 'descripcion',
-				idProductFamily: 1,
-				idProductSubFamily: 1,
+				// idProductFamily: 1,
+				// idProductSubFamily: 1,
 			};
 			uploadData.push(obj);
 		}

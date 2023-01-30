@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import {
 	Button,
 	Switch,
@@ -15,6 +15,7 @@ import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
 import Loading from '../loading';
+import { Router, useRouter } from 'next/router';
 
 const ProductForm = (props) => {
 	const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const ProductForm = (props) => {
 	const [fileList, setFileList] = useState([]);
 	const [isValidImgSize, setIsValidImgSize] = useState();
 
-	const [product, setProduct] = useState({
+	const initialState = {
 		idProductFamilyFk: props.product.idProductFamilyFk || '',
 		idProductSubFamilyFk: props.product.idProductSubFamilyFk || '',
 		nameProduct: props.product.nameProduct || '',
@@ -55,7 +56,9 @@ const ProductForm = (props) => {
 		starts: '5',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
-	});
+	};
+
+	const [product, setProduct] = useState(initialState);
 
 	console.log('Props Product', props.product);
 
@@ -182,6 +185,27 @@ const ProductForm = (props) => {
 		}
 	}, [generalContext, selectedBusiness]);
 
+	const validateBarCode = async (barCode) => {
+		const res = await requestHandler.post(
+			'/api/v2/product/find/bybarcode',
+			{ barCode, idSucursalFk: selectedBusiness.idSucursal }
+		);
+		const value = res.value.getValue();
+		console.log(value);
+		return !!value.data;
+	};
+
+	const validateProductName = async (nameProduct) => {
+		const res = await requestHandler.post('/api/v2/product/find/name', {
+			nameProduct,
+			idSucursalFk: selectedBusiness.idSucursal,
+		});
+		const value = res.value.getValue();
+		console.log(value);
+		return !!value.data;
+	};
+
+	const router = useRouter();
 	const onSubmit = async () => {
 		setLoading(true);
 		const formData = new FormData();
@@ -195,12 +219,30 @@ const ProductForm = (props) => {
 			const imgName = file.name.replace(' ', '-');
 			formData.append('image', file, imgName);
 		}
+		if (!props.update) {
+			const invalidCode = await validateBarCode(product.barCode);
+			const invalideName = await validateProductName(product.nameProduct);
+			if (invalideName) {
+				setLoading(false);
+				return message.error(
+					`El producto ${product.nameProduct} ya existe`
+				);
+			}
+			if (invalidCode) {
+				setLoading(false);
+				return message.error(
+					`El código ${product.barCode} ya se encuentra en uso`
+				);
+			}
+		}
 		await props.handleRequest(formData);
 		setLoading(false);
+		router.push('/dashboard/products');
 	};
 
 	const [form] = Form.useForm();
 	const onReset = () => {
+		setProduct(initialState);
 		form.resetFields();
 	};
 

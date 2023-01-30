@@ -9,8 +9,15 @@ import { profiles } from '../../pages/dashboard/users';
 import { addKeys } from '../../util/setKeys';
 import { users } from '../../util/database';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
+import { useRequest } from '../../hooks/useRequest';
 
-const UsersTable = ({ users }) => {
+const UsersTable = ({
+	users,
+	handleCloseModal,
+	handleOpenModal,
+	currentUser,
+	isModalOpen,
+}) => {
 	const columns = [
 		{
 			title: 'Nombre',
@@ -27,7 +34,7 @@ const UsersTable = ({ users }) => {
 		{
 			title: 'Acciones',
 			key: 5,
-			render: (_, index) => (
+			render: (_, record) => (
 				<Space size="middle">
 					<Button
 						type="primary"
@@ -40,12 +47,19 @@ const UsersTable = ({ users }) => {
 					</Button>
 					<Button
 						onClick={() => {
-							router.push(
-								`/dashboard/users/update/${_.idUser}`
-							);
+							router.push(`/dashboard/users/update/${_.idUser}`);
 						}}
 					>
 						<EditOutlined />
+					</Button>
+					<Button
+						type="primary"
+						danger
+						onClick={() => {
+							handleOpenModal(_);
+						}}
+					>
+						<DeleteOutlined />
 					</Button>
 				</Space>
 			),
@@ -53,22 +67,9 @@ const UsersTable = ({ users }) => {
 	];
 
 	const router = useRouter();
+	const { requestHandler } = useRequest();
 
 	const [loading, setLoading] = useState(true);
-	const [data, setData] = useState();
-	const [page, setPage] = useState();
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const handleSeeModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
-
-	const handleOk = () => {
-		setIsModalOpen(false);
-	};
-
-	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
 		if (users) {
@@ -82,17 +83,31 @@ const UsersTable = ({ users }) => {
 				columns={columns}
 				dataSource={users}
 				loading={loading}
-				onChange={(some) => setPage(some.current)}
+				//onChange={(some) => setPage(some.current)}
 			/>
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}
-				onOk={handleOk}
-				onCancel={handleSeeModal}
+				onOk={() => handleCloseModal(true)}
+				onCancel={() => handleCloseModal(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => handleCloseModal(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						type="primary"
+						danger
+						key="delete"
+						onClick={() => handleCloseModal(true)}
+					>
+						Eliminar
+					</Button>,
+				]}
 			>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
+				<p>{`Estas seguro de eliminar al usuario ${currentUser?.fullname}`}</p>
 			</Modal>
 		</div>
 	);
