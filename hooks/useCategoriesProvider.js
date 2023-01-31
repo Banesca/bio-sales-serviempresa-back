@@ -89,6 +89,14 @@ export function CategoriesProvider({ children }) {
 	};
 	// End Sub Categories
 
+	// Lines
+	const getLines = async (id) => {
+		const res = await requestHandler.get(`/api/v2/line/list/${id}`);
+		const lines = res.value.getValue().response;
+		dispatch({ type: ACTIONS.SET_LINES, payload: lines });
+	};
+	// End Lines
+
 	return (
 		<CategoryContext.Provider
 			value={{
@@ -101,6 +109,7 @@ export function CategoriesProvider({ children }) {
 				getSubCategories,
 				addSubCategory,
 				deleteSubCategory,
+				getLines,
 			}}
 		>
 			{children}

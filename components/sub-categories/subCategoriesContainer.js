@@ -6,6 +6,7 @@ import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
 import SubCategoryModals from './modals';
 import Loading from '../loading';
+import { useLoadingContext } from '../../hooks/useLoadingProvider';
 
 export default function SubCategoriesContainer() {
 	const columns = [
@@ -32,7 +33,8 @@ export default function SubCategoriesContainer() {
 
 	const { subCategories } = useCategoryContext();
 
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
+	const { setLoading } = useLoadingContext()
 
 	// list and filter
 	const [query, setQuery] = useState('');
@@ -119,7 +121,7 @@ export default function SubCategoriesContainer() {
 				setLoading={setLoading}
 				currentBrands={currentBrands}
 			/>
-			<Loading isLoading={loading} />
+			{/* <Loading isLoading={loading} /> */}
 		</>
 	);
 }

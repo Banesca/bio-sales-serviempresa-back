@@ -8,14 +8,17 @@ import { message } from 'antd';
 import CategoryContainer from '../../../components/categories/categoryContainer';
 import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import SubCategoriesContainer from '../../../components/sub-categories/subCategoriesContainer';
+import LinesContainer from '../../../components/lines/linesContainer';
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 
 const CategoriesPage = () => {
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
+	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 
-	const { getCategories, getSubCategories } = useCategoryContext();
+	const { getCategories, getSubCategories, getLines } = useCategoryContext();
 
 	const handleGetCategories = async (id) => {
 		try {
@@ -39,7 +42,7 @@ const CategoriesPage = () => {
 
 	const handleGetLines = async (id) => {
 		try {
-			await getSubCategories(id);
+			await getLines(id);
 			setLoading(false);
 		} catch (error) {
 			console.log(error);
@@ -56,6 +59,7 @@ const CategoriesPage = () => {
 			// getSubCategoriesRequest(selectedBusiness.idSucursal);
 			handleGetCategories(selectedBusiness.idSucursal);
 			handleGetSubCategories(selectedBusiness.idSucursal);
+			handleGetLines(selectedBusiness.idSucursal);
 			//handleGetLines(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,31 +79,34 @@ const CategoriesPage = () => {
 		{
 			key: '3',
 			label: 'Lineas',
-			children: <p>Lineas</p>,
+			children: <LinesContainer />,
 		},
 	];
 
-	if (loading) {
-		return (
-			<DashboardLayout>
-				<Loading isLoading={true} />
-			</DashboardLayout>
-		);
-	}
+	// if (loading) {
+	// 	return (
+	// 		<>
+	// 			<DashboardLayout></DashboardLayout>
+	// 			<Loading isLoading={true} />
+	// 		</>
+	// 	);
+	// }
 
 	return (
-		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-				}}
-			>
-				<Tabs items={tabItems} defaultActiveKey="1" />
-			</div>
+		<>
+			<DashboardLayout>
+				<div
+					style={{
+						margin: '1rem',
+						display: 'flex',
+						flexDirection: 'column',
+					}}
+				>
+					<Tabs items={tabItems} defaultActiveKey="1" />
+				</div>
+			</DashboardLayout>
 			<Loading isLoading={loading} />
-		</DashboardLayout>
+		</>
 	);
 };
 

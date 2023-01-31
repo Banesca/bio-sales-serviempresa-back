@@ -11,6 +11,7 @@ import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
+import { useLoadingContext } from '../../hooks/useLoadingProvider';
 
 export default function CategoryContainer() {
 	const columns = [
@@ -38,7 +39,8 @@ export default function CategoryContainer() {
 	const { categories, addCategory, deleteCategory } = useCategoryContext();
 
 	const [query, setQuery] = useState('');
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
+	const { setLoading } = useLoadingContext();
 
 	// delete category
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -118,7 +120,7 @@ export default function CategoryContainer() {
 				setLoading(false);
 				return message.error(`La categoría ${categoryName} ya existe`);
 			}
-			handleCloseCreateModal()
+			handleCloseCreateModal();
 			await addCategoryRequest(categoryName);
 		} catch (error) {
 			console.log(error);
@@ -244,7 +246,7 @@ export default function CategoryContainer() {
 					{`Estas seguro de que deseas eliminar la categoría ${currentCategory?.name}`}
 				</p>
 			</Modal>
-			<Loading isLoading={loading} />
+			{/* <Loading isLoading={loading} /> */}
 		</>
 	);
 }

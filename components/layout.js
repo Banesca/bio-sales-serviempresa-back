@@ -72,36 +72,38 @@ export default function DashboardLayout({ children }) {
 			localStorage.removeItem('accessToken');
 		}
 		localStorage.setItem('key', e.key);
-		router.push(e.key);
 		setLoading(true);
+		router.push(e.key);
 	};
 
 	return (
-		<Layout style={{ height: '100vh' }}>
-			<Header
-				style={{
-					background: '#111',
-					display: 'flex',
-					justifyContent: 'start',
-					alignItems: 'center',
-				}}
-			>
-				<p style={{ fontWeight: 'bolder', fontSize: '1.5rem' }}>
-					SiempreOL
-				</p>
-			</Header>
-			<Layout style={{ minHeight: 'fit-content' }}>
-				<Sider theme="light">
-					<Menu
-						mode="inline"
-						items={sidebarLinks}
-						onSelect={(e) => handleNavigation(e)}
-						style={{ height: '100vh' }}
-					/>
-				</Sider>
-				<Content style={{ heigh: '100vh' }}>{children}</Content>
+		<>
+			<Layout style={{ height: '100vh' }}>
+				<Header
+					style={{
+						background: '#111',
+						display: 'flex',
+						justifyContent: 'start',
+						alignItems: 'center',
+					}}
+				>
+					<p style={{ fontWeight: 'bolder', fontSize: '1.5rem' }}>
+						SiempreOL
+					</p>
+				</Header>
+				<Layout style={{ minHeight: 'fit-content' }}>
+					<Sider theme="light">
+						<Menu
+							mode="inline"
+							items={sidebarLinks}
+							onSelect={(e) => handleNavigation(e)}
+							style={{ height: '100vh' }}
+						/>
+					</Sider>
+					<Content style={{ heigh: '100vh' }}>{children}</Content>
+				</Layout>
 			</Layout>
 			<Loading isLoading={loading} />
-		</Layout>
+		</>
 	);
 }
