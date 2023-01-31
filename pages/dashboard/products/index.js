@@ -20,6 +20,8 @@ import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import Loading from '../../../components/loading';
+import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 
 export default function Products() {
 	const router = useRouter();
@@ -104,12 +106,14 @@ export default function Products() {
 		},
 	];
 	// loading
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
+	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
 
 	// Data
-	const [categories, setCategories] = useState([]);
+	// const [categories, setCategories] = useState([]);
+	const { categories, getCategories } = useCategoryContext();
 	const [brands, setBrands] = useState([]);
 
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
@@ -134,15 +138,22 @@ export default function Products() {
 		setLoading(false);
 	};
 
-	const categoryListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/family/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
+	const categoryListRequest = async (id = 1) => {
+		try {
+			await getCategories(id);
+			setLoading(false);
+		} catch (error) {
+			console.log(error);
+			return message.error('Error al cargar las categorías');
 		}
-		const value = response.value.getValue().response;
-		setCategories(value);
+		// const response = await requestHandler.get(
+		// 	`/api/v2/family/list/${business}`
+		// );
+		// if (response.isLeft()) {
+		// 	return;
+		// }
+		// const value = response.value.getValue().response;
+		// setCategories(value);
 	};
 
 	const brandListRequest = async (business = 1) => {
@@ -177,7 +188,10 @@ export default function Products() {
 	useEffect(() => {
 		// request data
 		setLoading(true);
-		if (generalContext && selectedBusiness) {
+		if (
+			Object.keys(generalContext).length > 0 &&
+			Object.keys(selectedBusiness).length > 0
+		) {
 			console.log('products');
 			categoryListRequest(selectedBusiness.idSucursal);
 			brandListRequest(selectedBusiness.idSucursal);
@@ -205,83 +219,88 @@ export default function Products() {
 	};
 
 	return (
-		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-				}}
-			>
-				<Row style={{ alignItems: 'center' }}>
-					<Col offset={6} span={12}>
-						<h1
+		<>
+			<DashboardLayout>
+				<div
+					style={{
+						margin: '1rem',
+						display: 'flex',
+						flexDirection: 'column',
+					}}
+				>
+					<Row style={{ alignItems: 'center' }}>
+						<Col offset={6} span={12}>
+							<h1
+								style={{
+									textAlign: 'center',
+									fontSize: '2rem',
+									color: '#fff',
+								}}
+							>
+								Productos
+							</h1>
+						</Col>
+						<Col
+							span={6}
 							style={{
-								textAlign: 'center',
-								fontSize: '2rem',
-								color: '#fff',
+								justifyContent: 'center',
+								display: 'flex',
 							}}
 						>
-							Productos
-						</h1>
-					</Col>
-					<Col
-						span={6}
-						style={{
-							justifyContent: 'center',
-							display: 'flex',
-						}}
-					>
-						<Button style={{ marginRight: '1rem' }} type="primary">
-							<Link href="products/import">Importar</Link>
-						</Button>
-						<Button type="primary">
-							<Link href="products/add">Agregar</Link>
-						</Button>
-					</Col>
-				</Row>
-				<SelectBusiness />
+							<Button
+								style={{ marginRight: '1rem' }}
+								type="primary"
+							>
+								<Link href="products/import">Importar</Link>
+							</Button>
+							<Button type="primary">
+								<Link href="products/add">Agregar</Link>
+							</Button>
+						</Col>
+					</Row>
+					<SelectBusiness />
 
-				<ProductFilter
-					setQuery={setQuery}
-					clean={clean}
-					categories={categories}
-					brands={brands}
-				/>
-				<Table
-					columns={columns}
-					dataSource={filtered()}
-					loading={loading}
-				/>
-			</div>
-			<Modal
-				title="Eliminar"
-				open={deleteModalOpen}
-				onCancel={() => setDeleteModalOpen(false)}
-				onOk={handleDelete}
-				footer={[
-					<Button
-						key="cancel"
-						onClick={() => setDeleteModalOpen(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={handleDelete}
-					>
-						Eliminar
-					</Button>,
-				]}
-			>
-				<p>
-					Estas seguro de que deseas eliminar
-					{` ${currentProduct?.nameProduct}`}
-				</p>
-			</Modal>
+					<ProductFilter
+						setQuery={setQuery}
+						clean={clean}
+						categories={categories}
+						brands={brands}
+					/>
+					<Table
+						columns={columns}
+						dataSource={filtered()}
+						loading={loading}
+					/>
+				</div>
+				<Modal
+					title="Eliminar"
+					open={deleteModalOpen}
+					onCancel={() => setDeleteModalOpen(false)}
+					onOk={handleDelete}
+					footer={[
+						<Button
+							key="cancel"
+							onClick={() => setDeleteModalOpen(false)}
+						>
+							Cancelar
+						</Button>,
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={handleDelete}
+						>
+							Eliminar
+						</Button>,
+					]}
+				>
+					<p>
+						Estas seguro de que deseas eliminar
+						{` ${currentProduct?.nameProduct}`}
+					</p>
+				</Modal>
+			</DashboardLayout>
 			<Loading isLoading={loading} />
-		</DashboardLayout>
+		</>
 	);
 }

@@ -18,15 +18,22 @@ import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/loading';
 import { useRouter } from 'next/router';
+import { addKeys } from '../../../util/setKeys';
 import Link from 'next/link';
 
 export default function OrdersPage() {
 	const columns = [
 		{
-			title: 'Numero de Orden',
-			dataIndex: 'numberOrden',
+			title: 'Fecha de creación',
+			dataIndex: 'created_at',
 			key: 0,
-			render: (text) => <p>{text}</p>,
+			render: (text) => <p>{text.split(' ', 1)}</p>,
+		},
+		{
+			title: 'Ultima actualización',
+			//dataIndex: 'updated_at',
+			key: 0,
+			render: (text) => <p></p>,
 		},
 		{
 			title: 'Vendedor',
@@ -58,12 +65,6 @@ export default function OrdersPage() {
 			},
 		},
 		{
-			title: 'Total',
-			dataIndex: 'totalBot',
-			key: 4,
-			render: (text) => <p>$ {text || 0}</p>,
-		},
-		{
 			title: 'Acciones',
 			key: 5,
 			render: (_, record) => (
@@ -76,18 +77,6 @@ export default function OrdersPage() {
 					>
 						<EyeTwoTone />
 					</Button>
-					{record.idStatusOrder !== 2 &&
-						record.idStatusOrder !== 4 && (
-							<Button
-								onClick={() =>
-									router.push(
-										`/dashboard/orders/update/${_.idOrderH}`
-									)
-								}
-							>
-								<EditOutlined />
-							</Button>
-						)}
 				</Space>
 			),
 		},
@@ -238,6 +227,7 @@ export default function OrdersPage() {
 		if (query.idStatusOrder) {
 			list = list.filter((o) => o.idStatusOrder === query.idStatusOrder);
 		}
+		addKeys(list);
 		return list;
 	}, [query, orders]);
 

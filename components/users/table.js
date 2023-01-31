@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Space, Button, Table, Modal, Pagination } from 'antd';
+import { Space, Button, Table, Modal } from 'antd';
 import PropTypes from 'prop-types';
 
-import { profiles } from '../../pages/dashboard/users';
-import { addKeys } from '../../util/setKeys';
-import { users } from '../../util/database';
-import { useBusinessProvider } from '../../hooks/useBusinessProvider';
-import { useRequest } from '../../hooks/useRequest';
+import { useLoadingContext } from '../../hooks/useLoadingProvider';
 
 const UsersTable = ({
 	users,
@@ -67,9 +63,9 @@ const UsersTable = ({
 	];
 
 	const router = useRouter();
-	const { requestHandler } = useRequest();
 
-	const [loading, setLoading] = useState(true);
+	// const [loading, setLoading] = useState(true);
+	const { loading, setLoading } = useLoadingContext()
 
 	useEffect(() => {
 		if (users) {

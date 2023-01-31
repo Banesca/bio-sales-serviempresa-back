@@ -65,9 +65,10 @@ const UpdateUser = () => {
 
 	if (loading || !business) {
 		return (
-			<DashboardLayout>
+			<>
+				<DashboardLayout></DashboardLayout>
 				<Loading isLoading={loading} />
-			</DashboardLayout>
+			</>
 		);
 	}
 

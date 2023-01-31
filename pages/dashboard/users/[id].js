@@ -1,21 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
-import { Button, List, Table } from 'antd';
+import { Button, List, Table, Modal, Form, Select, message } from 'antd';
 import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-
 import DashboardLayout from '../../../components/layout';
-import { users } from '../../../util/database';
 import Loading from '../../../components/loading';
 import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
-import { Modal } from 'antd';
-import { Form } from 'antd';
-import { Input } from 'antd';
-import { Select } from 'antd';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
-import { render } from 'react-dom';
-import { message } from 'antd';
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 
 const UserDetail = () => {
 	const columns = [
@@ -51,10 +43,10 @@ const UserDetail = () => {
 		{ name: 'Full Acceso', id: 2 },
 		{ name: 'Vendedor', id: 3 },
 	];
-
+	const { loading, setLoading } = useLoadingContext();
+	// const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState();
 	const [profile, setProfile] = useState();
-	const [loading, setLoading] = useState(false);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
@@ -165,133 +157,135 @@ const UserDetail = () => {
 	}, [businessByUser]);
 
 	return (
-		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					alignItems: 'center',
-					flexDirection: 'column',
-					justifyContent: 'center',
-				}}
-			>
+		<>
+			<DashboardLayout>
 				<div
 					style={{
-						width: '100%',
+						margin: '1rem',
 						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
 						alignItems: 'center',
+						flexDirection: 'column',
+						justifyContent: 'center',
 					}}
 				>
-					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem', color: 'white' }}
-						onClick={handleReturn}
-					/>
-					<h1
+					<div
 						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: 'white',
+							width: '100%',
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							alignItems: 'center',
 						}}
 					>
-						Información General
-					</h1>
-					<div>
+						<ArrowLeftOutlined
+							style={{ fontSize: '1.5rem', color: 'white' }}
+							onClick={handleReturn}
+						/>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '2rem',
+								color: 'white',
+							}}
+						>
+							Información General
+						</h1>
+						<div>
+							<Button
+								onClick={() => setIsModalOpen(true)}
+								type="primary"
+								style={{ marginRight: '2rem' }}
+							>
+								Asignar
+							</Button>
+						</div>
+					</div>
+					<List style={{ width: '100%' }}>
+						<List.Item>
+							<p>Nombre</p>
+							<p>{user?.fullname}</p>
+						</List.Item>
+						<List.Item>
+							<p>Email</p>
+							<p>{user?.mail}</p>
+						</List.Item>
+						<List.Item>
+							<p>Perfil</p>
+							<p>{profile?.name}</p>
+						</List.Item>
+					</List>
+					<Table
+						columns={columns}
+						style={{ width: '100%' }}
+						dataSource={businessByUser}
+					/>
+				</div>
+				<Modal
+					title="Asignar Empresas"
+					open={isModalOpen}
+					onCancel={() => closeModal(false)}
+					footer={[
+						<Button key="cancel" onClick={() => closeModal(false)}>
+							Cancelar
+						</Button>,
 						<Button
-							onClick={() => setIsModalOpen(true)}
+							key="asigne"
 							type="primary"
-							style={{ marginRight: '2rem' }}
+							onClick={() => closeModal(true)}
 						>
 							Asignar
-						</Button>
-					</div>
-				</div>
-				<List style={{ width: '100%' }}>
-					<List.Item>
-						<p>Nombre</p>
-						<p>{user?.fullname}</p>
-					</List.Item>
-					<List.Item>
-						<p>Email</p>
-						<p>{user?.mail}</p>
-					</List.Item>
-					<List.Item>
-						<p>Perfil</p>
-						<p>{profile?.name}</p>
-					</List.Item>
-				</List>
-				<Table
-					columns={columns}
-					style={{ width: '100%' }}
-					dataSource={businessByUser}
-				/>
-			</div>
-			<Modal
-				title="Asignar Empresas"
-				open={isModalOpen}
-				onCancel={() => closeModal(false)}
-				footer={[
-					<Button key="cancel" onClick={() => closeModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="asigne"
-						type="primary"
-						onClick={() => closeModal(true)}
-					>
-						Asignar
-					</Button>,
-				]}
-			>
-				<Form>
-					<Form.Item label="Empresas">
-						<Select
-							allowClear
-							value={businessToAdd}
-							onChange={(v) => setBusinessToAdd(v)}
+						</Button>,
+					]}
+				>
+					<Form>
+						<Form.Item label="Empresas">
+							<Select
+								allowClear
+								value={businessToAdd}
+								onChange={(v) => setBusinessToAdd(v)}
+							>
+								{business &&
+									business.map((b) => (
+										<Select.Option
+											key={b.idSucursal}
+											value={b.idSucursal}
+										>
+											{b.nombre}
+										</Select.Option>
+									))}
+							</Select>
+						</Form.Item>
+					</Form>
+				</Modal>
+				<Modal
+					open={confirmDelete}
+					title="Remover Permisos"
+					onCancel={() => closeRemoveModal(false)}
+					footer={[
+						<Button
+							key="cancel"
+							onClick={() => closeRemoveModal(false)}
 						>
-							{business &&
-								business.map((b) => (
-									<Select.Option
-										key={b.idSucursal}
-										value={b.idSucursal}
-									>
-										{b.nombre}
-									</Select.Option>
-								))}
-						</Select>
-					</Form.Item>
-				</Form>
-			</Modal>
-			<Modal
-				open={confirmDelete}
-				title="Remover Permisos"
-				onCancel={() => closeRemoveModal(false)}
-				footer={[
-					<Button
-						key="cancel"
-						onClick={() => closeRemoveModal(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="remove"
-						type="primary"
-						danger
-						onClick={() => handleRemoveBusiness()}
-					>
-						Remover
-					</Button>,
-				]}
-			>
-				<p>
-					Estas seguro de remover el acceso de la sucursal a{' '}
-					{user?.fullname}
-				</p>
-			</Modal>
+							Cancelar
+						</Button>,
+						<Button
+							key="remove"
+							type="primary"
+							danger
+							onClick={() => handleRemoveBusiness()}
+						>
+							Remover
+						</Button>,
+					]}
+				>
+					<p>
+						Estas seguro de remover el acceso de la sucursal a{' '}
+						{user?.fullname}
+					</p>
+				</Modal>
+			</DashboardLayout>
 			<Loading isLoading={loading} />
-		</DashboardLayout>
+		</>
 	);
 };
 
