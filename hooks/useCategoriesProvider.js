@@ -49,22 +49,33 @@ export function CategoriesProvider({ children }) {
 	// Categories
 	const getCategories = async (id) => {
 		const res = await requestHandler.get(`/api/v2/family/list/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		const categories = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
 	};
 
 	const deleteCategory = async (categoryId, businessId) => {
-		await requestHandler.delete(`/api/v2/family/delete/${categoryId}`);
+		const res = await requestHandler.delete(
+			`/api/v2/family/delete/${categoryId}`
+		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		await getCategories(businessId);
 	};
 
 	const addCategory = async (name, businessId) => {
-		await requestHandler.post(`/api/v2/family/add`, {
+		const res = await requestHandler.post(`/api/v2/family/add`, {
 			name: name,
 			order: 0,
 			image: null,
 			idSucursalFk: businessId,
 		});
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		await getCategories(businessId);
 	};
 	// End Categories
@@ -72,19 +83,28 @@ export function CategoriesProvider({ children }) {
 	// Sub Categories
 	const getSubCategories = async (id) => {
 		const res = await requestHandler.get(`/api/v2/subFamily/list/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		const subCategories = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_SUB_CATEGORIES, payload: subCategories });
 	};
 
 	const addSubCategory = async (body, businessId) => {
-		await requestHandler.post(`/api/v2/subfamily/add`, body);
+		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		await getSubCategories(businessId);
 	};
 
 	const deleteSubCategory = async (subCategoryId, businessId) => {
-		await requestHandler.delete(
+		const res = await requestHandler.delete(
 			`/api/v2/subfamily/delete/${subCategoryId}`
 		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		await getCategories(businessId);
 	};
 	// End Sub Categories
@@ -92,8 +112,27 @@ export function CategoriesProvider({ children }) {
 	// Lines
 	const getLines = async (id) => {
 		const res = await requestHandler.get(`/api/v2/line/list/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
 		const lines = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_LINES, payload: lines });
+	};
+
+	const addLine = async (body) => {
+		const res = await requestHandler.post(`/api/v2/line/add`, body);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getLines(body.idSucursalFk);
+	};
+
+	const deleteLine = async (id, businessId) => {
+		const res = await requestHandler.delete(`/api/v2/line/delete/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getLines(businessId);
 	};
 	// End Lines
 
@@ -110,6 +149,8 @@ export function CategoriesProvider({ children }) {
 				addSubCategory,
 				deleteSubCategory,
 				getLines,
+				addLine,
+				deleteLine,
 			}}
 		>
 			{children}
