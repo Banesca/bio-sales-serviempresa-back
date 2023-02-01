@@ -1,30 +1,21 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import DashboardLayout from '../../../components/layout';
 import { GeneralContext } from '../../_app';
-import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/loading';
-import {
-	Button,
-	Col,
-	Collapse,
-	Row,
-	Table,
-	Form,
-	Input,
-	Modal,
-	message,
-} from 'antd';
-import { Select } from 'antd';
+import { Button, Col, Row, Table, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import BrandsFilters from '../../../components/brands/brandsFilters';
+import BrandsModals from '../../../components/brands/brandsModals';
+import { addKeys } from '../../../util/setKeys';
 
 const BrandsPage = () => {
 	const columns = [
 		{
 			title: 'Nombre',
-			dataIndex: 'nameSubFamily',
+			dataIndex: 'name',
 			key: 1,
 			render: (text) => text,
 		},
@@ -35,7 +26,7 @@ const BrandsPage = () => {
 				<Button
 					danger
 					type="primary"
-					// onClick={() => handleOpenDeleteModal(item)}
+					onClick={() => handleOpenDeleteModal(item)}
 				>
 					<DeleteOutlined />
 				</Button>
@@ -47,11 +38,19 @@ const BrandsPage = () => {
 	const { getBrands, brands } = useBrandContext();
 	const { selectedBusiness } = useBusinessProvider();
 
-	// const [loading, setLoading] = useState(false);
-	const { loading, setLoading } = useLoadingContext()
 
-	const [createForm] = Form.useForm();
-	const [searchForm] = Form.useForm();
+	// const [loading, setLoading] = useState(false);
+	const { loading } = useLoadingContext();
+
+	// Create Modal
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+	// Delete Modal
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [selectedBrand, setSelectedBrand] = useState();
+
+	// Filters
+	const [query, setQuery] = useState('');
 
 	useEffect(() => {
 		if (
@@ -60,17 +59,8 @@ const BrandsPage = () => {
 		) {
 			getBrandsRequest(selectedBusiness.idSucursal);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedBusiness, generalContext]);
-
-	const getCategoriesRequest = async (id) => {
-		// setLoading(true);
-		// const res = await requestHandler.get(`/api/v2/family/list/${id}`);
-		// if (res.isLeft()) {
-		// 	return;
-		// }
-		// setCategories(res.value.getValue().response);
-		// setLoading(false);
-	};
 
 	const getBrandsRequest = async (id) => {
 		try {
@@ -79,45 +69,33 @@ const BrandsPage = () => {
 			console.log(error);
 			message.error('Error al cargar las marcas');
 		}
-		// setLoading(true);
-		// const res = await requestHandler.get(`/api/v2/subFamily/list/${id}`);
-		// if (res.isLeft()) {
-		// 	return;
-		// }
-		// let value = res.value.getValue().response;
-		// value = value.filter((b) => b.idStatus === 1);
-		// setBrands(value);
-		// setLoading(false);
 	};
 
-	// const brandsList = useMemo(() => {
-	// 	// let list = brands;
-	// 	// if (query) {
-	// 	// 	list = brands.filter((b) =>
-	// 	// 		b.nameSubFamily
-	// 	// 			.toLowerCase()
-	// 	// 			.includes(query.toLocaleLowerCase())
-	// 	// 	);
-	// 	// }
-	// 	// if (selectedCategory) {
-	// 	// 	list = brands.filter((b) => b.idProductFamily === selectedCategory);
-	// 	// }
-	// 	// return list;
-	// }, [brands, query, selectedCategory]);
+	//Modals
+	// -> Create
 
-	// useEffect(() => {
-	// 	// console.log(query);
-	// 	// console.log(selectedCategory);
-	// 	// console.log(brandsList);
-	// }, [query, selectedCategory, brandsList]);
+	// -> Delete
+	const handleOpenDeleteModal = (value) => {
+		setSelectedBrand(value);
+		setIsDeleteModalOpen(true);
+	};
 
-	// useEffect(() => {
-	// 	// if (generalContext && selectedBusiness) {
-	// 	// 	getBrandsRequest(selectedBusiness.idSucursal);
-	// 	// 	getCategoriesRequest(selectedBusiness.idSucursal);
-	// 	// }
-	// 	// // eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [generalContext, selectedBusiness]);
+	// End Modals
+
+	const handleOpenCreateModal = () => {
+		setIsCreateModalOpen(true);
+	};
+
+	const brandsList = useMemo(() => {
+		let list = brands;
+		if (query) {
+			list = brands.filter((b) =>
+				b.name.toLowerCase().includes(query.toLocaleLowerCase())
+			);
+		}
+		addKeys(list);
+		return list;
+	}, [brands, query]);
 
 	return (
 		<>
@@ -151,81 +129,21 @@ const BrandsPage = () => {
 							<Button
 								type="primary"
 								style={{ marginRight: '1rem' }}
-								// onClick={handleOpenCreateModal}
+								onClick={handleOpenCreateModal}
 							>
 								Agregar
 							</Button>
 						</Col>
 					</Row>
-					{/* <CategoryFilters setQuery={setQuery} /> */}
-					<Table bordered columns={columns} />
-					<Modal
-						// title="Agregar"
-						// open={isCreateModalOpen}
-						// onOk={handleCreateCategory}
-						// onCancel={() => handleCloseCreateModal()}
-						footer={[
-							<Button
-								key="cancel"
-								// onClick={() => handleCloseCreateModal()}
-							>
-								Cancelar
-							</Button>,
-							<Button
-								key="delete"
-								type="primary"
-								// onClick={handleCreateCategory}
-							>
-								Agregar
-							</Button>,
-						]}
-					>
-						<Form form={createForm}>
-							<Form.Item
-								label="nombre"
-								name="name"
-								style={{ padding: '0 .5rem' }}
-								required
-								rules={[
-									{
-										required: true,
-										message: 'Ingresa un nombre',
-									},
-								]}
-							>
-								<Input
-									allowClear
-									// value={categoryName}
-									// onChange={(e) => setCategoryName(e.target.value)}
-								/>
-							</Form.Item>
-						</Form>
-					</Modal>
-					<Modal
-						title="Eliminar"
-						// open={isDeleteModalOpen}
-						// onCancel={() => setIsDeleteModalOpen(false)}
-						footer={[
-							<Button
-								key="cancel"
-								// onClick={() => handleCloseDeleteModal(false)}
-							>
-								Cancelar
-							</Button>,
-							<Button
-								key="delete"
-								danger
-								type="primary"
-								// onClick={() => handleCloseDeleteModal(true)}
-							>
-								Eliminar
-							</Button>,
-						]}
-					>
-						{/* <p>
-					{`Estas seguro de que deseas eliminar la categoría ${currentCategory?.name}`}
-				</p> */}
-					</Modal>
+					<BrandsFilters setQuery={setQuery} />
+					<Table bordered dataSource={brandsList} columns={columns} />
+					<BrandsModals
+						isCreateModalOpen={isCreateModalOpen}
+						isDeleteModalOpen={isDeleteModalOpen}
+						setIsCreateModalOpen={setIsCreateModalOpen}
+						setIsDeleteModalOpen={setIsDeleteModalOpen}
+						selectedBrand={selectedBrand}
+					/>
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />
