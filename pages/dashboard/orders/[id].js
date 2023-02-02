@@ -1,95 +1,62 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import DashboardLayout from '../../../components/layout';
-import { Col, List, Row, Table } from 'antd';
-import Loading from '../../../components/loading';
-import { useRequest } from '../../../hooks/useRequest';
-import { useContext, useEffect, useState } from 'react';
+import DashboardLayout from '../../../components/shared/layout';
+import { List, message } from 'antd';
+import Loading from '../../../components/shared/loading';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GeneralContext } from '../../_app';
-import { message } from 'antd';
-import { Typography } from 'antd';
-
+import { orderStatusToUse } from '.';
+import DetailOrderTable from '../../../components/orders/detail/orderTable';
+import ChangeOrderStatus from '../../../components/orders/detail/changeStatus';
+import Title from '../../../components/shared/title';
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import { useOrders } from '../../../components/orders/hooks/useOrders';
 const OrderDetail = () => {
-	const columns = [
-		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 0,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Código',
-			dataIndex: 'barCode',
-			key: 0,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
-			key: 1,
-			render: (text) => <p>$ {text}</p>,
-		},
-		{
-			title: 'Cantidad',
-			dataIndex: 'weight',
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Sub Total',
-			dataIndex: 'weight',
-			key: 3,
-			render: (quantity, record) => (
-				<p>$ {record.priceSale * quantity}</p>
-			),
-		},
-	];
-
 	const router = useRouter();
 	const { id } = router.query;
 
-	const [loading, setLoading] = useState(true);
-	const [order, setOrder] = useState({});
-	const [user, setUser] = useState({});
-
-	const handleReturn = () => {
-		setLoading(true);
-		router.push('/dashboard/orders');
-	};
-
-	const { requestHandler } = useRequest();
+	const { loading, setLoading } = useLoadingContext();
+	const { user, currentOrder, getOrderById, changeStatus } = useOrders();
 
 	const generalContext = useContext(GeneralContext);
 
 	const getOrderRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/order/byidH/${id}`);
-		console.log(res.value);
-		if (res.isLeft()) {
-			return;
+		setLoading(true);
+		try {
+			await getOrderById(id);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al cargar el pedido');
+		} finally {
+			setLoading(false);
 		}
-		const value = res.value.getValue().data;
-		setOrder(value);
-		await getUserRequest(value.idUser);
-		setLoading(false);
 	};
 
-	const getUserRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/user/${id}`);
-		console.log(res.value);
-		if (res.isLeft()) {
-			return;
+	const handleChangeStatus = async (status) => {
+		setLoading(true);
+		try {
+			await changeStatus(status, id);
+			message.success('Estado actualizado');
+		} catch (error) {
+			console.log(error);
+			message.error('Error al actualizar orden');
+		} finally {
+			setLoading(false);
 		}
-		const value = res.value.getValue().data[0];
-		setUser(value);
 	};
 
 	useEffect(() => {
-		if (generalContext) {
+		setLoading(true);
+		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
 
-	if (loading) {
+	useEffect(() => {
+		console.log('current', currentOrder);
+	}, [currentOrder]);
+
+	if (loading || !currentOrder) {
 		return (
 			<DashboardLayout>
 				<Loading isLoading={loading} />
@@ -108,34 +75,16 @@ const OrderDetail = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<div
-					style={{
-						width: '100%',
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem', color: 'white' }}
-						onClick={handleReturn}
-					/>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: 'white',
-						}}
-					>
-						Información General
-					</h1>
-					<div></div>
-				</div>
+				<Title title="Información General" path="/dashboard/orders" />
+				<ChangeOrderStatus
+					status={currentOrder.idStatusOrder}
+					orderId={id}
+					handleChangeStatus={handleChangeStatus}
+				/>
 				<List style={{ width: '100%' }}>
 					<List.Item>
 						<p>Numero de Orden</p>
-						<p>{order.numberOrden}</p>
+						<p>{currentOrder.numberOrden}</p>
 					</List.Item>
 					<List.Item>
 						<p>Usuario - Vendedor</p>
@@ -143,66 +92,32 @@ const OrderDetail = () => {
 					</List.Item>
 					<List.Item>
 						<p>Estado</p>
-						<p>{order.statusOrder}</p>
+						<p>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
 					</List.Item>
 					<List.Item>
 						<p>Cliente</p>
-						<p>{order.fullNameClient}</p>
+						<p>{currentOrder.fullNameClient}</p>
 					</List.Item>
 					<List.Item>
 						<p>Numero de teléfono - Cliente</p>
-						<p>{order.phoneClient}</p>
+						<p>{currentOrder.phoneClient}</p>
 					</List.Item>
 					<List.Item>
 						<p>Dirección</p>
-						<p>{order.address}</p>
+						<p>{currentOrder.address}</p>
 					</List.Item>
 					<List.Item>
 						<p>Fecha de creación</p>
-						<p>{new Date(order.fechaEntrega).toLocaleDateString()}</p>
+						<p>
+							{new Date(
+								currentOrder.fechaEntrega
+							).toLocaleDateString()}
+						</p>
 					</List.Item>
 				</List>
-				<Table
-					style={{ width: '100%' }}
-					columns={columns}
-					dataSource={order?.body}
-					loading={loading}
-					title={() => (
-						<Typography
-							style={{
-								fontSize: '1.5rem',
-								fontWeight: 'bold',
-							}}
-						>
-							Productos
-						</Typography>
-					)}
-					footer={() => (
-						<Row>
-							<Col span={12}>
-								<Typography
-									style={{
-										fontSize: '1.2rem',
-										fontWeight: 'bold',
-									}}
-								>
-									Total
-								</Typography>
-							</Col>
-							<Col span={12}>
-								<Typography
-									style={{
-										textAlign: 'end',
-										fontSize: '1.2rem',
-										fontWeight: 'bold',
-										marginRight: '2rem',
-									}}
-								>
-									$ {order?.totalBot}
-								</Typography>
-							</Col>
-						</Row>
-					)}
+				<DetailOrderTable
+					products={currentOrder?.body}
+					total={currentOrder?.totalBot}
 				/>
 			</div>
 		</DashboardLayout>

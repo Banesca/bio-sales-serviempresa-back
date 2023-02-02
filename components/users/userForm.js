@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Button, Col, Row, Form, Input, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
-import Loading from '../loading';
+import Loading from '../shared/loading';
 import { Router, useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 
@@ -62,14 +62,26 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		console.log(businessByUser);
 	}, [businessByUser]);
 
+	const findUserByEmail = async (email) => {
+		const res = await requestHandler.get(`/api/v2/user/bymail/${email}`);
+
+		if (res.isLeft()) {
+			return message.error('Error al asignar permisos');
+		}
+
+		console.log(res.value.getValue(), 'value find');
+		// const value = res.value.getValue().data[0];
+		// return value;
+	};
+
 	const onSubmit = async () => {
 		setLoading(true);
 		await submitFunction(userData);
 		if (!update) {
-			// for (const business of businessByUser) {
-			// 	await handleAsigne(user.idUser, business);
-			// }
-			onReset();
+			const user = await findUserByEmail(userData.mail);
+			for (const business of businessByUser) {
+				await handleAsigne(user.idUser, business);
+			}
 			setLoading(false);
 			return;
 		}
