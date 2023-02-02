@@ -11,11 +11,11 @@ import {
 	Form,
 } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout'; 
 import { useRouter } from 'next/router';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 
 export default function ClientsPage() {
 	const columns = [

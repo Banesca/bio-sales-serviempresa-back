@@ -14,7 +14,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
-import Loading from '../loading';
+import Loading from '../shared/loading';
 import { Router, useRouter } from 'next/router';
 
 const ProductForm = (props) => {

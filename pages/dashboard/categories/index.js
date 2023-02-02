@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 import { Tabs } from 'antd';
 import { message } from 'antd';
 import CategoryContainer from '../../../components/categories/categoryContainer';

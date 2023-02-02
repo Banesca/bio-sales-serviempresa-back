@@ -1,10 +1,10 @@
 import { message } from 'antd';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import UserForm from '../../../components/users/userForm';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEffect, useState } from 'react';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 
 export const AddUserPage = () => {
 	const { requestHandler } = useRequest();

@@ -9,8 +9,8 @@ import {
 	CloseCircleOutlined,
 } from '@ant-design/icons';
 
-import Loading from '../../../components/loading';
-import DashboardLayout from '../../../components/layout';
+import Loading from '../../../components/shared/loading';
+import DashboardLayout from '../../../components/shared/layout';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import { ip } from '../../../util/environment';

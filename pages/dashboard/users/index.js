@@ -1,11 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Button, Col, Row, message } from 'antd';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout'
 import UsersTable from '../../../components/users/table';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 import UserFilters from '../../../components/users/filters';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Input, Form, Button, Layout, message } from 'antd';
-import Loading from '../components/loading';
+import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
 import { useBusinessProvider } from '../hooks/useBusinessProvider';

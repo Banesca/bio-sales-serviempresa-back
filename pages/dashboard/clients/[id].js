@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { List } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
-import DashboardLayout from '../../../components/layout';
-import Loading from '../../../components/loading';
+import DashboardLayout from '../../../components/shared/layout';
+import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';

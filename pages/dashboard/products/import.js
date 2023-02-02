@@ -10,9 +10,9 @@ import {
 import { Upload, Button, Table, message, Row, Col, Modal } from 'antd';
 import * as XLSX from 'xlsx';
 
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
-import DashboardLayout from '../../../../components/layout';
+import DashboardLayout from '../../../../components/shared/layout';
 import UserForm from '../../../../components/users/userForm';
-import Loading from '../../../../components/loading';
+import Loading from '../../../../components/shared/loading';
 import { useRouter } from 'next/router';
 import { useRequest } from '../../../../hooks/useRequest';
 import { GeneralContext } from '../../../_app';
@@ -37,8 +37,7 @@ const UpdateUser = () => {
 			idUser: id,
 		});
 		if (res.isLeft()) {
-			message.error('Ha ocurrido un error');
-			return;
+			return message.error('Ha ocurrido un error');
 		}
 	};
 

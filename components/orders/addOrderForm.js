@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Switch, Select, Input, Col, Form, Row, message, Button } from 'antd';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
-import Loading from '../loading';
+import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useRouter } from 'next/router';
 

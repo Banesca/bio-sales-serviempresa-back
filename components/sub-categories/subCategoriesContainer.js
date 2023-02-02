@@ -5,7 +5,6 @@ import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
 import SubCategoryModals from './modals';
-import Loading from '../loading';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 
 export default function SubCategoriesContainer() {
@@ -121,7 +120,6 @@ export default function SubCategoriesContainer() {
 				setLoading={setLoading}
 				currentBrands={currentBrands}
 			/>
-			{/* <Loading isLoading={loading} /> */}
 		</>
 	);
 }

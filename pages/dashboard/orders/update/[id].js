@@ -24,7 +24,7 @@ import {
 	message,
 	Typography,
 } from 'antd';
-import DashboardLayout from '../../../../components/layout';
+import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import { useRequest } from '../../../../hooks/useRequest';
 import ProductFilter from '../../../../components/products/productFilter';

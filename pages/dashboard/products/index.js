@@ -8,7 +8,7 @@ import {
 	EyeTwoTone,
 } from '@ant-design/icons';
 
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout'; 
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useRequest } from '../../../hooks/useRequest';
@@ -19,7 +19,7 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 

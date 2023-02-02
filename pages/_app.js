@@ -5,7 +5,7 @@ import { ConfigProvider, theme } from 'antd';
 import axios from 'axios';
 
 import { ipBackOffice } from '../util/environment';
-import Loading from '../components/loading';
+import Loading from '../components/shared/loading';
 import { BusinessProvider } from '../hooks/useBusinessProvider';
 import { useRouter } from 'next/router';
 import { CategoriesProvider } from '../hooks/useCategoriesProvider';

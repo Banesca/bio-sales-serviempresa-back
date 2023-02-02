@@ -1,4 +1,4 @@
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';
 import AddOrderForm from '../../../components/orders/addOrderForm';

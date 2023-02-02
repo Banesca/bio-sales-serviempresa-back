@@ -1,5 +1,5 @@
 import ProductForm from '../../../components/products/productForm';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';
 

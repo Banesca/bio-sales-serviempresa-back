@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import ProductForm from '../../../../components/products/productForm';
-import DashboardLayout from '../../../../components/layout';
+import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
-import Loading from '../../../../components/loading';
+import Loading from '../../../../components/shared/loading';
 import { useRequest } from '../../../../hooks/useRequest';
 import { message } from 'antd';
 

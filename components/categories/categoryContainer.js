@@ -5,7 +5,7 @@ import { Modal } from 'antd';
 import { Form } from 'antd';
 import { Button, Col, Row } from 'antd';
 import CategoryFilters from './categoryFilters';
-import Loading from '../loading';
+import Loading from '../shared/loading'; 
 import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { message } from 'antd';

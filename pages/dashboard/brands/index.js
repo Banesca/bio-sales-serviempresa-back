@@ -1,8 +1,8 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import DashboardLayout from '../../../components/layout';
+import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/shared/loading';
 import { Button, Col, Row, Table, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
@@ -37,7 +37,6 @@ const BrandsPage = () => {
 	const generalContext = useContext(GeneralContext);
 	const { getBrands, brands } = useBrandContext();
 	const { selectedBusiness } = useBusinessProvider();
-
 
 	// const [loading, setLoading] = useState(false);
 	const { loading } = useLoadingContext();
