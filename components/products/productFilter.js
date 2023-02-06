@@ -3,7 +3,14 @@ import { Select } from 'antd';
 import { Col, Form } from 'antd';
 import { Collapse, Row } from 'antd';
 
-const ProductFilter = ({ setQuery, clean, categories, brands }) => {
+const ProductFilter = ({
+	setQuery,
+	clean,
+	categories,
+	subCategories,
+	lines,
+	brands,
+}) => {
 	const [form] = Form.useForm();
 
 	const onReset = () => {
@@ -12,7 +19,6 @@ const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 	};
 
 	const onSubmit = (values) => {
-		console.log(values);
 		setQuery({
 			nameProduct: values.nameProduct || '',
 			barCode: values.barCode || '',
@@ -91,7 +97,6 @@ const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 										showSearch
 										allowClear
 										filterOption={(input, option) => {
-											console.log(input, option);
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
 												.includes(
@@ -113,7 +118,7 @@ const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 							</Col>
 							<Col span={12}>
 								<Form.Item
-									label="Marca"
+									label="Sub Categoría"
 									name="nameSubFamily"
 									style={{
 										padding: '0 .5rem',
@@ -123,7 +128,6 @@ const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 										allowClear
 										showSearch
 										filterOption={(input, option) => {
-											console.log(input, option);
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
 												.includes(
@@ -131,8 +135,8 @@ const ProductFilter = ({ setQuery, clean, categories, brands }) => {
 												);
 										}}
 									>
-										{brands &&
-											brands.map((b, i) => (
+										{subCategories &&
+											subCategories.map((b, i) => (
 												<Select.Option
 													key={b.idProductSubFamily}
 													value={b.idProductSubFamily}

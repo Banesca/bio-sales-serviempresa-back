@@ -24,6 +24,23 @@ export function useOrders() {
 		setOrders(value);
 	};
 
+	const setProductsQuantity = (value, index) => {
+		let obj = currentOrder;
+		console.log(obj, 'obj');
+		obj.body[index].weight = value;
+		setCurrentOrder({ ...obj });
+	};
+
+	const confirmProductQuantity = async (idOrderB, weight) => {
+		const res = await requestHandler.post(
+			`/api/v2/order/product/setweight`,
+			{ idOrderB, weight }
+		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+	};
+
 	const getOrderById = async (id) => {
 		const res = await requestHandler.get(`/api/v2/order/byidH/${id}`);
 		if (res.isLeft()) {
@@ -64,5 +81,7 @@ export function useOrders() {
 		getOrderById,
 		getOrders,
 		changeStatus,
+		setProductsQuantity,
+		confirmProductQuantity,
 	};
 }

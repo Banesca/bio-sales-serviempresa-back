@@ -100,7 +100,9 @@ export default function DashboardLayout({ children }) {
 							style={{ height: '100vh' }}
 						/>
 					</Sider>
-					<Content style={{ heigh: '100vh' }}>{children}</Content>
+					<Content style={{ heigh: '100vh', overflow: 'auto' }}>
+						{children}
+					</Content>
 				</Layout>
 			</Layout>
 			<Loading isLoading={loading} />

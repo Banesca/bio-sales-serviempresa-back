@@ -1,29 +1,6 @@
 import { useRouter } from 'next/router';
-import {
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useReducer,
-	useState,
-} from 'react';
-import {
-	ArrowLeftOutlined,
-	DeleteOutlined,
-	ExceptionOutlined,
-	ExclamationCircleFilled,
-} from '@ant-design/icons';
-import {
-	Button,
-	Col,
-	Row,
-	Table,
-	Form,
-	Input,
-	Space,
-	message,
-	Typography,
-} from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import { Button, Col, Row, message, Typography } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import { useRequest } from '../../../../hooks/useRequest';
@@ -33,183 +10,109 @@ import { addKeys } from '../../../../util/setKeys';
 import { Modal } from 'antd';
 import { useProductFilter } from '../../../../components/products/useProductFilter';
 import { List } from 'antd';
+import ProductList from '../../../../components/orders/update/productList';
+import ProductsInOrder from '../../../../components/orders/update/productsInOrder';
+import { useOrders } from '../../../../components/orders/hooks/useOrders';
+import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
+import { useProducts } from '../../../../components/products/hooks/useProducts';
+import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
+import { useBrandContext } from '../../../../hooks/useBrandsProvider';
+import { statusNames } from '../../../../components/orders/detail/changeStatus';
 
 const UpdateOrderPage = () => {
-	const AddColumns = [
-		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
-			key: 2,
-			render: (text, record) => (
-				<p style={{ color: record.isPromo == '1' && 'green' }}>
-					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
-			),
-		},
-		{
-			title: 'Acciones',
-			key: 3,
-			render: (text, record) => (
-				<Space>
-					<Button
-						type="primary"
-						onClick={() => handleAddProduct(record)}
-					>
-						Agregar
-					</Button>
-				</Space>
-			),
-		},
-	];
-
-	const orderColumns = [
-		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
-			key: 2,
-			render: (text, record) => (
-				<p style={{ color: record.isPromo == '1' && 'green' }}>
-					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
-			),
-		},
-		{
-			title: 'Cantidad',
-			dataIndex: 'weight',
-			key: 3,
-			render: (number, record, index) => (
-				<Space>
-					<Input
-						type="number"
-						style={{ width: '80px' }}
-						value={order.body[index].weight}
-						onChange={(e) => {
-							let obj = order;
-							obj.body[index].weight = e.target.value;
-							setOrder({ ...obj });
-						}}
-					/>
-					<Button
-						type="primary"
-						onClick={() => handleUpdateProduct(record)}
-					>
-						Ok
-					</Button>
-				</Space>
-			),
-		},
-		{
-			title: 'Acciones',
-			key: 3,
-			render: (record) => (
-				<Space>
-					<Button
-						onClick={() => deleteModalOpen(record)}
-						type="primary"
-						danger
-					>
-						<DeleteOutlined />
-					</Button>
-				</Space>
-			),
-		},
-	];
-
 	const router = useRouter();
 	const { id } = router.query;
 
 	const { filtered, clean, setProduct, setQuery } = useProductFilter();
+	const { products, getProducts } = useProducts();
+	const {
+		currentOrder,
+		getOrderById,
+		changeStatus,
+		setProductsQuantity,
+		confirmProductQuantity,
+	} = useOrders();
+	const {
+		categories,
+		subCategories,
+		lines,
+		getCategories,
+		getSubCategories,
+		getLines,
+	} = useCategoryContext();
+	const { brands, getBrands } = useBrandContext();
+	const { loading, setLoading } = useLoadingContext();
 
-	const [order, setOrder] = useState();
-	const [user, setUser] = useState();
-	const [loading, setLoading] = useState(true);
-	const [brands, setBrands] = useState([]);
-	const [categories, setCategories] = useState([]);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [currentProduct, setCurrentProduct] = useState();
 	const [total, setTotal] = useState(0);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 
-	const handleReturn = () => {
-		router.push('/dashboard/orders');
-	};
-
 	const getOrderRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/order/byidH/${id}`);
-		console.log(res.value);
-		if (res.isLeft()) {
-			return;
-		}
-		const value = res.value.getValue().data;
-		setOrder(value);
-		console.log(value);
-		setLoading(false);
-	};
-
-	const getUserRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/user/${id}`);
-		console.log(res.value);
-		if (res.isLeft()) {
-			return;
-		}
-		const value = res.value.getValue().data[0];
-		setUser(value);
-	};
-
-	const categoryListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/family/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
-		}
-		const value = response.value.getValue().response;
-		setCategories(value);
-	};
-
-	const brandListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/subfamily/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
-		}
-		console.log('BRAND', response.value.getValue());
-		const value = response.value.getValue().response;
-		setBrands(value);
-	};
-
-	const handleListProductRequest = async (
-		pFamily = 0,
-		pSubFamily = 0,
-		business = 1
-	) => {
-		const response = await requestHandler.get(
-			`/api/v2/product/list/${pFamily}/${pSubFamily}/${business}`
-		);
-		if (response.isLeft()) {
+		setLoading(true);
+		try {
+			await getOrderById(id);
+		} catch (error) {
+			message.error('Error al cargar orden');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		const value = response.value.getValue().data;
-		addKeys(value);
-		//dispatch({ type: FILTER_ACTIONS.GET_PRODUCTS, payload: value });
-		setProduct(value);
-		setLoading(false);
 	};
+
+	const getCategoriesRequest = async (id) => {
+		setLoading(true);
+		try {
+			await getCategories(id);
+			await getSubCategories(id);
+			await getLines(id);
+		} catch (error) {
+			message.error('Error al cargar categorías');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getBrandsRequest = async (id) => {
+		setLoading(true);
+		try {
+			await getBrands(id);
+		} catch (error) {
+			message.error('Error al cargar marcas');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleListProductRequest = async (id) => {
+		setLoading(true);
+		try {
+			await getProducts(id);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al cargar productos');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		if (products) {
+			addKeys(products);
+			setProduct(products);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [products]);
+
+	// const getUserRequest = async (id) => {
+	// 	const res = await requestHandler.get(`/api/v2/user/${id}`);
+	// 	console.log(res.value);
+	// 	if (res.isLeft()) {
+	// 		return;
+	// 	}
+	// 	const value = res.value.getValue().data[0];
+	// 	setUser(value);
+	// };
 
 	const calculateTotalRequest = async () => {
 		const res = await requestHandler.get(
@@ -222,74 +125,28 @@ const UpdateOrderPage = () => {
 		setTotal(value.message[0].TOTAL);
 	};
 
+	useEffect(() => {
+		if (currentOrder) {
+			calculateTotalRequest(currentOrder.idOrderH);
+		}
+	}, [currentOrder]);
+
 	const generalContext = useContext(GeneralContext);
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
-		if (generalContext && selectedBusiness) {
+		if (
+			Object.keys(generalContext).length &&
+			Object.keys(selectedBusiness).length
+		) {
 			getOrderRequest(id);
-			categoryListRequest(selectedBusiness.idSucursal);
-			brandListRequest(selectedBusiness.idSucursal);
-			handleListProductRequest(0, 0, selectedBusiness.idSucursal);
+			getBrandsRequest(selectedBusiness.idSucursal);
+			getCategoriesRequest(selectedBusiness.idSucursal);
+			handleListProductRequest(selectedBusiness.idSucursal);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id, selectedBusiness]);
-
-	useEffect(() => {
-		if (generalContext) {
-			calculateTotalRequest();
-		}
-	}, [order]);
-
-	const handleUpdateProduct = async (record) => {
-		setLoading(true);
-		const res = await requestHandler.post(
-			`/api/v2/order/product/setweight`,
-			{ idOrderB: record.idOrderB, weight: record.weight }
-		);
-		console.log(res);
-		if (res.isLeft()) {
-			message.error('Ha ocurrido un error');
-		}
-		setLoading(false);
-		await getOrderRequest(id);
-		message.success('Cantidad actualizada');
-	};
-
-	const handleAddProduct = async (record) => {
-		let index = 0;
-		let found = false;
-		if (order.body) {
-			for (const o of order.body) {
-				if (o.idProduct === record.idProduct) {
-					found = true;
-					break;
-				}
-				index += 1;
-			}
-			if (found) {
-				let obj = order;
-				obj.body[index].weight += 1;
-				await handleUpdateProduct(obj.body[index]);
-				return;
-			}
-		}
-		setLoading(true);
-		const res = await requestHandler.post(`/api/v2/order/product/add`, {
-			idOrderHFk: id,
-			idProductFk: record.idProduct,
-			idStatusFk: 1,
-			idUserAddFk: localStorage.getItem('userId'),
-			priceProductOrder: record.priceSale,
-			quantityProduct: 1,
-		});
-		if (res.isLeft()) {
-			return message.error('Ha ocurrido un error');
-		}
-		await getOrderRequest(id);
-		message.success('Producto agregado');
-		setLoading(false);
-	};
 
 	const handleRemoveProduct = async (record) => {
 		setLoading(true);
@@ -305,7 +162,7 @@ const UpdateOrderPage = () => {
 		message.success('Producto removido');
 	};
 
-	const deleteModalOpen = (product) => {
+	const openDeleteModal = (product) => {
 		setCurrentProduct(product);
 		setDeleteOpen(true);
 	};
@@ -317,41 +174,18 @@ const UpdateOrderPage = () => {
 
 	const handleCloseOrder = async () => {
 		setLoading(true);
-		const res = await requestHandler.put(`/api/v2/order/close/${id}`, {
-			comments: '',
-			mpCash: total,
-			mpCreditCard: 0,
-			mpDebitCard: 0,
-			mpTranferBack: 0,
-			totalBot: total,
-			mpMpago: 0,
-			idCurrencyFk: 1,
-			listPaymentMethod: [],
-			isAfip: '0',
-			mpRappi: 0,
-			mpGlovo: 0,
-			mpUber: 0,
-			mpPedidosya: 0,
-			mpJust: 0,
-			mpWabi: 0,
-			mpOtro2: 0,
-			mpPedidosyacash: 0,
-			mpPersonal: 0,
-			mpRapicash: 0,
-			mpPresent: 0,
-			mpPaypal: 0,
-			mpZelle: 0,
-			mpBofa: 0,
-			mpYumi: 0,
-			waste: 0,
-			isPrintBillin: 0,
-		});
-		console.log(res);
-		if (res.isLeft()) {
-			return message.error('Ha ocurrido un error');
+		try {
+			await changeStatus(
+				statusNames['En Proceso'],
+				currentOrder.idOrderH
+			);
+			router.push(`/dashboard/orders/${id}`);
+		} catch (error) {
+			console.error(error);
+			message.error('Error al procesar pedido');
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
-		router.push(`/dashboard/orders/${id}`);
 	};
 
 	const handleCancelOrder = async () => {
@@ -365,12 +199,6 @@ const UpdateOrderPage = () => {
 		setLoading(false);
 		message.success('Orden cancelada');
 	};
-
-	useEffect(() => {
-		if (order && order.idStatusOrder !== 1) {
-			router.push(`/dashboard/orders/${id}`);
-		}
-	}, [id, order]);
 
 	return (
 		<DashboardLayout>
@@ -390,10 +218,7 @@ const UpdateOrderPage = () => {
 						alignItems: 'center',
 					}}
 				>
-					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem', color: 'white' }}
-						onClick={handleReturn}
-					/>
+					<div></div>
 					<h1
 						style={{
 							textAlign: 'center',
@@ -401,23 +226,16 @@ const UpdateOrderPage = () => {
 							color: 'white',
 						}}
 					>
-						Actualizar Orden
+						Tomar pedido
 					</h1>
 					<div>
 						<Button
 							onClick={() => setIsCloseOrderModal(true)}
 							type="primary"
 							style={{ marginRight: '1rem' }}
-							disabled={!order?.body}
+							disabled={!currentOrder?.body}
 						>
-							Facturar
-						</Button>
-						<Button
-							onClick={() => setIsCancelOrderModal(true)}
-							type="primary"
-							danger
-						>
-							Anular
+							Procesar
 						</Button>
 					</div>
 				</div>
@@ -427,12 +245,15 @@ const UpdateOrderPage = () => {
 							brands={brands}
 							setQuery={setQuery}
 							categories={categories}
+							subCategories={subCategories}
+							lines={lines}
 							clean={clean}
 						/>
-						<Table
-							dataSource={filtered()}
-							columns={AddColumns}
-							loading={loading}
+						<ProductList
+							products={filtered()}
+							orderId={id}
+							orderProducts={currentOrder?.body}
+							getOrderRequest={getOrderRequest}
 						/>
 					</Col>
 					<Col span={12}>
@@ -444,12 +265,13 @@ const UpdateOrderPage = () => {
 									margin: '0 0 2rem 0',
 								}}
 							>
-								{`Orden ${order?.numberOrden}`}
+								{`Orden ${currentOrder?.numberOrden}`}
 							</h2>
-							<Table
-								columns={orderColumns}
-								loading={loading}
-								dataSource={order?.body ? order.body : null}
+							<ProductsInOrder
+								order={currentOrder}
+								openDeleteModal={openDeleteModal}
+								setProductsQuantity={setProductsQuantity}
+								confirmProductQuantity={confirmProductQuantity}
 							/>
 						</Typography>
 					</Col>
@@ -480,15 +302,15 @@ const UpdateOrderPage = () => {
 				</p>
 			</Modal>
 			<Modal
-				title="Facturar"
+				title="Procesar"
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
 				onOk={() => handleCloseOrder()}
 				cancelText="Cancelar"
-				okText="Facturar"
+				okText="Procesar"
 			>
 				<List
-					dataSource={order?.body}
+					dataSource={currentOrder?.body}
 					renderItem={(item) => (
 						<List.Item>
 							<List.Item.Meta

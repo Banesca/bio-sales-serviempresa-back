@@ -8,7 +8,7 @@ import { useOrders } from '../hooks/useOrders';
 import { message } from 'antd';
 import { useRouter } from 'next/router';
 
-const statusNames = {
+export const statusNames = {
 	Facturado: 2,
 	'En Proceso': 3,
 	Retenido: 4,

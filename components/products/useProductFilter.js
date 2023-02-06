@@ -1,5 +1,5 @@
-import { FilterFilled } from '@ant-design/icons';
 import { useCallback, useReducer } from 'react';
+import { addKeys } from '../../util/setKeys';
 
 const INITIAL_QUERY_VALUES = {
 	nameProduct: '',
@@ -62,6 +62,7 @@ export function useProductFilter() {
 				(p) => p.idProductSubFamily === state.query.nameSubFamily
 			);
 		}
+		addKeys(list)
 		return list;
 	}, []);
 
