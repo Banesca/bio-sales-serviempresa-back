@@ -38,7 +38,7 @@ export default function ProductsInOrder({
 				<Space>
 					<Input
 						type="number"
-						style={{ width: '80px' }}
+						style={{ width: '60px' }}
 						value={order?.body[index].weight}
 						onChange={(e) =>
 							setProductsQuantity(e.target.value, index)
