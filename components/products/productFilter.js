@@ -1,16 +1,15 @@
-import { Button, Input } from 'antd';
-import { Select } from 'antd';
-import { Col, Form } from 'antd';
-import { Collapse, Row } from 'antd';
+import { Button, Input, Select, Col, Form, Collapse, Row } from 'antd';
+
+import { useCategoryContext } from '../../hooks/useCategoriesProvider';
+import { useBrandContext } from '../../hooks/useBrandsProvider';
 
 const ProductFilter = ({
 	setQuery,
 	clean,
-	categories,
-	subCategories,
-	lines,
-	brands,
 }) => {
+	const { categories, subCategories, lines } = useCategoryContext();
+	const { brands } = useBrandContext();
+
 	const [form] = Form.useForm();
 
 	const onReset = () => {
@@ -26,6 +25,8 @@ const ProductFilter = ({
 			minPrice: values.minPrice || '',
 			nameFamily: values.nameFamily || 0,
 			nameSubFamily: values.nameSubFamily || 0,
+			idBrandFk: values.idBrandFk || 0,
+			idLineFk: values.idLineFk || 0,
 		});
 	};
 
@@ -142,6 +143,70 @@ const ProductFilter = ({
 													value={b.idProductSubFamily}
 												>
 													{b.nameSubFamily}
+												</Select.Option>
+											))}
+									</Select>
+								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={12}>
+								<Form.Item
+									label="Linea"
+									name="idLineFk"
+									style={{
+										padding: '0 .5rem',
+									}}
+								>
+									<Select
+										showSearch
+										allowClear
+										filterOption={(input, option) => {
+											return (option?.children ?? '')
+												.toLocaleLowerCase()
+												.includes(
+													input.toLocaleLowerCase()
+												);
+										}}
+									>
+										{lines &&
+											lines.map((line, i) => (
+												<Select.Option
+													key={line.idLine}
+													value={line.idLine}
+												>
+													{line.name}
+												</Select.Option>
+											))}
+									</Select>
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item
+									label="Marca"
+									name="idBrandFk"
+									style={{
+										padding: '0 .5rem',
+									}}
+								>
+									<Select
+										showSearch
+										allowClear
+										filterOption={(input, option) => {
+											return (option?.children ?? '')
+												.toLocaleLowerCase()
+												.includes(
+													input.toLocaleLowerCase()
+												);
+										}}
+									>
+										{brands &&
+											brands.map((c, i) => (
+												<Select.Option
+													key={c.idBrand}
+													value={c.idBrand}
+												>
+													{c.name}
 												</Select.Option>
 											))}
 									</Select>

@@ -1,13 +1,15 @@
 import { useCallback, useReducer } from 'react';
 import { addKeys } from '../../util/setKeys';
 
-const INITIAL_QUERY_VALUES = {
+export const INITIAL_QUERY_VALUES = {
 	nameProduct: '',
 	barCode: '',
 	minPrice: 0,
 	maxPrice: 0,
 	nameFamily: '',
 	nameSubFamily: '',
+	idLineFk: '',
+	idBrandFk: '',
 };
 
 const FILTER_ACTIONS = {
@@ -62,7 +64,13 @@ export function useProductFilter() {
 				(p) => p.idProductSubFamily === state.query.nameSubFamily
 			);
 		}
-		addKeys(list)
+		if (state.query.idBrandFk) {
+			list = list.filter((p) => p.idBrandFk == state.query.idBrandFk);
+		}
+		if (state.query.idLineFk) {
+			list = list.filter((p) => p.idLineFk == state.query.idLineFk);
+		}
+		addKeys(list);
 		return list;
 	}, []);
 
@@ -72,7 +80,7 @@ export function useProductFilter() {
 				return {
 					...state,
 					query: INITIAL_QUERY_VALUES,
-					products: state.products,
+					filtered: () => state.products
 				};
 			case FILTER_ACTIONS.GET_PRODUCTS:
 				return {
@@ -106,7 +114,8 @@ export function useProductFilter() {
 	};
 
 	const clean = () => {
-		setQuery(INITIAL_QUERY_VALUES);
+		dispatch({ type: FILTER_ACTIONS.CLEAR });
+		// setQuery(INITIAL_QUERY_VALUES);
 	};
 
 	return { setQuery, setProduct, clean, filtered };
