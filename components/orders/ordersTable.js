@@ -20,12 +20,44 @@ export default function OrdersTable({ orders }) {
 			title: 'Fecha de creación',
 			dataIndex: 'created_at',
 			key: 0,
+			sorter: (a, b) => {
+				let aYear = a.created_at.substring(0, 4);
+				let bYear = b.created_at.substring(0, 4);
+
+				let aMonth = a.created_at.substring(5, 7);
+				let bMonth = b.created_at.substring(5, 7);
+
+				let aDay = a.created_at.substring(5, 7);
+				let bDay = b.created_at.substring(8, 10);
+
+				let aDate = new Date(aYear, aMonth, aDay);
+				let bDate = new Date(bYear, bMonth, bDay);
+
+				return aDate.getTime() - bDate.getTime();
+			},
+			showSorterTooltip: false,
 			render: (text) => <p>{text.split(' ', 1)}</p>,
 		},
 		{
 			title: 'Ultima actualización',
 			//dataIndex: 'updated_at',
 			key: 0,
+			// sorter: (a, b) => {
+			// 	let aYear = a.updated_at.substring(0, 4);
+			// 	let bYear = b.updated_at.substring(0, 4);
+
+			// 	let aMonth = a.updated_at.substring(5, 7);
+			// 	let bMonth = b.updated_at.substring(5, 7);
+
+			// 	let aDay = a.updated_at.substring(5, 7);
+			// 	let bDay = b.updated_at.substring(8, 10);
+
+			// 	let aDate = new Date(aYear, aMonth, aDay);
+			// 	let bDate = new Date(bYear, bMonth, bDay);
+
+			// 	return aDate.getTime() - bDate.getTime();
+			// },
+			// showSorterTooltip: false,
 			render: (text) => <p></p>,
 		},
 		{
