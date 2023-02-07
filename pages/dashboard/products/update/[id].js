@@ -1,11 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import ProductForm from '../../../../components/products/productForm';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import Loading from '../../../../components/shared/loading';
-import { useRequest } from '../../../../hooks/useRequest';
 import { message } from 'antd';
+import { useProducts } from '../../../../components/products/hooks/useProducts';
+import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
 
 export const UpdateProduct = () => {
 	const generalContext = useContext(GeneralContext);
@@ -13,71 +15,45 @@ export const UpdateProduct = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
+	const { getProductById, updateProduct, currentProduct } = useProducts();
+
 	const [product, setProduct] = useState({});
-	const [productImage, setProductImage] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [brand, setBrand] = useState(null);
-	const [category, setCategory] = useState(null);
-
-	const { requestHandler } = useRequest();
-
-	const getCategoryRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/family/get/${id}`);
-		if (res.isLeft()) {
-			return console.log('error');
-		}
-		const value = res.value.getValue().data;
-		setCategory(value);
-		//set(res.value.getValue().data);
-	};
-
-	const getBrandRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/subfamily/get/${id}`);
-		if (res.isLeft()) {
-			setLoading(false);
-			return console.log('error');
-		}
-		const value = res.value.getValue().data;
-		setBrand(value);
-		setLoading(false);
-		//set(res.value.getValue().data);
-	};
+	const { loading, setLoading } = useLoadingContext();
 
 	const getProductRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/product/get/${id}`);
-		if (res.isLeft()) {
-			setLoading(false);
-			return console.log('ERROR', res.value.getErrorValue());
+		setLoading(true);
+		try {
+			await getProductById(id);
+		} catch (error) {
+			console.log(error);
 		}
-		const value = res.value.getValue().data;
-		console.log('PRODUCT', value);
-		setProduct(value);
-		getCategoryRequest(value.idProductFamilyFk);
-		getBrandRequest(value.idProductSubFamilyFk);
-		//getImageRequest(res.value.getValue().data.urlImagenProduct);
 	};
 
-	const updateProductRequest = async (data) => {
-		const res = await requestHandler.put('/api/v2/product/update', data);
-		console.log('RESPONSE', res);
-		if (res.isLeft()) {
-			console.log(res.value.getErrorValue());
-			message.error('Ha ocurrido un error');
+	const updateProductRequest = async (data, file) => {
+		setLoading(true);
+		try {
+			await updateProduct(data, file);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al actualizar producto');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		setLoading(false);
-		const value = res.value.getValue().response;
-		console.log(value);
-		message.success('Producto Actualizado');
 	};
 
 	useEffect(() => {
+		setLoading(true);
 		if (generalContext && id) {
-			setLoading(true);
 			getProductRequest(id);
 		}
 	}, [generalContext, id]);
+
+	useEffect(() => {
+		if (Object.keys(currentProduct).length) {
+			setProduct(currentProduct);
+			setLoading(false);
+		}
+	}, [currentProduct]);
 
 	return (
 		<DashboardLayout>

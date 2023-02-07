@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
 	Button,
 	Switch,
@@ -11,58 +11,51 @@ import {
 	message,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
-import Loading from '../shared/loading';
-import { Router, useRouter } from 'next/router';
+import { useLoadingContext } from '../../hooks/useLoadingProvider';
+import { useBrandContext } from '../../hooks/useBrandsProvider';
+import { useCategoryContext } from '../../hooks/useCategoriesProvider';
+import { MEASURE_UNITS } from './hooks/useProducts';
 
 const ProductForm = (props) => {
-	const [loading, setLoading] = useState(false);
-	const [brands, setBrands] = useState([]);
-	const [categories, setCategories] = useState([]);
-	const [imageUrl, setImageUrl] = useState();
-	const [hasPromotion, setHasPromotion] = useState(false);
-	const [unitMeasure, setUnitMeasure] = useState([]);
+	const { setLoading } = useLoadingContext();
+	const { brands, getBrands } = useBrandContext();
+	const {
+		categories,
+		getCategories,
+		subCategories,
+		getSubCategories,
+		lines,
+		getLines,
+	} = useCategoryContext();
+
 	const [file, setFile] = useState(null);
 	const [fileList, setFileList] = useState([]);
 	const [isValidImgSize, setIsValidImgSize] = useState();
 
 	const initialState = {
+		nameProduct: props.product.nameProduct || '',
+		barCode: props.product.barCode || '',
 		idProductFamilyFk: props.product.idProductFamilyFk || '',
 		idProductSubFamilyFk: props.product.idProductSubFamilyFk || '',
-		nameProduct: props.product.nameProduct || '',
-		pricePurchase: 0,
+		idLineFk: props.product.idLineFk || null,
+		idBrandFk: props.product.idBrandFk || null,
+		ean: props.product.ean || '',
+		healthRegister: props.product.healthRegister || '',
 		priceSale: props.product.priceSale || 0,
-		idUnitMeasurePurchaseFk: props.product.idUnitMeasureSaleFk || '',
-		idUnitMeasureSaleFk: props.product.idUnitMeasureSaleFk || '',
-		idTypeProductFk: '1',
-		idAdicionalCategoryFk: '0',
-		idRestaurantFk: 1,
-		is5050: '0',
-		efectivo: '0',
+		cpe: props.product.cpe || '',
 		isPromo: props.product.isPromo || '0',
-		linkPago: '0',
-		minStock: '0',
-		isheavy: '0',
-		maxProducVenta: '0',
-		maxAditionals: '0',
-		minAditionals: '0',
 		marketPrice: props.product.marketPrice || 0,
-		percentageOfProfit: '0',
-		nameKitchen: '',
-		barCode: props.product.barCode || '',
-		tax: '',
-		starts: '5',
+		idUnitMeasureSaleFk: props.product.idUnitMeasureSaleFk || '',
+		unitweight: props.product.unitweight || null,
+		unitByBox: props.product.unitByBox || '',
+		observation: props.product.observation || '',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
 	};
 
 	const [product, setProduct] = useState(initialState);
-
-	console.log('Props Product', props.product);
-
-	const { requestHandler } = useRequest();
 
 	const fileProgress = (fileInput) => {
 		const img = new Image();
@@ -136,108 +129,59 @@ const ProductForm = (props) => {
 	};
 
 	const categoryListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/family/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
+		setLoading(true);
+		try {
+			await getCategories(business);
+			await getSubCategories(business);
+			await getLines(business);
+		} catch (error) {
+			console.log(error);
 		}
-		const value = response.value.getValue().response;
-		setCategories(value);
 	};
 
 	const brandListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/subfamily/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
+		setLoading(true);
+		try {
+			await getBrands(business);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al cargar las marcas');
 		}
-		console.log('BRAND', response.value.getValue());
-		const value = response.value.getValue().response;
-		setBrands(value);
-	};
-
-	const unitMeasureRequest = async () => {
-		const response = await requestHandler.get(`/api/v2/utils/unitmeasure`);
-		if (response.isLeft()) {
-			return;
-		}
-		console.log('BRAND', response.value.getValue());
-		const value = response.value.getValue().response;
-		setUnitMeasure(value);
 	};
 
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
-		console.log('business', selectedBusiness);
-		if (generalContext && selectedBusiness) {
+		console.log(product, 'product');
+	}, [product]);
+
+	useEffect(() => {
+		if (
+			Object.keys(generalContext).length &&
+			Object.keys(selectedBusiness).length
+		) {
 			brandListRequest(selectedBusiness.idSucursal);
 			categoryListRequest(selectedBusiness.idSucursal);
-			unitMeasureRequest();
 			setProduct({
 				...product,
 				idSucursalFk: selectedBusiness.idSucursal,
 				idRestaurantFk: selectedBusiness.idSucursal,
 			});
+			setLoading(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-	const validateBarCode = async (barCode) => {
-		const res = await requestHandler.post(
-			'/api/v2/product/find/bybarcode',
-			{ barCode, idSucursalFk: selectedBusiness.idSucursal }
-		);
-		const value = res.value.getValue();
-		console.log(value);
-		return !!value.data;
-	};
-
-	const validateProductName = async (nameProduct) => {
-		const res = await requestHandler.post('/api/v2/product/find/name', {
-			nameProduct,
-			idSucursalFk: selectedBusiness.idSucursal,
-		});
-		const value = res.value.getValue();
-		console.log(value);
-		return !!value.data;
-	};
-
-	const router = useRouter();
 	const onSubmit = async () => {
 		setLoading(true);
-		const formData = new FormData();
-		for (const field of Object.entries(product)) {
-			if (!props.update && field[0] == 'idProduct') {
-				continue;
-			}
-			formData.append(field[0], field[1]);
-		}
-		if (file) {
-			const imgName = file.name.replace(' ', '-');
-			formData.append('image', file, imgName);
-		}
-		if (!props.update) {
-			const invalidCode = await validateBarCode(product.barCode);
-			const invalideName = await validateProductName(product.nameProduct);
-			if (invalideName) {
-				setLoading(false);
-				return message.error(
-					`El producto ${product.nameProduct} ya existe`
-				);
-			}
-			if (invalidCode) {
-				setLoading(false);
-				return message.error(
-					`El código ${product.barCode} ya se encuentra en uso`
-				);
-			}
-		}
-		await props.handleRequest(formData);
+		console.log(product, 'product');
+		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
+		await props.handleRequest(product, file);
 		setLoading(false);
-		router.push('/dashboard/products');
+		if (!props.update) {
+			onReset();
+		}
 	};
 
 	const [form] = Form.useForm();
@@ -259,8 +203,8 @@ const ProductForm = (props) => {
 			</h1>
 			<div
 				style={{
-					maxWidth: '650px',
-					margin: 'auto',
+					// maxWidth: '650px',
+					margin: 'auto 1rem',
 				}}
 			>
 				<Form
@@ -270,36 +214,49 @@ const ProductForm = (props) => {
 					initialValues={{
 						nameProduct: product.nameProduct,
 						barCode: product.barCode,
-						priceSale: product.priceSale,
 						idProductFamilyFk: product.idProductFamilyFk,
 						idProductSubFamilyFk: product.idProductSubFamilyFk,
-						idUnitMeasureSaleFk: product.idUnitMeasureSaleFk,
+						idBrandFk: product.idBrandFk,
+						idLineFk: product.idLineFk,
+						ean: product.ean,
+						healthRegister: product.healthRegister,
+						priceSale: product.priceSale,
+						cpe: product.cpe,
 						marketPrice: product.marketPrice,
+						idUnitMeasureSaleFk: product.idUnitMeasureSaleFk,
+						unitByBox: product.unitByBox,
+						unitweight: product.unitweight,
+						observation: product.observation,
 					}}
 					onFinish={onSubmit}
 					autoComplete="off"
 					form={form}
 				>
-					<Form.Item
-						label="Nombre"
-						name="nameProduct"
-						rules={[
-							{ required: true, message: 'Ingresa un nombre' },
-						]}
-					>
-						<Input
-							type="text"
-							defaultValue={product.nameProduct}
-							value={product.nameProduct}
-							onChange={(e) =>
-								setProduct({
-									...product,
-									nameProduct: e.target.value,
-								})
-							}
-						></Input>
-					</Form.Item>
 					<Row>
+						<Col span={12}>
+							<Form.Item
+								label="Nombre"
+								name="nameProduct"
+								labelCol={{ span: 8 }}
+								rules={[
+									{
+										required: true,
+										message: 'Ingresa un nombre',
+									},
+								]}
+							>
+								<Input
+									type="text"
+									value={product.nameProduct}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											nameProduct: e.target.value,
+										})
+									}
+								></Input>
+							</Form.Item>
+						</Col>
 						<Col span={12}>
 							<Form.Item
 								label="Código"
@@ -313,38 +270,12 @@ const ProductForm = (props) => {
 								]}
 							>
 								<Input
-									defaultValue={product.barCode}
 									value={product.barCode}
 									type="text"
 									onChange={(e) =>
 										setProduct({
 											...product,
 											barCode: e.target.value,
-										})
-									}
-								></Input>
-							</Form.Item>
-						</Col>
-						<Col span={12}>
-							<Form.Item
-								label="Precio"
-								name="priceSale"
-								labelCol={{ span: 8 }}
-								rules={[
-									{
-										required: true,
-										message: 'Ingresa un precio',
-									},
-								]}
-							>
-								<Input
-									defaultValue={product.priceSale}
-									value={product.priceSale}
-									type="number"
-									onChange={(e) =>
-										setProduct({
-											...product,
-											priceSale: e.target.value,
 										})
 									}
 								></Input>
@@ -365,7 +296,6 @@ const ProductForm = (props) => {
 								]}
 							>
 								<Select
-									defaultValue={product.idProductFamilyFk}
 									value={product.idProductFamilyFk}
 									onChange={(v) =>
 										setProduct({
@@ -388,7 +318,7 @@ const ProductForm = (props) => {
 						</Col>
 						<Col span={12}>
 							<Form.Item
-								label="Marca"
+								label="Sub Categoría"
 								name="idProductSubFamilyFk"
 								labelCol={{ span: 8 }}
 								rules={[
@@ -399,7 +329,6 @@ const ProductForm = (props) => {
 								]}
 							>
 								<Select
-									defaultValue={product.idProductSubFamilyFk}
 									value={product.idProductSubFamilyFk}
 									onChange={(v) =>
 										setProduct({
@@ -408,8 +337,8 @@ const ProductForm = (props) => {
 										})
 									}
 								>
-									{brands &&
-										brands.map((b, i) => (
+									{subCategories &&
+										subCategories.map((b, i) => (
 											<Select.Option
 												key={b.idProductSubFamily}
 												value={b.idProductSubFamily}
@@ -424,57 +353,142 @@ const ProductForm = (props) => {
 					<Row>
 						<Col span={12}>
 							<Form.Item
-								label="Medida"
-								name="idUnitMeasureSaleFk"
+								label="Linea"
+								name="idLineFk"
 								labelCol={{ span: 8 }}
-								rules={[
-									{
-										required: true,
-										message: 'Elige una medida',
-									},
-								]}
 							>
 								<Select
-									defaultValue={product.idUnitMeasureSaleFk}
-									value={product.idUnitMeasureSaleFk}
+									value={product.idLineFk}
 									onChange={(v) =>
 										setProduct({
 											...product,
-											idUnitMeasureSaleFk: v,
-											idUnitMeasurePurchaseFk: v,
+											idLineFk: v,
 										})
 									}
 								>
-									{unitMeasure &&
-										unitMeasure.map((u) => (
+									{lines &&
+										lines.map((line) => (
 											<Select.Option
-												key={u.idUnitMeasureFk}
-												value={u.idUnitMeasureFk}
+												key={line.idLine}
+												value={line.idLine}
 											>
-												{u.unitMeasure}
+												{line.name}
 											</Select.Option>
 										))}
 								</Select>
 							</Form.Item>
 						</Col>
 						<Col span={12}>
-							{/* <Form.Item
+							<Form.Item
 								label="Marca"
-								name="idProductSubFamilyFk"
+								name="idBrandFk"
 								labelCol={{ span: 8 }}
+								rules={[
+									{
+										required: true,
+										message: 'Elige una marca',
+									},
+								]}
 							>
-								<Select allowClear>
+								<Select
+									value={product.idBrandFk}
+									onChange={(v) =>
+										setProduct({
+											...product,
+											idBrandFk: v,
+										})
+									}
+								>
 									{brands &&
-										brands.map((b, i) => (
+										brands.map((brand) => (
 											<Select.Option
-												key={b.idProductSubFamily}
-												value={b.idProductSubFamily}
+												key={brand.idBrand}
+												value={brand.idBrand}
 											>
-												{b.name}
+												{brand.name}
 											</Select.Option>
 										))}
 								</Select>
-							</Form.Item> */}
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={12}>
+							<Form.Item
+								label="EAN13"
+								name="ean"
+								labelCol={{ span: 8 }}
+							>
+								<Input
+									value={product.ean}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											ean: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item
+								label="Registro Sanitario"
+								name="healthRegister"
+								labelCol={{ span: 8 }}
+							>
+								<Input
+									value={product.healthRegister}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											healthRegister: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={12}>
+							<Form.Item
+								label="Precio"
+								name="priceSale"
+								labelCol={{ span: 8 }}
+								rules={[
+									{
+										required: true,
+										message: 'Ingresa un precio',
+									},
+								]}
+							>
+								<Input
+									value={product.priceSale}
+									type="number"
+									onChange={(e) =>
+										setProduct({
+											...product,
+											priceSale: e.target.value,
+										})
+									}
+								></Input>
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item
+								labelCol={{ span: 8 }}
+								label="CPE"
+								name="cpe"
+							>
+								<Input
+									value={product.cpe}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											cpe: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
 						</Col>
 					</Row>
 					<Row>
@@ -506,7 +520,6 @@ const ProductForm = (props) => {
 								>
 									<Input
 										type="number"
-										defaultValue={product.marketPrice}
 										value={product.marketPrice}
 										onChange={(e) =>
 											setProduct({
@@ -518,6 +531,97 @@ const ProductForm = (props) => {
 								</Form.Item>
 							</Col>
 						)}
+					</Row>
+					<Row>
+						<Col span={12}>
+							<Form.Item
+								label="Medida"
+								name="idUnitMeasureSaleFk"
+								labelCol={{ span: 8 }}
+								rules={[
+									{
+										required: true,
+										message: 'Elige una medida',
+									},
+								]}
+							>
+								<Select
+									value={product.idUnitMeasureSaleFk}
+									onChange={(v) =>
+										setProduct({
+											...product,
+											idUnitMeasureSaleFk: v,
+											idUnitMeasurePurchaseFk: v,
+										})
+									}
+								>
+									{Object.entries(MEASURE_UNITS).map((u) => (
+										<Select.Option key={u[1]} value={u[1]}>
+											{u[0]}
+										</Select.Option>
+									))}
+								</Select>
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							{product.idUnitMeasureSaleFk == 3 && (
+								<Form.Item
+									label="Peso Unitario"
+									name="unitweight"
+									required={product.idUnitMeasureSaleFk === 3}
+									labelCol={{ span: 8 }}
+								>
+									<Input
+										value={product.unitweight}
+										onChange={(e) =>
+											setProduct({
+												...product,
+												unitweight: e.target.value,
+											})
+										}
+									/>
+								</Form.Item>
+							)}
+							{product.idUnitMeasureSaleFk == 17 && (
+								<Form.Item
+									label="Unidades/Caja"
+									name="unitByBox"
+									required={
+										product.idUnitMeasureSaleFk === 17
+									}
+									labelCol={{ span: 8 }}
+								>
+									<Input
+										value={product.unitByBox}
+										onChange={(e) =>
+											setProduct({
+												...product,
+												unitByBox: e.target.value,
+											})
+										}
+									/>
+								</Form.Item>
+							)}
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Form.Item
+								label="Observación"
+								name="observation"
+								labelCol={{ span: 4 }}
+							>
+								<Input
+									value={product.observation}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											observation: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
+						</Col>
 					</Row>
 					<Form.Item
 						wrapperCol={{ span: 4, offset: 11 }}
@@ -560,7 +664,6 @@ const ProductForm = (props) => {
 					</Row>
 				</Form>
 			</div>
-			<Loading isLoading={loading} />
 		</>
 	);
 };

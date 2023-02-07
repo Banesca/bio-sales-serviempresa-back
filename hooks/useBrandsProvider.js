@@ -9,6 +9,7 @@ export function useBrandContext() {
 
 const ACTIONS = {
 	SET_BRANDS: 'setBrands',
+	SET_CURRENT_BRANS: 'setCurrentBrand',
 };
 
 export function BrandsProvider({ children }) {
@@ -16,6 +17,7 @@ export function BrandsProvider({ children }) {
 
 	const INITIAL_STATE = {
 		brands: [],
+		currentBrand: {},
 	};
 
 	function reducer(state, action) {
@@ -25,6 +27,11 @@ export function BrandsProvider({ children }) {
 					...state,
 					brands: action.payload,
 				};
+			case ACTIONS.SET_CURRENT_BRANS:
+				return {
+					...state,
+					currentBrand: action.payload,
+				};
 		}
 	}
 
@@ -32,6 +39,15 @@ export function BrandsProvider({ children }) {
 		const res = await requestHandler.get(`/api/v2/brand/list/${id}`);
 		const value = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_BRANDS, payload: value });
+	};
+
+	const getBrandById = async (id) => {
+		const res = await requestHandler.get(`/api/v2/brand/get/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		const value = res.value.getValue().data;
+		dispatch({ type: ACTIONS.SET_CURRENT_BRANS, payload: value });
 	};
 
 	const addBrand = async (name, idSucursalFk) => {
@@ -46,7 +62,9 @@ export function BrandsProvider({ children }) {
 	};
 
 	const deleteBrand = async (brandId, businessId) => {
-		const res = await requestHandler.delete(`/api/v2/brand/delete/${brandId}`);
+		const res = await requestHandler.delete(
+			`/api/v2/brand/delete/${brandId}`
+		);
 		if (res.isLeft()) {
 			throw new Error(res.value.getErrorValue());
 		}
@@ -57,7 +75,14 @@ export function BrandsProvider({ children }) {
 
 	return (
 		<BrandContext.Provider
-			value={{ brands: state.brands, getBrands, addBrand, deleteBrand }}
+			value={{
+				brands: state.brands,
+				currentBrand: state.currentBrand,
+				getBrands,
+				getBrandById,
+				addBrand,
+				deleteBrand,
+			}}
 		>
 			{children}
 		</BrandContext.Provider>

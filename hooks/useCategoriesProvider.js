@@ -11,6 +11,9 @@ const ACTIONS = {
 	SET_CATEGORIES: 'getCategories',
 	SET_SUB_CATEGORIES: 'getSubCategories',
 	SET_LINES: 'getLines',
+	SET_CURRENT_CATEGORIES: 'setCategory',
+	SET_CURRENT_SUB_CATEGORIES: 'setSubCategory',
+	SET_CURRENT_LINES: 'setLine',
 };
 
 export function CategoriesProvider({ children }) {
@@ -18,8 +21,11 @@ export function CategoriesProvider({ children }) {
 
 	const INITIAL_STATE = {
 		categories: [],
+		currentCategory: {},
 		subCategories: [],
+		currentSubCategory: {},
 		lines: [],
+		currentLine: {},
 	};
 
 	const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
@@ -31,15 +37,30 @@ export function CategoriesProvider({ children }) {
 					...state,
 					categories: action.payload,
 				};
+			case ACTIONS.SET_CURRENT_CATEGORIES:
+				return {
+					...state,
+					currentCategory: action.payload,
+				};
 			case ACTIONS.SET_SUB_CATEGORIES:
 				return {
 					...state,
 					subCategories: action.payload,
 				};
+			case ACTIONS.SET_CURRENT_SUB_CATEGORIES:
+				return {
+					...state,
+					currentSubCategory: action.payload,
+				};
 			case ACTIONS.SET_LINES:
 				return {
 					...state,
 					lines: action.payload,
+				};
+			case ACTIONS.SET_CURRENT_LINES:
+				return {
+					...state,
+					currentLine: action.payload,
 				};
 			default:
 				return state;
@@ -54,6 +75,15 @@ export function CategoriesProvider({ children }) {
 		}
 		const categories = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
+	};
+
+	const getCategoryById = async (id) => {
+		const res = await requestHandler.get(`/api/v2/family/get/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		const value = res.value.getValue().data;
+		dispatch({ type: ACTIONS.SET_CURRENT_CATEGORIES, payload: value });
 	};
 
 	const deleteCategory = async (categoryId, businessId) => {
@@ -90,6 +120,15 @@ export function CategoriesProvider({ children }) {
 		dispatch({ type: ACTIONS.SET_SUB_CATEGORIES, payload: subCategories });
 	};
 
+	const getSubCategoryById = async (id) => {
+		const res = await requestHandler.get(`/api/v2/subfamily/get/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		const value = res.value.getValue().data;
+		dispatch({ type: ACTIONS.SET_CURRENT_SUB_CATEGORIES, payload: value });
+	};
+
 	const addSubCategory = async (body, businessId) => {
 		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
 		if (res.isLeft()) {
@@ -119,6 +158,15 @@ export function CategoriesProvider({ children }) {
 		dispatch({ type: ACTIONS.SET_LINES, payload: lines });
 	};
 
+	const getLineById = async (id) => {
+		const res = await requestHandler.get(`/api/v2/line/get/${id}`);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		const value = res.value.getValue().data;
+		dispatch({ type: ACTIONS.SET_CURRENT_LINES, payload: value });
+	};
+
 	const addLine = async (body) => {
 		const res = await requestHandler.post(`/api/v2/line/add`, body);
 		if (res.isLeft()) {
@@ -140,15 +188,21 @@ export function CategoriesProvider({ children }) {
 		<CategoryContext.Provider
 			value={{
 				categories: state.categories,
+				currentCategory: state.currentCategory,
 				subCategories: state.subCategories,
+				currentSubCategory: state.currentSubCategory,
 				lines: state.lines,
+				currentLine: state.currentLine,
 				getCategories,
+				getCategoryById,
 				addCategory,
 				deleteCategory,
 				getSubCategories,
+				getSubCategoryById,
 				addSubCategory,
 				deleteSubCategory,
 				getLines,
+				getLineById,
 				addLine,
 				deleteLine,
 			}}

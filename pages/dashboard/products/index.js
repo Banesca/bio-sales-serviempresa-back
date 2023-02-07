@@ -8,10 +8,9 @@ import {
 	EyeTwoTone,
 } from '@ant-design/icons';
 
-import DashboardLayout from '../../../components/shared/layout'; 
+import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import { addKeys } from '../../../util/setKeys';
 import SelectBusiness from '../../../components/business/selectBusiness';
@@ -22,6 +21,8 @@ import { useProductFilter } from '../../../components/products/useProductFilter'
 import Loading from '../../../components/shared/loading';
 import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import { useProducts } from '../../../components/products/hooks/useProducts';
+import { useBrandContext } from '../../../hooks/useBrandsProvider';
 
 export default function Products() {
 	const router = useRouter();
@@ -105,82 +106,72 @@ export default function Products() {
 			),
 		},
 	];
-	// loading
-	// const [loading, setLoading] = useState(true);
 	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
 
-	// Data
-	// const [categories, setCategories] = useState([]);
-	const { categories, getCategories } = useCategoryContext();
-	const [brands, setBrands] = useState([]);
+	const { getCategories, getSubCategories, getLines } = useCategoryContext();
+	const { getBrands } = useBrandContext();
 
+	const { getProducts, deleteProduct, products } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
-	const { requestHandler } = useRequest();
+	useEffect(() => {
+		let list = products;
+		addKeys(list);
+		setProduct(list);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [products]);
 
-	const handleListProductRequest = async (
-		pFamily = 0,
-		pSubFamily = 0,
-		business = 1
-	) => {
-		const response = await requestHandler.get(
-			`/api/v2/product/list/${pFamily}/${pSubFamily}/${business}`
-		);
-		if (response.isLeft()) {
+	const getProductsRequest = async (businessId) => {
+		setLoading(true);
+		try {
+			await getProducts(businessId);
+		} catch (error) {
+			console.error(error);
+			message.error('Error al cargar productos');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		const value = response.value.getValue().data;
-		addKeys(value);
-		setProduct(value);
-		setLoading(false);
 	};
 
 	const categoryListRequest = async (id = 1) => {
+		setLoading(true);
 		try {
 			await getCategories(id);
+			await getSubCategories(id);
+			await getLines(id);
 			setLoading(false);
 		} catch (error) {
 			console.log(error);
 			return message.error('Error al cargar las categorías');
+		} finally {
+			setLoading(false);
 		}
-		// const response = await requestHandler.get(
-		// 	`/api/v2/family/list/${business}`
-		// );
-		// if (response.isLeft()) {
-		// 	return;
-		// }
-		// const value = response.value.getValue().response;
-		// setCategories(value);
 	};
 
 	const brandListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/subfamily/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
+		setLoading(true);
+		try {
+			await getBrands(business);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al cargar marcas');
+		} finally {
+			setLoading(false);
 		}
-		console.log('BRAND', response.value.getValue());
-		const value = response.value.getValue().response;
-		setBrands(value);
 	};
 
 	const deleteProductRequest = async (id) => {
 		setLoading(true);
-		const res = await requestHandler.delete(`/api/v2/product/delete/${id}`);
-		if (res.isLeft()) {
-			console.log(res.value.getErrorValue());
-			message.error('Ha ocurrido un error');
+		try {
+			await deleteProduct(id, selectedBusiness.idSucursal);
+		} catch (error) {
+			console.error(error);
+			message.error('Error al eliminar producto');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		const value = res.value.getValue().response;
-		console.log(value);
-		handleListProductRequest(0, 0, selectedBusiness.idSucursal);
-		message.success('Product Eliminado');
 	};
 
 	const { selectedBusiness } = useBusinessProvider();
@@ -195,7 +186,7 @@ export default function Products() {
 			console.log('products');
 			categoryListRequest(selectedBusiness.idSucursal);
 			brandListRequest(selectedBusiness.idSucursal);
-			handleListProductRequest(0, 0, selectedBusiness.idSucursal);
+			getProductsRequest(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
@@ -260,12 +251,7 @@ export default function Products() {
 					</Row>
 					<SelectBusiness />
 
-					<ProductFilter
-						setQuery={setQuery}
-						clean={clean}
-						categories={categories}
-						brands={brands}
-					/>
+					<ProductFilter setQuery={setQuery} clean={clean} />
 					<Table
 						columns={columns}
 						dataSource={filtered()}

@@ -1,28 +1,31 @@
+import { useProducts } from '../../../components/products/hooks/useProducts';
 import ProductForm from '../../../components/products/productForm';
 import DashboardLayout from '../../../components/shared/layout';
-import { useRequest } from '../../../hooks/useRequest';
+import Loading from '../../../components/shared/loading';
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { message } from 'antd';
 
 export const AddProduct = () => {
-	const { requestHandler } = useRequest();
 
-	const addProductRequest = async (data) => {
-		const res = await requestHandler.post('/api/v2/product/add', data);
-		console.log('RESPONSE', res);
-		if (res.isLeft()) {
-			console.log(res.value.getErrorValue());
-			message.error('Ha ocurrido un error');
-			//setLoading(false);
-			return;
+	const { loading, setLoading } = useLoadingContext();
+	const { addProduct } = useProducts();
+
+	const addProductRequest = async (data, file) => {
+		setLoading(true);
+		try {
+			await addProduct(data, file);
+			message.success('Producto agregado');
+		} catch (error) {
+			console.log(error);
+			message.error(error?.message);
+		} finally {
+			setLoading(false);
 		}
-		//setLoading(false);
-		const value = res.value.getValue().response;
-		console.log(value);
-		message.success('Producto Agregado');
 	};
 
 	return (
 		<DashboardLayout>
+			<Loading isLoading={loading} />
 			<ProductForm product={{}} handleRequest={addProductRequest} />
 		</DashboardLayout>
 	);
