@@ -29,6 +29,7 @@ const ImportProducts = () => {
 		{
 			title: 'Código',
 			dataIndex: 'barCode',
+			responsive: ['sm'],
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
@@ -44,21 +45,31 @@ const ImportProducts = () => {
 				),
 		},
 		{
-			title: 'Categoria',
+			title: 'Categoría',
 			dataIndex: 'nameFamily',
+			responsive: ['lg'],
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Sub Categoría',
+			dataIndex: 'nameSubFamily',
+			responsive: ['xl'],
 			key: 5,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Marca',
-			dataIndex: 'nameSubFamily',
-			key: 5,
+			dataIndex: 'nameBrand',
+			responsive: ['lg'],
+			key: 6,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Promoción',
 			dataIndex: 'isPromo',
-			key: 5,
+			key: 7,
+			responsive: ['md'],
 			render: (bool) => {
 				return (
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -77,7 +88,7 @@ const ImportProducts = () => {
 		},
 		{
 			title: 'Acciones',
-			key: 6,
+			key: 8,
 			render: (product, index) => (
 				<Button type="primary" danger>
 					<DeleteOutlined onClick={() => confirmDelete(product)} />
@@ -191,36 +202,40 @@ const ImportProducts = () => {
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
 		for (const row of rows) {
-			// let valid = true;
-			// if (!existCategory(row.categoria)) {
-			// 	setRejectedCategories((prev) => [...prev, row.categoria]);
-			// 	valid = false;
-			// }
-			// if (!existBrand(row.marca)) {
-			// 	// rejectedBrands.push(row.marca);
-			// 	setRejectedBrands((prev) => [...prev, row.marca]);
-			// 	valid = false;
-			// }
-			// if (!valid) {
-			// 	return;
-			// }
 			const obj = {
-				nameFamily: row.categoria,
-				nameSubFamily: row.marca,
 				nameProduct: row.nombre,
 				pricePurchase: 0,
 				priceSale: row.precio,
-				marketPrice: row.precio_promocion,
+				idUnitMeasurePurchaseFk: 17,
+				idUnitMeasureSaleFk:
+					row.medida === 'UNIDAD' ? 17 : 3,
 				idSucursalFk: selectedBusiness.idSucursal,
 				idTypeProductFk: 1,
-				isPromo: row.en_promocion ? '1' : '0',
-				is5050: row.destacado ? '1' : '0',
-				linkPago: '',
+				is5050: 1,
+				isPromo: row.en_promocion ? 1 : 0,
+				maxProducVenta: '',
+				minStock: 0,
 				apply_inventory: true,
+				efectivo: 0,
+				linkPago: 0,
+				maxAditionals: 0,
+				minAditionals: 0,
+				marketPrice: row.precio_promocion || 0,
+				percentageOfProfit: 0,
+				isheavy: 0,
+				idAdicionalCategoryFk: 0,
 				barCode: String(row.codigo),
-				nameKitchen: 'descripcion',
-				// idProductFamily: 1,
-				// idProductSubFamily: 1,
+				nameKitchen: '',
+				unitweight: row.peso_unitario || null,
+				observation: row.observacion || '',
+				nameBrand: row.marca || null,
+				nameLine: row.linea || null,
+				nameFamily: row.categoria,
+				nameSubFamily: row.subcategoria,
+				unitByBox: row.unidades_por_caja || null,
+				ean: row.ean || '',
+				healthRegister: row.registro_sanitario || '',
+				cpe: row.cpe || '',
 			};
 			uploadData.push(obj);
 		}
@@ -298,7 +313,7 @@ const ImportProducts = () => {
 		const formatData = removeKeys(data);
 
 		setLoading(true);
-		const res = await requestHandler.post(`/api/v2/product/add/masive`, {
+		const res = await requestHandler.post(`/api/v2/product/add/masive/sales`, {
 			lista: formatData,
 		});
 		console.log(res);
@@ -329,16 +344,18 @@ const ImportProducts = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Row style={{ margin: '2rem 0' }}>
-						<Col
-							span={8}
-							offset={8}
-							style={{
-								justifyContent: 'center',
-								display: 'flex',
-								flexDirection: 'column',
-							}}
-						>
+					<Row style={{ margin: '1rem 0', width: '100%' }}>
+						<Col>
+							<Button
+								disabled={!data?.length > 0}
+								onClick={handleSendData}
+								type="primary"
+								style={{ marginRight: '1rem'}}
+							>
+								Cargar
+							</Button>
+						</Col>
+						<Col>
 							<Upload
 								{...props}
 								fileList={fileList}
@@ -347,30 +364,16 @@ const ImportProducts = () => {
 								type="file"
 							>
 								<Button icon={<UploadOutlined />} block>
-									Subir archivo
+									Archivo
 								</Button>
 							</Upload>
 						</Col>
 					</Row>
-					<Row style={{ margin: '0 0 1rem' }}>
-						<Col
-							span={6}
-							offset={8}
-							style={{
-								justifyContent: 'center',
-								display: 'flex',
-								flexDirection: 'column',
-							}}
-						>
-							<Button
-								disabled={!data?.length > 0}
-								onClick={handleSendData}
-							>
-								Cargar Datos
-							</Button>
-						</Col>
-					</Row>
-					<Table columns={columns} dataSource={data} />
+					<Table
+						columns={columns}
+						dataSource={data}
+						style={{ overflowX: 'scroll' }}
+					/>
 				</div>
 				<Modal
 					title="Eliminar"

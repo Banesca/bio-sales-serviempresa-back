@@ -44,13 +44,13 @@ const setData = (data) => {
 		unitByBox: data.unitByBox,
 		unitweight: data.unitweight,
 		observation: data.observation || '',
-		idSucursalFk: data.idSucursalFk,
 		cpe: data.cpe,
-		ean: data.ean13,
+		ean: data.ean,
 		healthRegister: data.healthRegister,
+		idProduct: data.idProduct,
 	};
 
-	return body
+	return body;
 };
 
 const setFormData = (product, file = null, update = false) => {
@@ -106,7 +106,7 @@ export function useProducts() {
 	};
 
 	const addProduct = async (data, file) => {
-		const body = setData(data)
+		const body = setData(data);
 		if (!validateProductName(data.nameProduct, data.idSucursalFk)) {
 			throw new Error('El nombre ya se encuentra en uso');
 		}
@@ -134,9 +134,14 @@ export function useProducts() {
 	};
 
 	const updateProduct = async (data, file) => {
-		const body = setData(data)
+		const body = setData(data);
+		console.log(body, 'body');
 		const formData = setFormData(body, file, true);
-		const res = await requestHandler.put('/api/v2/product/update', formData);
+		console.log(formData.get('idProduct'));
+		const res = await requestHandler.put(
+			'/api/v2/product/update/sales',
+			formData
+		);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
