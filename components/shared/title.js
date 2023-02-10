@@ -1,4 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Typography } from 'antd';
 import { useRouter } from 'next/router';
 
 export default function Title({ title, path }) {
@@ -19,18 +20,20 @@ export default function Title({ title, path }) {
 			}}
 		>
 			<ArrowLeftOutlined
-				style={{ fontSize: '1.5rem', color: 'white' }}
+				style={{ fontSize: '1.5rem' }}
 				onClick={handleReturn}
 			/>
-			<h1
-				style={{
-					textAlign: 'center',
-					fontSize: '2rem',
-					color: 'white',
-				}}
-			>
-				{title}
-			</h1>
+			<Typography>
+				<h1
+					style={{
+						textAlign: 'center',
+						fontSize: '2rem',
+						margin: '0'
+					}}
+				>
+					{title}
+				</h1>
+			</Typography>
 			<div></div>
 		</div>
 	);

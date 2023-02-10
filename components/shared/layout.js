@@ -80,19 +80,30 @@ export default function DashboardLayout({ children }) {
 		<>
 			<Layout style={{ height: '100vh' }}>
 				<Header
+					theme="light"
 					style={{
-						background: '#111',
+						backgroundColor: '#0984e3',
 						display: 'flex',
 						justifyContent: 'start',
 						alignItems: 'center',
+						zIndex: 1000
 					}}
 				>
-					<p style={{ fontWeight: 'bolder', fontSize: '1.5rem' }}>
+					<p
+						style={{
+							fontWeight: 'bolder',
+							fontSize: '1.5rem',
+							color: '#eee',
+						}}
+					>
 						SiempreOL
 					</p>
 				</Header>
-				<Layout style={{ minHeight: 'fit-content' }}>
-					<Sider theme="light">
+				<Layout style={{ minHeight: 'fit-content' }} hasSider>
+					<Sider
+						theme="light"
+						breakpoint="lg"
+					>
 						<Menu
 							mode="inline"
 							items={sidebarLinks}
@@ -100,9 +111,13 @@ export default function DashboardLayout({ children }) {
 							style={{ height: '100vh' }}
 						/>
 					</Sider>
-					<Content style={{ heigh: '100vh', overflow: 'auto' }}>
-						{children}
-					</Content>
+					<Layout>
+						<Content
+							style={{ heigh: '100vh', overflow: 'initial' }}
+						>
+							{children}
+						</Content>
+					</Layout>
 				</Layout>
 			</Layout>
 			<Loading isLoading={loading} />

@@ -83,7 +83,7 @@ const AddOrderForm = (props) => {
 		<>
 			<h1
 				style={{
-					color: 'white',
+					,
 					fontSize: '2rem',
 					textAlign: 'center',
 				}}

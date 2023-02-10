@@ -10,6 +10,7 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import BrandsFilters from '../../../components/brands/brandsFilters';
 import BrandsModals from '../../../components/brands/brandsModals';
 import { addKeys } from '../../../util/setKeys';
+import { Typography } from 'antd';
 
 const BrandsPage = () => {
 	const columns = [
@@ -108,26 +109,27 @@ const BrandsPage = () => {
 				>
 					<Row style={{ alignItems: 'center' }}>
 						<Col offset={6} span={12}>
-							<h1
-								style={{
-									textAlign: 'center',
-									fontSize: '2rem',
-									color: '#fff',
-								}}
-							>
-								Marcas
-							</h1>
+							<Typography>
+								<h1
+									style={{
+										textAlign: 'center',
+										fontSize: '2rem',
+										margin: '0.5rem 0'
+									}}
+								>
+									Marcas
+								</h1>
+							</Typography>
 						</Col>
 						<Col
 							span={6}
 							style={{
-								justifyContent: 'center',
+								justifyContent: 'end',
 								display: 'flex',
 							}}
 						>
 							<Button
 								type="primary"
-								style={{ marginRight: '1rem' }}
 								onClick={handleOpenCreateModal}
 							>
 								Agregar

@@ -24,13 +24,16 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 		<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 			<Collapse.Panel header="Filtros">
 				<Form
-					style={{ maxWidth: '800px', width: '100%' }}
-					labelCol={{ span: 8 }}
+					style={{
+						maxWidth: '600px',
+						width: '100%',
+						margin: '0 auto',
+					}}
 					onFinish={handleSearch}
 					form={searchForm}
 				>
 					<Row>
-						<Col span={12}>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
 								label="Nombre"
 								name="nameSubFamily"
@@ -39,7 +42,7 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 								<Input allowClear />
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
 								label="Sub Categoría"
 								name="idSubFamily"
@@ -60,20 +63,25 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
-							<Form.Item
-								wrapperCol={{
-									span: 12,
-									offset: 8,
-								}}
-							>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8 }}
+							md={{ span: 8 }}
+						>
+							<Form.Item style={{ margin: '0 .5rem' }}>
 								<Button block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
-							<Form.Item wrapperCol={{ span: 12, offset: 8 }}>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8, offset: 8 }}
+							md={{ span: 8, offset: 8 }}
+						>
+							<Form.Item style={{ margin: '0 .5rem' }}>
 								<Button htmlType="submit" type="primary" block>
 									Buscar
 								</Button>

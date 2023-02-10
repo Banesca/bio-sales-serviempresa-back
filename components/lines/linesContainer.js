@@ -6,6 +6,7 @@ import { addKeys } from '../../util/setKeys';
 import LinesFilters from './linesFilters';
 import LinesModals from './lineModals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
+import { Typography } from 'antd';
 
 export default function LinesContainer() {
 	const columns = [
@@ -37,7 +38,6 @@ export default function LinesContainer() {
 		console.log(lines);
 	}, [lines]);
 
-
 	// list and filter
 	const [query, setQuery] = useState('');
 	const [selectedSubCategory, setSelectedSubCategory] = useState();
@@ -54,9 +54,7 @@ export default function LinesContainer() {
 		let list = lines;
 		if (query) {
 			list = lines.filter((b) =>
-				b.name
-					.toLowerCase()
-					.includes(query.toLocaleLowerCase())
+				b.name.toLowerCase().includes(query.toLocaleLowerCase())
 			);
 		}
 		if (selectedSubCategory) {
@@ -77,27 +75,36 @@ export default function LinesContainer() {
 	return (
 		<>
 			<Row style={{ alignItems: 'center' }}>
-				<Col offset={6} span={12}>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: '#fff',
-						}}
-					>
-						Lineas
-					</h1>
+				<Col
+					lg={{ offset: 6, span: 12 }}
+					md={{ offset: 6, span: 12 }}
+					sm={{ offset: 6, span: 12 }}
+					xs={{ span: 12 }}
+				>
+					<Typography>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '2rem',
+								margin: '.5rem 0',
+							}}
+						>
+							Lineas
+						</h1>
+					</Typography>
 				</Col>
 				<Col
-					span={6}
+					lg={{ span: 6 }}
+					md={{ span: 6 }}
+					sm={{ span: 6 }}
+					xs={{ span: 12 }}
 					style={{
-						justifyContent: 'center',
+						justifyContent: 'end',
 						display: 'flex',
 					}}
 				>
 					<Button
 						type="primary"
-						style={{ marginRight: '1rem' }}
 						onClick={() => setIsCreateModalOpen(true)}
 					>
 						Agregar

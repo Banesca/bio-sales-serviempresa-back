@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Button, Col, Row, message } from 'antd';
-import DashboardLayout from '../../../components/shared/layout'
+import DashboardLayout from '../../../components/shared/layout';
 import UsersTable from '../../../components/users/table';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
@@ -9,6 +9,7 @@ import Loading from '../../../components/shared/loading';
 import UserFilters from '../../../components/users/filters';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
+import { Typography } from 'antd';
 
 export default function Users() {
 	const { requestHandler } = useRequest();
@@ -107,21 +108,31 @@ export default function Users() {
 					}}
 				>
 					<Row style={{ alignItems: 'center' }}>
-						<Col offset={6} span={12}>
-							<h1
-								style={{
-									textAlign: 'center',
-									fontSize: '2rem',
-									color: '#fff',
-								}}
-							>
-								Usuarios
-							</h1>
+						<Col
+							lg={{ offset: 6, span: 12 }}
+							md={{ offset: 6, span: 12 }}
+							sm={{ offset: 6, span: 12 }}
+							xs={{ span: 12 }}
+						>
+							<Typography>
+								<h1
+									style={{
+										textAlign: 'center',
+										fontSize: '1.5rem',
+										margin: '.5rem 0',
+									}}
+								>
+									Usuarios
+								</h1>
+							</Typography>
 						</Col>
 						<Col
-							span={6}
+							lg={{ span: 6 }}
+							md={{ span: 6 }}
+							sm={{ span: 6 }}
+							xs={{ span: 12 }}
 							style={{
-								justifyContent: 'center',
+								justifyContent: 'end',
 								display: 'flex',
 							}}
 						>

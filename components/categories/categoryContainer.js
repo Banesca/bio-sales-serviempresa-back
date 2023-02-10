@@ -5,13 +5,14 @@ import { Modal } from 'antd';
 import { Form } from 'antd';
 import { Button, Col, Row } from 'antd';
 import CategoryFilters from './categoryFilters';
-import Loading from '../shared/loading'; 
+import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
+import { Typography } from 'antd';
 
 export default function CategoryContainer() {
 	const columns = [
@@ -150,29 +151,35 @@ export default function CategoryContainer() {
 	return (
 		<>
 			<Row style={{ alignItems: 'center' }}>
-				<Col offset={6} span={12}>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: '#fff',
-						}}
-					>
-						Categorías
-					</h1>
+				<Col
+					lg={{ offset: 6, span: 12 }}
+					md={{ offset: 6, span: 12 }}
+					sm={{ offset: 6, span: 12 }}
+					xs={{ span: 12 }}
+				>
+					<Typography>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '1.5rem',
+								margin: '0.5rem 0',
+							}}
+						>
+							Categorías
+						</h1>
+					</Typography>
 				</Col>
 				<Col
-					span={6}
+					lg={{ span: 6 }}
+					md={{ span: 6 }}
+					sm={{ span: 6 }}
+					xs={{ span: 12 }}
 					style={{
-						justifyContent: 'center',
+						justifyContent: 'end',
 						display: 'flex',
 					}}
 				>
-					<Button
-						type="primary"
-						style={{ marginRight: '1rem' }}
-						onClick={handleOpenCreateModal}
-					>
+					<Button type="primary" onClick={handleOpenCreateModal}>
 						Agregar
 					</Button>
 				</Col>

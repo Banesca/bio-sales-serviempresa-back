@@ -223,7 +223,7 @@ const UpdateOrderPage = () => {
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
-							color: 'white',
+							
 						}}
 					>
 						Tomar pedido

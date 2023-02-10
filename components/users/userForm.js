@@ -5,6 +5,7 @@ import { message } from 'antd';
 import Loading from '../shared/loading';
 import { Router, useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
+import { profileList } from './filters';
 
 const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const { requestHandler } = useRequest();
@@ -18,12 +19,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 
 	const [loading, setLoading] = useState(false);
 	const [businessByUser, setBusinessByUser] = useState(userBusiness);
-
-	const profileList = [
-		{ name: 'Administrador', id: 1 },
-		{ name: 'Facturador', id: 2 },
-		{ name: 'Vendedor', id: 3 },
-	];
 
 	const handleChange = (e) => {
 		setUserData((prevData) => ({
@@ -70,20 +65,20 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		}
 
 		console.log(res.value.getValue(), 'value find');
-		// const value = res.value.getValue().data[0];
-		// return value;
+		const value = res.value.getValue().data[0];
+		return value;
 	};
 
 	const onSubmit = async () => {
 		setLoading(true);
+		console.log(userData, 'userData')
 		await submitFunction(userData);
 		if (!update) {
 			const user = await findUserByEmail(userData.mail);
+			console.log('This is the user data', user);
 			for (const business of businessByUser) {
 				await handleAsigne(user.idUser, business);
 			}
-			setLoading(false);
-			return;
 		}
 		message.success(update ? 'Usuario actualizado' : 'Usuario agregado');
 		setLoading(false);
@@ -104,7 +99,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 			>
 				<h1
 					style={{
-						color: 'white',
+						
 						fontSize: '2rem',
 						textAlign: 'center',
 					}}
@@ -205,8 +200,18 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 							))}
 						</Select>
 					</Form.Item>
-					{!update && (
-						<Form.Item label="Empresas" name="business">
+					{!update && userData.idProfileFk == 3 && (
+						<Form.Item
+							label="Empresas"
+							name="business"
+							rules={[
+								{
+									required:
+										!update && userData.idProfileFk === 3,
+									message: 'Elige una empresa',
+								},
+							]}
+						>
 							<Select
 								value={businessByUser}
 								mode="multiple"

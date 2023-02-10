@@ -19,6 +19,7 @@ const Loading = ({ isLoading }) => {
 				left: 0,
 				alignItems: 'center',
 				justifyContent: 'center',
+				overflow: 'scroll'
 			}}
 		>
 			<LoadingOutlined style={{ fontSize: '4rem', color: 'white' }} />

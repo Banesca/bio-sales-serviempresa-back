@@ -35,27 +35,24 @@ const SelectBusiness = () => {
 		<Row>
 			{contextHolder}
 			<Col span={24}>
-				<h3 style={{ color: 'white', textAlign: 'center' }}>
-					Ambiente Empresarial
-				</h3>
-				<Form form={form}>
-					<Form.Item
-						wrapperCol={{ span: 6, offset: 9 }}
-						name="business"
-					>
-						<Select onChange={onChange}>
-							{business &&
-								business.map((b) => (
-									<Select.Option
-										key={b.idSucursal}
-										value={b.idSucursal}
-									>
-										{b.nombre}
-									</Select.Option>
-								))}
-						</Select>
-					</Form.Item>
-				</Form>
+				<h3 style={{ textAlign: 'center' }}>Ambiente Empresarial</h3>
+				<Row style={{ display: 'flex', justifyContent: 'center' }}>
+					<Form form={form}>
+						<Form.Item name="business">
+							<Select onChange={onChange} style={{ minWidth: '200px'}}>
+								{business &&
+									business.map((b) => (
+										<Select.Option
+											key={b.idSucursal}
+											value={b.idSucursal}
+										>
+											{b.nombre}
+										</Select.Option>
+									))}
+							</Select>
+						</Form.Item>
+					</Form>
+				</Row>
 			</Col>
 		</Row>
 	);

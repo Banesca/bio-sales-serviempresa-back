@@ -6,6 +6,7 @@ import { Space, Button, Table, Modal } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
+import { profileList } from './filters';
 
 const UsersTable = ({
 	users,
@@ -26,6 +27,17 @@ const UsersTable = ({
 			dataIndex: 'mail',
 			key: 2,
 			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Perfil',
+			dataIndex: 'idProfileFk',
+			key: 2,
+			render: (text) => {
+				let profile = profileList.find((p) => p.id === text);
+				console.log(profile);
+
+				return <p>{profile?.name}</p>;
+			},
 		},
 		{
 			title: 'Acciones',
@@ -65,7 +77,7 @@ const UsersTable = ({
 	const router = useRouter();
 
 	// const [loading, setLoading] = useState(true);
-	const { loading, setLoading } = useLoadingContext()
+	const { loading, setLoading } = useLoadingContext();
 
 	useEffect(() => {
 		if (users) {
@@ -79,6 +91,7 @@ const UsersTable = ({
 				columns={columns}
 				dataSource={users}
 				loading={loading}
+				style={{ overflowX: 'scroll' }}
 				//onChange={(some) => setPage(some.current)}
 			/>
 			<Modal

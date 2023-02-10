@@ -6,6 +6,7 @@ import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
 import SubCategoryModals from './modals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
+import { Typography } from 'antd';
 
 export default function SubCategoriesContainer() {
 	const columns = [
@@ -33,7 +34,7 @@ export default function SubCategoriesContainer() {
 	const { subCategories } = useCategoryContext();
 
 	// const [loading, setLoading] = useState(false);
-	const { setLoading } = useLoadingContext()
+	const { setLoading } = useLoadingContext();
 
 	// list and filter
 	const [query, setQuery] = useState('');
@@ -64,7 +65,7 @@ export default function SubCategoriesContainer() {
 		addKeys(list);
 		return list;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [query, subCategories, selectedCategory ]);
+	}, [query, subCategories, selectedCategory]);
 
 	// End Filters
 
@@ -80,27 +81,36 @@ export default function SubCategoriesContainer() {
 	return (
 		<>
 			<Row style={{ alignItems: 'center' }}>
-				<Col offset={6} span={12}>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							color: '#fff',
-						}}
-					>
-						Sub Categorías
-					</h1>
+				<Col
+					lg={{ offset: 6, span: 12 }}
+					md={{ offset: 6, span: 12 }}
+					sm={{ offset: 6, span: 12 }}
+					xs={{ span: 12 }}
+				>
+					<Typography>
+						<h1
+							style={{
+								textAlign: 'center',
+								fontSize: '1.5rem',
+								margin: '0.5rem 0',
+							}}
+						>
+							Sub Categorías
+						</h1>
+					</Typography>
 				</Col>
 				<Col
-					span={6}
+					lg={{ span: 6 }}
+					md={{ span: 6 }}
+					sm={{ span: 6 }}
+					xs={{ span: 12 }}
 					style={{
-						justifyContent: 'center',
+						justifyContent: 'end',
 						display: 'flex',
 					}}
 				>
 					<Button
 						type="primary"
-						style={{ marginRight: '1rem' }}
 						onClick={handleOpenCreateModal}
 					>
 						Agregar

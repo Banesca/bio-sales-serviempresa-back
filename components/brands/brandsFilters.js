@@ -1,58 +1,63 @@
-import { Button, Input } from "antd";
-import { Col, Form, Row } from "antd";
-import { Collapse } from "antd";
+import { Button, Input } from 'antd';
+import { Col, Form, Row } from 'antd';
+import { Collapse } from 'antd';
 
 export default function BrandsFilters({ setQuery }) {
-
 	const [searchForm] = Form.useForm();
 
-    const onReset = () => {
-        setQuery('')
-        searchForm.resetFields()
-    }
+	const onReset = () => {
+		setQuery('');
+		searchForm.resetFields();
+	};
 
-    const handleSearch = (values) => {
-        setQuery(values.name)
-        console.log(values)
-    }
+	const handleSearch = (values) => {
+		setQuery(values.name);
+		console.log(values);
+	};
 
-    return(
+	return (
 		<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 			<Collapse.Panel header="Filtros">
 				<Form
-					style={{ maxWidth: '800px', width: '100%' }}
-					labelCol={{ span: 6 }}
+					style={{
+						maxWidth: '600px',
+						width: '100%',
+						margin: '0 auto',
+					}}
 					onFinish={handleSearch}
 					form={searchForm}
 				>
 					<Row>
 						<Col span={24}>
 							<Form.Item
-								label="nombre"
+								label="Nombre"
 								name="name"
-								wrapperCol={{
-									span: 16,
-								}}
+								style={{ marginInline: '.5rem' }}
 							>
 								<Input allowClear />
 							</Form.Item>
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
-							<Form.Item
-								wrapperCol={{
-									span: 12,
-									offset: 8,
-								}}
-							>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8 }}
+							md={{ span: 8 }}
+						>
+							<Form.Item style={{ padding: '0 .5rem' }}>
 								<Button block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
-							<Form.Item wrapperCol={{ span: 12, offset: 8 }}>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8, offset: 8 }}
+							md={{ span: 8, offset: 8 }}
+						>
+							<Form.Item style={{ padding: '0 .5rem' }}>
 								<Button htmlType="submit" type="primary" block>
 									Buscar
 								</Button>
@@ -62,5 +67,5 @@ export default function BrandsFilters({ setQuery }) {
 				</Form>
 			</Collapse.Panel>
 		</Collapse>
-    )
+	);
 }

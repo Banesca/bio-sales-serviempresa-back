@@ -185,7 +185,6 @@ const UserDetail = () => {
 							style={{
 								textAlign: 'center',
 								fontSize: '2rem',
-								color: 'white',
 							}}
 						>
 							Información General

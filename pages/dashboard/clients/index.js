@@ -11,11 +11,12 @@ import {
 	Form,
 } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
-import DashboardLayout from '../../../components/shared/layout'; 
+import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import Loading from '../../../components/shared/loading';
+import { Typography } from 'antd';
 
 export default function ClientsPage() {
 	const columns = [
@@ -141,15 +142,16 @@ export default function ClientsPage() {
 			>
 				<Row style={{ alignItems: 'center' }}>
 					<Col offset={6} span={12}>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '2rem',
-								color: '#fff',
-							}}
-						>
-							Clientes
-						</h1>
+						<Typography>
+							<h1
+								style={{
+									textAlign: 'center',
+									fontSize: '2rem',
+								}}
+							>
+								Clientes
+							</h1>
+						</Typography>
 					</Col>
 				</Row>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>

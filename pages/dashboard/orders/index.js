@@ -11,6 +11,7 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { message } from 'antd';
 import OrdersTable from '../../../components/orders/ordersTable';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import { Typography } from 'antd';
 
 export const orderStatusToUse = {
 	1: 'Recibido',
@@ -91,15 +92,16 @@ export default function OrdersPage() {
 			>
 				<Row style={{ alignItems: 'center' }}>
 					<Col offset={6} span={12}>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '2rem',
-								color: '#fff',
-							}}
-						>
-							Pedidos
-						</h1>
+						<Typography>
+							<h1
+								style={{
+									textAlign: 'center',
+									fontSize: '2rem',
+								}}
+							>
+								Pedidos
+							</h1>
+						</Typography>
 					</Col>
 					<Col
 						span={6}
