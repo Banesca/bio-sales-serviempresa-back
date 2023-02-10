@@ -18,6 +18,7 @@ import { useProducts } from '../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
+import Title from '../../../components/shared/title';
 
 const Product = () => {
 	const router = useRouter();
@@ -147,25 +148,8 @@ const Product = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<div
-					style={{
-						width: '100%',
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem', color: 'white' }}
-						onClick={handleReturn}
-					/>
-					<h1 style={{ color: 'white', fontSize: '2rem' }}>
-						Detalles
-					</h1>
-					<div></div>
-				</div>
-				<List style={{ width: '100%', paddingInline: '2rem' }}>
+				<Title title="Detalles" path="/dashboard/products" />
+				<List style={{ width: '100%' }}>
 					<List.Item>
 						<p>Nombre</p>
 						<p>{currentProduct?.nameProduct}</p>
@@ -180,11 +164,11 @@ const Product = () => {
 					</List.Item>
 					<List.Item>
 						<p>Categoría</p>
-						<p>{currentCategory.name}</p>
+						<p>{currentCategory?.name}</p>
 					</List.Item>
 					<List.Item>
 						<p>Sub Categoría</p>
-						<p>{currentSubCategory.nameSubFamily}</p>
+						<p>{currentSubCategory?.nameSubFamily}</p>
 					</List.Item>
 					{currentLine.name && (
 						<List.Item>
@@ -259,6 +243,12 @@ const Product = () => {
 						<p>Registro Sanitario</p>
 						<p>{currentProduct.healthRegister}</p>
 					</List.Item>
+					{currentProduct.observation && (
+						<List.Item>
+							<p>Observación</p>
+							<p>{currentProduct.observation}</p>
+						</List.Item>
+					)}
 					<List.Item>
 						<p>Stock</p>
 						<p>

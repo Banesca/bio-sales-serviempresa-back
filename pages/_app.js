@@ -45,7 +45,11 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<ConfigProvider
 			theme={{
-				algorithm: theme.darkAlgorithm,
+				algorithm: theme.defaultAlgorithm,
+				token: {
+					colorPrimary: '#0984e3',
+					colorError: '#d00'
+				},
 			}}
 		>
 			<GeneralContext.Provider value={generalData}>

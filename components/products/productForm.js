@@ -17,8 +17,11 @@ import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { useBrandContext } from '../../hooks/useBrandsProvider';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { MEASURE_UNITS } from './hooks/useProducts';
+import { useRouter } from 'next/router';
+import Card from '../shared/card';
 
 const ProductForm = (props) => {
+	const router = useRouter();
 	const { setLoading } = useLoadingContext();
 	const { brands, getBrands } = useBrandContext();
 	const {
@@ -180,7 +183,7 @@ const ProductForm = (props) => {
 		await props.handleRequest(product, file);
 		setLoading(false);
 		if (!props.update) {
-			onReset();
+			return onReset();
 		}
 	};
 
@@ -194,23 +197,16 @@ const ProductForm = (props) => {
 		<>
 			<h1
 				style={{
-					color: 'white',
 					fontSize: '2rem',
 					textAlign: 'center',
 				}}
 			>
 				{props.update ? 'Actualizar Producto' : 'Agregar Producto'}
 			</h1>
-			<div
-				style={{
-					// maxWidth: '650px',
-					margin: 'auto 1rem',
-				}}
-			>
+			<Card>
 				<Form
 					style={{ width: '100%' }}
 					name="addProduct"
-					labelCol={{ span: 4 }}
 					initialValues={{
 						nameProduct: product.nameProduct,
 						barCode: product.barCode,
@@ -233,17 +229,31 @@ const ProductForm = (props) => {
 					form={form}
 				>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
 								label="Nombre"
 								name="nameProduct"
-								labelCol={{ span: 8 }}
+								style={{
+									padding: '0 .5rem',
+								}}
 								rules={[
 									{
 										required: true,
 										message: 'Ingresa un nombre',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									type="text"
@@ -257,17 +267,31 @@ const ProductForm = (props) => {
 								></Input>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Código"
 								name="barCode"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Ingresa un código',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									value={product.barCode}
@@ -283,17 +307,31 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Categoría"
 								name="idProductFamilyFk"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Elige una categoría',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Select
 									value={product.idProductFamilyFk}
@@ -316,17 +354,31 @@ const ProductForm = (props) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Sub Categoría"
 								name="idProductSubFamilyFk"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Elige una marca',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Select
 									value={product.idProductSubFamilyFk}
@@ -351,11 +403,25 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
 								label="Linea"
 								name="idLineFk"
-								labelCol={{ span: 8 }}
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Select
 									value={product.idLineFk}
@@ -378,17 +444,31 @@ const ProductForm = (props) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Marca"
 								name="idBrandFk"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Elige una marca',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Select
 									value={product.idBrandFk}
@@ -413,11 +493,25 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
 								label="EAN13"
 								name="ean"
-								labelCol={{ span: 8 }}
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									value={product.ean}
@@ -430,11 +524,25 @@ const ProductForm = (props) => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Registro Sanitario"
 								name="healthRegister"
-								labelCol={{ span: 8 }}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									value={product.healthRegister}
@@ -449,17 +557,31 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Precio"
 								name="priceSale"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Ingresa un precio',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									value={product.priceSale}
@@ -473,11 +595,25 @@ const ProductForm = (props) => {
 								></Input>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
-								labelCol={{ span: 8 }}
 								label="CPE"
 								name="cpe"
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Input
 									value={product.cpe}
@@ -492,11 +628,25 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
 								name="isPromo"
 								label="Promoción"
-								labelCol={{ span: 8 }}
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Switch
 									checked={product.isPromo == 1}
@@ -505,11 +655,17 @@ const ProductForm = (props) => {
 							</Form.Item>
 						</Col>
 						{product.isPromo == '1' && (
-							<Col span={12}>
+							<Col
+								xs={{ span: 24 }}
+								sm={{ span: 24 }}
+								md={{ span: 12 }}
+							>
 								<Form.Item
 									label="Precio"
+									style={{
+										padding: '0 .5rem',
+									}}
 									name="marketPrice"
-									labelCol={{ span: 8 }}
 									rules={[
 										{
 											required: product.isPromo == 1,
@@ -517,6 +673,14 @@ const ProductForm = (props) => {
 												'Ingresa un precio para promoción',
 										},
 									]}
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
 								>
 									<Input
 										type="number"
@@ -533,17 +697,31 @@ const ProductForm = (props) => {
 						)}
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Medida"
 								name="idUnitMeasureSaleFk"
-								labelCol={{ span: 8 }}
 								rules={[
 									{
 										required: true,
 										message: 'Elige una medida',
 									},
 								]}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
 							>
 								<Select
 									value={product.idUnitMeasureSaleFk}
@@ -563,13 +741,27 @@ const ProductForm = (props) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
+						<Col
+							xs={{ span: 24 }}
+							sm={{ span: 24 }}
+							md={{ span: 12 }}
+						>
 							{product.idUnitMeasureSaleFk == 3 && (
 								<Form.Item
+									style={{
+										padding: '0 .5rem',
+									}}
 									label="Peso Unitario"
 									name="unitweight"
 									required={product.idUnitMeasureSaleFk === 3}
-									labelCol={{ span: 8 }}
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
 								>
 									<Input
 										value={product.unitweight}
@@ -584,12 +776,22 @@ const ProductForm = (props) => {
 							)}
 							{product.idUnitMeasureSaleFk == 17 && (
 								<Form.Item
+									style={{
+										padding: '0 .5rem',
+									}}
 									label="Unidades/Caja"
 									name="unitByBox"
 									required={
 										product.idUnitMeasureSaleFk === 17
 									}
-									labelCol={{ span: 8 }}
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
 								>
 									<Input
 										value={product.unitByBox}
@@ -609,9 +811,21 @@ const ProductForm = (props) => {
 							<Form.Item
 								label="Observación"
 								name="observation"
-								labelCol={{ span: 4 }}
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 5 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 19 },
+									sm: { span: 18 },
+								}}
 							>
-								<Input
+								<Input.TextArea
+									rows={3}
+									cols={3}
 									value={product.observation}
 									onChange={(e) =>
 										setProduct({
@@ -623,39 +837,57 @@ const ProductForm = (props) => {
 							</Form.Item>
 						</Col>
 					</Row>
-					<Form.Item
-						wrapperCol={{ span: 4, offset: 11 }}
-						style={{ marginTop: '1rem' }}
-						rules={[{ required: true, message: 'Sube una imagen' }]}
-					>
-						<Upload
-							name="avatar"
-							className="avatar-uploader"
-							listType="picture"
-							fileList={fileList}
-							accept=".png,.jpg"
-							{...uploadProps}
-						>
-							<Button icon={<UploadOutlined />}>
-								Subir imagen
-							</Button>
-						</Upload>
-					</Form.Item>
 					<Row>
-						<Col span={12}>
+						<Col
+							sm={{ span: 10, offset: 0 }}
+							xs={{ span: 10, offset: 0 }}
+							lg={{ span: 7, offset: 5 }}
+							md={{ span: 7, offset: 5 }}
+						>
 							<Form.Item
-								wrapperCol={{
-									span: 12,
-									offset: 8,
-								}}
+								style={{ marginTop: '1rem' }}
+								rules={[
+									{
+										required: true,
+										message: 'Sube una imagen',
+									},
+								]}
 							>
+								<Upload
+									name="avatar"
+									className="avatar-uploader"
+									listType="picture"
+									fileList={fileList}
+									accept=".png,.jpg"
+									{...uploadProps}
+								>
+									<Button icon={<UploadOutlined />}>
+										Subir imagen
+									</Button>
+								</Upload>
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col
+							sm={{ span: 10, offset: 0 }}
+							xs={{ span: 10, offset: 0 }}
+							lg={{ span: 7, offset: 5 }}
+							md={{ span: 7, offset: 5 }}
+						>
+							<Form.Item>
 								<Button block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>
 						</Col>
-						<Col span={12}>
-							<Form.Item wrapperCol={{ span: 12, offset: 8 }}>
+						<Col
+							sm={{ span: 10, offset: 4 }}
+							xs={{ span: 10, offset: 4 }}
+							lg={{ span: 7, offset: 5 }}
+							md={{ span: 7, offset: 5 }}
+						>
+							<Form.Item>
 								<Button htmlType="submit" type="primary" block>
 									{props.update ? 'Actualizar' : 'Agregar'}
 								</Button>
@@ -663,7 +895,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 				</Form>
-			</div>
+			</Card>
 		</>
 	);
 };

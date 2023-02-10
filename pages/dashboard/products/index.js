@@ -23,6 +23,7 @@ import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useProducts } from '../../../components/products/hooks/useProducts';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
+import { Typography } from 'antd';
 
 export default function Products() {
 	const router = useRouter();
@@ -36,12 +37,14 @@ export default function Products() {
 		{
 			title: 'Código',
 			dataIndex: 'barCode',
+			responsive: ['md'],
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Precio',
 			dataIndex: 'priceSale',
+			responsive: ['sm'],
 			key: 3,
 			render: (text, record) => (
 				<p style={{ color: record.isPromo == '1' && 'green' }}>
@@ -52,6 +55,7 @@ export default function Products() {
 		{
 			title: 'Promoción',
 			dataIndex: 'isPromo',
+			responsive: ['lg'],
 			key: 5,
 			render: (text) => {
 				return (
@@ -220,19 +224,29 @@ export default function Products() {
 					}}
 				>
 					<Row style={{ alignItems: 'center' }}>
-						<Col offset={6} span={12}>
-							<h1
-								style={{
-									textAlign: 'center',
-									fontSize: '2rem',
-									color: '#fff',
-								}}
-							>
-								Productos
-							</h1>
+						<Col
+							sm={{ span: 12 }}
+							xs={{ span: 24 }}
+							md={{ span: 12, offset: 6 }}
+							lg={{ offset: 6, span: 12 }}
+						>
+							<Typography>
+								<h1
+									style={{
+										textAlign: 'center',
+										fontSize: '2rem',
+										margin: '0',
+									}}
+								>
+									Productos
+								</h1>
+							</Typography>
 						</Col>
 						<Col
-							span={6}
+							xs={{ span: 24 }}
+							lg={{ span: 6 }}
+							md={{ span: 6 }}
+							sm={{ span: 12 }}
 							style={{
 								justifyContent: 'center',
 								display: 'flex',
@@ -253,6 +267,7 @@ export default function Products() {
 
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<Table
+						style={{ overflowX: 'scroll'}}
 						columns={columns}
 						dataSource={filtered()}
 						loading={loading}

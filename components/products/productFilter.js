@@ -3,10 +3,7 @@ import { Button, Input, Select, Col, Form, Collapse, Row } from 'antd';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../hooks/useBrandsProvider';
 
-const ProductFilter = ({
-	setQuery,
-	clean,
-}) => {
+const ProductFilter = ({ setQuery, clean }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
 
@@ -39,46 +36,77 @@ const ProductFilter = ({
 						style={{ maxWidth: '800px', width: '100%' }}
 						name="productFilters"
 						onFinish={onSubmit}
-						labelCol={{ span: 8 }}
 					>
 						<Row>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Nombre"
 									style={{ padding: '0 .5rem' }}
 									name="nameProduct"
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
+									}}
 								>
 									<Input allowClear />
 								</Form.Item>
 							</Col>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Código"
 									name="barCode"
 									style={{ padding: '0 .5rem' }}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
+									}}
 								>
 									<Input allowClear />
 								</Form.Item>
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Precio min"
 									name="minPrice"
 									style={{
 										padding: '0 .5rem',
 									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
+									}}
 								>
 									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Precio max"
 									name="maxPrice"
 									style={{
 										padding: '0 .5rem',
+									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
 									}}
 								>
 									<Input type="number" allowClear />
@@ -86,12 +114,20 @@ const ProductFilter = ({
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Categoría"
 									name="nameFamily"
 									style={{
 										padding: '0 .5rem',
+									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
 									}}
 								>
 									<Select
@@ -117,12 +153,20 @@ const ProductFilter = ({
 									</Select>
 								</Form.Item>
 							</Col>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Sub Categoría"
 									name="nameSubFamily"
 									style={{
 										padding: '0 .5rem',
+									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
 									}}
 								>
 									<Select
@@ -150,12 +194,20 @@ const ProductFilter = ({
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Linea"
 									name="idLineFk"
 									style={{
 										padding: '0 .5rem',
+									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
 									}}
 								>
 									<Select
@@ -181,12 +233,20 @@ const ProductFilter = ({
 									</Select>
 								</Form.Item>
 							</Col>
-							<Col span={12}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Marca"
 									name="idBrandFk"
 									style={{
 										padding: '0 .5rem',
+									}}
+									labelCol={{
+										md: { span: 8 },
+										sm: { span: 10 },
+									}}
+									wrapperCol={{
+										md: { span: 16 },
+										sm: { span: 14 },
 									}}
 								>
 									<Select
@@ -214,11 +274,15 @@ const ProductFilter = ({
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col
+								sm={{ span: 12, offset: 0 }}
+								xs={{ span: 12, offset: 0 }}
+								lg={{ span: 8, offset: 4 }}
+								md={{ span: 8, offset: 4 }}
+							>
 								<Form.Item
-									wrapperCol={{
-										span: 12,
-										offset: 8,
+									style={{
+										padding: '0 .5rem',
 									}}
 								>
 									<Button block onClick={onReset}>
@@ -226,11 +290,15 @@ const ProductFilter = ({
 									</Button>
 								</Form.Item>
 							</Col>
-							<Col span={12}>
+							<Col
+								sm={{ span: 12, offset: 0 }}
+								xs={{ span: 12, offset: 0 }}
+								lg={{ span: 8, offset: 4 }}
+								md={{ span: 8, offset: 4 }}
+							>
 								<Form.Item
-									wrapperCol={{
-										span: 12,
-										offset: 8,
+									style={{
+										padding: '0 .5rem',
 									}}
 								>
 									<Button

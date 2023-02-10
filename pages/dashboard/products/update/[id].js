@@ -32,12 +32,13 @@ export const UpdateProduct = () => {
 	const updateProductRequest = async (data, file) => {
 		setLoading(true);
 		try {
-			await updateProduct(data, file);
+			await updateProduct({ ...data, idProduct: id }, file);
 		} catch (error) {
 			console.log(error);
 			message.error('Error al actualizar producto');
 		} finally {
 			setLoading(false);
+			router.push(`/dashboard/products/${id}`)
 		}
 	};
 

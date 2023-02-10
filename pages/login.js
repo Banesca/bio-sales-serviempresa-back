@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { Input, Form, Button, Layout, message } from 'antd';
+import { Input, Typography, Form, Button, Layout, message } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -93,58 +93,72 @@ export default function Login() {
 						paddingInline: '1rem',
 					}}
 				>
-					<h1
+					<div
 						style={{
-							fontWeight: 'bold',
-							fontSize: '4rem',
-							color: '#eee',
+							backgroundColor: 'white',
+							borderRadius: '1rem',
+							paddingInline: '4rem'
 						}}
 					>
-						SiempreOL
-					</h1>
-					<h2 style={{ color: 'white', fontSize: '2rem' }}>
-						Iniciar Sesión
-					</h2>
-					<Form
-						name="login"
-						autoComplete="off"
-						labelCol={{ span: 8 }}
-						onFinish={onSubmit}
-					>
-						<Form.Item
-							label="Correo"
-							name="mail"
-							rules={[
-								{
-									required: true,
-									message: 'Ingresa un correo',
-								},
-								{
-									type: 'email',
-									message: 'Ingresa un email valido',
-								},
-							]}
+						<Typography>
+							<h1
+								style={{
+									fontWeight: 'bold',
+									fontSize: '4rem',
+								}}
+							>
+								SiempreOL
+							</h1>
+							<h2
+								style={{
+									fontSize: '2rem',
+									textAlign: 'center',
+								}}
+							>
+								Iniciar Sesión
+							</h2>
+						</Typography>
+						<Form
+							name="login"
+							autoComplete="off"
+							labelCol={{ span: 8 }}
+							onFinish={onSubmit}
 						>
-							<Input />
-						</Form.Item>
-						<Form.Item
-							label="Contraseña"
-							name="pin"
-							rules={[
-								{
-									required: true,
-									message: 'Ingresa una contraseña',
-								},
-							]}
-						>
-							<Input.Password />
-						</Form.Item>
-						<Form.Item wrapperCol={{ span: 8, offset: 8 }}>
-							<Button type="primary" htmlType="submit" block>
-								Aceptar
-							</Button>
-						</Form.Item>
-					</Form>
+							<Form.Item
+								label="Correo"
+								name="mail"
+								rules={[
+									{
+										required: true,
+										message: 'Ingresa un correo',
+									},
+									{
+										type: 'email',
+										message: 'Ingresa un email valido',
+									},
+								]}
+							>
+								<Input />
+							</Form.Item>
+							<Form.Item
+								label="Contraseña"
+								name="pin"
+								rules={[
+									{
+										required: true,
+										message: 'Ingresa una contraseña',
+									},
+								]}
+							>
+								<Input.Password />
+							</Form.Item>
+							<Form.Item wrapperCol={{ span: 8, offset: 8 }}>
+								<Button type="primary" htmlType="submit" block>
+									Aceptar
+								</Button>
+							</Form.Item>
+						</Form>
+					</div>
 				</Content>
 			</Layout>
 			<Loading isLoading={loading} />
