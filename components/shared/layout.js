@@ -103,6 +103,8 @@ export default function DashboardLayout({ children }) {
 					<Sider
 						theme="light"
 						breakpoint="lg"
+						collapsedWidth='3rem'
+						width='10rem'
 					>
 						<Menu
 							mode="inline"
