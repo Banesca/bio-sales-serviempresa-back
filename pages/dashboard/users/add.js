@@ -1,24 +1,13 @@
-import { message } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import UserForm from '../../../components/users/userForm';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
-import { useRequest } from '../../../hooks/useRequest';
-import { useEffect, useState } from 'react';
 import Loading from '../../../components/shared/loading';
+import { useUser } from '../../../components/users/hooks/useUser';
 
 export const AddUserPage = () => {
-	const { requestHandler } = useRequest();
 	const { business } = useBusinessProvider();
 
-	const AddUserRequest = async (data) => {
-		const res = await requestHandler.post('/api/v2/user/add', data);
-		if (res.isLeft()) {
-			console.log(res);
-			message.error('Ha ocurrido un error');
-			return;
-		}
-		console.log(res);
-	};
+	const { addUser } = useUser()
 
 	if (!business) {
 		return (
@@ -33,7 +22,7 @@ export const AddUserPage = () => {
 			<UserForm
 				update={false}
 				user={{}}
-				submitFunction={AddUserRequest}
+				submitFunction={addUser}
 				business={business}
 			/>
 		</DashboardLayout>

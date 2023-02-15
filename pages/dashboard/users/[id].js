@@ -8,28 +8,13 @@ import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import { useUser } from '../../../components/users/hooks/useUser';
+import useClients from '../../../components/clients/hooks/useClients';
+import UserBusinessTable from '../../../components/users/detail/businessTable';
+import UserClientsTable from '../../../components/users/detail/clientsTable';
+import Link from 'next/link';
 
 const UserDetail = () => {
-	const columns = [
-		{
-			title: 'Empresas asignadas',
-			dataIndex: 'nombre',
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			render: (item) => (
-				<Button
-					type="primary"
-					danger
-					onClick={() => openConfirmDelete(item)}
-				>
-					<DeleteOutlined />
-				</Button>
-			),
-		},
-	];
-
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -44,13 +29,32 @@ const UserDetail = () => {
 		{ name: 'Vendedor', id: 3 },
 	];
 	const { loading, setLoading } = useLoadingContext();
-	// const [loading, setLoading] = useState(false);
+	const {
+		sellerClients,
+		getUserById,
+		getSellerClients,
+		assignClientToSeller,
+		removeClientToSeller,
+		addItemToUserRoute,
+	} = useUser();
+
+	const { clients, listClients } = useClients();
+
 	const [user, setUser] = useState();
 	const [profile, setProfile] = useState();
 
+	// assign clients
+	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
+	const [clientsToAssign, setClientsToAssign] = useState([]);
+
+	const [clientToRemove, setClientToRemove] = useState(null);
+	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
+
+	// Assign Business
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
 
+	// business
 	const [businessByUser, setBusinessByUser] = useState([]);
 	const [businessToAdd, setBusinessToAdd] = useState();
 	const [businessToRemove, setBusinessToRemove] = useState();
@@ -59,9 +63,8 @@ const UserDetail = () => {
 
 	const { requestHandler } = useRequest();
 
-	const getUserBusiness = async (userId) => {
+	const getUserBusiness = async (id) => {
 		const res = await requestHandler.get(`/api/v2/user/branch/${id}`);
-		console.log(res);
 		if (res.isLeft()) {
 			return;
 		}
@@ -69,24 +72,57 @@ const UserDetail = () => {
 		setBusinessByUser(value);
 	};
 
-	const getUserRequest = async (id) => {
-		const res = await requestHandler.get(`/api/v2/user/${id}`);
-		if (res.isLeft()) {
+	const getSellerClientsRequest = async (id) => {
+		setLoading(true);
+		try {
+			await getSellerClients(id);
+		} catch (error) {
+			console.log(error);
+			message.error('Error');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		const value = res.value.getValue().data[0];
-		setUser(value);
-		setProfile(profileList.filter((p) => p.id === value.idProfileFk)[0]);
-		setLoading(false);
+	};
+
+	const getClientsRequest = async () => {
+		setLoading(true);
+		try {
+			await listClients();
+		} catch (error) {
+			console.log(error);
+			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const getUserRequest = async (id) => {
+		setLoading(true);
+		try {
+			const user = await getUserById(id);
+			if (!user) {
+				return message.error('Usuario no encontrado');
+			}
+			setUser(user);
+			setProfile(profileList.filter((p) => p.id === user.idProfileFk)[0]);
+			if (user.idProfileFk === 3) {
+				console.log('get sellers');
+				await getSellerClientsRequest(user.idUser);
+			}
+		} catch (error) {
+			message.error('Ha ocurrido un error user request');
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const { business } = useBusinessProvider();
 
 	useEffect(() => {
-		if (generalContext) {
+		if (Object.keys(generalContext).length) {
 			getUserRequest(id);
 			getUserBusiness(id);
+			getClientsRequest();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
@@ -139,11 +175,6 @@ const UserDetail = () => {
 		message.success('Acceso removido');
 	};
 
-	const openConfirmDelete = (item) => {
-		setBusinessToRemove(item);
-		setConfirmDelete(true);
-	};
-
 	const closeRemoveModal = async (bool) => {
 		if (!bool) {
 			setConfirmDelete(false);
@@ -152,9 +183,60 @@ const UserDetail = () => {
 		setConfirmDelete(false);
 	};
 
-	useEffect(() => {
-		console.log(businessByUser);
-	}, [businessByUser]);
+	const handleAssignClientsToSeller = async () => {
+		setLoading(true);
+		setIsAssignClientOpen(false);
+		try {
+			let count = 0;
+			for (const client of clientsToAssign) {
+				if (clientAlreadyAssigned(client)) {
+					message.info(
+						'Este usuario ya cuenta con acceso sobre el cliente seleccionado'
+					);
+					continue;
+				}
+				await assignClientToSeller({
+					idClientFk: client,
+					idUserFk: Number(id),
+				});
+				count += 1;
+			}
+			if (count > 0)
+				message.success(
+					`${count} ${
+						count > 1 ? `Clientes agregados` : `Cliente agregado`
+					}`
+				);
+			await getSellerClients(id);
+			setClientsToAssign([]);
+		} catch (error) {
+			console.log(error);
+			message.error('Error al asignar clientes');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const clientAlreadyAssigned = (id) => {
+		const exists = sellerClients.some((c) => c.idClient === id);
+		console.log('exitst', exists);
+		return exists;
+	};
+
+	const handleRemoveClient = async () => {
+		setLoading(true);
+		setConfirmRemoveClient(false);
+		try {
+			await removeClientToSeller(clientToRemove.idSellersClient);
+			await getSellerClients(id);
+			message.success('Cliente removido');
+		} catch (error) {
+			console.log(error);
+			message.error('Error al remover cliente');
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<>
@@ -178,13 +260,13 @@ const UserDetail = () => {
 						}}
 					>
 						<ArrowLeftOutlined
-							style={{ fontSize: '1.5rem', color: 'white' }}
+							style={{ fontSize: '1.5rem' }}
 							onClick={handleReturn}
 						/>
 						<h1
 							style={{
 								textAlign: 'center',
-								fontSize: '2rem',
+								fontSize: '1.5rem',
 							}}
 						>
 							Información General
@@ -193,13 +275,32 @@ const UserDetail = () => {
 							<Button
 								onClick={() => setIsModalOpen(true)}
 								type="primary"
-								style={{ marginRight: '2rem' }}
+								style={{ marginRight: '.5rem' }}
 							>
-								Asignar
+								Empresas
+							</Button>
+							<Button
+								onClick={() => setIsAssignClientOpen(true)}
+								type="primary"
+								style={{ marginRight: '.5rem' }}
+							>
+								Clientes
+							</Button>
+							<Button type="primary">
+								<Link href={`/dashboard/users/routes/${id}`}>
+									Rutas
+								</Link>
 							</Button>
 						</div>
 					</div>
-					<List style={{ width: '100%' }}>
+					<List
+						style={{
+							width: '100%',
+							backgroundColor: 'white',
+							borderRadius: '.5rem',
+							marginBottom: '1rem',
+						}}
+					>
 						<List.Item>
 							<p>Nombre</p>
 							<p>{user?.fullname}</p>
@@ -213,12 +314,22 @@ const UserDetail = () => {
 							<p>{profile?.name}</p>
 						</List.Item>
 					</List>
-					<Table
-						columns={columns}
-						style={{ width: '100%' }}
-						dataSource={businessByUser}
-					/>
+					{profile?.id == 3 && (
+						<>
+							<UserBusinessTable
+								business={businessByUser}
+								setConfirmDelete={setConfirmDelete}
+								setBusinessToRemove={setBusinessToRemove}
+							/>
+							<UserClientsTable
+								clients={sellerClients}
+								setConfirmDelete={setConfirmRemoveClient}
+								setClientToRemove={setClientToRemove}
+							/>
+						</>
+					)}
 				</div>
+				{/* Asignar Empresas */}
 				<Modal
 					title="Asignar Empresas"
 					open={isModalOpen}
@@ -256,6 +367,55 @@ const UserDetail = () => {
 						</Form.Item>
 					</Form>
 				</Modal>
+				{/* End Asignar Empresas */}
+
+				{/* Asignar Clientes */}
+				<Modal
+					title="Asignar Clientes"
+					open={isAssignClientOpen}
+					onCancel={() => setIsAssignClientOpen(false)}
+					footer={[
+						<Button
+							key="cancel"
+							onClick={() => {
+								setIsAssignClientOpen(false);
+								setClientsToAssign([]);
+							}}
+						>
+							Cancelar
+						</Button>,
+						<Button
+							key="asigne"
+							type="primary"
+							onClick={handleAssignClientsToSeller}
+						>
+							Asignar
+						</Button>,
+					]}
+				>
+					<Form>
+						<Form.Item label="Clientes">
+							<Select
+								allowClear
+								mode="multiple"
+								value={clientsToAssign}
+								onChange={(v) => setClientsToAssign(v)}
+							>
+								{clients &&
+									clients.map((client) => (
+										<Select.Option
+											key={client.idClient}
+											value={client.idClient}
+										>
+											{client.nameClient}
+										</Select.Option>
+									))}
+							</Select>
+						</Form.Item>
+					</Form>
+				</Modal>
+				{/* End Asignar Clientes */}
+				{/* Confirm remove business */}
 				<Modal
 					open={confirmDelete}
 					title="Remover Permisos"
@@ -282,6 +442,34 @@ const UserDetail = () => {
 						{user?.fullname}
 					</p>
 				</Modal>
+				{/* End confirm remove business */}
+				{/* Confirm remove client */}
+				<Modal
+					open={confirmRemoveClient}
+					title="Remover Permisos"
+					onCancel={() => setConfirmRemoveClient(false)}
+					footer={[
+						<Button
+							key="cancel"
+							onClick={() => setClientToRemove(false)}
+						>
+							Cancelar
+						</Button>,
+						<Button
+							key="remove"
+							type="primary"
+							danger
+							onClick={() => handleRemoveClient()}
+						>
+							Remover
+						</Button>,
+					]}
+				>
+					<p>
+						{`Estas seguro de remover el acceso sobre el cliente ${clientToRemove?.nameClient} al usuario ${user?.fullname}`}
+					</p>
+				</Modal>
+				{/* End remove client */}
 			</DashboardLayout>
 			<Loading isLoading={loading} />
 		</>

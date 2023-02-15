@@ -6,9 +6,12 @@ import Loading from '../shared/loading';
 import { Router, useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 import { profileList } from './filters';
+import { useUser } from './hooks/useUser';
 
 const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const { requestHandler } = useRequest();
+
+	const { findUserByEmail } = useUser();
 
 	const [userData, setUserData] = useState({
 		fullname: user.fullname || '',
@@ -57,32 +60,42 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		console.log(businessByUser);
 	}, [businessByUser]);
 
-	const findUserByEmail = async (email) => {
-		const res = await requestHandler.get(`/api/v2/user/bymail/${email}`);
-
-		if (res.isLeft()) {
-			return message.error('Error al asignar permisos');
+	const handleFindUser = async (email) => {
+		try {
+			return await findUserByEmail(email);
+		} catch (error) {
+			message.error('Error al encontrar usuario');
 		}
-
-		console.log(res.value.getValue(), 'value find');
-		const value = res.value.getValue().data[0];
-		return value;
 	};
 
 	const onSubmit = async () => {
-		setLoading(true);
-		console.log(userData, 'userData')
-		await submitFunction(userData);
-		if (!update) {
-			const user = await findUserByEmail(userData.mail);
-			console.log('This is the user data', user);
-			for (const business of businessByUser) {
-				await handleAsigne(user.idUser, business);
+		try {
+			setLoading(true);
+			console.log(userData, 'userData');
+			await submitFunction(userData);
+			if (!update && userData.idProfileFk === 3) {
+				const user = await handleFindUser(userData.mail);
+				if (!user) {
+					return message.error('Error al asignar permisos');
+				}
+				for (const business of businessByUser) {
+					await handleAsigne(user.idUser, business);
+				}
 			}
+			message.success(
+				update ? 'Usuario actualizado' : 'Usuario agregado'
+			);
+			router.push('/dashboard/users');
+		} catch (error) {
+			console.log(error, 'error')
+			message.error(
+				update
+					? 'Error al actualizar usuario'
+					: ' Error al agregar usuario'
+			);
+		} finally {
+			setLoading(false);
 		}
-		message.success(update ? 'Usuario actualizado' : 'Usuario agregado');
-		setLoading(false);
-		router.push('/dashboard/users');
 	};
 
 	if (!user && update) {
@@ -99,7 +112,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 			>
 				<h1
 					style={{
-						
 						fontSize: '2rem',
 						textAlign: 'center',
 					}}

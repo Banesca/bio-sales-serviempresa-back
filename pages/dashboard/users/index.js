@@ -10,36 +10,29 @@ import UserFilters from '../../../components/users/filters';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
 import { Typography } from 'antd';
+import { useUser } from '../../../components/users/hooks/useUser';
 
 export default function Users() {
 	const { requestHandler } = useRequest();
 
 	const { loading, setLoading } = useLoadingContext();
+	const { users, deleteUser, getUsers } = useUser();
 	// const [loading, setLoading] = useState(true);
 
-	const [users, setUsers] = useState([]);
+	// const [users, setUsers] = useState([]);
 	const [query, setQuery] = useState({
 		fullname: '',
 		mail: '',
 		idProfileFk: 0,
 	});
 
-	const getUsersRequest = async () => {
-		const res = await requestHandler.get(`/api/v2/user`);
-		if (res.isLeft()) {
-			setLoading(false);
-			return;
-		}
-		const value = res.value.getValue();
-		setUsers(value.data);
-		setLoading(false);
-	};
-
 	const generalContext = useContext(GeneralContext);
 
 	useEffect(() => {
-		if (generalContext) {
-			getUsersRequest();
+		setLoading(true)
+		if (Object.keys(generalContext).length) {
+			getUsers();
+			setLoading(false)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
@@ -82,19 +75,18 @@ export default function Users() {
 			return;
 		}
 		setIsModalOpen(false);
-		await handleDelete();
-		await getUsersRequest();
+		await handleDelete(currentUser.idUser, currentUser.fullname);
 	};
 
-	const handleDelete = async () => {
-		const res = await requestHandler.put(
-			`/api/v2/user/change/status/${currentUser.idUser}/3`
-		);
-		console.log(res);
-		setLoading(false);
-		return message.success(
-			`El usuario ${currentUser.fullname} ha sido eliminado`
-		);
+	const handleDelete = async (idUser, name) => {
+		try {
+			await deleteUser(idUser);
+			message.success(`El usuario ${name} ha sido eliminado`);
+		} catch (error) {
+			message.error('Error al eliminar usuario');
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
