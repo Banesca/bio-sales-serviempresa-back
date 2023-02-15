@@ -2,7 +2,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import { useRouter } from 'next/router';
 
-export default function Title({ title, path }) {
+export default function Title({ title, path, children }) {
 	const router = useRouter();
 
 	const handleReturn = () => {
@@ -17,6 +17,7 @@ export default function Title({ title, path }) {
 				flexDirection: 'row',
 				justifyContent: 'space-between',
 				alignItems: 'center',
+				marginBottom: '1rem'
 			}}
 		>
 			<ArrowLeftOutlined
@@ -27,14 +28,14 @@ export default function Title({ title, path }) {
 				<h1
 					style={{
 						textAlign: 'center',
-						fontSize: '2rem',
-						margin: '0'
+						fontSize: '1.5rem',
+						margin: '0',
 					}}
 				>
 					{title}
 				</h1>
 			</Typography>
-			<div></div>
+			<div>{children}</div>
 		</div>
 	);
 }

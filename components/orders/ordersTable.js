@@ -33,7 +33,7 @@ export default function OrdersTable({ orders }) {
 				let aDate = new Date(aYear, aMonth, aDay);
 				let bDate = new Date(bYear, bMonth, bDay);
 
-				return aDate.getTime() - bDate.getTime();
+				return aDate - bDate
 			},
 			showSorterTooltip: false,
 			render: (text) => <p>{text.split(' ', 1)}</p>,
@@ -55,7 +55,7 @@ export default function OrdersTable({ orders }) {
 				let aDate = new Date(aYear, aMonth, aDay);
 				let bDate = new Date(bYear, bMonth, bDay);
 
-				return aDate.getTime() - bDate.getTime();
+				return aDate - bDate
 			},
 			showSorterTooltip: false,
 			render: (text) => <p>{text.split(' ', 1)}</p>,

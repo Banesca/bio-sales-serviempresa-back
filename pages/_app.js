@@ -19,17 +19,18 @@ function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
 
-	useEffect(() => {
-		async function setBusiness(business = 'demo') {
-			try {
-				const response = await axios.get(
-					`${ipBackOffice}/customer/byname/${business}`
-				);
-				setGeneralData(response.data.restaurante);
-			} catch (error) {
-				console.log(error);
-			}
+	async function setBusiness(business = 'demo') {
+		try {
+			const response = await axios.get(
+				`${ipBackOffice}/customer/byname/${business}`
+			);
+			setGeneralData(response.data.restaurante);
+		} catch (error) {
+			console.log(error);
 		}
+	}
+
+	useEffect(() => {
 		setBusiness();
 		setLoading(false);
 	}, []);
@@ -48,7 +49,7 @@ function MyApp({ Component, pageProps }) {
 				algorithm: theme.defaultAlgorithm,
 				token: {
 					colorPrimary: '#0984e3',
-					colorError: '#d00'
+					colorError: '#d00',
 				},
 			}}
 		>
