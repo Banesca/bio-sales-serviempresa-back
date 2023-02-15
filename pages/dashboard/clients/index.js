@@ -17,6 +17,8 @@ import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import Loading from '../../../components/shared/loading';
 import { Typography } from 'antd';
+import useClients from '../../../components/clients/hooks/useClients';
+import { message } from 'antd';
 
 export default function ClientsPage() {
 	const columns = [
@@ -64,7 +66,8 @@ export default function ClientsPage() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	// clients
-	const [clients, setClients] = useState([]);
+	// const [clients, setClients] = useState([]);
+	const { clients, listClients } = useClients();
 	const [query, setQuery] = useState({
 		nameClient: '',
 		phone: '',
@@ -79,24 +82,25 @@ export default function ClientsPage() {
 		setIsModalOpen(false);
 	};
 
-	const { requestHandler } = useRequest();
 	const generalContext = useContext(GeneralContext);
 
 	const getClientsRequest = async () => {
 		setLoading(true);
-		const res = await requestHandler.get('/api/v2/client/list');
-		if (res.isLeft()) {
+		try {
+			await listClients();
+		} catch (error) {
+			console.log(error);
+			message.error('Ha ocurrido un error');
+		} finally {
 			setLoading(false);
-			return;
 		}
-		setClients(res.value.getValue().response);
-		setLoading(false);
 	};
 
 	useEffect(() => {
-		if (generalContext) {
+		if (Object.keys(generalContext).length) {
 			getClientsRequest();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const [form] = Form.useForm();
