@@ -244,8 +244,7 @@ export default function Products() {
 							Importar
 						</Button>
 					</Title>
-					{userProfile != PROFILES.BILLER &&
-						userProfile != PROFILES.ADMIN && <SelectBusiness />}
+					{userProfile == PROFILES.MASTER && <SelectBusiness />}
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<Table
 						style={{ overflowX: 'scroll' }}
