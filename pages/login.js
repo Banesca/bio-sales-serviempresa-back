@@ -6,6 +6,7 @@ import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
 import { useBusinessProvider } from '../hooks/useBusinessProvider';
 import { ip } from '../util/environment';
+import { PROFILES } from '../components/shared/profiles';
 
 const { Content } = Layout;
 
@@ -28,10 +29,19 @@ export default function Login() {
 
 	// business Context
 	const businessContext = useBusinessProvider();
-	console.log(businessContext);
 
 	const handleLoginRequest = async (data) => {
 		return await requestHandler.post('/api/v1/validator/login', data);
+	};
+
+	const getUserBusiness = async (id) => {
+		const res = await requestHandler.get(`/api/v2/user/branch/${id}`);
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value.getValue().data;
+		console.log(res, 'res');
+		return value;
 	};
 
 	const onSubmit = async (values) => {
@@ -58,13 +68,34 @@ export default function Login() {
 			return handleLoginError('Usuario o contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
-		localStorage.setItem('userId', value.idUser);
 		localStorage.setItem('accessToken', value.token);
+		console.log(value, 'user value');
+		if (value.idProfileFk != PROFILES.MASTER) {
+			const businessByUser = await getUserBusiness(value.idUser);
+			console.log(businessByUser, 'user business');
+			if (businessByUser.length < 1) {
+				handleLoginError('Acceso denegado');
+				return;
+			}
+			const businessIdsList = value.branch.map((b) => b.idSucursal);
+			const selectedBusinessIdx = businessIdsList.indexOf(
+				businessByUser[0].idSucursalFk
+			);
+
+			localStorage.setItem(
+				'selectedBusiness',
+				JSON.stringify(value.branch[selectedBusinessIdx])
+			);
+		} else {
+			localStorage.setItem(
+				'selectedBusiness',
+				JSON.stringify(value.branch[0])
+			);
+		}
+		console.log(value);
+		localStorage.setItem('userId', value.idUser);
+		localStorage.setItem('userProfile', value.idProfileFk);
 		localStorage.setItem('business', JSON.stringify(value.branch));
-		localStorage.setItem(
-			'selectedBusiness',
-			JSON.stringify(value.branch[0])
-		);
 		businessContext.handleSetBusiness(value.branch);
 		businessContext.handleSetSelectedBusiness(value.branch);
 		setLoading(false);
@@ -97,7 +128,7 @@ export default function Login() {
 						style={{
 							backgroundColor: 'white',
 							borderRadius: '1rem',
-							paddingInline: '4rem'
+							paddingInline: '4rem',
 						}}
 					>
 						<Typography>

@@ -6,7 +6,8 @@ import { Space, Button, Table, Modal } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
-import { profileList } from './filters';
+import { PROFILES, PROFILE_LIST } from '../shared/profiles';
+import { useAuthContext } from '../../context/useUserProfileProvider';
 
 const UsersTable = ({
 	users,
@@ -33,7 +34,7 @@ const UsersTable = ({
 			dataIndex: 'idProfileFk',
 			key: 2,
 			render: (text) => {
-				let profile = profileList.find((p) => p.id === text);
+				let profile = PROFILE_LIST.find((p) => p.id === text);
 				console.log(profile);
 
 				return <p>{profile?.name}</p>;
@@ -41,6 +42,7 @@ const UsersTable = ({
 		},
 		{
 			title: 'Acciones',
+			width: '40px',
 			key: 5,
 			render: (_, record) => (
 				<Space size="middle">
@@ -60,21 +62,25 @@ const UsersTable = ({
 					>
 						<EditOutlined />
 					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => {
-							handleOpenModal(_);
-						}}
-					>
-						<DeleteOutlined />
-					</Button>
+					{userProfile != PROFILES.BILLER &&
+						userProfile != PROFILES.ADMIN && (
+							<Button
+								type="primary"
+								danger
+								onClick={() => {
+									handleOpenModal(_);
+								}}
+							>
+								<DeleteOutlined />
+							</Button>
+						)}
 				</Space>
 			),
 		},
 	];
 
 	const router = useRouter();
+	const { userProfile } = useAuthContext();
 
 	// const [loading, setLoading] = useState(true);
 	const { loading, setLoading } = useLoadingContext();

@@ -19,6 +19,11 @@ import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
 
+export const UNIT_TYPE = {
+	UNIT: 17,
+	KG: 3,
+};
+
 const UpdateOrderPage = () => {
 	const router = useRouter();
 	const { id } = router.query;
@@ -104,16 +109,6 @@ const UpdateOrderPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [products]);
 
-	// const getUserRequest = async (id) => {
-	// 	const res = await requestHandler.get(`/api/v2/user/${id}`);
-	// 	console.log(res.value);
-	// 	if (res.isLeft()) {
-	// 		return;
-	// 	}
-	// 	const value = res.value.getValue().data[0];
-	// 	setUser(value);
-	// };
-
 	const calculateTotalRequest = async () => {
 		const res = await requestHandler.get(
 			`/api/v2/order/calculate/total/${id}`
@@ -127,9 +122,10 @@ const UpdateOrderPage = () => {
 
 	useEffect(() => {
 		if (currentOrder) {
+			console.log('calculate total')
 			calculateTotalRequest(currentOrder.idOrderH);
 		}
-	}, [currentOrder]);
+	}, [currentOrder, getOrderRequest]);
 
 	const generalContext = useContext(GeneralContext);
 	const { requestHandler } = useRequest();
@@ -200,6 +196,23 @@ const UpdateOrderPage = () => {
 		message.success('Orden cancelada');
 	};
 
+	const calculateSubTotal = (item) => {
+		let subTotal = 0;
+		if (item.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
+			console.log('kg');
+			subTotal =
+				item.weight *
+				(item.unitweight *
+					(item.isPromo == '1' ? item.marketPrice : item.priceSale));
+		} else {
+			subTotal =
+				item.weight *
+				(item.isPromo == '1' ? item.marketPrice : item.priceSale);
+		}
+		console.log(subTotal);
+		return subTotal;
+	};
+
 	return (
 		<DashboardLayout>
 			<div
@@ -223,7 +236,6 @@ const UpdateOrderPage = () => {
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
-							
 						}}
 					>
 						Tomar pedido
@@ -317,9 +329,17 @@ const UpdateOrderPage = () => {
 								title={item.nameProduct}
 								description={`Cantidad: ${
 									item.weight
-								} | Precio: $${item.priceSale.toFixed(2)}`}
+								} | Precio: $${
+									item.isPromo == 1
+										? item.marketPrice.toFixed(2)
+										: item.priceSale.toFixed(2)
+								} ${
+									item.idUnitMeasureSaleFk == UNIT_TYPE.KG
+										? `| Peso: ${item.unitweight}KG`
+										: ''
+								}`}
 							/>
-							<p>SubTotal: ${item.weight * item.priceSale}</p>
+							<p>SubTotal: $ {calculateSubTotal(item)}</p>
 						</List.Item>
 					)}
 				>

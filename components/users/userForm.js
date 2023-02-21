@@ -3,10 +3,10 @@ import { Button, Col, Row, Form, Input, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import Loading from '../shared/loading';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
-import { profileList } from './filters';
 import { useUser } from './hooks/useUser';
+import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 
 const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const { requestHandler } = useRequest();
@@ -73,7 +73,12 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 			setLoading(true);
 			console.log(userData, 'userData');
 			await submitFunction(userData);
-			if (!update && userData.idProfileFk === 3) {
+			if (
+				!update &&
+				(userData.idProfileFk == PROFILES.SELLER ||
+					userData.idProfileFk == PROFILES.ADMIN ||
+					userData.idProfileFk == PROFILES.BILLER)
+			) {
 				const user = await handleFindUser(userData.mail);
 				if (!user) {
 					return message.error('Error al asignar permisos');
@@ -87,7 +92,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 			);
 			router.push('/dashboard/users');
 		} catch (error) {
-			console.log(error, 'error')
+			console.log(error, 'error');
 			message.error(
 				update
 					? 'Error al actualizar usuario'
@@ -205,29 +210,49 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 								}))
 							}
 						>
-							{profileList.map((p) => (
-								<Select.Option key={p.id} value={p.id}>
-									{p.name}
-								</Select.Option>
-							))}
+							{PROFILE_LIST.map((p) => {
+								if (p.id === 1) {
+									return;
+								}
+								return (
+									<Select.Option key={p.id} value={p.id}>
+										{p.name}
+									</Select.Option>
+								);
+							})}
 						</Select>
 					</Form.Item>
-					{!update && userData.idProfileFk == 3 && (
+					{!update && userData.idProfileFk && (
 						<Form.Item
 							label="Empresas"
 							name="business"
 							rules={[
 								{
 									required:
-										!update && userData.idProfileFk === 3,
+										!update &&
+										(userData.idProfileFk ==
+											PROFILES.SELLER ||
+											userData.idProfileFk ==
+												PROFILES.BILLER ||
+											userData.idProfileFk ==
+												PROFILES.ADMIN),
 									message: 'Elige una empresa',
 								},
 							]}
 						>
 							<Select
 								value={businessByUser}
-								mode="multiple"
-								onChange={(value) => setBusinessByUser(value)}
+								mode={
+									userData.idProfileFk === PROFILES.SELLER &&
+									'multiple'
+								}
+								onChange={(value) => {
+									if (Array.isArray(value)) {
+										setBusinessByUser(value);
+									} else {
+										setBusinessByUser([value]);
+									}
+								}}
 							>
 								{business.map((p) => (
 									<Select.Option

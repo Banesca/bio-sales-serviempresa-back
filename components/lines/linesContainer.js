@@ -7,6 +7,9 @@ import LinesFilters from './linesFilters';
 import LinesModals from './lineModals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
+import { useAuthContext } from '../../context/useUserProfileProvider';
+import Title from '../shared/title';
+import { PROFILES } from '../shared/profiles';
 
 export default function LinesContainer() {
 	const columns = [
@@ -19,10 +22,12 @@ export default function LinesContainer() {
 		{
 			title: 'Acciones',
 			key: 2,
+			width: '20px',
 			render: (_, item) => (
 				<Button
 					danger
 					type="primary"
+					disabled={userProfile == PROFILES.BILLER}
 					onClick={() => openDeleteModal(item)}
 				>
 					<DeleteOutlined />
@@ -33,6 +38,7 @@ export default function LinesContainer() {
 
 	const { lines } = useCategoryContext();
 	const { loading } = useLoadingContext();
+	const { userProfile } = useAuthContext();
 
 	useEffect(() => {
 		console.log(lines);
@@ -74,43 +80,16 @@ export default function LinesContainer() {
 
 	return (
 		<>
-			<Row style={{ alignItems: 'center' }}>
-				<Col
-					lg={{ offset: 6, span: 12 }}
-					md={{ offset: 6, span: 12 }}
-					sm={{ offset: 6, span: 12 }}
-					xs={{ span: 12 }}
-				>
-					<Typography>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '2rem',
-								margin: '.5rem 0',
-							}}
-						>
-							Lineas
-						</h1>
-					</Typography>
-				</Col>
-				<Col
-					lg={{ span: 6 }}
-					md={{ span: 6 }}
-					sm={{ span: 6 }}
-					xs={{ span: 12 }}
-					style={{
-						justifyContent: 'end',
-						display: 'flex',
-					}}
-				>
+			<Title>
+				{userProfile != PROFILES.BILLER && (
 					<Button
 						type="primary"
 						onClick={() => setIsCreateModalOpen(true)}
 					>
 						Agregar
 					</Button>
-				</Col>
-			</Row>
+				)}
+			</Title>
 			<LinesFilters
 				setQuery={setQuery}
 				setSelectedSubCategory={setSelectedSubCategory}

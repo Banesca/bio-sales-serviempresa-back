@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { CategoriesProvider } from '../hooks/useCategoriesProvider';
 import { BrandsProvider } from '../hooks/useBrandsProvider';
 import { LoadingProvider } from '../hooks/useLoadingProvider';
+import { ProfileProvider } from '../context/useUserProfileProvider';
 
 export const GeneralContext = createContext();
 
@@ -54,16 +55,18 @@ function MyApp({ Component, pageProps }) {
 			}}
 		>
 			<GeneralContext.Provider value={generalData}>
-				<BusinessProvider>
-					<CategoriesProvider>
-						<BrandsProvider>
-							<LoadingProvider>
-								<Component {...pageProps} />
-								<Loading isLoading={loading} />
-							</LoadingProvider>
-						</BrandsProvider>
-					</CategoriesProvider>
-				</BusinessProvider>
+				<ProfileProvider>
+					<BusinessProvider>
+						<CategoriesProvider>
+							<BrandsProvider>
+								<LoadingProvider>
+									<Component {...pageProps} />
+									<Loading isLoading={loading} />
+								</LoadingProvider>
+							</BrandsProvider>
+						</CategoriesProvider>
+					</BusinessProvider>
+				</ProfileProvider>
 			</GeneralContext.Provider>
 		</ConfigProvider>
 	);

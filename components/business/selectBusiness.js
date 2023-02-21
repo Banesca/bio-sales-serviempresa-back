@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { message, Select, Col, Row } from 'antd';
-import { setTabs } from '../../util/setKeys';
 import { Form } from 'antd';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 
@@ -15,7 +14,7 @@ const SelectBusiness = () => {
 	};
 
 	const onChange = (key) => {
-		const filterBusiness = business.filter((b) => b.idSucursal === key)[0];
+		const filterBusiness = business.find((b) => b.idSucursal === key);
 		handleSetSelectedBusiness(filterBusiness);
 		localStorage.setItem(
 			'selectedBusiness',
@@ -26,7 +25,7 @@ const SelectBusiness = () => {
 
 	const [form] = Form.useForm();
 	useEffect(() => {
-		if (selectedBusiness) {
+		if (Object.keys(selectedBusiness).length) {
 			form.setFieldValue('business', selectedBusiness.nombre);
 		}
 	}, [selectedBusiness]);
@@ -35,11 +34,16 @@ const SelectBusiness = () => {
 		<Row>
 			{contextHolder}
 			<Col span={24}>
-				<h3 style={{ textAlign: 'center' }}>Ambiente Empresarial</h3>
+				<h3 style={{ textAlign: 'center', margin: '0' }}>
+					Ambiente Empresarial
+				</h3>
 				<Row style={{ display: 'flex', justifyContent: 'center' }}>
 					<Form form={form}>
 						<Form.Item name="business">
-							<Select onChange={onChange} style={{ minWidth: '200px'}}>
+							<Select
+								onChange={onChange}
+								style={{ minWidth: '200px' }}
+							>
 								{business &&
 									business.map((b) => (
 										<Select.Option

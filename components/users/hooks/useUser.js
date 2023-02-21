@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
+import { addKeys } from '../../../util/setKeys';
+
+const formatToday = () => {
+	const today = new Date();
+	return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+};
 
 export function useUser() {
 	const [users, setUsers] = useState([]);
 	const [sellerClients, setSellerClients] = useState([]);
+	const [routes, setRoutes] = useState([]);
 
 	const { requestHandler } = useRequest();
 
@@ -62,10 +69,11 @@ export function useUser() {
 	};
 
 	const getUserRouteByDate = async (
+		userId,
 		data = {
-			listDate: `2023-1-31,2023-2-14`,
-		},
-		userId
+			dateStart: `2023-1-1`,
+			dateEnd: formatToday(),
+		}
 	) => {
 		const res = await requestHandler.post(
 			`/api/v2/user/rute/bydate/${userId}`,
@@ -74,10 +82,24 @@ export function useUser() {
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
+		const value = res.value.getValue().data;
+		addKeys(value);
+		setRoutes(value);
+	};
+
+	const removeRouteItem = async ({ idSellerRoute, userId }) => {
+		console.log('useUser', idSellerRoute);
+		const res = await requestHandler.get(
+			`/api/v2/user/delete/rute/${idSellerRoute}`
+		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getUserRouteByDate(userId);
 	};
 
 	const addUser = async (data) => {
-		const res = await requestHandler.post('/api/v2/user/add', data);
+		const res = await requestHandler.post('/api/v2/user/add/sales', data);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -117,6 +139,7 @@ export function useUser() {
 	return {
 		users,
 		sellerClients,
+		routes,
 		getUsers,
 		getUserById,
 		addUser,
@@ -128,5 +151,6 @@ export function useUser() {
 		removeClientToSeller,
 		addItemToUserRoute,
 		getUserRouteByDate,
+		removeRouteItem,
 	};
 }

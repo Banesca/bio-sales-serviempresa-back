@@ -7,6 +7,9 @@ import SubCategoryFilters from './filters';
 import SubCategoryModals from './modals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
+import Title from '../shared/title';
+import { useAuthContext } from '../../context/useUserProfileProvider';
+import { PROFILES } from '../shared/profiles';
 
 export default function SubCategoriesContainer() {
 	const columns = [
@@ -18,11 +21,13 @@ export default function SubCategoriesContainer() {
 		},
 		{
 			title: 'Acciones',
+			width: '20px',
 			key: 2,
 			render: (_, item) => (
 				<Button
 					danger
 					type="primary"
+					disabled={userProfile == PROFILES.BILLER}
 					onClick={() => openDeleteModal(item)}
 				>
 					<DeleteOutlined />
@@ -32,6 +37,7 @@ export default function SubCategoriesContainer() {
 	];
 
 	const { subCategories } = useCategoryContext();
+	const { userProfile } = useAuthContext();
 
 	// const [loading, setLoading] = useState(false);
 	const { setLoading } = useLoadingContext();
@@ -80,7 +86,7 @@ export default function SubCategoriesContainer() {
 
 	return (
 		<>
-			<Row style={{ alignItems: 'center' }}>
+			{/* <Row style={{ alignItems: 'center' }}>
 				<Col
 					lg={{ offset: 6, span: 12 }}
 					md={{ offset: 6, span: 12 }}
@@ -108,15 +114,15 @@ export default function SubCategoriesContainer() {
 						justifyContent: 'end',
 						display: 'flex',
 					}}
-				>
-					<Button
-						type="primary"
-						onClick={handleOpenCreateModal}
-					>
+				></Col>
+			</Row> */}
+			<Title title="Sub Categorías" goBack={false}>
+				{userProfile != PROFILES.BILLER && (
+					<Button type="primary" onClick={handleOpenCreateModal}>
 						Agregar
 					</Button>
-				</Col>
-			</Row>
+				)}
+			</Title>
 			<SubCategoryFilters
 				setQuery={setQuery}
 				setSelectedCategory={setSelectedCategory}

@@ -8,7 +8,7 @@ export function useBusinessProvider() {
 
 export function BusinessProvider(props) {
 	const [business, setBusiness] = useState([]);
-	const [selectedBusiness, setSelectedBusiness] = useState(null);
+	const [selectedBusiness, setSelectedBusiness] = useState({});
 
 	const handleSetBusiness = (business) => {
 		setBusiness(business);
@@ -19,11 +19,18 @@ export function BusinessProvider(props) {
 	};
 
 	useEffect(() => {
-		const savedBusiness = localStorage.getItem('business');
-		const savedSelectedBusiness = localStorage.getItem('selectedBusiness');
-		setBusiness(JSON.parse(savedBusiness));
-		setSelectedBusiness(JSON.parse(savedSelectedBusiness));
-	}, []);
+		const savedBusiness = JSON.parse(localStorage.getItem('business'));
+		const savedSelectedBusiness = JSON.parse(
+			localStorage.getItem('selectedBusiness')
+		);
+		console.log(savedSelectedBusiness, 'savedSelectedBusiness');
+		setBusiness(savedBusiness);
+		setSelectedBusiness((prev) =>
+			savedSelectedBusiness.idSucursal == prev?.idSucursal
+				? prev
+				: savedSelectedBusiness
+		);
+	}, [selectedBusiness]);
 
 	return (
 		<BusinessContext.Provider

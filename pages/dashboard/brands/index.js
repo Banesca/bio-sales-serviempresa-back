@@ -11,6 +11,9 @@ import BrandsFilters from '../../../components/brands/brandsFilters';
 import BrandsModals from '../../../components/brands/brandsModals';
 import { addKeys } from '../../../util/setKeys';
 import { Typography } from 'antd';
+import { PROFILES } from '../../../components/shared/profiles';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
+import Title from '../../../components/shared/title';
 
 const BrandsPage = () => {
 	const columns = [
@@ -23,10 +26,12 @@ const BrandsPage = () => {
 		{
 			title: 'Acciones',
 			key: 2,
+			width: '20px',
 			render: (_, item) => (
 				<Button
 					danger
 					type="primary"
+					disabled={userProfile == PROFILES.BILLER}
 					onClick={() => handleOpenDeleteModal(item)}
 				>
 					<DeleteOutlined />
@@ -38,6 +43,7 @@ const BrandsPage = () => {
 	const generalContext = useContext(GeneralContext);
 	const { getBrands, brands } = useBrandContext();
 	const { selectedBusiness } = useBusinessProvider();
+	const { userProfile } = useAuthContext();
 
 	// const [loading, setLoading] = useState(false);
 	const { loading } = useLoadingContext();
@@ -107,35 +113,16 @@ const BrandsPage = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Row style={{ alignItems: 'center' }}>
-						<Col offset={6} span={12}>
-							<Typography>
-								<h1
-									style={{
-										textAlign: 'center',
-										fontSize: '2rem',
-										margin: '0.5rem 0'
-									}}
-								>
-									Marcas
-								</h1>
-							</Typography>
-						</Col>
-						<Col
-							span={6}
-							style={{
-								justifyContent: 'end',
-								display: 'flex',
-							}}
-						>
+					<Title title="Marcas">
+						{userProfile != PROFILES.BILLER && (
 							<Button
 								type="primary"
 								onClick={handleOpenCreateModal}
 							>
 								Agregar
 							</Button>
-						</Col>
-					</Row>
+						)}
+					</Title>
 					<BrandsFilters setQuery={setQuery} />
 					<Table bordered dataSource={brandsList} columns={columns} />
 					<BrandsModals

@@ -2,12 +2,7 @@ import { Button, Input } from 'antd';
 import { Select } from 'antd';
 import { Col, Form } from 'antd';
 import { Collapse, Row } from 'antd';
-
-export const profileList = [
-	{ name: 'Administrador', id: 1 },
-	{ name: 'Facturador', id: 2 },
-	{ name: 'Vendedor', id: 3 },
-];
+import { PROFILE_LIST } from '../shared/profiles';
 
 const UserFilters = ({ setQuery }) => {
 	const [form] = Form.useForm();
@@ -80,7 +75,7 @@ const UserFilters = ({ setQuery }) => {
 								name="idProfileFk"
 							>
 								<Select>
-									{profileList.map((p) => (
+									{PROFILE_LIST.map((p) => (
 										<Select.Option key={p.id} value={p.id}>
 											{p.name}
 										</Select.Option>

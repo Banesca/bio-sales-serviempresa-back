@@ -13,6 +13,9 @@ import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
+import { useAuthContext } from '../../context/useUserProfileProvider';
+import { PROFILES } from '../shared/profiles';
+import Title from '../shared/title';
 
 export default function CategoryContainer() {
 	const columns = [
@@ -25,17 +28,21 @@ export default function CategoryContainer() {
 		{
 			title: 'Acciones',
 			key: 2,
+			width: '20px',
 			render: (_, item) => (
 				<Button
 					danger
 					type="primary"
 					onClick={() => handleOpenDeleteModal(item)}
+					disabled={userProfile == PROFILES.BILLER}
 				>
 					<DeleteOutlined />
 				</Button>
 			),
 		},
 	];
+
+	const { userProfile } = useAuthContext();
 
 	const { categories, addCategory, deleteCategory } = useCategoryContext();
 
@@ -150,40 +157,14 @@ export default function CategoryContainer() {
 
 	return (
 		<>
-			<Row style={{ alignItems: 'center' }}>
-				<Col
-					lg={{ offset: 6, span: 12 }}
-					md={{ offset: 6, span: 12 }}
-					sm={{ offset: 6, span: 12 }}
-					xs={{ span: 12 }}
-				>
-					<Typography>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '1.5rem',
-								margin: '0.5rem 0',
-							}}
-						>
-							Categorías
-						</h1>
-					</Typography>
-				</Col>
-				<Col
-					lg={{ span: 6 }}
-					md={{ span: 6 }}
-					sm={{ span: 6 }}
-					xs={{ span: 12 }}
-					style={{
-						justifyContent: 'end',
-						display: 'flex',
-					}}
-				>
-					<Button type="primary" onClick={handleOpenCreateModal}>
-						Agregar
-					</Button>
-				</Col>
-			</Row>
+			<Title title="Categorías">
+				{userProfile !=
+					PROFILES.BILLER && (
+						<Button type="primary" onClick={handleOpenCreateModal}>
+							Agregar
+						</Button>
+					)}
+			</Title>
 			<CategoryFilters setQuery={setQuery} />
 			<Table bordered dataSource={categoriesList} columns={columns} />
 			<Modal

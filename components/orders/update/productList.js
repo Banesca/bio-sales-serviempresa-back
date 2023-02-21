@@ -5,6 +5,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';
 import { useEffect } from 'react';
 import { useProductOrders } from '../hooks/useProductOrders';
+import { UNIT_TYPE } from '../../../pages/dashboard/orders/update/[id]';
 
 export default function ProductList({
 	orderId,
@@ -72,11 +73,19 @@ export default function ProductList({
 		console.log(body, 'body');
 		setLoading(true);
 		try {
+			let priceProductOrder =
+				body.isPromo == 1 ? body.marketPrice : body.priceSale;
+			console.log(body, 'body');
+			console.log(priceProductOrder, 'before price product order');
+			if (body.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
+				priceProductOrder *= body.unitweight;
+			}
+			console.log(priceProductOrder, 'price product order');
 			await addProduct({
 				idOrderHFk: orderId,
 				idProductFk: body.idProduct,
 				idUserAddFk: localStorage.getItem('userId'),
-				priceProductOrder: body.priceSale,
+				priceProductOrder,
 			});
 			message.success('Producto agregado');
 		} catch (error) {
