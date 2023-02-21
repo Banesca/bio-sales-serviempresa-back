@@ -195,14 +195,13 @@ const ClientDetail = () => {
 					}}
 				>
 					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem', color: 'white' }}
+						style={{ fontSize: '1.5rem' }}
 						onClick={handleReturn}
 					/>
 					<h1
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
-							
 						}}
 					>
 						{client?.nameClient}
@@ -212,7 +211,6 @@ const ClientDetail = () => {
 				<h3
 					style={{
 						textAlign: 'center',
-						
 					}}
 				>
 					Información General
@@ -238,7 +236,6 @@ const ClientDetail = () => {
 				<h3
 					style={{
 						textAlign: 'center',
-						
 					}}
 				>
 					Pedidos

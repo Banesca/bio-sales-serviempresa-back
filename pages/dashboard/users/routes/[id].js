@@ -12,23 +12,52 @@ import { Form } from 'antd';
 import { Input } from 'antd';
 import { DatePicker } from 'antd';
 import { Select } from 'antd';
-import useClients from '../../../../components/clients/hooks/useClients';
+import Loading from '../../../../components/shared/loading';
+import { DeleteOutlined } from '@ant-design/icons';
 
 export default function Routes() {
 	const columns = [
 		{
 			title: 'Fecha',
+			dataIndex: 'date',
+			key: 1,
 		},
 		{
-			title: 'Clientes',
+			title: 'Cliente',
+			dataIndex: 'idClientFk',
+			key: 2,
+			render: (text) => {
+				const value = sellerClients?.find((c) => c.idClient == text);
+				return <p>{value?.nameClient}</p>;
+			},
+		},
+		{
+			title: 'Acciones',
+			key: 3,
+			width: '20px',
+			render: (value) => (
+				<Button
+					onClick={() => showDeleteRouteConfirm(value)}
+					type="primary"
+					danger
+				>
+					<DeleteOutlined />
+				</Button>
+			),
 		},
 	];
 
 	const router = useRouter();
 	const { id } = router.query;
-	const { addItemToUserRoute, getUserRouteByDate } = useUser();
+	const {
+		addItemToUserRoute,
+		getUserRouteByDate,
+		routes,
+		sellerClients,
+		getSellerClients,
+		removeRouteItem,
+	} = useUser();
 	const { loading, setLoading } = useLoadingContext();
-	const { listClients, clients } = useClients();
 	const generalContext = useContext(GeneralContext);
 
 	const FORM_INITIAL_STATE = {
@@ -55,7 +84,7 @@ export default function Routes() {
 	const handleGetUserRoutes = async (data) => {
 		setLoading(true);
 		try {
-			await getUserRouteByDate(data, id);
+			await getUserRouteByDate(id, data);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -63,9 +92,9 @@ export default function Routes() {
 		}
 	};
 
-	const handleGetClients = async () => {
+	const handleGetClients = async (id) => {
 		try {
-			await listClients();
+			await getSellerClients(id);
 		} catch (error) {
 			console.log(error);
 		}
@@ -75,7 +104,7 @@ export default function Routes() {
 		setLoading(true);
 		if (Object.keys(generalContext).length) {
 			handleGetUserRoutes();
-			handleGetClients();
+			handleGetClients(id);
 			setLoading(false);
 		}
 	}, [generalContext]);
@@ -104,6 +133,44 @@ export default function Routes() {
 		}
 	};
 
+	const handleFilterRoutes = async (values) => {
+		if (!values) {
+			return await handleGetUserRoutes();
+		}
+		const dateStart = `${values[0].$y}-${values[0].$M + 1}-${values[0].$D}`;
+		const dateEnd = `${values[1].$y}-${values[1].$M + 1}-${values[1].$D}`;
+		try {
+			await handleGetUserRoutes({ dateStart, dateEnd });
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const showDeleteRouteConfirm = (value) => {
+		console.log(value, 'confirm');
+		Modal.confirm({
+			title: 'Eliminar',
+			content: 'Estas seguro de eliminar esta ruta?',
+			okText: 'Eliminar',
+			icon: null,
+			cancelText: 'Cancelar',
+			okButtonProps: {
+				type: 'primary',
+				danger: true,
+			},
+			onOk() {
+				return new Promise((resolve, reject) => {
+					removeRouteItem({
+						idSellerRoute: value.idSellersRuta,
+						userId: id,
+					});
+					resolve(message.success('Cliente removido de la ruta'));
+				}).catch(() => message.error('Ha ocurrido un error'));
+			},
+			onCancel() {},
+		});
+	};
+
 	return (
 		<DashboardLayout>
 			<div
@@ -115,12 +182,29 @@ export default function Routes() {
 					justifyContent: 'center',
 				}}
 			>
-				<Title title="Rutas" path={`/dashboard/users/${id}`}>
+				<Title
+					title="Rutas"
+					path={`/dashboard/users/${id}`}
+					goBack={true}
+				>
 					<Button type="primary" onClick={() => setIsModalOpen(true)}>
 						Agregar
 					</Button>
 				</Title>
-				<Table columns={columns} style={{ width: '100%' }} />
+				<Form>
+					<Form.Item>
+						<DatePicker.RangePicker
+							placeholder={['Fecha inicial', 'Fecha final']}
+							allowEmpty={[false, false]}
+							onChange={handleFilterRoutes}
+						></DatePicker.RangePicker>
+					</Form.Item>
+				</Form>
+				<Table
+					columns={columns}
+					style={{ width: '100%' }}
+					dataSource={routes}
+				/>
 			</div>
 			<Modal
 				title="Agregar Ruta"
@@ -157,8 +241,8 @@ export default function Routes() {
 								}))
 							}
 						>
-							{clients &&
-								clients.map((c) => (
+							{sellerClients &&
+								sellerClients.map((c) => (
 									<Select.Option
 										key={c.idClient}
 										value={c.idClient}
@@ -182,7 +266,7 @@ export default function Routes() {
 							value={formState.observation}
 							onChange={(e) =>
 								setFormState((prev) => ({
-									...formState,
+									...prev,
 									observation: e.target.value,
 								}))
 							}
@@ -190,6 +274,7 @@ export default function Routes() {
 					</Form.Item>
 				</Form>
 			</Modal>
+			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);
 }

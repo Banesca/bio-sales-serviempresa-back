@@ -9,8 +9,8 @@ const Loading = ({ isLoading }) => {
 		<div
 			style={{
 				zIndex: 1000,
-				backgroundColor: '#000',
-				opacity: 0.4,
+				backgroundColor: '#fff',
+				opacity: 0.6,
 				position: 'absolute',
 				display: 'flex',
 				width: '100%',
@@ -22,7 +22,7 @@ const Loading = ({ isLoading }) => {
 				overflow: 'scroll'
 			}}
 		>
-			<LoadingOutlined style={{ fontSize: '4rem', color: 'white' }} />
+			<LoadingOutlined style={{ fontSize: '4rem', color: '#0984e3' }} />
 		</div>
 	);
 };

@@ -11,9 +11,12 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
 import { Typography } from 'antd';
 import { useUser } from '../../../components/users/hooks/useUser';
+import { PROFILES } from '../../../components/shared/profiles';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
+import Title from '../../../components/shared/title';
 
 export default function Users() {
-	const { requestHandler } = useRequest();
+	const { userProfile } = useAuthContext();
 
 	const { loading, setLoading } = useLoadingContext();
 	const { users, deleteUser, getUsers } = useUser();
@@ -29,10 +32,10 @@ export default function Users() {
 	const generalContext = useContext(GeneralContext);
 
 	useEffect(() => {
-		setLoading(true)
+		setLoading(true);
 		if (Object.keys(generalContext).length) {
 			getUsers();
-			setLoading(false)
+			setLoading(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
@@ -99,40 +102,19 @@ export default function Users() {
 						flexDirection: 'column',
 					}}
 				>
-					<Row style={{ alignItems: 'center' }}>
-						<Col
-							lg={{ offset: 6, span: 12 }}
-							md={{ offset: 6, span: 12 }}
-							sm={{ offset: 6, span: 12 }}
-							xs={{ span: 12 }}
-						>
-							<Typography>
-								<h1
-									style={{
-										textAlign: 'center',
-										fontSize: '1.5rem',
-										margin: '.5rem 0',
-									}}
+					<Title title="Usuarios" goBack={false}>
+						{userProfile != PROFILES.BILLER && userProfile != PROFILES.ADMIN && (
+							<Button
+								type="primary"
+							>
+								<Link
+									href='users/add'
 								>
-									Usuarios
-								</h1>
-							</Typography>
-						</Col>
-						<Col
-							lg={{ span: 6 }}
-							md={{ span: 6 }}
-							sm={{ span: 6 }}
-							xs={{ span: 12 }}
-							style={{
-								justifyContent: 'end',
-								display: 'flex',
-							}}
-						>
-							<Button type="primary">
-								<Link href="users/add">Agregar</Link>
+									Agregar
+								</Link>
 							</Button>
-						</Col>
-					</Row>
+						)}
+					</Title>
 					<UserFilters setQuery={setQuery} />
 					<UsersTable
 						users={usersList}

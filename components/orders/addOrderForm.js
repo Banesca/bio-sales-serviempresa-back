@@ -36,7 +36,7 @@ const AddOrderForm = (props) => {
 	}, [generalContext, selectedBusiness]);
 
 	const [form] = Form.useForm();
-	
+
 	const createClient = async (data) => {
 		const res = await requestHandler.post(`/api/v2/client/add`, {
 			nameClient: data.fullNameClient,
@@ -44,10 +44,9 @@ const AddOrderForm = (props) => {
 			numberDocument: data.rif,
 			address: data.address,
 			idStatusFK: 1,
-			observacion: data.comments
-		})
-		console.log(res)
-	}
+			observacion: data.comments,
+		});
+	};
 
 	const onSubmit = async (values) => {
 		setLoading(true);
@@ -68,7 +67,7 @@ const AddOrderForm = (props) => {
 			phoneClient: isNewClient ? values.phoneClient : null,
 		};
 		if (isNewClient) {
-			await createClient(values)
+			await createClient(values);
 		}
 		console.log(data);
 		await props.handleRequest(data);
@@ -83,7 +82,6 @@ const AddOrderForm = (props) => {
 		<>
 			<h1
 				style={{
-					,
 					fontSize: '2rem',
 					textAlign: 'center',
 				}}

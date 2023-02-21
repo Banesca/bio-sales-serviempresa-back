@@ -13,21 +13,21 @@ import useClients from '../../../components/clients/hooks/useClients';
 import UserBusinessTable from '../../../components/users/detail/businessTable';
 import UserClientsTable from '../../../components/users/detail/clientsTable';
 import Link from 'next/link';
+import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
+import Title from '../../../components/shared/title';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
 
 const UserDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
+
+	const { userProfile } = useAuthContext();
 
 	const handleReturn = () => {
 		router.push('/dashboard/users');
 		setLoading(true);
 	};
 
-	const profileList = [
-		{ name: 'Administrador', id: 1 },
-		{ name: 'Full Acceso', id: 2 },
-		{ name: 'Vendedor', id: 3 },
-	];
 	const { loading, setLoading } = useLoadingContext();
 	const {
 		sellerClients,
@@ -104,7 +104,9 @@ const UserDetail = () => {
 				return message.error('Usuario no encontrado');
 			}
 			setUser(user);
-			setProfile(profileList.filter((p) => p.id === user.idProfileFk)[0]);
+			setProfile(
+				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
+			);
 			if (user.idProfileFk === 3) {
 				console.log('get sellers');
 				await getSellerClientsRequest(user.idUser);
@@ -129,6 +131,10 @@ const UserDetail = () => {
 
 	const handleAsigne = async () => {
 		setLoading(true);
+		if (businessByUser.length > 0 && profile?.id != PROFILES.SELLER) {
+			setLoading(false);
+			return message.info('Este usuario ya tiene una empresa asignada');
+		}
 		const res = await requestHandler.post(`/api/v2/user/branch/add`, {
 			idUserFk: user.idUser,
 			idSucursalFk: businessToAdd,
@@ -163,7 +169,7 @@ const UserDetail = () => {
 	const handleRemoveBusiness = async () => {
 		setLoading(true);
 		const res = await requestHandler.delete(
-			`/api/v2/user/delete/${businessToRemove.idUserBranch}`
+			`/api/v2/user/delete/branch/${businessToRemove.idUserBranch}`
 		);
 		if (res.isLeft()) {
 			setLoading(false);
@@ -250,49 +256,40 @@ const UserDetail = () => {
 						justifyContent: 'center',
 					}}
 				>
-					<div
-						style={{
-							width: '100%',
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<ArrowLeftOutlined
-							style={{ fontSize: '1.5rem' }}
-							onClick={handleReturn}
-						/>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '1.5rem',
-							}}
-						>
-							Información General
-						</h1>
-						<div>
-							<Button
-								onClick={() => setIsModalOpen(true)}
-								type="primary"
-								style={{ marginRight: '.5rem' }}
-							>
-								Empresas
-							</Button>
-							<Button
-								onClick={() => setIsAssignClientOpen(true)}
-								type="primary"
-								style={{ marginRight: '.5rem' }}
-							>
-								Clientes
-							</Button>
-							<Button type="primary">
-								<Link href={`/dashboard/users/routes/${id}`}>
-									Rutas
-								</Link>
-							</Button>
-						</div>
-					</div>
+					<Title title="Información General" path="/dashboard/users">
+						<>
+							{profile?.id != PROFILES.MASTER &&
+								userProfile == PROFILES.MASTER && (
+									<Button
+										onClick={() => setIsModalOpen(true)}
+										type="primary"
+										style={{ marginRight: '.5rem' }}
+									>
+										Empresas
+									</Button>
+								)}
+							{profile?.id == PROFILES.SELLER && (
+								<>
+									<Button
+										onClick={() =>
+											setIsAssignClientOpen(true)
+										}
+										type="primary"
+										style={{ marginRight: '.5rem' }}
+									>
+										Clientes
+									</Button>
+									<Button type="primary">
+										<Link
+											href={`/dashboard/users/routes/${id}`}
+										>
+											Rutas
+										</Link>
+									</Button>
+								</>
+							)}
+						</>
+					</Title>
 					<List
 						style={{
 							width: '100%',
@@ -314,18 +311,22 @@ const UserDetail = () => {
 							<p>{profile?.name}</p>
 						</List.Item>
 					</List>
-					{profile?.id == 3 && (
+					{profile?.id != PROFILES.MASTER && (
 						<>
-							<UserBusinessTable
-								business={businessByUser}
-								setConfirmDelete={setConfirmDelete}
-								setBusinessToRemove={setBusinessToRemove}
-							/>
-							<UserClientsTable
-								clients={sellerClients}
-								setConfirmDelete={setConfirmRemoveClient}
-								setClientToRemove={setClientToRemove}
-							/>
+							{userProfile == PROFILES.MASTER && (
+								<UserBusinessTable
+									business={businessByUser}
+									setConfirmDelete={setConfirmDelete}
+									setBusinessToRemove={setBusinessToRemove}
+								/>
+							)}
+							{profile?.id == PROFILES.SELLER && (
+								<UserClientsTable
+									clients={sellerClients}
+									setConfirmDelete={setConfirmRemoveClient}
+									setClientToRemove={setClientToRemove}
+								/>
+							)}
 						</>
 					)}
 				</div>

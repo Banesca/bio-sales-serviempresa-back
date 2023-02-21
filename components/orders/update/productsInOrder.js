@@ -75,7 +75,7 @@ export default function ProductsInOrder({
 	const handleUpdateProduct = async (record) => {
 		setLoading(true);
 		try {
-			await confirmProductQuantity(record.idOrderB, record.weight);
+			await confirmProductQuantity(record.idOrderB, Number(record.weight));
 			message.success('Cantidad actualizada');
 		} catch (error) {
 			console.error(error);

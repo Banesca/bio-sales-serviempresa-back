@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Col, Row, Table, Space, Button, Modal } from 'antd';
+import { Table, Space, Button, Modal } from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -23,7 +23,9 @@ import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useProducts } from '../../../components/products/hooks/useProducts';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
-import { Typography } from 'antd';
+import Title from '../../../components/shared/title';
+import { PROFILES } from '../../../components/shared/profiles';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
 
 export default function Products() {
 	const router = useRouter();
@@ -110,6 +112,7 @@ export default function Products() {
 			),
 		},
 	];
+	const { userProfile } = useAuthContext();
 	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
@@ -223,51 +226,33 @@ export default function Products() {
 						flexDirection: 'column',
 					}}
 				>
-					<Row style={{ alignItems: 'center' }}>
-						<Col
-							sm={{ span: 12 }}
-							xs={{ span: 24 }}
-							md={{ span: 12, offset: 6 }}
-							lg={{ offset: 6, span: 12 }}
-						>
-							<Typography>
-								<h1
-									style={{
-										textAlign: 'center',
-										fontSize: '2rem',
-										margin: '0',
-									}}
-								>
-									Productos
-								</h1>
-							</Typography>
-						</Col>
-						<Col
-							xs={{ span: 24 }}
-							lg={{ span: 6 }}
-							md={{ span: 6 }}
-							sm={{ span: 12 }}
-							style={{
-								justifyContent: 'center',
-								display: 'flex',
-							}}
-						>
+					<Title goBack={false} title={'Productos'}>
+						{userProfile != PROFILES.BILLER && (
 							<Button
 								style={{ marginRight: '1rem' }}
 								type="primary"
+								disabled={userProfile == PROFILES.BILLER}
+								onClick={() =>
+									router.push(`/dashboard/products/add`)
+								}
 							>
-								<Link href="products/import">Importar</Link>
+								Agregar
 							</Button>
-							<Button type="primary">
-								<Link href="products/add">Agregar</Link>
-							</Button>
-						</Col>
-					</Row>
-					<SelectBusiness />
-
+						)}
+						<Button
+							type="primary"
+							onClick={() =>
+								router.push(`/dashboard/products/import`)
+							}
+						>
+							Importar
+						</Button>
+					</Title>
+					{userProfile != PROFILES.BILLER &&
+						userProfile != PROFILES.ADMIN && <SelectBusiness />}
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<Table
-						style={{ overflowX: 'scroll'}}
+						style={{ overflowX: 'scroll' }}
 						columns={columns}
 						dataSource={filtered()}
 						loading={loading}

@@ -13,12 +13,13 @@ import {
 import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
-import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import Loading from '../../../components/shared/loading';
 import { Typography } from 'antd';
 import useClients from '../../../components/clients/hooks/useClients';
 import { message } from 'antd';
+import Title from '../../../components/shared/title';
+import Link from 'next/link';
 
 export default function ClientsPage() {
 	const columns = [
@@ -36,7 +37,7 @@ export default function ClientsPage() {
 		},
 		{
 			title: 'Teléfono',
-			dataIndex: 'phoneClient',
+			dataIndex: 'phone',
 			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
@@ -100,7 +101,7 @@ export default function ClientsPage() {
 		if (Object.keys(generalContext).length) {
 			getClientsRequest();
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const [form] = Form.useForm();
@@ -144,20 +145,11 @@ export default function ClientsPage() {
 					flexDirection: 'column',
 				}}
 			>
-				<Row style={{ alignItems: 'center' }}>
-					<Col offset={6} span={12}>
-						<Typography>
-							<h1
-								style={{
-									textAlign: 'center',
-									fontSize: '2rem',
-								}}
-							>
-								Clientes
-							</h1>
-						</Typography>
-					</Col>
-				</Row>
+				<Title title={'Clientes'}>
+					<Link href="/dashboard/clients/add">
+						<Button type="primary">Agregar</Button>
+					</Link>
+				</Title>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
 					<Collapse.Panel header="Filtros">
 						<Row style={{ justifyContent: 'center' }}>

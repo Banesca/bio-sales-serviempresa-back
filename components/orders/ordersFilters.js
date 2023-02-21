@@ -87,7 +87,12 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 									padding: '0 .5rem',
 								}}
 							>
-								<DatePicker.RangePicker />
+								<DatePicker.RangePicker
+									placeholder={[
+										'Fecha inicial',
+										'Fecha final',
+									]}
+								/>
 							</Form.Item>
 						</Col>
 					</Row>
