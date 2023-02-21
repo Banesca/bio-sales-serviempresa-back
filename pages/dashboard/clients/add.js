@@ -35,10 +35,8 @@ export default function AddClient() {
 				idStatusFK: 1,
 				observacion: data.comments,
 			});
-			console.log(res);
 			message.success('Cliente agregado');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al agregar cliente');
 		} finally {
 			setLoading(false);

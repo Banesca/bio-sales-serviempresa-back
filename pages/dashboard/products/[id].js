@@ -19,6 +19,7 @@ import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Title from '../../../components/shared/title';
+import { message } from 'antd';
 
 const Product = () => {
 	const router = useRouter();
@@ -50,7 +51,7 @@ const Product = () => {
 		try {
 			await getCategoryById(categoryId);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar categoria')
 		} finally {
 			setLoading(false);
 		}
@@ -61,7 +62,7 @@ const Product = () => {
 		try {
 			await getSubCategoryById(subCategoryId);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar sub categoria')
 		} finally {
 			setLoading(false);
 		}
@@ -72,7 +73,7 @@ const Product = () => {
 		try {
 			await getLineById(lineId);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar linea')
 		} finally {
 			setLoading(false);
 		}
@@ -83,7 +84,7 @@ const Product = () => {
 		try {
 			await getBrandById(id);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar marca')
 		} finally {
 			setLoading(false);
 		}
@@ -94,15 +95,11 @@ const Product = () => {
 		try {
 			await getProductById(id);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar producto')
 		} finally {
 			setLoading(false);
 		}
 	};
-
-	useEffect(() => {
-		console.log(currentProduct, 'current Product');
-	}, [currentProduct]);
 
 	useEffect(() => {
 		setLoading(true);

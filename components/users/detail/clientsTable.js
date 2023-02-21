@@ -30,7 +30,6 @@ export default function UserClientsTable({
 	];
 
 	const openConfirmDelete = (item) => {
-        console.log(item)
 		setClientToRemove(item);
 		setConfirmDelete(true);
 	};

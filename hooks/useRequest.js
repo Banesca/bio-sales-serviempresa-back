@@ -10,7 +10,6 @@ export function useRequest() {
 
 	const requestHandler = {
 		get: async (route, params) => {
-			console.log(`${ip}:${generalContext.api_port}${route}`);
 			try {
 				const httpsAgent = new https.Agent({
 					rejectUnauthorized: false,

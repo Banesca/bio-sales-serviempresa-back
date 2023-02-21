@@ -40,17 +40,14 @@ export default function Login() {
 			return;
 		}
 		const value = res.value.getValue().data;
-		console.log(res, 'res');
 		return value;
 	};
 
 	const onSubmit = async (values) => {
 		setLoading(true);
 		const res = await handleLoginRequest(values);
-		console.log(res);
 		if (res.isLeft()) {
 			const error = res.value.getErrorValue();
-			console.log('ERROR', error);
 			setLoading(false);
 			switch (error.status) {
 				case 400:
@@ -69,10 +66,8 @@ export default function Login() {
 		}
 		const value = res.value.getValue().data[0];
 		localStorage.setItem('accessToken', value.token);
-		console.log(value, 'user value');
 		if (value.idProfileFk != PROFILES.MASTER) {
 			const businessByUser = await getUserBusiness(value.idUser);
-			console.log(businessByUser, 'user business');
 			if (businessByUser.length < 1) {
 				handleLoginError('Acceso denegado');
 				return;
@@ -92,7 +87,6 @@ export default function Login() {
 				JSON.stringify(value.branch[0])
 			);
 		}
-		console.log(value);
 		localStorage.setItem('userId', value.idUser);
 		localStorage.setItem('userProfile', value.idProfileFk);
 		localStorage.setItem('business', JSON.stringify(value.branch));

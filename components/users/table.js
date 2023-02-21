@@ -35,8 +35,6 @@ const UsersTable = ({
 			key: 2,
 			render: (text) => {
 				let profile = PROFILE_LIST.find((p) => p.id === text);
-				console.log(profile);
-
 				return <p>{profile?.name}</p>;
 			},
 		},

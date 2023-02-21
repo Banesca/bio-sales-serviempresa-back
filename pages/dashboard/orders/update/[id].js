@@ -94,7 +94,6 @@ const UpdateOrderPage = () => {
 		try {
 			await getProducts(id);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);
@@ -122,7 +121,6 @@ const UpdateOrderPage = () => {
 
 	useEffect(() => {
 		if (currentOrder) {
-			console.log('calculate total')
 			calculateTotalRequest(currentOrder.idOrderH);
 		}
 	}, [currentOrder, getOrderRequest]);
@@ -199,7 +197,6 @@ const UpdateOrderPage = () => {
 	const calculateSubTotal = (item) => {
 		let subTotal = 0;
 		if (item.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
-			console.log('kg');
 			subTotal =
 				item.weight *
 				(item.unitweight *
@@ -209,7 +206,6 @@ const UpdateOrderPage = () => {
 				item.weight *
 				(item.isPromo == '1' ? item.marketPrice : item.priceSale);
 		}
-		console.log(subTotal);
 		return subTotal;
 	};
 

@@ -72,7 +72,6 @@ const BrandsPage = () => {
 		try {
 			await getBrands(id);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar las marcas');
 		}
 	};

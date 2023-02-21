@@ -74,7 +74,6 @@ export default function Routes() {
 		try {
 			await addItemToUserRoute(data);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al agregar cliente a la ruta');
 		} finally {
 			setLoading(false);
@@ -86,7 +85,7 @@ export default function Routes() {
 		try {
 			await getUserRouteByDate(id, data);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar rutas')
 		} finally {
 			setLoading(false);
 		}
@@ -96,7 +95,7 @@ export default function Routes() {
 		try {
 			await getSellerClients(id);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar clientes')
 		}
 	};
 
@@ -112,7 +111,6 @@ export default function Routes() {
 	const handleSubmit = async () => {
 		setLoading(true);
 		try {
-			console.log(formState);
 			const body = {
 				idUserFk: id,
 				idClientFk: formState.idClientFk,
@@ -122,12 +120,11 @@ export default function Routes() {
 					formState.date.$D
 				}`,
 			};
-			console.log(body);
 			setIsModalOpen(false);
 			await handleAddItemToUserRoute(body);
 			await handleGetUserRoutes();
 		} catch (error) {
-			console.log(error);
+			message.error('Ha ocurrido un error')
 		} finally {
 			setLoading(false);
 		}
@@ -142,12 +139,11 @@ export default function Routes() {
 		try {
 			await handleGetUserRoutes({ dateStart, dateEnd });
 		} catch (error) {
-			console.log(error);
+			message.error('Ha ocurrido un error')
 		}
 	};
 
 	const showDeleteRouteConfirm = (value) => {
-		console.log(value, 'confirm');
 		Modal.confirm({
 			title: 'Eliminar',
 			content: 'Estas seguro de eliminar esta ruta?',

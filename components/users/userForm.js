@@ -56,10 +56,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	};
 	// User business End
 
-	useEffect(() => {
-		console.log(businessByUser);
-	}, [businessByUser]);
-
 	const handleFindUser = async (email) => {
 		try {
 			return await findUserByEmail(email);
@@ -71,7 +67,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const onSubmit = async () => {
 		try {
 			setLoading(true);
-			console.log(userData, 'userData');
 			await submitFunction(userData);
 			if (
 				!update &&
@@ -92,7 +87,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 			);
 			router.push('/dashboard/users');
 		} catch (error) {
-			console.log(error, 'error');
 			message.error(
 				update
 					? 'Error al actualizar usuario'

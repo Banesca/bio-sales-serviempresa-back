@@ -135,9 +135,7 @@ export function useProducts() {
 
 	const updateProduct = async (data, file) => {
 		const body = setData(data);
-		console.log(body, 'body');
 		const formData = setFormData(body, file, true);
-		console.log(formData.get('idProduct'));
 		const res = await requestHandler.put(
 			'/api/v2/product/update/sales',
 			formData

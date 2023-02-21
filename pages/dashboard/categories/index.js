@@ -25,7 +25,6 @@ const CategoriesPage = () => {
 			await getCategories(id);
 			setLoading(false);
 		} catch (error) {
-			console.log(error);
 			return message.error('Error al cargar las categorías');
 		}
 	};
@@ -35,7 +34,6 @@ const CategoriesPage = () => {
 			await getSubCategories(id);
 			setLoading(false);
 		} catch (error) {
-			console.log(error);
 			return message.error('Error al cargar las sub-categorías');
 		}
 	};
@@ -45,7 +43,6 @@ const CategoriesPage = () => {
 			await getLines(id);
 			setLoading(false);
 		} catch (error) {
-			console.log(error);
 			return message.error('Error al cargar las lineas');
 		}
 	};

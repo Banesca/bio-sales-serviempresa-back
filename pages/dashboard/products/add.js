@@ -16,7 +16,6 @@ export const AddProduct = () => {
 			await addProduct(data, file);
 			message.success('Producto agregado');
 		} catch (error) {
-			console.log(error);
 			message.error(error?.message);
 		} finally {
 			setLoading(false);

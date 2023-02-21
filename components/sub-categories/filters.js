@@ -17,7 +17,6 @@ export default function SubCategoryFilters({ setQuery, setSelectedCategory }) {
 
 	const handleSearch = (values) => {
 		setQuery(values.nameSubFamily);
-		console.log('values', values);
 		setSelectedCategory(values.idFamily);
 	};
 

@@ -41,7 +41,6 @@ export default function BrandsModals({
 			setLoading(false);
 			message.success('Marca agregada');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al agregar marca');
 		}
 	};
@@ -58,7 +57,6 @@ export default function BrandsModals({
 			message.success('Marca eliminada');
 		} catch (error) {
             setLoading(false)
-			console.log(error);
 			message.error('Error al eliminar marca');
 		}
 	};

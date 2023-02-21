@@ -11,7 +11,6 @@ export const addKeys = (rows) => {
 export const removeKeys = (rows) => {
 	for (const row of rows) {
 		delete row.key;
-		console.log(row);
 	}
 	return rows;
 };

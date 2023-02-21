@@ -30,7 +30,6 @@ export default function SubCategoryModals({
 	const [createForm] = Form.useForm();
 
 	useEffect(() => {
-		console.log(isCreateModalOpen, isDeleteModalOpen);
 		setModals({
 			add: isCreateModalOpen,
 			delete: isDeleteModalOpen,
@@ -45,7 +44,6 @@ export default function SubCategoryModals({
 			setLoading(false);
 			message.success('Sub categoría eliminada');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al eliminar sub categoría');
 		}
 	};
@@ -74,7 +72,6 @@ export default function SubCategoryModals({
 			await addSubCategory(data, selectedBusiness.idSucursal);
 			message.success('Sub categoría agregada');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al eliminar sub categoría');
 		}
 	};
@@ -105,7 +102,6 @@ export default function SubCategoryModals({
 			await addSubCategoryRequest();
 			setLoading(false);
 		} catch (error) {
-			console.log(error);
 			setIsCreateModalOpen(false);
 			setLoading(false);
 			return message.error('Error al agregar sub categoría');

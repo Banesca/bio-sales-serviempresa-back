@@ -48,7 +48,6 @@ export function useUser() {
 		if (res.isLeft()) {
 			return res.value.getErrorValue();
 		}
-		console.log(res);
 	};
 
 	const removeClientToSeller = async (idRelation) => {
@@ -65,7 +64,6 @@ export function useUser() {
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
-		console.log(res);
 	};
 
 	const getUserRouteByDate = async (
@@ -88,7 +86,6 @@ export function useUser() {
 	};
 
 	const removeRouteItem = async ({ idSellerRoute, userId }) => {
-		console.log('useUser', idSellerRoute);
 		const res = await requestHandler.get(
 			`/api/v2/user/delete/rute/${idSellerRoute}`
 		);

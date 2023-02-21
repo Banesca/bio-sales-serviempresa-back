@@ -24,7 +24,6 @@ const OrderDetail = () => {
 		try {
 			await getOrderById(id);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar el pedido');
 		} finally {
 			setLoading(false);
@@ -37,7 +36,6 @@ const OrderDetail = () => {
 			await changeStatus(status, id);
 			message.success('Estado actualizado');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al actualizar orden');
 		} finally {
 			setLoading(false);
@@ -51,10 +49,6 @@ const OrderDetail = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
-
-	useEffect(() => {
-		console.log('current', currentOrder);
-	}, [currentOrder]);
 
 	if (loading || !currentOrder) {
 		return (

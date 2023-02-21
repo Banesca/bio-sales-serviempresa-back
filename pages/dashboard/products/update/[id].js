@@ -25,7 +25,7 @@ export const UpdateProduct = () => {
 		try {
 			await getProductById(id);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar producto')
 		}
 	};
 
@@ -34,7 +34,6 @@ export const UpdateProduct = () => {
 		try {
 			await updateProduct({ ...data, idProduct: id }, file);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al actualizar producto');
 		} finally {
 			setLoading(false);

@@ -23,7 +23,6 @@ export function BusinessProvider(props) {
 		const savedSelectedBusiness = JSON.parse(
 			localStorage.getItem('selectedBusiness')
 		);
-		console.log(savedSelectedBusiness, 'savedSelectedBusiness');
 		setBusiness(savedBusiness);
 		setSelectedBusiness((prev) =>
 			savedSelectedBusiness.idSucursal == prev?.idSucursal

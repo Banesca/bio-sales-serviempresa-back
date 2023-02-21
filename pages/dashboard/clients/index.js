@@ -90,7 +90,6 @@ export default function ClientsPage() {
 		try {
 			await listClients();
 		} catch (error) {
-			console.log(error);
 			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
@@ -118,7 +117,6 @@ export default function ClientsPage() {
 	const clientsList = useMemo(() => {
 		let list = clients;
 		for (const [key, value] of Object.entries(query)) {
-			console.log([key, value]);
 			if (value) {
 				list = list.filter((c) =>
 					c[key]?.toLowerCase().includes(query[key].toLowerCase())

@@ -17,7 +17,6 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 
 	const handleSearch = (values) => {
 		setQuery(values.nameSubFamily);
-		console.log('values', values);
 		setSelectedSubCategory(values.idSubFamily);
 	};
 	return (

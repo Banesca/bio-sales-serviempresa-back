@@ -77,8 +77,7 @@ const UserDetail = () => {
 		try {
 			await getSellerClients(id);
 		} catch (error) {
-			console.log(error);
-			message.error('Error');
+			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
 		}
@@ -89,7 +88,6 @@ const UserDetail = () => {
 		try {
 			await listClients();
 		} catch (error) {
-			console.log(error);
 			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
@@ -108,7 +106,6 @@ const UserDetail = () => {
 				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
 			);
 			if (user.idProfileFk === 3) {
-				console.log('get sellers');
 				await getSellerClientsRequest(user.idUser);
 			}
 		} catch (error) {
@@ -216,7 +213,6 @@ const UserDetail = () => {
 			await getSellerClients(id);
 			setClientsToAssign([]);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al asignar clientes');
 		} finally {
 			setLoading(false);
@@ -225,7 +221,6 @@ const UserDetail = () => {
 
 	const clientAlreadyAssigned = (id) => {
 		const exists = sellerClients.some((c) => c.idClient === id);
-		console.log('exitst', exists);
 		return exists;
 	};
 
@@ -237,7 +232,6 @@ const UserDetail = () => {
 			await getSellerClients(id);
 			message.success('Cliente removido');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al remover cliente');
 		} finally {
 			setLoading(false);

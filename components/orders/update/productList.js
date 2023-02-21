@@ -70,17 +70,13 @@ export default function ProductList({
 
 	// Add Product
 	const handleAddProductToOrder = async (body) => {
-		console.log(body, 'body');
 		setLoading(true);
 		try {
 			let priceProductOrder =
 				body.isPromo == 1 ? body.marketPrice : body.priceSale;
-			console.log(body, 'body');
-			console.log(priceProductOrder, 'before price product order');
 			if (body.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
 				priceProductOrder *= body.unitweight;
 			}
-			console.log(priceProductOrder, 'price product order');
 			await addProduct({
 				idOrderHFk: orderId,
 				idProductFk: body.idProduct,
@@ -89,7 +85,6 @@ export default function ProductList({
 			});
 			message.success('Producto agregado');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al agregar producto');
 		} finally {
 			setLoading(false);
@@ -100,10 +95,8 @@ export default function ProductList({
 		if (products) {
 			const { found, index } = productExist(record.idProduct);
 			if (found) {
-				console.log('found');
 				let productList = [...orderProducts];
 				productList[index].weight += 1;
-				console.log(productList[index], 'product index');
 				return await handleUpdateProduct({
 					idOrderB: productList[index].idOrderB,
 					weight: productList[index].weight,
@@ -126,24 +119,11 @@ export default function ProductList({
 	};
 
 	const handleUpdateProduct = async ({ idOrderB, weight }) => {
-		// setLoading(true);
-		// const res = await requestHandler.post(
-		// 	`/api/v2/order/product/setweight`,
-		// 	{ idOrderB: record.idOrderB, weight: record.weight }
-		// );
-		// console.log(res);
-		// if (res.isLeft()) {
-		// 	message.error('Ha ocurrido un error');
-		// }
-		// setLoading(false);
-		// await getOrderRequest(id);
-		// message.success('Cantidad actualizada');
 		try {
 			setLoading(true);
 			await updateProductQuantity(idOrderB, weight);
 			message.success('Cantidad actualizada');
 		} catch (error) {
-			console.log(error);
 			message.error('Error al actualizar cantidad');
 		} finally {
 			setLoading(false);
@@ -151,7 +131,6 @@ export default function ProductList({
 	};
 
 	useEffect(() => {
-		console.log(products);
 	}, [products]);
 
 	return (

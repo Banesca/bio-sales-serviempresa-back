@@ -54,7 +54,6 @@ export function useProductFilter() {
 			);
 		}
 		if (state.query.nameFamily) {
-			console.log('filter category');
 			list = list.filter(
 				(p) => p.idProductFamily === state.query.nameFamily
 			);

@@ -10,14 +10,10 @@ export const AddOrder = () => {
 
 	const addOrderRequest = async (data) => {
 		const res = await requestHandler.post('/api/v2/order/create', data);
-		console.log('RESPONSE', res);
 		if (res.isLeft()) {
-			console.log(res.value.getErrorValue());
-			message.error('Ha ocurrido un error');
-			return;
+			return message.error('Ha ocurrido un error');
 		}
 		const value = res.value.getValue().data;
-		console.log(value);
 		message.success('Pedido agregado');
 		router.push(`/dashboard/orders/update/${value[0]}`);
 	};

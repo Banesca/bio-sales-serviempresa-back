@@ -150,7 +150,6 @@ export default function Products() {
 			await getLines(id);
 			setLoading(false);
 		} catch (error) {
-			console.log(error);
 			return message.error('Error al cargar las categorías');
 		} finally {
 			setLoading(false);
@@ -162,7 +161,6 @@ export default function Products() {
 		try {
 			await getBrands(business);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar marcas');
 		} finally {
 			setLoading(false);
@@ -190,7 +188,6 @@ export default function Products() {
 			Object.keys(generalContext).length > 0 &&
 			Object.keys(selectedBusiness).length > 0
 		) {
-			console.log('products');
 			categoryListRequest(selectedBusiness.idSucursal);
 			brandListRequest(selectedBusiness.idSucursal);
 			getProductsRequest(selectedBusiness.idSucursal);
@@ -211,7 +208,6 @@ export default function Products() {
 
 	const handleDelete = () => {
 		// request delete product
-		console.log(currentProduct.idProduct);
 		deleteProductRequest(currentProduct.idProduct);
 		setDeleteModalOpen(false);
 	};

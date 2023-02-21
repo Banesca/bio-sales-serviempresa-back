@@ -41,7 +41,6 @@ export default function LinesModals({
 			setLoading(false);
 			message.success('Linea agregada');
 		} catch (error) {
-			console.log(error);
 			setLoading(false);
 			message.error('Error al agregar linea');
 		}
@@ -55,7 +54,6 @@ export default function LinesModals({
 			setLoading(false);
 			message.success('Linea eliminada');
 		} catch (error) {
-			console.log(error);
 			setLoading(false);
 			message.error('Error al eliminar Linea');
 		}

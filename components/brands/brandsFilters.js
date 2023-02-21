@@ -12,7 +12,6 @@ export default function BrandsFilters({ setQuery }) {
 
 	const handleSearch = (values) => {
 		setQuery(values.name);
-		console.log(values);
 	};
 
 	return (

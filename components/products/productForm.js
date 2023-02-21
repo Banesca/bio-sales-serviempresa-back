@@ -63,15 +63,12 @@ const ProductForm = (props) => {
 	const fileProgress = (fileInput) => {
 		const img = new Image();
 		img.src = window.URL.createObjectURL(fileInput);
-		console.log('open');
 		img.onload = () => {
 			setIsValidImgSize({ width: img.width, height: img.height });
 			if (img.width <= 600 && img.height <= 600) {
-				console.log('good');
 				setIsValidImgSize(true);
 				return true;
 			} else {
-				console.log('bad');
 				setIsValidImgSize(false);
 				message.error('La resolución debe ser menor a 600x600');
 				return false;
@@ -82,7 +79,6 @@ const ProductForm = (props) => {
 	const uploadProps = {
 		beforeUpload: (file) => {
 			fileProgress(file);
-			console.log('close');
 			const isJpgOrPng =
 				file.type === 'image/jpeg' ||
 				file.type === 'image/png' ||
@@ -95,14 +91,12 @@ const ProductForm = (props) => {
 				message.error('El tamaño máximo es 2MB!');
 			}
 			let isValid = isJpgOrPng && isLt2M;
-			console.log('valid before upload', isValid);
 			if (isValid) {
 				setFile(file);
 			}
 			return isValid;
 		},
 		onChange: (info) => {
-			console.log('change');
 			let newFileList = [...info.fileList];
 			newFileList = newFileList.slice(-1);
 
@@ -113,7 +107,6 @@ const ProductForm = (props) => {
 
 			setFileList(newFileList);
 			if (newFileList[0].status == 'done') {
-				console.log('uploaded', isValidImgSize);
 				if (!isValidImgSize) {
 					setFileList([]);
 					return;
@@ -138,7 +131,7 @@ const ProductForm = (props) => {
 			await getSubCategories(business);
 			await getLines(business);
 		} catch (error) {
-			console.log(error);
+			message.error('Error al cargar las categorias');
 		}
 	};
 
@@ -147,17 +140,12 @@ const ProductForm = (props) => {
 		try {
 			await getBrands(business);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar las marcas');
 		}
 	};
 
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
-
-	useEffect(() => {
-		console.log(product, 'product');
-	}, [product]);
 
 	useEffect(() => {
 		if (
@@ -178,7 +166,6 @@ const ProductForm = (props) => {
 
 	const onSubmit = async () => {
 		setLoading(true);
-		console.log(product, 'product');
 		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
 		await props.handleRequest(product, file);
 		setLoading(false);

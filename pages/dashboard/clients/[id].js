@@ -152,11 +152,10 @@ const ClientDetail = () => {
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
-			console.log(res);
 			const value = res.value.getValue().data;
 			setOrders(value);
 		} catch (error) {
-			console.log(error);
+			message.error('Ha ocurrido un error')
 		} finally {
 			setLoading(false);
 		}

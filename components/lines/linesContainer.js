@@ -40,10 +40,6 @@ export default function LinesContainer() {
 	const { loading } = useLoadingContext();
 	const { userProfile } = useAuthContext();
 
-	useEffect(() => {
-		console.log(lines);
-	}, [lines]);
-
 	// list and filter
 	const [query, setQuery] = useState('');
 	const [selectedSubCategory, setSelectedSubCategory] = useState();

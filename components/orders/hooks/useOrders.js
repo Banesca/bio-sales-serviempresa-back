@@ -26,7 +26,6 @@ export function useOrders() {
 
 	const setProductsQuantity = (value, index) => {
 		let obj = currentOrder;
-		console.log(obj, 'obj');
 		obj.body[index].weight = value;
 		setCurrentOrder({ ...obj });
 	};
@@ -69,10 +68,6 @@ export function useOrders() {
 		}
 		await getOrderById(orderId);
 	};
-
-	useEffect(() => {
-		console.log(currentOrder);
-	}, [currentOrder]);
 
 	return {
 		orders,

@@ -111,9 +111,7 @@ const ImportProducts = () => {
 				);
 				setData(filteredProducts);
 			},
-			onCancel() {
-				console.log('cancel');
-			},
+			onCancel() {},
 		});
 	};
 
@@ -181,7 +179,6 @@ const ImportProducts = () => {
 		if (response.isLeft()) {
 			return;
 		}
-		console.log('BRAND', response.value.getValue());
 		const value = response.value.getValue().response;
 		setBrands(value);
 	};
@@ -207,8 +204,7 @@ const ImportProducts = () => {
 				pricePurchase: 0,
 				priceSale: row.precio,
 				idUnitMeasurePurchaseFk: 17,
-				idUnitMeasureSaleFk:
-					row.medida === 'UNIDAD' ? 17 : 3,
+				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
 				idSucursalFk: selectedBusiness.idSucursal,
 				idTypeProductFk: 1,
 				is5050: 1,
@@ -271,7 +267,6 @@ const ImportProducts = () => {
 			// }
 			addKeys(uploadData);
 			setData(uploadData);
-			console.log('DATA', uploadData);
 		};
 	};
 
@@ -313,10 +308,12 @@ const ImportProducts = () => {
 		const formatData = removeKeys(data);
 
 		setLoading(true);
-		const res = await requestHandler.post(`/api/v2/product/add/masive/sales`, {
-			lista: formatData,
-		});
-		console.log(res);
+		const res = await requestHandler.post(
+			`/api/v2/product/add/masive/sales`,
+			{
+				lista: formatData,
+			}
+		);
 		if (res.isLeft()) {
 			return message.error('Ha ocurrido un error');
 		}
@@ -350,7 +347,7 @@ const ImportProducts = () => {
 								disabled={!data?.length > 0}
 								onClick={handleSendData}
 								type="primary"
-								style={{ marginRight: '1rem'}}
+								style={{ marginRight: '1rem' }}
 							>
 								Cargar
 							</Button>

@@ -69,7 +69,6 @@ export default function CategoryContainer() {
 			setLoading(false);
 			message.success('Categoría agregada');
 		} catch (error) {
-			console.log(error);
 			setLoading(false);
 			message.error('Error al agregar categoría');
 		}
@@ -97,7 +96,6 @@ export default function CategoryContainer() {
 			setLoading(false);
 			message.success('Categoría eliminada');
 		} catch (error) {
-			console.log(error);
 			setLoading(false);
 			message.error('Error al eliminar categoría');
 		}
@@ -123,7 +121,6 @@ export default function CategoryContainer() {
 		try {
 			await createForm.validateFields(['name']);
 			const invalidName = await validateCategoryName(categoryName);
-			console.log(invalidName);
 			if (invalidName) {
 				setLoading(false);
 				return message.error(`La categoría ${categoryName} ya existe`);
@@ -131,7 +128,7 @@ export default function CategoryContainer() {
 			handleCloseCreateModal();
 			await addCategoryRequest(categoryName);
 		} catch (error) {
-			console.log(error);
+			message.error('Ha ocurrido un error al crear la categoria')
 		}
 	};
 

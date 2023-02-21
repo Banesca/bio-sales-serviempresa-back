@@ -48,7 +48,6 @@ export default function OrdersPage() {
 		try {
 			await getOrders(data);
 		} catch (error) {
-			console.log(error);
 			message.error('Error al cargar los pedidos');
 		} finally {
 			setLoading(false);

@@ -69,7 +69,6 @@ const AddOrderForm = (props) => {
 		if (isNewClient) {
 			await createClient(values);
 		}
-		console.log(data);
 		await props.handleRequest(data);
 		setLoading(false);
 	};
