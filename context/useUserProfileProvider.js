@@ -1,17 +1,17 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React from "react";
+import { useRouter } from "next/router";
 
 const ProfileContext = React.createContext();
 const { Provider } = ProfileContext;
 
 export function useAuthContext() {
-	return React.useContext(ProfileContext);
+  return React.useContext(ProfileContext);
 }
 
 export const ProfileProvider = ({ children }) => {
-	const [userProfile, setUserProfile] = React.useState(null);
+  const [userProfile, setUserProfile] = React.useState(null);
 
-	const router = useRouter();
+  const router = useRouter();
 
 	React.useEffect(() => {
 		const profile = localStorage.getItem('userProfile');
@@ -21,13 +21,13 @@ export const ProfileProvider = ({ children }) => {
 		setUserProfile((prev) => (prev == profile ? prev : profile));
 	}, [userProfile]);
 
-	return (
-		<Provider
-			value={{
-				userProfile,
-			}}
-		>
-			{children}
-		</Provider>
-	);
+  return (
+    <Provider
+      value={{
+        userProfile,
+      }}
+    >
+      {children}
+    </Provider>
+  );
 };

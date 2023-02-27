@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
+    "all": "^0.0.0",
     "antd": "^5.0.5",
     "axios": "^1.2.2",
     "convert-csv-to-json": "^1.5.0",
@@ -17,7 +18,7 @@
     "eslint-config-next": "13.0.6",
     "fs": "0.0.1-security",
     "moment": "^2.29.4",
-    "next": "13.0.6",
+    "next": "^13.0.6",
     "primereact": "^8.7.3",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
