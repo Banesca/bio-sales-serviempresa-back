@@ -16,7 +16,7 @@ export default function UserClientsTable({
 		{
 			title: 'Acciones',
 			key: '2',
-            width: 20,
+			width: 20,
 			render: (item) => (
 				<Button
 					type="primary"

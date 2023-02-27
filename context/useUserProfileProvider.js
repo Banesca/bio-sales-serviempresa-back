@@ -16,7 +16,7 @@ export const ProfileProvider = ({ children }) => {
 	React.useEffect(() => {
 		const profile = localStorage.getItem('userProfile');
 		if (!profile) {
-			return router.push('/login');
+			router.push('/login');
 		}
 		setUserProfile((prev) => (prev == profile ? prev : profile));
 	}, [userProfile]);

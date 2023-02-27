@@ -229,7 +229,7 @@ export default function Products() {
 								type="primary"
 								disabled={userProfile == PROFILES.BILLER}
 								onClick={() =>
-									router.push(`/dashboard/products/add`)
+									router.push('/dashboard/products/add')
 								}
 							>
 								Agregar
@@ -238,7 +238,7 @@ export default function Products() {
 						<Button
 							type="primary"
 							onClick={() =>
-								router.push(`/dashboard/products/import`)
+								router.push('/dashboard/products/import')
 							}
 						>
 							Importar

@@ -15,7 +15,7 @@ export function useUser() {
 	const { requestHandler } = useRequest();
 
 	const getUsers = async () => {
-		const res = await requestHandler.get(`/api/v2/user/only/enable`);
+		const res = await requestHandler.get('/api/v2/user/only/enable');
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -41,7 +41,7 @@ export function useUser() {
 	};
 
 	const assignClientToSeller = async ({ idUserFk, idClientFk }) => {
-		const res = await requestHandler.post(`/api/v2/user/assign/client`, {
+		const res = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk,
 			idClientFk,
 		});
@@ -60,7 +60,7 @@ export function useUser() {
 	};
 
 	const addItemToUserRoute = async (data) => {
-		const res = await requestHandler.post(`/api/v2/user/rute/add`, data);
+		const res = await requestHandler.post('/api/v2/user/rute/add', data);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -69,7 +69,7 @@ export function useUser() {
 	const getUserRouteByDate = async (
 		userId,
 		data = {
-			dateStart: `2023-1-1`,
+			dateStart: '2023-1-1',
 			dateEnd: formatToday(),
 		}
 	) => {

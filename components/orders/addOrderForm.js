@@ -38,7 +38,7 @@ const AddOrderForm = (props) => {
 	const [form] = Form.useForm();
 
 	const createClient = async (data) => {
-		const res = await requestHandler.post(`/api/v2/client/add`, {
+		const res = await requestHandler.post('/api/v2/client/add', {
 			nameClient: data.fullNameClient,
 			phone: data.phoneClient,
 			numberDocument: data.rif,

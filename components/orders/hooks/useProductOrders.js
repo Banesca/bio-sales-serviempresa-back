@@ -16,7 +16,7 @@ export function useProductOrders() {
 		idUserAddFk,
 		priceProductOrder,
 	}) => {
-		const res = await requestHandler.post(`/api/v2/order/product/add`, {
+		const res = await requestHandler.post('/api/v2/order/product/add', {
 			idOrderHFk,
 			idProductFk,
 			idStatusFk: 1,

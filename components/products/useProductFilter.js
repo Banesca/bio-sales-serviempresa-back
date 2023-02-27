@@ -75,29 +75,29 @@ export function useProductFilter() {
 
 	function reducer(state, action) {
 		switch (action.type) {
-			case FILTER_ACTIONS.CLEAR:
-				return {
-					...state,
-					query: INITIAL_QUERY_VALUES,
-					filtered: () => state.products
-				};
-			case FILTER_ACTIONS.GET_PRODUCTS:
-				return {
-					...state,
-					products: action.payload,
-					filtered: () => action.payload,
-				};
-			case FILTER_ACTIONS.SEARCH:
-				return {
-					...state,
-					filtered: () => filterProducts(state),
-				};
+		case FILTER_ACTIONS.CLEAR:
+			return {
+				...state,
+				query: INITIAL_QUERY_VALUES,
+				filtered: () => state.products
+			};
+		case FILTER_ACTIONS.GET_PRODUCTS:
+			return {
+				...state,
+				products: action.payload,
+				filtered: () => action.payload,
+			};
+		case FILTER_ACTIONS.SEARCH:
+			return {
+				...state,
+				filtered: () => filterProducts(state),
+			};
 
-			case FILTER_ACTIONS.SET_QUERY:
-				return {
-					...state,
-					query: action.payload,
-				};
+		case FILTER_ACTIONS.SET_QUERY:
+			return {
+				...state,
+				query: action.payload,
+			};
 		}
 	}
 

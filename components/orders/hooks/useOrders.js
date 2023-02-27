@@ -32,7 +32,7 @@ export function useOrders() {
 
 	const confirmProductQuantity = async (idOrderB, weight) => {
 		const res = await requestHandler.post(
-			`/api/v2/order/product/setweight/sales`,
+			'/api/v2/order/product/setweight/sales',
 			{ idOrderB, weight }
 		);
 		if (res.isLeft()) {

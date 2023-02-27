@@ -132,7 +132,7 @@ const UserDetail = () => {
 			setLoading(false);
 			return message.info('Este usuario ya tiene una empresa asignada');
 		}
-		const res = await requestHandler.post(`/api/v2/user/branch/add`, {
+		const res = await requestHandler.post('/api/v2/user/branch/add', {
 			idUserFk: user.idUser,
 			idSucursalFk: businessToAdd,
 		});
@@ -207,7 +207,7 @@ const UserDetail = () => {
 			if (count > 0)
 				message.success(
 					`${count} ${
-						count > 1 ? `Clientes agregados` : `Cliente agregado`
+						count > 1 ? 'Clientes agregados' : 'Cliente agregado'
 					}`
 				);
 			await getSellerClients(id);
@@ -254,14 +254,14 @@ const UserDetail = () => {
 						<>
 							{profile?.id != PROFILES.MASTER &&
 								userProfile == PROFILES.MASTER && (
-									<Button
-										onClick={() => setIsModalOpen(true)}
-										type="primary"
-										style={{ marginRight: '.5rem' }}
-									>
+								<Button
+									onClick={() => setIsModalOpen(true)}
+									type="primary"
+									style={{ marginRight: '.5rem' }}
+								>
 										Empresas
-									</Button>
-								)}
+								</Button>
+							)}
 							{profile?.id == PROFILES.SELLER && (
 								<>
 									<Button

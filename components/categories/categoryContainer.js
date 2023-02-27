@@ -157,10 +157,10 @@ export default function CategoryContainer() {
 			<Title title="Categorías">
 				{userProfile !=
 					PROFILES.BILLER && (
-						<Button type="primary" onClick={handleOpenCreateModal}>
+					<Button type="primary" onClick={handleOpenCreateModal}>
 							Agregar
-						</Button>
-					)}
+					</Button>
+				)}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
 			<Table bordered dataSource={categoriesList} columns={columns} />

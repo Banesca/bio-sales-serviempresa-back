@@ -25,7 +25,7 @@ export function BusinessProvider(props) {
 		);
 		setBusiness(savedBusiness);
 		setSelectedBusiness((prev) =>
-			savedSelectedBusiness.idSucursal == prev?.idSucursal
+			savedSelectedBusiness?.idSucursal == prev?.idSucursal
 				? prev
 				: savedSelectedBusiness
 		);

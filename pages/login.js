@@ -50,14 +50,14 @@ export default function Login() {
 			const error = res.value.getErrorValue();
 			setLoading(false);
 			switch (error.status) {
-				case 400:
-					return handleLoginError(error.data.error);
-				case 404:
-					return handleLoginError('Ha ocurrido un error');
-				case 500:
-					return handleLoginError(error.data.error);
-				default:
-					return handleLoginError('Ha ocurrido un error');
+			case 400:
+				return handleLoginError(error.data.error);
+			case 404:
+				return handleLoginError('Ha ocurrido un error');
+			case 500:
+				return handleLoginError(error.data.error);
+			default:
+				return handleLoginError('Ha ocurrido un error');
 			}
 		}
 		if (!res.value.getValue()) {

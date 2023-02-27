@@ -45,7 +45,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 
 	// User business
 	const handleAsigne = async (userId, businessId) => {
-		const res = await requestHandler.post(`/api/v2/user/branch/add`, {
+		const res = await requestHandler.post('/api/v2/user/branch/add', {
 			idUserFk: userId,
 			idSucursalFk: businessId,
 		});
