@@ -110,7 +110,7 @@ export default function ProductList({
 
 	const updateProductQuantity = async (idOrderB, weight) => {
 		const res = await requestHandler.post(
-			`/api/v2/order/product/setweight`,
+			'/api/v2/order/product/setweight',
 			{ idOrderB, weight }
 		);
 		if (res.isLeft()) {

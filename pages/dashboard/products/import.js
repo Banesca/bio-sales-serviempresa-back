@@ -19,401 +19,409 @@ import { useBusinessProvider } from "../../../hooks/useBusinessProvider";
 import { notification } from "antd";
 
 const ImportProducts = () => {
-  const columns = [
-    {
-      title: "Nombre",
-      dataIndex: "nameProduct",
-      key: 1,
-      render: (text) => <p>{text}</p>,
-    },
-    {
-      title: "Código",
-      dataIndex: "barCode",
-      responsive: ["sm"],
-      key: 2,
-      render: (text) => <p>{text}</p>,
-    },
-    {
-      title: "Precio",
-      dataIndex: "priceSale",
-      key: 3,
-      render: (text, record) =>
-        record.isPromo == "1" ? (
-          <p style={{ color: "green" }}>$ {record.marketPrice}</p>
-        ) : (
-          <p>$ {text}</p>
-        ),
-    },
-    {
-      title: "Categoría",
-      dataIndex: "nameFamily",
-      responsive: ["lg"],
-      key: 4,
-      render: (text) => <p>{text}</p>,
-    },
-    {
-      title: "Sub Categoría",
-      dataIndex: "nameSubFamily",
-      responsive: ["xl"],
-      key: 5,
-      render: (text) => <p>{text}</p>,
-    },
-    {
-      title: "Marca",
-      dataIndex: "nameBrand",
-      responsive: ["lg"],
-      key: 6,
-      render: (text) => <p>{text}</p>,
-    },
-    {
-      title: "Promoción",
-      dataIndex: "isPromo",
-      key: 7,
-      responsive: ["md"],
-      render: (bool) => {
-        return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            {bool == "1" ? (
-              <CheckCircleOutlined
-                style={{ fontSize: "1.5rem", color: "green" }}
-              />
-            ) : (
-              <CloseCircleOutlined
-                style={{ fontSize: "1.5rem", color: "red" }}
-              />
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      title: "Acciones",
-      key: 8,
-      render: (product, index) => (
-        <Button type="primary" onClick={() => confirmDelete(product)} danger>
-          <DeleteOutlined />
-        </Button>
-      ),
-    },
-  ];
 
-  const confirmDelete = (product) => {
-    Modal.confirm({
-      title: "Eliminar",
-      icon: <ExclamationCircleFilled />,
-      content: "Estas seguro de eliminar este producto?",
-      okText: "Eliminar",
-      okType: "danger",
-      cancelText: "Cancelar",
-      onOk() {
-        const filteredProducts = data.filter((p) => p.key !== product.key);
-        setData(filteredProducts);
-      },
-      onCancel() {},
-    });
-  };
+	const columns = [
+		{
+			title: 'Nombre',
+			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Código',
+			dataIndex: 'barCode',
+			responsive: ['sm'],
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Precio',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text, record) =>
+				record.isPromo == '1' ? (
+					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+				) : (
+					<p>$ {text}</p>
+				),
+		},
+		{
+			title: 'Categoría',
+			dataIndex: 'nameFamily',
+			responsive: ['lg'],
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Sub Categoría',
+			dataIndex: 'nameSubFamily',
+			responsive: ['xl'],
+			key: 5,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Marca',
+			dataIndex: 'nameBrand',
+			responsive: ['lg'],
+			key: 6,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Promoción',
+			dataIndex: 'isPromo',
+			key: 7,
+			responsive: ['md'],
+			render: (bool) => {
+				return (
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						{bool == '1' ? (
+							<CheckCircleOutlined
+								style={{ fontSize: '1.5rem', color: 'green' }}
+							/>
+						) : (
+							<CloseCircleOutlined
+								style={{ fontSize: '1.5rem', color: 'red' }}
+							/>
+						)}
+					</div>
+				);
+			},
+		},
+		{
+			title: 'Acciones',
+			key: 8,
+			render: (product, index) => (
+				<Button type="primary" danger>
+					<DeleteOutlined onClick={() => confirmDelete(product)} />
+				</Button>
+			),
+		},
+	];
 
-  const handleSeeModal = (product = null) => {
-    setCurrentProduct(product);
-    if (!product) {
-      setDeleteModalOpen(false);
-    } else {
-      setDeleteModalOpen(true);
-    }
-    setDeleteModalOpen(!deleteModalOpen);
-  };
+	const confirmDelete = (product) => {
+		Modal.confirm({
+			title: 'Eliminar',
+			icon: <ExclamationCircleFilled />,
+			content: 'Estas seguro de eliminar este producto?',
+			okText: 'Eliminar',
+			okType: 'danger',
+			cancelText: 'Cancelar',
+			onOk() {
+				const filteredProducts = data.filter(
+					(p) => p.code !== product.code
+				);
+				setData(filteredProducts);
+			},
+			onCancel() {},
+		});
+	};
 
-  const handleDelete = () => {
-    const filteredProducts = data.filter((p) => p.code !== currentProduct.code);
-    setData(filteredProducts);
-    handleSeeModal();
-  };
+	const handleSeeModal = (product = null) => {
+		setCurrentProduct(product);
+		if (!product) {
+			setDeleteModalOpen(false);
+		} else {
+			setDeleteModalOpen(true);
+		}
+		setDeleteModalOpen(!deleteModalOpen);
+	};
 
-  const generalContext = useContext(GeneralContext);
-  const { selectedBusiness } = useBusinessProvider();
-  const { requestHandler } = useRequest();
+	const handleDelete = () => {
+		const filteredProducts = data.filter(
+			(p) => p.code !== currentProduct.code
+		);
+		setData(filteredProducts);
+		handleSeeModal();
+	};
 
-  // Product to delete
-  const [currentProduct, setCurrentProduct] = useState();
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const generalContext = useContext(GeneralContext);
+	const { selectedBusiness } = useBusinessProvider();
+	const { requestHandler } = useRequest();
 
-  //Notification
-  const [notificationOpen, setNotificationOpen] = useState(false);
+	// Product to delete
+	const [currentProduct, setCurrentProduct] = useState();
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // control files
-  const [fileList, setFileList] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+	//Notification
+	const [notificationOpen, setNotificationOpen] = useState(false);
 
-  // Table's Data
-  const [data, setData] = useState([]);
+	// control files
+	const [fileList, setFileList] = useState([]);
+	const [selectedFile, setSelectedFile] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+	// Table's Data
+	const [data, setData] = useState([]);
 
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
+	const [loading, setLoading] = useState(false);
 
-  const [rejectedBrands, setRejectedBrands] = useState([]);
-  const [rejectedCategories, setRejectedCategories] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [brands, setBrands] = useState([]);
 
-  const [api, contextHolder] = notification.useNotification();
+	const [rejectedBrands, setRejectedBrands] = useState([]);
+	const [rejectedCategories, setRejectedCategories] = useState([]);
 
-  const categoryListRequest = async (business = 1) => {
-    const response = await requestHandler.get(
-      `/api/v2/family/list/${business}`
-    );
-    if (response.isLeft()) {
-      return;
-    }
-    const value = response.value.getValue().response;
-    setCategories(value);
-  };
+	const [api, contextHolder] = notification.useNotification();
 
-  const brandListRequest = async (business = 1) => {
-    const response = await requestHandler.get(
-      `/api/v2/subfamily/list/${business}`
-    );
-    if (response.isLeft()) {
-      return;
-    }
-    const value = response.value.getValue().response;
-    setBrands(value);
-  };
+	const categoryListRequest = async (business = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/family/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().response;
+		setCategories(value);
+	};
 
-  useEffect(() => {
-    if (selectedBusiness && generalContext) {
-      setLoading(true);
-      categoryListRequest(selectedBusiness.idSucursal);
-      brandListRequest(selectedBusiness.idSucursal);
-      setLoading(false);
-    }
-  }, [selectedBusiness, generalContext]);
+	const brandListRequest = async (business = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/subfamily/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().response;
+		setBrands(value);
+	};
 
-  const getFileExtension = (filename) => {
-    return filename.split(".").pop();
-  };
+	useEffect(() => {
+		if (selectedBusiness && generalContext) {
+			setLoading(true);
+			categoryListRequest(selectedBusiness.idSucursal);
+			brandListRequest(selectedBusiness.idSucursal);
+			setLoading(false);
+		}
+	}, [selectedBusiness, generalContext]);
 
-  const convertExcelDataToAPI = (rows) => {
-    let uploadData = [];
-    for (const row of rows) {
-      const obj = {
-        nameProduct: row.nombre,
-        pricePurchase: 0,
-        priceSale: row.precio,
-        idUnitMeasurePurchaseFk: 17,
-        idUnitMeasureSaleFk: row.medida === "UNIDAD" ? 17 : 3,
-        idSucursalFk: selectedBusiness.idSucursal,
-        idTypeProductFk: 1,
-        is5050: 1,
-        isPromo: row.en_promocion ? 1 : 0,
-        maxProducVenta: "",
-        minStock: 0,
-        apply_inventory: true,
-        efectivo: 0,
-        linkPago: 0,
-        maxAditionals: 0,
-        minAditionals: 0,
-        marketPrice: row.precio_promocion || 0,
-        percentageOfProfit: 0,
-        isheavy: 0,
-        idAdicionalCategoryFk: 0,
-        barCode: String(row.codigo),
-        nameKitchen: "",
-        unitweight: row.peso_unitario || null,
-        observation: row.observacion || "",
-        nameBrand: row.marca || null,
-        nameLine: row.linea || null,
-        nameFamily: row.categoria,
-        nameSubFamily: row.subcategoria,
-        unitByBox: row.unidades_por_caja || null,
-        ean: row.ean || "",
-        healthRegister: row.registro_sanitario || "",
-        cpe: row.cpe || "",
-      };
-      uploadData.push(obj);
-    }
-    return uploadData;
-  };
+	const getFileExtension = (filename) => {
+		return filename.split('.').pop();
+	};
 
-  const existCategory = (name) => {
-    const filter = categories.filter(
-      (c) => c.name.toLowerCase() === name.toLowerCase()
-    );
-    return filter.length > 0;
-  };
+	const convertExcelDataToAPI = (rows) => {
+		let uploadData = [];
+		for (const row of rows) {
+			const obj = {
+				nameProduct: row.nombre,
+				pricePurchase: 0,
+				priceSale: row.precio,
+				idUnitMeasurePurchaseFk: 17,
+				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
+				idSucursalFk: selectedBusiness.idSucursal,
+				idTypeProductFk: 1,
+				is5050: 1,
+				isPromo: row.en_promocion ? 1 : 0,
+				maxProducVenta: '',
+				minStock: 0,
+				apply_inventory: true,
+				efectivo: 0,
+				linkPago: 0,
+				maxAditionals: 0,
+				minAditionals: 0,
+				marketPrice: row.precio_promocion || 0,
+				percentageOfProfit: 0,
+				isheavy: 0,
+				idAdicionalCategoryFk: 0,
+				barCode: String(row.codigo),
+				nameKitchen: '',
+				unitweight: row.peso_unitario || null,
+				observation: row.observacion || '',
+				nameBrand: row.marca || null,
+				nameLine: row.linea || null,
+				nameFamily: row.categoria,
+				nameSubFamily: row.subcategoria,
+				unitByBox: row.unidades_por_caja || null,
+				ean: row.ean || '',
+				healthRegister: row.registro_sanitario || '',
+				cpe: row.cpe || '',
+			};
+			uploadData.push(obj);
+		}
+		return uploadData;
+	};
 
-  const existBrand = (name) => {
-    const filter = brands.filter(
-      (b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
-    );
-    return filter.length > 0;
-  };
+	const existCategory = (name) => {
+		const filter = categories.filter(
+			(c) => c.name.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
+	};
 
-  const handleConvertFileToJson = (files) => {
-    const file = new Blob(files, { type: files[0].type });
-    let reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = async (e) => {
-      const workbox = XLSX.read(e.target.result, { type: "buffer" });
-      const worksheetName = workbox.SheetNames[0];
-      const workSheet = workbox.Sheets[worksheetName];
-      let data = XLSX.utils.sheet_to_json(workSheet);
-      const uploadData = await convertExcelDataToAPI(data);
-      // if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
-      // 	setNotificationOpen(true);
-      // }
-      addKeys(uploadData);
-      setData(uploadData);
-    };
-  };
+	const existBrand = (name) => {
+		const filter = brands.filter(
+			(b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
+	};
 
-  const handleChange = (info) => {
-    let newFileList = [...info.fileList];
-    newFileList = newFileList.slice(-1);
+	const handleConvertFileToJson = (files) => {
+		const file = new Blob(files, { type: files[0].type });
+		let reader = new FileReader();
+		reader.readAsArrayBuffer(file);
+		reader.onload = async (e) => {
+			const workbox = XLSX.read(e.target.result, { type: 'buffer' });
+			const worksheetName = workbox.SheetNames[0];
+			const workSheet = workbox.Sheets[worksheetName];
+			let data = XLSX.utils.sheet_to_json(workSheet);
+			const uploadData = await convertExcelDataToAPI(data);
+			// if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
+			// 	setNotificationOpen(true);
+			// }
+			addKeys(uploadData);
+			setData(uploadData);
+		};
+	};
 
-    if (newFileList.length === 0) {
-      setFileList(newFileList[0]);
-      return message.success("Archivo eliminado");
-    }
-    const extension = getFileExtension(newFileList[0].name);
-    if (extension !== "xlsx" && extension !== "xls") {
-      return message.error(
-        'La extension del archivo debe ser ".xlsx" o ".xls"'
-      );
-    }
+	const handleChange = (info) => {
+		let newFileList = [...info.fileList];
+		newFileList = newFileList.slice(-1);
 
-    setFileList(newFileList);
-    if (newFileList[0].status == "done") {
-      setLoading(true);
-      handleConvertFileToJson([selectedFile]);
-      //message.success(`${newFileList[0].name} ha sido cargado`);
-    } else if (newFileList[0].status == "error") {
-      message.error("Ha ocurrido un error");
-    }
-    setLoading(false);
-  };
+		if (newFileList.length === 0) {
+			setFileList(newFileList[0]);
+			return message.success('Archivo eliminado');
+		}
+		const extension = getFileExtension(newFileList[0].name);
+		if (extension !== 'xlsx' && extension !== 'xls') {
+			return message.error(
+				'La extension del archivo debe ser ".xlsx" o ".xls"'
+			);
+		}
 
-  const props = {
-    onChange: handleChange,
-    beforeUpload: (file) => {
-      setSelectedFile(file);
-      return file;
-    },
-  };
+		setFileList(newFileList);
+		if (newFileList[0].status == 'done') {
+			setLoading(true);
+			handleConvertFileToJson([selectedFile]);
+			//message.success(`${newFileList[0].name} ha sido cargado`);
+		} else if (newFileList[0].status == 'error') {
+			message.error('Ha ocurrido un error');
+		}
+		setLoading(false);
+	};
 
-  const handleSendData = async () => {
-    const formatData = removeKeys(data);
+	const props = {
+		onChange: handleChange,
+		beforeUpload: (file) => {
+			setSelectedFile(file);
+			return file;
+		},
+	};
 
-    setLoading(true);
-    const res = await requestHandler.post(`/api/v2/product/add/masive/sales`, {
-      lista: formatData,
-    });
-    if (res.isLeft()) {
-      return message.error("Ha ocurrido un error");
-    }
-    message.success("Productos agregados exitosamente");
-    setData([]);
-    setRejectedBrands([]);
-    setRejectedCategories([]);
-    setFileList([]);
-    setLoading(false);
-  };
+	const handleSendData = async () => {
+		const formatData = removeKeys(data);
 
-  useEffect(() => {
-    if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
-      setNotificationOpen(true);
-    }
-  }, [rejectedBrands, rejectedCategories]);
+		setLoading(true);
+		const res = await requestHandler.post(
+			'/api/v2/product/add/masive/sales',
+			{
+				lista: formatData,
+			}
+		);
+		if (res.isLeft()) {
+			return message.error('Ha ocurrido un error');
+		}
+		message.success('Productos agregados exitosamente');
+		setData([]);
+		setRejectedBrands([]);
+		setRejectedCategories([]);
+		setFileList([]);
+		setLoading(false);
+	};
 
-  return (
-    <>
-      <DashboardLayout>
-        <div
-          style={{
-            margin: "1rem",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Row style={{ margin: "1rem 0", width: "100%" }}>
-            <Col>
-              <Button
-                disabled={!data?.length > 0}
-                onClick={handleSendData}
-                type="primary"
-                style={{ marginRight: "1rem" }}
-              >
-                Cargar
-              </Button>
-            </Col>
-            <Col>
-              <Upload
-                {...props}
-                fileList={fileList}
-                style={{ width: "100%" }}
-                accept=".xls,.xlsx"
-                type="file"
-              >
-                <Button icon={<UploadOutlined />} block>
-                  Archivo
-                </Button>
-              </Upload>
-            </Col>
-          </Row>
-          <Table
-            columns={columns}
-            dataSource={data}
-            style={{ overflowX: "scroll" }}
-          />
-        </div>
-        <Modal
-          title="Eliminar"
-          open={deleteModalOpen}
-          onCancel={() => setDeleteModalOpen(false)}
-          onOk={handleDelete}
-          okText="Eliminar"
-          cancelText="Cancelar"
-        >
-          <p>Estas seguro de que deseas eliminar este producto</p>
-        </Modal>
-        <Modal
-          title="Notificación"
-          open={notificationOpen}
-          footer={[
-            <Button
-              onClick={() => setNotificationOpen(false)}
-              key="confirmar"
-              type="primary"
-            >
-              Confirmar
-            </Button>,
-          ]}
-        >
-          <p>
-            Algunos productos no han sido cargados, ya que, hay categorías y/o
-            marcas que no están registradas, créalas para cargar todos los
-            productos.
-          </p>
-          {rejectedCategories && (
-            <p>
-              Crea las siguientes categorías{" "}
-              <strong style={{ color: "red" }}>
-                {rejectedCategories.join(", ")}
-              </strong>
-            </p>
-          )}
-          {rejectedBrands && (
-            <p>
-              Crea las siguientes marcas{" "}
-              <strong style={{ color: "red" }}>
-                {rejectedBrands.join(", ")}
-              </strong>
-            </p>
-          )}
-        </Modal>
-        <Loading isLoading={loading} />
-      </DashboardLayout>
-    </>
-  );
+	useEffect(() => {
+		if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
+			setNotificationOpen(true);
+		}
+	}, [rejectedBrands, rejectedCategories]);
+
+	return (
+		<>
+			<DashboardLayout>
+				<div
+					style={{
+						margin: '1rem',
+						display: 'flex',
+						flexDirection: 'column',
+					}}
+				>
+					<Row style={{ margin: '1rem 0', width: '100%' }}>
+						<Col>
+							<Button
+								disabled={!data?.length > 0}
+								onClick={handleSendData}
+								type="primary"
+								style={{ marginRight: '1rem' }}
+							>
+								Cargar
+							</Button>
+						</Col>
+						<Col>
+							<Upload
+								{...props}
+								fileList={fileList}
+								style={{ width: '100%' }}
+								accept=".xls,.xlsx"
+								type="file"
+							>
+								<Button icon={<UploadOutlined />} block>
+									Archivo
+								</Button>
+							</Upload>
+						</Col>
+					</Row>
+					<Table
+						columns={columns}
+						dataSource={data}
+						style={{ overflowX: 'scroll' }}
+					/>
+				</div>
+				<Modal
+					title="Eliminar"
+					open={deleteModalOpen}
+					onCancel={() => setDeleteModalOpen(false)}
+					onOk={handleDelete}
+					okText="Eliminar"
+					cancelText="Cancelar"
+				>
+					<p>Estas seguro de que deseas eliminar este producto</p>
+				</Modal>
+				<Modal
+					title="Notificación"
+					open={notificationOpen}
+					footer={[
+						<Button
+							onClick={() => setNotificationOpen(false)}
+							key="confirmar"
+							type="primary"
+						>
+							Confirmar
+						</Button>,
+					]}
+				>
+					<p>
+						Algunos productos no han sido cargados, ya que, hay
+						categorías y/o marcas que no están registradas, créalas
+						para cargar todos los productos.
+					</p>
+					{rejectedCategories && (
+						<p>
+							Crea las siguientes categorías{' '}
+							<strong style={{ color: 'red' }}>
+								{rejectedCategories.join(', ')}
+							</strong>
+						</p>
+					)}
+					{rejectedBrands && (
+						<p>
+							Crea las siguientes marcas{' '}
+							<strong style={{ color: 'red' }}>
+								{rejectedBrands.join(', ')}
+							</strong>
+						</p>
+					)}
+				</Modal>
+				<Loading isLoading={loading} />
+			</DashboardLayout>
+		</>
+	);
 };
 
 export default ImportProducts;

@@ -62,16 +62,16 @@ const UsersTable = ({
 					</Button>
 					{userProfile != PROFILES.BILLER &&
 						userProfile != PROFILES.ADMIN && (
-							<Button
-								type="primary"
-								danger
-								onClick={() => {
-									handleOpenModal(_);
-								}}
-							>
-								<DeleteOutlined />
-							</Button>
-						)}
+						<Button
+							type="primary"
+							danger
+							onClick={() => {
+								handleOpenModal(_);
+							}}
+						>
+							<DeleteOutlined />
+						</Button>
+					)}
 				</Space>
 			),
 		},

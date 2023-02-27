@@ -40,7 +40,7 @@ export default function DetailOrderTable({ products, total }) {
 	];
 
 	const { loading } = useLoadingContext();
-    addKeys(products)
+	addKeys(products)
 
 	return (
 		<Table

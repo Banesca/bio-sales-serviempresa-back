@@ -56,7 +56,7 @@ export default function BrandsModals({
 			setLoading(false);
 			message.success('Marca eliminada');
 		} catch (error) {
-            setLoading(false)
+			setLoading(false)
 			message.error('Error al eliminar marca');
 		}
 	};

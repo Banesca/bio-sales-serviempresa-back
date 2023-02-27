@@ -13,13 +13,13 @@ export const ProfileProvider = ({ children }) => {
 
   const router = useRouter();
 
-  React.useEffect(() => {
-    const profile = localStorage.getItem("userProfile");
-    if (!profile) {
-      router.push("/login");
-    }
-    setUserProfile((prev) => (prev == profile ? prev : profile));
-  }, [userProfile]);
+	React.useEffect(() => {
+		const profile = localStorage.getItem('userProfile');
+		if (!profile) {
+			router.push('/login');
+		}
+		setUserProfile((prev) => (prev == profile ? prev : profile));
+	}, [userProfile]);
 
   return (
     <Provider

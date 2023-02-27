@@ -18,18 +18,18 @@ export function BusinessProvider(props) {
     setSelectedBusiness(business);
   };
 
-  useEffect(() => {
-    const savedBusiness = JSON.parse(localStorage.getItem("business"));
-    const savedSelectedBusiness = JSON.parse(
-      localStorage.getItem("selectedBusiness")
-    );
-    setBusiness(savedBusiness);
-    setSelectedBusiness((prev) =>
-      savedSelectedBusiness?.idSucursal == prev?.idSucursal
-        ? prev
-        : savedSelectedBusiness
-    );
-  }, [selectedBusiness]);
+	useEffect(() => {
+		const savedBusiness = JSON.parse(localStorage.getItem('business'));
+		const savedSelectedBusiness = JSON.parse(
+			localStorage.getItem('selectedBusiness')
+		);
+		setBusiness(savedBusiness);
+		setSelectedBusiness((prev) =>
+			savedSelectedBusiness?.idSucursal == prev?.idSucursal
+				? prev
+				: savedSelectedBusiness
+		);
+	}, [selectedBusiness]);
 
   return (
     <BusinessContext.Provider

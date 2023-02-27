@@ -64,30 +64,30 @@ const ClientDetail = () => {
 			key: 3,
 			render: (text, record) => {
 				switch (record.idStatusOrder) {
-					case 1:
-						return (
-							<p style={{ color: '#0984e3' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 2:
-						return (
-							<p style={{ color: '#00b894' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 3:
-						return (
-							<p style={{ color: '#0984e3' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 4:
-						return (
-							<p style={{ color: '#d63031' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
+				case 1:
+					return (
+						<p style={{ color: '#0984e3' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
+				case 2:
+					return (
+						<p style={{ color: '#00b894' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
+				case 3:
+					return (
+						<p style={{ color: '#0984e3' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
+				case 4:
+					return (
+						<p style={{ color: '#d63031' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
 				}
 			},
 		},
@@ -146,7 +146,7 @@ const ClientDetail = () => {
 	const getOrderByClient = async (phoneNumber) => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.post(`/api/v2/order/byclient`, {
+			const res = await requestHandler.post('/api/v2/order/byclient', {
 				query: phoneNumber,
 			});
 			if (res.isLeft()) {

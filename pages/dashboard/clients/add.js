@@ -11,7 +11,7 @@ import { useRequest } from '../../../hooks/useRequest';
 
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
-    const { requestHandler } = useRequest()
+	const { requestHandler } = useRequest()
 
 	const [form] = Form.useForm();
 
@@ -21,13 +21,13 @@ export default function AddClient() {
 
 	const handleSubmit = async (values) => {
 		await createClient(values);
-        form.resetFields()
+		form.resetFields()
 	};
 
 	const createClient = async (data) => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.post(`/api/v2/client/add`, {
+			await requestHandler.post('/api/v2/client/add', {
 				nameClient: data.fullNameClient,
 				phone: data.phoneClient,
 				numberDocument: data.rif,

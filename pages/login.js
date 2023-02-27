@@ -43,39 +43,39 @@ export default function Login() {
     return value;
   };
 
-  const onSubmit = async (values) => {
-    setLoading(true);
-    const res = await handleLoginRequest(values);
-    if (res.isLeft()) {
-      const error = res.value.getErrorValue();
-      setLoading(false);
-      switch (error.status) {
-        case 400:
-          return handleLoginError(error.data.error);
-        case 404:
-          return handleLoginError("Ha ocurrido un error");
-        case 500:
-          return handleLoginError(error.data.error);
-        default:
-          return handleLoginError("Ha ocurrido un error");
-      }
-    }
-    if (!res.value.getValue()) {
-      setLoading(false);
-      return handleLoginError("Usuario o contraseña incorrectos");
-    }
-    const value = res.value.getValue().data[0];
-    localStorage.setItem("accessToken", value.token);
-    if (value.idProfileFk != PROFILES.MASTER) {
-      const businessByUser = await getUserBusiness(value.idUser);
-      if (businessByUser.length < 1) {
-        handleLoginError("Acceso denegado");
-        return;
-      }
-      const businessIdsList = value.branch.map((b) => b.idSucursal);
-      const selectedBusinessIdx = businessIdsList.indexOf(
-        businessByUser[0].idSucursalFk
-      );
+	const onSubmit = async (values) => {
+		setLoading(true);
+		const res = await handleLoginRequest(values);
+		if (res.isLeft()) {
+			const error = res.value.getErrorValue();
+			setLoading(false);
+			switch (error.status) {
+			case 400:
+				return handleLoginError(error.data.error);
+			case 404:
+				return handleLoginError('Ha ocurrido un error');
+			case 500:
+				return handleLoginError(error.data.error);
+			default:
+				return handleLoginError('Ha ocurrido un error');
+			}
+		}
+		if (!res.value.getValue()) {
+			setLoading(false);
+			return handleLoginError('Usuario o contraseña incorrectos');
+		}
+		const value = res.value.getValue().data[0];
+		localStorage.setItem('accessToken', value.token);
+		if (value.idProfileFk != PROFILES.MASTER) {
+			const businessByUser = await getUserBusiness(value.idUser);
+			if (businessByUser.length < 1) {
+				handleLoginError('Acceso denegado');
+				return;
+			}
+			const businessIdsList = value.branch.map((b) => b.idSucursal);
+			const selectedBusinessIdx = businessIdsList.indexOf(
+				businessByUser[0].idSucursalFk
+			);
 
       localStorage.setItem(
         "selectedBusiness",
