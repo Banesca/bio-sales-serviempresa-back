@@ -90,8 +90,8 @@ const ImportProducts = () => {
 			title: 'Acciones',
 			key: 8,
 			render: (product, index) => (
-				<Button type="primary" danger>
-					<DeleteOutlined onClick={() => confirmDelete(product)} />
+				<Button type="primary" onClick={() => confirmDelete(product)} danger>
+					<DeleteOutlined  />
 				</Button>
 			),
 		},
@@ -107,7 +107,7 @@ const ImportProducts = () => {
 			cancelText: 'Cancelar',
 			onOk() {
 				const filteredProducts = data.filter(
-					(p) => p.code !== product.code
+					(p) => p.key !== product.key
 				);
 				setData(filteredProducts);
 			},

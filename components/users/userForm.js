@@ -166,25 +166,55 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 							onChange={handleChange}
 						/>
 					</Form.Item>
-					{!update && (
-						<Form.Item
-							label="Contraseña"
+					<Form.Item
+						label="Contraseña"
+						name="pin"
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa una contraseña',
+							},
+							{
+								min: 8,
+								message: 'Escribe una contraseña de minimo 8 caracteres',
+							},
+						]}
+					>
+						<Input
+							type="password"
 							name="pin"
-							rules={[
-								{
-									required: true,
-									message: 'Ingresa una contraseña',
+							value={userData.pin}
+							onChange={handleChange}
+						/>
+					</Form.Item>
+					<Form.Item
+						label="Repetir contraseña"
+						name="Repit"
+						dependencies={['pin']}
+						rules={[
+							{
+								required: true,
+								message: 'Repite la contraseña',
+							},
+							({ getFieldValue }) => ({
+								validator(_, value) {
+									if (!value || getFieldValue('pin') === value) {
+										return Promise.resolve();
+									}
+									return Promise.reject(
+										new Error('Las dos contraseñas no son iguales')
+									);
 								},
-							]}
-						>
-							<Input
-								type="password"
-								name="pin"
-								value={userData.pin}
-								onChange={handleChange}
-							/>
-						</Form.Item>
-					)}
+							}),
+						]}
+					>
+						<Input
+							type="password"
+							name="Repit"
+							value={userData.pin}
+							onChange={handleChange}
+						/>
+					</Form.Item>
 					<Form.Item
 						label="Perfil"
 						name="idProfileFk"
