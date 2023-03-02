@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import { Input, Typography, Form, Button, Layout, message } from 'antd';
+import Button from 'antd-button-color';
+import { Input, Typography, Form, Layout, message } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -177,9 +178,9 @@ export default function Login() {
 							>
 								<Input.Password />
 							</Form.Item>
-							<Form.Item wrapperCol={{ span: 8, offset: 8 }}>
-								<Button type="primary" htmlType="submit" block>
-									Aceptar
+							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end'}} justify='end'>
+								<Button type="primary" htmlType="submit" style={{magin: '0'}} block>
+									Acceder
 								</Button>
 							</Form.Item>
 						</Form>

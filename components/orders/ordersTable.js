@@ -80,25 +80,25 @@ export default function OrdersTable({ orders }) {
 				switch (record.idStatusOrder) {
 				case 1:
 					return (
-						<p style={{ color: '#0984e3' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 2:
 					return (
-						<p style={{ color: '#00b894' }}>
+						<p style={{ color: '#00b894', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 3:
 					return (
-						<p style={{ color: '#0984e3' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
 					return (
-						<p style={{ color: '#d63031' }}>
+						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);

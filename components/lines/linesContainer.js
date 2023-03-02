@@ -79,7 +79,7 @@ export default function LinesContainer() {
 			<Title>
 				{userProfile != PROFILES.BILLER && (
 					<Button
-						type="primary"
+						type="succes"
 						onClick={() => setIsCreateModalOpen(true)}
 					>
 						Agregar

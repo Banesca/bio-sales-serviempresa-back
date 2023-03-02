@@ -75,7 +75,7 @@ const CategoriesPage = () => {
 		},
 		{
 			key: '3',
-			label: 'Lineas',
+			label: 'Líneas',
 			children: <LinesContainer />,
 		},
 	];

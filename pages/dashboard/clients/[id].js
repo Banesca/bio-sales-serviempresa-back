@@ -66,25 +66,25 @@ const ClientDetail = () => {
 				switch (record.idStatusOrder) {
 				case 1:
 					return (
-						<p style={{ color: '#0984e3' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 2:
 					return (
-						<p style={{ color: '#00b894' }}>
+						<p style={{ color: '#00b894', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 3:
 					return (
-						<p style={{ color: '#0984e3' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
 					return (
-						<p style={{ color: '#d63031' }}>
+						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
@@ -182,53 +182,56 @@ const ClientDetail = () => {
 					margin: '1rem',
 					display: 'flex',
 					flexDirection: 'column',
+					display: 'flex'
 				}}
 			>
+				<ArrowLeftOutlined
+					style={{ fontSize: '1.5rem' }}
+					onClick={handleReturn}
+				/>
 				<div
 					style={{
 						width: '100%',
+						marginTop: '20px',
 						display: 'flex',
-						flexDirection: 'row',
+						flexDirection: 'column',
+						backgroundColor: 'white',
 						justifyContent: 'space-between',
 						alignItems: 'center',
 					}}
 				>
-					<ArrowLeftOutlined
-						style={{ fontSize: '1.5rem' }}
-						onClick={handleReturn}
-					/>
 					<h1
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
+							margin: '15px'
 						}}
 					>
 						{client?.nameClient}
 					</h1>
-					<div></div>
-				</div>
-				<h3
-					style={{
-						textAlign: 'center',
-					}}
-				>
+					<h3
+						style={{
+							textAlign: 'center',
+						}}
+					>
 					Información General
-				</h3>
-				<List>
-					<List.Item>
-						<p>Rif</p>
+					</h3>
+				</div>
+				<List style={{backgroundColor: 'white'}}>
+					<List.Item style={{padding: '10px 25px'}}>
+						<p style={{fontWeight: 'bold'}}>Rif</p>
 						<p>{client?.numberDocument}</p>
 					</List.Item>
-					<List.Item>
-						<p>Teléfono</p>
+					<List.Item style={{padding: '10px 25px'}}>
+						<p style={{fontWeight: 'bold'}}>Teléfono</p>
 						<p>{client?.phone}</p>
 					</List.Item>
-					<List.Item>
-						<p>Estado</p>
+					<List.Item style={{padding: '10px 25px'}}>
+						<p style={{fontWeight: 'bold'}}>Estado</p>
 						<p>{client?.statusName}</p>
 					</List.Item>
-					<List.Item>
-						<p>Dirección</p>
+					<List.Item style={{padding: '10px 25px'}}>
+						<p style={{fontWeight: 'bold'}}>Dirección</p>
 						<p>{client?.address}</p>
 					</List.Item>
 				</List>

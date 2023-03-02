@@ -77,31 +77,31 @@ const OrderDetail = () => {
 				/>
 				<List style={{ width: '100%' }}>
 					<List.Item>
-						<p>Numero de Orden</p>
+						<p style={{fontWeight: 'bold'}}>Numero de Orden</p>
 						<p>{currentOrder.numberOrden}</p>
 					</List.Item>
 					<List.Item>
-						<p>Usuario - Vendedor</p>
+						<p style={{fontWeight: 'bold'}}>Usuario - Vendedor</p>
 						<p>{user.fullname}</p>
 					</List.Item>
 					<List.Item>
-						<p>Estado</p>
+						<p style={{fontWeight: 'bold'}}>Estado</p>
 						<p>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
 					</List.Item>
 					<List.Item>
-						<p>Cliente</p>
+						<p style={{fontWeight: 'bold'}}>Cliente</p>
 						<p>{currentOrder.fullNameClient}</p>
 					</List.Item>
 					<List.Item>
-						<p>Numero de teléfono - Cliente</p>
+						<p style={{fontWeight: 'bold'}}>Numero de teléfono - Cliente</p>
 						<p>{currentOrder.phoneClient}</p>
 					</List.Item>
 					<List.Item>
-						<p>Dirección</p>
+						<p style={{fontWeight: 'bold'}}>Dirección</p>
 						<p>{currentOrder.address}</p>
 					</List.Item>
 					<List.Item>
-						<p>Fecha de creación</p>
+						<p style={{fontWeight: 'bold'}}>Fecha de creación</p>
 						<p>
 							{new Date(
 								currentOrder.fechaEntrega

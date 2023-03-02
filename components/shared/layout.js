@@ -48,6 +48,11 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(ShoppingCartOutlined),
 		},
 		{
+			key: '/dashboard/profile',
+			label: 'Mi perfil',
+			icon: React.createElement(UserOutlined),
+		},
+		{
 			key: '/login',
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),

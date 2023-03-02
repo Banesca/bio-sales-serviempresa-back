@@ -118,7 +118,7 @@ export default function SubCategoriesContainer() {
 			</Row> */}
 			<Title title="Sub Categorías" goBack={false}>
 				{userProfile != PROFILES.BILLER && (
-					<Button type="primary" onClick={handleOpenCreateModal}>
+					<Button type="success" onClick={handleOpenCreateModal}>
 						Agregar
 					</Button>
 				)}

@@ -105,7 +105,7 @@ export default function Users() {
 					<Title title="Usuarios" goBack={false}>
 						{userProfile != PROFILES.BILLER && userProfile != PROFILES.ADMIN && (
 							<Button
-								type="primary"
+								type="success"
 							>
 								<Link
 									href='users/add'

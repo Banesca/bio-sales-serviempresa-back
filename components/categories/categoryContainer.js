@@ -157,7 +157,7 @@ export default function CategoryContainer() {
 			<Title title="Categorías">
 				{userProfile !=
 					PROFILES.BILLER && (
-					<Button type="primary" onClick={handleOpenCreateModal}>
+					<Button type="success" onClick={handleOpenCreateModal}>
 							Agregar
 					</Button>
 				)}
@@ -178,7 +178,7 @@ export default function CategoryContainer() {
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="succes"
 						onClick={handleCreateCategory}
 					>
 						Agregar

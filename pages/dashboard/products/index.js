@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Button, Modal } from 'antd';
+import { Table, Space, Modal } from 'antd';
+import Button from 'antd-button-color';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -226,7 +227,7 @@ export default function Products() {
 						{userProfile != PROFILES.BILLER && (
 							<Button
 								style={{ marginRight: '1rem' }}
-								type="primary"
+								type="success"
 								disabled={userProfile == PROFILES.BILLER}
 								onClick={() =>
 									router.push('/dashboard/products/add')
@@ -236,7 +237,7 @@ export default function Products() {
 							</Button>
 						)}
 						<Button
-							type="primary"
+							type="warning"
 							onClick={() =>
 								router.push('/dashboard/products/import')
 							}

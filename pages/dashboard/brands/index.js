@@ -115,7 +115,7 @@ const BrandsPage = () => {
 					<Title title="Marcas">
 						{userProfile != PROFILES.BILLER && (
 							<Button
-								type="primary"
+								type="success"
 								onClick={handleOpenCreateModal}
 							>
 								Agregar

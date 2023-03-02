@@ -32,38 +32,38 @@ export function CategoriesProvider({ children }) {
 
 	function reducer(state, action) {
 		switch (action.type) {
-			case ACTIONS.SET_CATEGORIES:
-				return {
-					...state,
-					categories: action.payload,
-				};
-			case ACTIONS.SET_CURRENT_CATEGORIES:
-				return {
-					...state,
-					currentCategory: action.payload,
-				};
-			case ACTIONS.SET_SUB_CATEGORIES:
-				return {
-					...state,
-					subCategories: action.payload,
-				};
-			case ACTIONS.SET_CURRENT_SUB_CATEGORIES:
-				return {
-					...state,
-					currentSubCategory: action.payload,
-				};
-			case ACTIONS.SET_LINES:
-				return {
-					...state,
-					lines: action.payload,
-				};
-			case ACTIONS.SET_CURRENT_LINES:
-				return {
-					...state,
-					currentLine: action.payload,
-				};
-			default:
-				return state;
+		case ACTIONS.SET_CATEGORIES:
+			return {
+				...state,
+				categories: action.payload,
+			};
+		case ACTIONS.SET_CURRENT_CATEGORIES:
+			return {
+				...state,
+				currentCategory: action.payload,
+			};
+		case ACTIONS.SET_SUB_CATEGORIES:
+			return {
+				...state,
+				subCategories: action.payload,
+			};
+		case ACTIONS.SET_CURRENT_SUB_CATEGORIES:
+			return {
+				...state,
+				currentSubCategory: action.payload,
+			};
+		case ACTIONS.SET_LINES:
+			return {
+				...state,
+				lines: action.payload,
+			};
+		case ACTIONS.SET_CURRENT_LINES:
+			return {
+				...state,
+				currentLine: action.payload,
+			};
+		default:
+			return state;
 		}
 	}
 

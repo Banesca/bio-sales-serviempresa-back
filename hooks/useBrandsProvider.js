@@ -22,16 +22,16 @@ export function BrandsProvider({ children }) {
 
 	function reducer(state, action) {
 		switch (action.type) {
-			case ACTIONS.SET_BRANDS:
-				return {
-					...state,
-					brands: action.payload,
-				};
-			case ACTIONS.SET_CURRENT_BRANS:
-				return {
-					...state,
-					currentBrand: action.payload,
-				};
+		case ACTIONS.SET_BRANDS:
+			return {
+				...state,
+				brands: action.payload,
+			};
+		case ACTIONS.SET_CURRENT_BRANS:
+			return {
+				...state,
+				currentBrand: action.payload,
+			};
 		}
 	}
 

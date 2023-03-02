@@ -13,6 +13,9 @@ export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest()
 
+	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g
+	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g
+
 	const [form] = Form.useForm();
 
 	const onReset = () => {
@@ -27,7 +30,7 @@ export default function AddClient() {
 	const createClient = async (data) => {
 		setLoading(true);
 		try {
-			await requestHandler.post('/api/v2/client/add', {
+			const res = await requestHandler.post('/api/v2/client/add', {
 				nameClient: data.fullNameClient,
 				phone: data.phoneClient,
 				numberDocument: data.rif,
@@ -110,6 +113,11 @@ export default function AddClient() {
 											message:
 												'Ingresa un numero de teléfono',
 										},
+										{
+											pattern: regexpTlp,
+											message:
+												'Ingresa un numero de telefono valido'
+										}
 									]}
 									labelCol={{
 										md: { span: 10 },
@@ -121,7 +129,7 @@ export default function AddClient() {
 									}}
 									name="phoneClient"
 								>
-									<Input type="number" />
+									<Input type="tel" />
 								</Form.Item>
 							</Col>
 						</Row>
@@ -180,10 +188,15 @@ export default function AddClient() {
 											message:
 												'Ingresa el rif del cliente',
 										},
+										{
+											pattern: regexpRif,
+											message: 
+												'Ingresa un rif valido'
+										}
 									]}
 									name="rif"
 								>
-									<Input type="text" />
+									<Input type="text" placeholder='Formate aceptado: j-12345678-1' />
 								</Form.Item>
 							</Col>
 						</Row>
@@ -216,7 +229,7 @@ export default function AddClient() {
 								md={{ span: 7, offset: 5 }}
 							>
 								<Form.Item>
-									<Button block onClick={onReset}>
+									<Button block onClick={onReset} type='primary' >
 										Limpiar
 									</Button>
 								</Form.Item>
@@ -230,7 +243,7 @@ export default function AddClient() {
 								<Form.Item>
 									<Button
 										htmlType="submit"
-										type="primary"
+										type="success"
 										block
 									>
 										Agregar

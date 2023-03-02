@@ -17,6 +17,9 @@ import { GeneralContext } from '../../_app';
 import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
+import Title from '../../../components/shared/title';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
+
 
 const ImportProducts = () => {
 	const columns = [
@@ -91,7 +94,7 @@ const ImportProducts = () => {
 			key: 8,
 			render: (product, index) => (
 				<Button type="primary" onClick={() => confirmDelete(product)} danger>
-					<DeleteOutlined  />
+					<DeleteOutlined />
 				</Button>
 			),
 		},
@@ -106,9 +109,7 @@ const ImportProducts = () => {
 			okType: 'danger',
 			cancelText: 'Cancelar',
 			onOk() {
-				const filteredProducts = data.filter(
-					(p) => p.key !== product.key
-				);
+				const filteredProducts = data.filter((p) => p.key !== product.key);
 				setData(filteredProducts);
 			},
 			onCancel() {},
@@ -126,12 +127,12 @@ const ImportProducts = () => {
 	};
 
 	const handleDelete = () => {
-		const filteredProducts = data.filter(
-			(p) => p.code !== currentProduct.code
-		);
+		const filteredProducts = data.filter((p) => p.code !== currentProduct.code);
 		setData(filteredProducts);
 		handleSeeModal();
 	};
+
+	// Title
 
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
@@ -308,12 +309,9 @@ const ImportProducts = () => {
 		const formatData = removeKeys(data);
 
 		setLoading(true);
-		const res = await requestHandler.post(
-			'/api/v2/product/add/masive/sales',
-			{
-				lista: formatData,
-			}
-		);
+		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
+			lista: formatData,
+		});
 		if (res.isLeft()) {
 			return message.error('Ha ocurrido un error');
 		}
@@ -334,6 +332,8 @@ const ImportProducts = () => {
 	return (
 		<>
 			<DashboardLayout>
+				<Title title="Importar">
+				</Title>
 				<div
 					style={{
 						margin: '1rem',
@@ -349,7 +349,7 @@ const ImportProducts = () => {
 								type="primary"
 								style={{ marginRight: '1rem' }}
 							>
-								Cargar
+                Cargar
 							</Button>
 						</Col>
 						<Col>
@@ -361,7 +361,7 @@ const ImportProducts = () => {
 								type="file"
 							>
 								<Button icon={<UploadOutlined />} block>
-									Archivo
+                  Archivo
 								</Button>
 							</Upload>
 						</Col>
@@ -391,18 +391,18 @@ const ImportProducts = () => {
 							key="confirmar"
 							type="primary"
 						>
-							Confirmar
+              Confirmar
 						</Button>,
 					]}
 				>
 					<p>
-						Algunos productos no han sido cargados, ya que, hay
-						categorías y/o marcas que no están registradas, créalas
-						para cargar todos los productos.
+            Algunos productos no han sido cargados, ya que, hay categorías y/o
+            marcas que no están registradas, créalas para cargar todos los
+            productos.
 					</p>
 					{rejectedCategories && (
 						<p>
-							Crea las siguientes categorías{' '}
+              Crea las siguientes categorías{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedCategories.join(', ')}
 							</strong>
@@ -410,7 +410,7 @@ const ImportProducts = () => {
 					)}
 					{rejectedBrands && (
 						<p>
-							Crea las siguientes marcas{' '}
+              Crea las siguientes marcas{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedBrands.join(', ')}
 							</strong>

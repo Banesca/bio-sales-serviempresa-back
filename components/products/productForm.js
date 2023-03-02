@@ -396,7 +396,7 @@ const ProductForm = (props) => {
 							md={{ span: 12 }}
 						>
 							<Form.Item
-								label="Linea"
+								label="Línea"
 								name="idLineFk"
 								style={{
 									padding: '0 .5rem',
@@ -863,7 +863,7 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 5 }}
 						>
 							<Form.Item>
-								<Button block onClick={onReset}>
+								<Button block onClick={onReset} type='primary' >
 									Limpiar
 								</Button>
 							</Form.Item>
@@ -875,7 +875,7 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 5 }}
 						>
 							<Form.Item>
-								<Button htmlType="submit" type="primary" block>
+								<Button htmlType="submit" type="succes" block>
 									{props.update ? 'Actualizar' : 'Agregar'}
 								</Button>
 							</Form.Item>

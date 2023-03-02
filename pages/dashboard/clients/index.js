@@ -48,7 +48,7 @@ export default function ClientsPage() {
 				<Space size="middle">
 					<Button
 						type="primary"
-						onClick={() => router.push(`clients/${_.idClient}`)}
+						onClick={() => router.push(`clients/${index.idClient}`)}
 					>
 						<EyeTwoTone />
 					</Button>
@@ -145,7 +145,7 @@ export default function ClientsPage() {
 			>
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="primary">Agregar</Button>
+						<Button type="success">Agregar</Button>
 					</Link>
 				</Title>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
@@ -184,11 +184,11 @@ export default function ClientsPage() {
 											<Input type="text" />
 										</Form.Item>
 									</Col>
-									{/* <Col span={12}>
+									<Col span={12}>
 										<Form.Item name="rif" label="Rif">
 											<Input type="text" />
 										</Form.Item>
-									</Col> */}
+									</Col>
 								</Row>
 								<Row>
 									<Col span={12}>

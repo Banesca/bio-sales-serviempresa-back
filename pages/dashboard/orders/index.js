@@ -109,7 +109,7 @@ export default function OrdersPage() {
 							display: 'flex',
 						}}
 					>
-						<Button type="primary">
+						<Button type="success">
 							<Link href="orders/add">Agregar</Link>
 						</Button>
 					</Col>

@@ -105,6 +105,7 @@ const UserDetail = () => {
 			setProfile(
 				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
 			);
+			console.log(user)
 			if (user.idProfileFk === 3) {
 				await getSellerClientsRequest(user.idUser);
 			}

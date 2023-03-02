@@ -232,14 +232,14 @@ const AddOrderForm = (props) => {
 									offset: 8,
 								}}
 							>
-								<Button block onClick={onReset}>
+								<Button type='primary' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>
 						</Col>
 						<Col span={12}>
 							<Form.Item wrapperCol={{ span: 12, offset: 12 }}>
-								<Button htmlType="submit" type="primary" block>
+								<Button htmlType="submit" type="succes" block>
 									Agregar
 								</Button>
 							</Form.Item>

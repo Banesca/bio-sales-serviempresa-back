@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/style.css'
 import { createContext, useEffect, useState } from 'react';
 
 import { ConfigProvider, theme } from 'antd';

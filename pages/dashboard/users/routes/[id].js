@@ -183,7 +183,7 @@ export default function Routes() {
 					path={`/dashboard/users/${id}`}
 					goBack={true}
 				>
-					<Button type="primary" onClick={() => setIsModalOpen(true)}>
+					<Button type="success" onClick={() => setIsModalOpen(true)}>
 						Agregar
 					</Button>
 				</Title>
