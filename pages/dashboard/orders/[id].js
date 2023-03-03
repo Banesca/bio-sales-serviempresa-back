@@ -70,12 +70,12 @@ const OrderDetail = () => {
 				}}
 			>
 				<Title title="Información General" path="/dashboard/orders" />
-				<ChangeOrderStatus
-					status={currentOrder.idStatusOrder}
-					orderId={id}
-					handleChangeStatus={handleChangeStatus}
-				/>
-				<List style={{ width: '100%' }}>
+				<List style={{ width: '100%', padding: '10px 15px', backgroundColor: 'white', marginBottom: '25px'}}>
+					<ChangeOrderStatus
+						status={currentOrder.idStatusOrder}
+						orderId={id}
+						handleChangeStatus={handleChangeStatus}
+					/>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Numero de Orden</p>
 						<p>{currentOrder.numberOrden}</p>

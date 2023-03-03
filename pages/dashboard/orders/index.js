@@ -12,6 +12,7 @@ import { message } from 'antd';
 import OrdersTable from '../../../components/orders/ordersTable';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
+import Title from '../../../components/shared/title';
 
 export const orderStatusToUse = {
 	1: 'Recibido',
@@ -89,31 +90,11 @@ export default function OrdersPage() {
 					flexDirection: 'column',
 				}}
 			>
-				<Row style={{ alignItems: 'center' }}>
-					<Col offset={6} span={12}>
-						<Typography>
-							<h1
-								style={{
-									textAlign: 'center',
-									fontSize: '2rem',
-								}}
-							>
-								Pedidos
-							</h1>
-						</Typography>
-					</Col>
-					<Col
-						span={6}
-						style={{
-							justifyContent: 'center',
-							display: 'flex',
-						}}
-					>
-						<Button type="success">
-							<Link href="orders/add">Agregar</Link>
-						</Button>
-					</Col>
-				</Row>
+				<Title title={'Pedidos'}>
+					<Button type="success">
+						<Link href="orders/add">Agregar</Link>
+					</Button>
+				</Title>
 				<OrdersFilters
 					setQuery={setQuery}
 					getOrdersRequest={getOrdersRequest}

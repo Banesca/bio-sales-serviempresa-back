@@ -77,7 +77,7 @@ export default function ChangeOrderStatus({
 												statusNames['En Proceso']
 											)
 										}
-										type="primary"
+										type="warning"
 									>
 										Procesar
 									</Button>
@@ -102,7 +102,7 @@ export default function ChangeOrderStatus({
 												statusNames.Facturado
 											)
 										}
-										type="primary"
+										type="warning"
 									>
 										Facturar
 									</Button>
@@ -116,7 +116,7 @@ export default function ChangeOrderStatus({
 												statusNames['En Proceso']
 											)
 										}
-										type="primary"
+										type="warning"
 									>
 										Procesar
 									</Button>

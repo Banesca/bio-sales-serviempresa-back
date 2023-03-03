@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal } from 'antd';
+import { Table, Space, Modal, ConfigProvider } from 'antd';
 import Button from 'antd-button-color';
 import {
 	CheckCircleOutlined,
@@ -27,6 +27,7 @@ import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
+import Empty from 'antd';
 
 export default function Products() {
 	const router = useRouter();
@@ -213,6 +214,22 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<>
 			<DashboardLayout>
@@ -245,14 +262,15 @@ export default function Products() {
 							Importar
 						</Button>
 					</Title>
-					{userProfile == PROFILES.MASTER && <SelectBusiness />}
 					<ProductFilter setQuery={setQuery} clean={clean} />
-					<Table
-						style={{ overflowX: 'scroll' }}
-						columns={columns}
-						dataSource={filtered()}
-						loading={loading}
-					/>
+					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+						<Table
+							style={{ overflowX: 'scroll' }}
+							columns={columns}
+							dataSource={filtered()}
+							loading={loading}
+						/>
+					</ConfigProvider>
 				</div>
 				<Modal
 					title="Eliminar"

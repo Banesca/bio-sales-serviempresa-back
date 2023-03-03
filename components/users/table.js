@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Space, Button, Table, Modal } from 'antd';
+import { Space, Button, Table, Modal, ConfigProvider, Empty } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
@@ -89,15 +89,34 @@ const UsersTable = ({
 		}
 	}, [users]);
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<div>
-			<Table
-				columns={columns}
-				dataSource={users}
-				loading={loading}
-				style={{ overflowX: 'scroll' }}
-				//onChange={(some) => setPage(some.current)}
-			/>
+			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<Table
+					columns={columns}
+					dataSource={users}
+					loading={loading}
+					style={{ overflowX: 'scroll' }}
+					//onChange={(some) => setPage(some.current)}
+				/>
+			</ConfigProvider>
+
 			<Modal
 				title={'Detail'}
 				open={isModalOpen}

@@ -1,4 +1,4 @@
-import { Button, Table } from 'antd';
+import { Button, ConfigProvider, Empty, Table } from 'antd';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Space } from 'antd';
 import { EyeTwoTone } from '@ant-design/icons';
@@ -121,5 +121,26 @@ export default function OrdersTable({ orders }) {
 		},
 	];
 
-	return <Table columns={columns} dataSource={orders} loading={loading} />;
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
+	return (
+		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<Table columns={columns} dataSource={orders} loading={loading} />
+		</ConfigProvider>
+
+	)
 }

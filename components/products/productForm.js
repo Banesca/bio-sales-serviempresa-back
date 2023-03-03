@@ -875,7 +875,7 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 5 }}
 						>
 							<Form.Item>
-								<Button htmlType="submit" type="succes" block>
+								<Button htmlType="submit" type="success" block>
 									{props.update ? 'Actualizar' : 'Agregar'}
 								</Button>
 							</Form.Item>

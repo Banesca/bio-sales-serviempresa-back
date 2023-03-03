@@ -7,7 +7,7 @@ import {
 	ExclamationCircleFilled,
 	UploadOutlined,
 } from '@ant-design/icons';
-import { Upload, Button, Table, message, Row, Col, Modal } from 'antd';
+import { Upload, Button, Table, message, Row, Col, Modal, ConfigProvider, Empty } from 'antd';
 import * as XLSX from 'xlsx';
 
 import DashboardLayout from '../../../components/shared/layout';
@@ -19,7 +19,7 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
-
+import { SmileOutlined } from '@ant-design/icons';
 
 const ImportProducts = () => {
 	const columns = [
@@ -329,11 +329,25 @@ const ImportProducts = () => {
 		}
 	}, [rejectedBrands, rejectedCategories]);
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<>
 			<DashboardLayout>
-				<Title title="Importar">
-				</Title>
 				<div
 					style={{
 						margin: '1rem',
@@ -341,6 +355,8 @@ const ImportProducts = () => {
 						flexDirection: 'column',
 					}}
 				>
+					<Title title="Importar">
+					</Title>
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
 							<Button
@@ -366,11 +382,14 @@ const ImportProducts = () => {
 							</Upload>
 						</Col>
 					</Row>
-					<Table
-						columns={columns}
-						dataSource={data}
-						style={{ overflowX: 'scroll' }}
-					/>
+					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+						<Table
+							columns={columns}
+							dataSource={data}
+							style={{ overflowX: 'scroll' }}
+							renderEmpty={customizeRenderEmpty}
+						/>
+					</ConfigProvider>
 				</div>
 				<Modal
 					title="Eliminar"

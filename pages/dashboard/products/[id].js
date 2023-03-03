@@ -146,7 +146,7 @@ const Product = () => {
 				}}
 			>
 				<Title title="Detalles" path="/dashboard/products" />
-				<List style={{ width: '100%' }}>
+				<List style={{ width: '100%', backgroundColor: 'white', padding: '10px 25px' }}>
 					<List.Item>
 						<p>Nombre</p>
 						<p>{currentProduct?.nameProduct}</p>

@@ -2,10 +2,14 @@ import { Button, Input, Select, Col, Form, Collapse, Row } from 'antd';
 
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../hooks/useBrandsProvider';
+import { PROFILES } from '../shared/profiles';
+import SelectBusiness from '../business/selectBusiness';
+import { useAuthContext } from '../../context/useUserProfileProvider';
 
 const ProductFilter = ({ setQuery, clean }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
+	const { userProfile } = useAuthContext();
 
 	const [form] = Form.useForm();
 
@@ -37,6 +41,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 						name="productFilters"
 						onFinish={onSubmit}
 					>
+						{userProfile == PROFILES.MASTER && <SelectBusiness />}
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item

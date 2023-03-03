@@ -239,7 +239,7 @@ const AddOrderForm = (props) => {
 						</Col>
 						<Col span={12}>
 							<Form.Item wrapperCol={{ span: 12, offset: 12 }}>
-								<Button htmlType="submit" type="succes" block>
+								<Button htmlType="submit" type="success" block>
 									Agregar
 								</Button>
 							</Form.Item>

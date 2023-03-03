@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../../components/shared/layout';
 import Title from '../../../../components/shared/title';
-import { Button, Table } from 'antd';
+import { Button, ConfigProvider, Empty, Table } from 'antd';
 import { useUser } from '../../../../components/users/hooks/useUser';
 import { message } from 'antd';
 import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
@@ -167,6 +167,22 @@ export default function Routes() {
 		});
 	};
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<DashboardLayout>
 			<div
@@ -196,11 +212,14 @@ export default function Routes() {
 						></DatePicker.RangePicker>
 					</Form.Item>
 				</Form>
-				<Table
-					columns={columns}
-					style={{ width: '100%' }}
-					dataSource={routes}
-				/>
+				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<Table
+						columns={columns}
+						style={{ width: '100%' }}
+						dataSource={routes}
+					/>
+				</ConfigProvider>
+
 			</div>
 			<Modal
 				title="Agregar Ruta"

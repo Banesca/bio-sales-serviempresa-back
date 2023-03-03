@@ -293,15 +293,15 @@ const UserDetail = () => {
 							marginBottom: '1rem',
 						}}
 					>
-						<List.Item>
+						<List.Item style={{padding: '10px 25px'}}>
 							<p>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
-						<List.Item>
+						<List.Item style={{padding: '10px 25px'}}>
 							<p>Email</p>
 							<p>{user?.mail}</p>
 						</List.Item>
-						<List.Item>
+						<List.Item style={{padding: '10px 25px'}}>
 							<p>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>

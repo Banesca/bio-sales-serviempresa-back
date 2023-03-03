@@ -3,7 +3,7 @@ import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/shared/loading';
-import { Button, Col, Row, Table, message } from 'antd';
+import { Button, Col, Row, Table, message, ConfigProvider, Empty } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
@@ -102,6 +102,22 @@ const BrandsPage = () => {
 		return list;
 	}, [brands, query]);
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<>
 			<DashboardLayout>
@@ -122,15 +138,18 @@ const BrandsPage = () => {
 							</Button>
 						)}
 					</Title>
-					<BrandsFilters setQuery={setQuery} />
-					<Table bordered dataSource={brandsList} columns={columns} />
-					<BrandsModals
-						isCreateModalOpen={isCreateModalOpen}
-						isDeleteModalOpen={isDeleteModalOpen}
-						setIsCreateModalOpen={setIsCreateModalOpen}
-						setIsDeleteModalOpen={setIsDeleteModalOpen}
-						selectedBrand={selectedBrand}
-					/>
+					<ConfigProvider renderEmpty={customizeRenderEmpty}> 
+						<BrandsFilters setQuery={setQuery} />
+						<Table bordered dataSource={brandsList} columns={columns} />
+						<BrandsModals
+							isCreateModalOpen={isCreateModalOpen}
+							isDeleteModalOpen={isDeleteModalOpen}
+							setIsCreateModalOpen={setIsCreateModalOpen}
+							setIsDeleteModalOpen={setIsDeleteModalOpen}
+							selectedBrand={selectedBrand}
+						/>
+					</ConfigProvider>
+
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Input, Table } from 'antd';
+import { ConfigProvider, Empty, Input, Table } from 'antd';
 import { Modal } from 'antd';
 import { Form } from 'antd';
 import { Button, Col, Row } from 'antd';
@@ -152,6 +152,22 @@ export default function CategoryContainer() {
 	}, [categories, query, addCategory, deleteCategory]);
 	// End Search
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<>
 			<Title title="Categorías">
@@ -163,7 +179,11 @@ export default function CategoryContainer() {
 				)}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
-			<Table bordered dataSource={categoriesList} columns={columns} />
+			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+
+				<Table bordered dataSource={categoriesList} columns={columns} />
+			</ConfigProvider>
+
 			<Modal
 				title="Agregar"
 				open={isCreateModalOpen}
@@ -178,7 +198,7 @@ export default function CategoryContainer() {
 					</Button>,
 					<Button
 						key="delete"
-						type="succes"
+						type="success"
 						onClick={handleCreateCategory}
 					>
 						Agregar

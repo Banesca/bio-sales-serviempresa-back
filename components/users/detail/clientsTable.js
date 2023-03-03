@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Table } from 'antd';
+import { Button, ConfigProvider, Empty, Table } from 'antd';
 
 export default function UserClientsTable({
 	clients,
@@ -34,11 +34,30 @@ export default function UserClientsTable({
 		setConfirmDelete(true);
 	};
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
-		<Table
-			style={{ width: '100%' }}
-			columns={clientColumns}
-			dataSource={clients}
-		/>
+		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<Table
+				style={{ width: '100%' }}
+				columns={clientColumns}
+				dataSource={clients}
+			/>
+		</ConfigProvider>
+
 	);
 }
