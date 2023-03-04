@@ -14,8 +14,18 @@ export default function useClients() {
 		setClients(res.value.getValue().response);
 	}
 
+	const deleteClient = async (idClient) => {
+		const res = await requestHandler.delete(`/api/v2/client/delete/:${idClient}`)
+		console.log('cliente eliminado')
+		if (res.isLeft()) {
+			throw res.value.getErrorValue()
+		}
+		await listClients()
+	}
+
 	return {
 		clients,
-		listClients
+		listClients,
+		deleteClient
 	}
 }

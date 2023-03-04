@@ -118,7 +118,12 @@ export function useUser() {
 			idProfileFk: data.idProfileFk,
 			idUser: id,
 		});
-		if (res.isLeft()) {
+		const rest = await requestHandler.put('/api/v2/user/edit/pass', {
+			pin: data.pin,
+			idUser: id
+		});
+		console.log('actualizado')
+		if (res.isLeft() && rest.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 	};

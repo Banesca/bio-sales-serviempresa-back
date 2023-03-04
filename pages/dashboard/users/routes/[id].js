@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../../components/shared/layout';
 import Title from '../../../../components/shared/title';
-import { Button, ConfigProvider, Empty, Table } from 'antd';
+import { Button, Collapse, ConfigProvider, Empty, Table } from 'antd';
 import { useUser } from '../../../../components/users/hooks/useUser';
 import { message } from 'antd';
 import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
@@ -203,15 +203,19 @@ export default function Routes() {
 						Agregar
 					</Button>
 				</Title>
-				<Form>
-					<Form.Item>
-						<DatePicker.RangePicker
-							placeholder={['Fecha inicial', 'Fecha final']}
-							allowEmpty={[false, false]}
-							onChange={handleFilterRoutes}
-						></DatePicker.RangePicker>
-					</Form.Item>
-				</Form>
+				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
+					<Collapse.Panel header="Filtros" >
+						<Form style={{display: 'flex', justifyContent: 'center'}}>
+							<Form.Item>
+								<DatePicker.RangePicker
+									placeholder={['Fecha inicial', 'Fecha final']}
+									allowEmpty={[false, false]}
+									onChange={handleFilterRoutes}
+								></DatePicker.RangePicker>
+							</Form.Item>
+						</Form>
+					</Collapse.Panel>
+				</Collapse>
 				<ConfigProvider renderEmpty={customizeRenderEmpty}>
 					<Table
 						columns={columns}

@@ -9,6 +9,8 @@ import {
 	Modal,
 	Table,
 	Form,
+	ConfigProvider,
+	Empty,
 } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
@@ -52,13 +54,52 @@ export default function ClientsPage() {
 					>
 						<EyeTwoTone />
 					</Button>
-					<Button type="primary" danger>
+					<Button
+						type="primary"
+						danger
+						onClick={() => handleOpenDeleteModal(index)}
+					>
 						<DeleteOutlined />
 					</Button>
 				</Space>
 			),
 		},
 	];
+
+	const [currentClient, setCurrentClient] = useState();
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+
+	const handleOpenDeleteModal = (client) => {
+		setCurrentClient(client);
+		setDeleteModalOpen(true);
+	};
+
+	const handleCloseModal = async (bool) => {
+		setLoading(true);
+		if (!bool) {
+			setLoading(false);
+			setDeleteModalOpen(false);
+			return;
+		}
+		setDeleteModalOpen(false);
+		await handleDelete(currentClient.nameClient, currentClient.idClient);
+	};
+
+	const handleDelete = async (name, id) => {
+		try {
+			await deleteClient(id);
+			console.log(id);
+			message.success(`El usuario ${name} ha sido eliminado`);
+		} catch (error) {
+			message.error('Error al eliminar cliente');
+		} finally {
+			setLoading(false)
+		}
+	};
+
+
+
 
 	const router = useRouter();
 
@@ -68,7 +109,7 @@ export default function ClientsPage() {
 
 	// clients
 	// const [clients, setClients] = useState([]);
-	const { clients, listClients } = useClients();
+	const { clients, listClients, deleteClient } = useClients();
 	const [query, setQuery] = useState({
 		nameClient: '',
 		phone: '',
@@ -133,6 +174,22 @@ export default function ClientsPage() {
 			address: values.address || '',
 		});
 	};
+
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
 
 	return (
 		<DashboardLayout>
@@ -224,7 +281,9 @@ export default function ClientsPage() {
 						</Row>
 					</Collapse.Panel>
 				</Collapse>
-				<Table columns={columns} dataSource={clientsList} />
+				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<Table columns={columns} dataSource={clientsList} />
+				</ConfigProvider>
 			</div>
 			<Modal
 				title={'Detail'}
@@ -236,6 +295,32 @@ export default function ClientsPage() {
 				<p>Some contents...</p>
 				<p>Some contents...</p>
 			</Modal>
+			<Modal
+				title="Eliminar"
+				open={deleteModalOpen}
+				onOk={() => handleCloseModal(true)}
+				onCancel={() => handleCloseModal(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => handleCloseModal(false)}
+					>
+							Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						danger
+						type="primary"
+						onClick={() => handleCloseModal(true)}
+					>
+							Eliminar
+					</Button>,
+				]}
+			>
+				<p>
+					Estas seguro de que deseas eliminar a {`${currentClient?.nameClient}`}
+				</p>
+			</Modal>						
 			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);

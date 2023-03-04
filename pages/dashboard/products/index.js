@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider } from 'antd';
+import { Table, Space, Modal, ConfigProvider, Empty } from 'antd';
 import Button from 'antd-button-color';
 import {
 	CheckCircleOutlined,
@@ -27,7 +27,6 @@ import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
-import Empty from 'antd';
 
 export default function Products() {
 	const router = useRouter();
@@ -226,7 +225,7 @@ export default function Products() {
 				</span>
 			}
 		>
-			
+
 		</Empty>
 	);
 

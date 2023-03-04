@@ -12,6 +12,8 @@ export const INITIAL_QUERY_VALUES = {
 	idBrandFk: '',
 };
 
+
+
 const FILTER_ACTIONS = {
 	SEARCH: 'search',
 	CLEAR: 'clear',

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { Button, Col, Row, message, Typography } from 'antd';
+import { Col, Row, message, Typography, Button } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import { useRequest } from '../../../../hooks/useRequest';
@@ -239,7 +239,7 @@ const UpdateOrderPage = () => {
 					<div>
 						<Button
 							onClick={() => setIsCloseOrderModal(true)}
-							type="primary"
+							type="warning"
 							style={{ marginRight: '1rem' }}
 							disabled={!currentOrder?.body}
 						>

@@ -84,6 +84,7 @@ export default function Users() {
 	const handleDelete = async (idUser, name) => {
 		try {
 			await deleteUser(idUser);
+			console.log(idUser)
 			message.success(`El usuario ${name} ha sido eliminado`);
 		} catch (error) {
 			message.error('Error al eliminar usuario');

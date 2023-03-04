@@ -15,25 +15,20 @@ import { useRequest } from '../../../hooks/useRequest';
 
 const UserDetail = () => {
 
-	const { userProfile } = useAuthContext();
 	const { requestHandler } = useRequest()
 
 
 	const { loading, setLoading } = useLoadingContext();
 	const {
-		sellerClients,
 		getUserById,
-		getSellerClients,
 	} = useUser();
 
-	const { clients, listClients } = useClients();
 
 	const [user, setUser] = useState({});
 
 	const [profile, setProfile] = useState();
 
 	// assign clients
-	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
 
 
 	// Assign Business
@@ -44,17 +39,6 @@ const UserDetail = () => {
 	const generalContext = useContext(GeneralContext);
 
 
-	const getSellerClientsRequest = async (id) => {
-		setLoading(true);
-		try {
-			await getSellerClients(id);
-		} catch (error) {
-			message.error('Ha ocurrido un error');
-		} finally {
-			setLoading(false);
-		}
-	};
-
 
 
 	const getUserRequest = async (id) => {
@@ -63,13 +47,12 @@ const UserDetail = () => {
 		try {
 			const user = await getUserById(loggedUser);
 			if (!user) {
-				return message.error('Usuario no encontrado');
+				return message.error('Hay algun error con tu perfil');
 			}
 			setUser(user);
 			setProfile(
 				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
 			);
-			console.log(user)
 			if (user.idProfileFk === 3) {
 				await getSellerClientsRequest(user.idUser);
 			}
@@ -94,7 +77,6 @@ const UserDetail = () => {
 		pin: user.pin || '',
 	});
 
-
 	const handleChange = (e) => {
 		setUserData((prevData) => ({
 			...prevData,
@@ -102,12 +84,13 @@ const UserDetail = () => {
 		}));
 	};
 
+
 	const onSubmit = async (data) => {
 		setLoading(true);
 		try {
 			const id = window.localStorage.getItem('userId')
 			await requestHandler.put('/api/v2/user/edit/pass', {
-				pin: data.pin,
+				pin: data,
 				idUser: id
 			})
 			message.success('Contraseña actualizada');
@@ -118,7 +101,7 @@ const UserDetail = () => {
 		}
 	};
 
-	const handleOpenModal = (data) => {
+	const handleOpenModal = () => {
 		setIsModalOpen(true);
 	};
 
@@ -130,6 +113,7 @@ const UserDetail = () => {
 			return;
 		}
 	};
+
 
 	const finishForm = async (values) => {
 		await handleCloseModal(true)
@@ -167,19 +151,19 @@ const UserDetail = () => {
 						}}
 					>
 						<List.Item style={{padding: '10px 25px'}}>
-							<p>Nombre</p>
+							<p style={{fontWeight: 'bold'}}>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
 						<List.Item style={{padding: '10px 25px'}}>
-							<p>Email</p>
+							<p style={{fontWeight: 'bold'}}>Email</p>
 							<p>{user?.mail}</p>
 						</List.Item >
 						<List.Item style={{padding: '10px 25px'}}>
-							<p>Perfil</p>
+							<p style={{fontWeight: 'bold'}}>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 25px'}}>
-							<Button type='primary' ghost
+						<List.Item style={{padding: '10px 10px'}}>
+							<Button type='link' style={{fontWeight: 'bold'}}
 								onClick={() => {
 									handleOpenModal();
 								}}
@@ -200,23 +184,23 @@ const UserDetail = () => {
 								<Button
 									type="primary"
 									key="delete"
-									onClick={finishForm}
+									onClick={() => finishForm(userData)}
 								>
 							Guardar
 								</Button>,
 							]}
 						>
 							<List.Item>
-								<h4>Ingresa una contraseña nueva</h4>
+								<h4 style={{marginLeft: '0'}}>Ingresa una nueva contraseña</h4>
 								<Form 
 									name="login"
 									autoComplete="off"
 									labelCol={{ span: 8 }}
 									form={form}
 									initialValues={{
-										pin: userData.pin,
+										pin: '',
 									}}
-									onFinish={finishForm}
+									onFinish={onSubmit}
 								>
 									
 									<Form.Item
@@ -265,7 +249,6 @@ const UserDetail = () => {
 											type="password"
 											name="Repit"
 											value={userData.pin}
-											onChange={handleChange}
 										/>
 									</Form.Item>
 								</Form>

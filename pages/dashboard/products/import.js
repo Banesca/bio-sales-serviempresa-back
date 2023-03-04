@@ -387,7 +387,6 @@ const ImportProducts = () => {
 							columns={columns}
 							dataSource={data}
 							style={{ overflowX: 'scroll' }}
-							renderEmpty={customizeRenderEmpty}
 						/>
 					</ConfigProvider>
 				</div>

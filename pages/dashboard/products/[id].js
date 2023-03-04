@@ -167,10 +167,10 @@ const Product = () => {
 						<p>Sub Categoría</p>
 						<p>{currentSubCategory?.nameSubFamily}</p>
 					</List.Item>
-					{currentLine.name && (
+					{currentLine?.name && (
 						<List.Item>
 							<p>Linea</p>
-							<p>{currentLine.name}</p>
+							<p>{currentLine?.name}</p>
 						</List.Item>
 					)}
 					<List.Item>

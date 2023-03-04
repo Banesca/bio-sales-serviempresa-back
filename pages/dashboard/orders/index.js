@@ -15,10 +15,11 @@ import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
 
 export const orderStatusToUse = {
-	1: 'Recibido',
-	2: 'Facturado',
-	3: 'En Proceso',
-	4: 'Retenido',
+	1: '1Recibido',
+	2: '2Facturado',
+	3: '3En Proceso',
+	4: '4Detenido',
+	5: '5Retenido'
 };
 
 export default function OrdersPage() {

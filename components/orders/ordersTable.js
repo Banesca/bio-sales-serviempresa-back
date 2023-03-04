@@ -92,11 +92,17 @@ export default function OrdersTable({ orders }) {
 					);
 				case 3:
 					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+						<p style={{ color: '#43FAFF', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
+					return (
+						<p style={{ color: '#FEE036', fontWeight: 'bold' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
+				case 5:
 					return (
 						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}

@@ -1,5 +1,5 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Input, Table } from 'antd';
+import { Button, ConfigProvider, Empty, Input, Table } from 'antd';
 import { Space } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -93,13 +93,29 @@ export default function ProductsInOrder({
 
 	const { loading } = useLoadingContext();
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+
+		</Empty>
+	);
+
 	return (
-		<>
+		<ConfigProvider renderEmpty={customizeRenderEmpty}>
 			<Table
 				columns={orderColumns}
 				loading={loading}
 				dataSource={productList}
 			/>
-		</>
+		</ConfigProvider>
 	);
 }

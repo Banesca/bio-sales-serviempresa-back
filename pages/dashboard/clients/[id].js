@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { Button, List, Table } from 'antd';
+import { Button, ConfigProvider, Empty, List, Table } from 'antd';
 import { ArrowLeftOutlined, EyeTwoTone } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/shared/layout';
@@ -78,7 +78,7 @@ const ClientDetail = () => {
 					);
 				case 3:
 					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+						<p style={{ color: '#43FAFF', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
@@ -175,6 +175,22 @@ const ClientDetail = () => {
 		}
 	}, [client]);
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+			
+		</Empty>
+	);
+
 	return (
 		<DashboardLayout>
 			<div
@@ -242,11 +258,14 @@ const ClientDetail = () => {
 				>
 					Pedidos
 				</h3>
-				<Table
-					loading={loading}
-					columns={columns}
-					dataSource={orders}
-				/>
+				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<Table
+						loading={loading}
+						columns={columns}
+						dataSource={orders}
+					/>
+				</ConfigProvider>
+
 			</div>
 			<Loading isLoading={loading} />
 		</DashboardLayout>

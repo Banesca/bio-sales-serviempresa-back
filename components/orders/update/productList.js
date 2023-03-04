@@ -1,4 +1,4 @@
-import { Button, Space } from 'antd';
+import { Button, ConfigProvider, Empty, Space } from 'antd';
 import { Table } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useRequest } from '../../../hooks/useRequest';
@@ -36,7 +36,7 @@ export default function ProductList({
 			render: (text, record) => (
 				<Space>
 					<Button
-						type="primary"
+						type="success"
 						onClick={() => handleAddProduct(record)}
 					>
 						Agregar
@@ -133,7 +133,26 @@ export default function ProductList({
 	useEffect(() => {
 	}, [products]);
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+
+		</Empty>
+	);
+
 	return (
-		<Table dataSource={products} columns={AddColumns} loading={loading} />
+		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<Table dataSource={products} columns={AddColumns} loading={loading} />
+		</ConfigProvider>
+
 	);
 }
