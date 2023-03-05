@@ -24,7 +24,7 @@ export function useOrders() {
 		setOrders(value);
 	};
 
-	const setProductsQuantity = (value, index) => {
+	const setProductsQuantity = async (value, index) => {
 		let obj = currentOrder;
 		obj.body[index].weight = value;
 		setCurrentOrder({ ...obj });

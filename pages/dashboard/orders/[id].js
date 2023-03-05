@@ -1,7 +1,7 @@
 import DashboardLayout from '../../../components/shared/layout';
 import { List, message } from 'antd';
 import Loading from '../../../components/shared/loading';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GeneralContext } from '../../_app';
 import { orderStatusToUse } from '.';
@@ -19,6 +19,7 @@ const OrderDetail = () => {
 
 	const generalContext = useContext(GeneralContext);
 
+	
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -29,7 +30,25 @@ const OrderDetail = () => {
 			setLoading(false);
 		}
 	};
-
+	
+	const getStatus = () => {
+		let status = currentOrder.idStatusOrder;
+		let color = '';
+		console.log(status);
+		if(status == 2) {
+			color = '#00b894';
+		} else if (status == 3) {
+			color = '#43FAFF';
+		} else if (status == 4) {
+			color = '#0984e3';
+		} else if (status == 5) {
+			color = '#d63031';
+		} else {
+			color = '#969696';
+		}
+		console.log(color);
+		return color;
+	};
 	const handleChangeStatus = async (status) => {
 		setLoading(true);
 		try {
@@ -48,6 +67,7 @@ const OrderDetail = () => {
 			getOrderRequest(id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	
 	}, [generalContext, id]);
 
 	if (loading || !currentOrder) {
@@ -57,6 +77,7 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
+
 
 	return (
 		<DashboardLayout>
@@ -86,7 +107,7 @@ const OrderDetail = () => {
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Estado</p>
-						<p>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
+						<p style={{color: `${getStatus()}`, fontWeight: 'bold'}}>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Cliente</p>

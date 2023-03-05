@@ -10,8 +10,9 @@ import { useRouter } from 'next/router';
 
 export const statusNames = {
 	Facturado: 2,
-	'En Proceso': 3,
-	Retenido: 4,
+	'Completada': 3,
+	Procesada: 4,
+	Retenida: 5
 };
 
 export default function ChangeOrderStatus({
@@ -40,16 +41,24 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames['En Proceso']],
-				status: statusNames['En Proceso'],
+				action: orderStatusToUse[statusNames['Completada']],
+				status: statusNames['Completada'],
 			}));
 		},
 		4: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Retenido],
-				status: statusNames.Retenido,
+				action: orderStatusToUse[statusNames.Procesada],
+				status: statusNames.Procesada,
+			}));
+		},
+		5: () => {
+			setModal((prev) => ({
+				...prev,
+				visible: true,
+				action: orderStatusToUse[statusNames.Retenida],
+				status: statusNames.Retenida,
 			}));
 		},
 	};
@@ -69,12 +78,12 @@ export default function ChangeOrderStatus({
 					<List.Item>
 						<h3>Actualizar Estado</h3>
 						<Space>
-							{status == 1 && (
+							{status == 3 && (
 								<>
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames['En Proceso']
+												statusNames['Completada']
 											)
 										}
 										type="warning"
@@ -84,7 +93,7 @@ export default function ChangeOrderStatus({
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames.Retenido
+												statusNames.Retenida
 											)
 										}
 										type="primary"
@@ -94,7 +103,7 @@ export default function ChangeOrderStatus({
 									</Button>
 								</>
 							)}
-							{status == 3 && (
+							{status == 4 && (
 								<>
 									<Button
 										onClick={() =>
@@ -108,12 +117,12 @@ export default function ChangeOrderStatus({
 									</Button>
 								</>
 							)}
-							{status == 4 && (
+							{status == 5 && (
 								<>
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames['En Proceso']
+												statusNames['Completada']
 											)
 										}
 										type="warning"
