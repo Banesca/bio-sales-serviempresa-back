@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 /* import Button from 'antd-button-color';
  */
-import { Input, Typography, Form, Layout, Button, message } from 'antd';
+import { Input, Typography, Form, Layout, Button, message, Modal } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -16,6 +16,11 @@ export default function Login() {
 	const router = useRouter();
 
 	const { requestHandler } = useRequest();
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+	const handleDelete = () => {
+		setDeleteModalOpen(false);
+	};
 
 	// display message
 	const [messageApi, contextHolder] = message.useMessage();
@@ -180,9 +185,20 @@ export default function Login() {
 								<Input.Password />
 							</Form.Item>
 							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end', marginTop: '-25px'}} justify='end'>
-								<Button type="link" htmlType="submit" style={{margin: '0'}} block>
+								<Button type="link" style={{margin: '0'}} onClick={() => setDeleteModalOpen(true)} block>
 									¿Olvidó su contraseña?
 								</Button>
+								<Modal
+									title="¿Olvidó su contraseña?"
+									style={{textAlign: 'center'}}
+									open={deleteModalOpen}
+									onCancel={() => setDeleteModalOpen(false)}
+									footer={null}
+								>
+									<p>
+										Para recuperar su acceso comuniquese con un administrador
+									</p>
+								</Modal>
 							</Form.Item>
 							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end', marginTop: '-15px'}} justify='end'>
 								<Button type="primary" htmlType="submit" style={{margin: '0'}} block>
