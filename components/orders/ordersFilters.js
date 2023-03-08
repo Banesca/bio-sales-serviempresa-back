@@ -48,14 +48,14 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 					form={filterForm}
 					onFinish={handleSearch}
 					style={{ maxWidth: '900px' }}
-					labelCol={{ span: 8 }}
+					labelCol={{ span: 10 }}
 				>
 					<Row
 						style={{
 							justifyContent: 'space-between',
 						}}
 					>
-						<Col span={12}>
+						<Col span={11}>
 							<Form.Item
 								label="Estado"
 								name="idStatusOrder"
@@ -98,7 +98,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+							<Form.Item wrapperCol={{ offset: 9, span: 13 }}>
 								<Button
 									htmlType="submit"
 									block
@@ -109,8 +109,8 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 							</Form.Item>
 						</Col>
 						<Col span={12}>
-							<Form.Item wrapperCol={{ offset: 8, span: 12 }}>
-								<Button htmlType="submit" type="primary" block>
+							<Form.Item wrapperCol={{ offset: 10, span: 14 }}>
+								<Button htmlType="submit" type="success" block>
 									Buscar
 								</Button>
 							</Form.Item>

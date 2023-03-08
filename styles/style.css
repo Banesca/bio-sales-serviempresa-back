@@ -133,8 +133,8 @@
 }
 .ant-btn-info {
   color: #fff !important;
-  background-color: #17a2b8 !important;
-  border-color: #17a2b8 !important;
+  background-color: #ff6c0b !important;
+  border-color: #ff6c0b !important;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
   -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
@@ -161,17 +161,16 @@
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
-.ant-btn-info:hover,
-.ant-btn-info:focus {
+.ant-btn-info:hover {
   color: #fff !important;
-  background-color: #1fc8e3 !important;
-  border-color: #1fc8e3 !important;
+  background-color: #ff7f2a !important;
+  border-color: #ff7f2a !important;
 }
 .ant-btn-info:active,
 .ant-btn-info.active {
   color: #fff !important;
-  background-color: #117a8b !important;
-  border-color: #117a8b !important;
+  background-color: #dd5f0b !important;
+  border-color: #dd5f0b !important;
 }
 .ant-btn-background-ghost.ant-btn-info {
   color: #17a2b8 !important;

@@ -9,6 +9,7 @@ import {
 	ShoppingOutlined,
 	UserOutlined,
 	UsergroupAddOutlined,
+	InboxOutlined,
 } from '@ant-design/icons';
 
 import Loading from './loading';
@@ -48,6 +49,11 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(ShoppingCartOutlined),
 		},
 		{
+			key: '/dashboard/orders',
+			label: 'Inventario',
+			icon: React.createElement(InboxOutlined),
+		},
+		{
 			key: '/dashboard/profile',
 			label: 'Mi perfil',
 			icon: React.createElement(UserOutlined),
@@ -83,7 +89,7 @@ export default function DashboardLayout({ children }) {
 
 	return (
 		<>
-			<Layout style={{ height: '100vh' }}>
+			<Layout style={{ height: '100vh', width: '100%' }}>
 				<Header
 					theme="light"
 					style={{
@@ -98,7 +104,7 @@ export default function DashboardLayout({ children }) {
 						style={{
 							fontWeight: 'bolder',
 							fontSize: '1.5rem',
-							color: '#eee',
+							color: '#fff',
 						}}
 					>
 						SiempreOL
@@ -115,12 +121,12 @@ export default function DashboardLayout({ children }) {
 							mode="inline"
 							items={sidebarLinks}
 							onSelect={(e) => handleNavigation(e)}
-							style={{ height: '100vh' }}
+							style={{ height: '100%', backgroundColor: 'rgba(128, 128, 128, 0.04)' }}
 						/>
 					</Sider>
 					<Layout>
 						<Content
-							style={{ heigh: '100vh', overflow: 'initial' }}
+							style={{ heigh: '100vh', overflow: 'initial', backgroundColor: 'white' }}
 						>
 							{children}
 						</Content>

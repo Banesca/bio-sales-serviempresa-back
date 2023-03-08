@@ -129,7 +129,7 @@ export default function SubCategoryModals({
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="success"
 						onClick={handleAddSubCategory}
 					>
 						Agregar

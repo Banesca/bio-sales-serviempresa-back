@@ -1,7 +1,7 @@
 import { Button, ConfigProvider, Empty, Table } from 'antd';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Space } from 'antd';
-import { EyeTwoTone } from '@ant-design/icons';
+import { EditOutlined, EyeTwoTone } from '@ant-design/icons';
 import { orderStatusToUse } from '../../pages/dashboard/orders';
 import { useRouter } from 'next/router';
 
@@ -13,6 +13,7 @@ export default function OrdersTable({ orders }) {
 	const handleSeeDetail = (order) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/${order.idOrderH}`);
+		 console.log(order);
 	};
 
 	const columns = [
@@ -80,25 +81,25 @@ export default function OrdersTable({ orders }) {
 				switch (record.idStatusOrder) {
 				case 1:
 					return (
-						<p style={{ color: '#969696 ', fontWeight: 'bold' }}>
+						<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 2:
 					return (
-						<p style={{ color: '#00b894', fontWeight: 'bold' }}>
+						<p style={{ color: '#06a800', fontWeight: 'bold' }}> 
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 3:
 					return (
-						<p style={{ color: '#43FAFF', fontWeight: 'bold' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
 					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+						<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
@@ -112,16 +113,23 @@ export default function OrdersTable({ orders }) {
 			},
 		},
 		{
-			title: 'Acciones',
+			title: 'Acción',
 			key: 5,
-			render: (order) => (
-				<Space size="middle">
-					<Button
-						type="primary"
-						onClick={() => handleSeeDetail(order)}
-					>
-						<EyeTwoTone />
-					</Button>
+			render: (order, record) => (
+				<Space size="middle" style={{display: 'flex', justifyContent: 'center'}}>
+					{orderStatusToUse[record.idStatusOrder] == 'Facturado' 
+						? <Button
+							type='primary'
+							onClick={() => handleSeeDetail(order)}
+						>
+							<EyeTwoTone/>
+						</Button>
+						: <Button
+							onClick={() => handleSeeDetail(order)}
+						>
+							<EditOutlined/>
+						</Button>
+					}
 				</Space>
 			),
 		},

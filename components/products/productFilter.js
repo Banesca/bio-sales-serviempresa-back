@@ -37,7 +37,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 				<Row style={{ justifyContent: 'center' }}>
 					<Form
 						form={form}
-						style={{ maxWidth: '800px', width: '100%' }}
+						style={{ maxWidth: '800px', width: '100%', fontWeight: 'bold' }}
 						name="productFilters"
 						onFinish={onSubmit}
 					>
@@ -308,7 +308,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								>
 									<Button
 										htmlType="submit"
-										type="primary"
+										type="success"
 										block
 									>
 										Buscar

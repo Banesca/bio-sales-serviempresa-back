@@ -20,7 +20,7 @@ export default function LinesContainer() {
 			render: (text) => text,
 		},
 		{
-			title: 'Acciones',
+			title: 'Acción',
 			key: 2,
 			width: '20px',
 			render: (_, item) => (

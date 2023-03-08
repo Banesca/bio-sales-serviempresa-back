@@ -238,7 +238,7 @@ export default function Routes() {
 					>
 						Cancelar
 					</Button>,
-					<Button key="add" type="primary" onClick={handleSubmit}>
+					<Button key="add" type="success" onClick={handleSubmit}>
 						Agregar
 					</Button>,
 				]}

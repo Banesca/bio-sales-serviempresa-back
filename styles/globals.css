@@ -23,3 +23,60 @@ h5,
 h6 {
 	color: 'white';
 }
+
+.form > div {
+	background-color: rgba(128, 128, 128, 0.09) !important;
+	margin-bottom: 1rem !important;
+}
+
+.ant-table-thead tr{
+	background-color: rgba(0, 0, 0, 0.952);
+	font-size: 16px;
+}
+
+th {
+	background-color: #2e2e2e85 !important;
+	color: white !important;
+	font-weight: bolder !important;
+}
+
+td {
+	border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ant-space {
+	align-self: center !important;
+}
+
+.ant-table-footer {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.ant-table-tbody > :nth-child(2n + 1) {
+	background-color: #ffffff2c !important;
+}
+.ant-table-tbody > :nth-child(2n + 2) {
+	background-color: #d6d6d64d !important;
+}
+
+.ant-table-cell-row-hover {
+	background-color: white;
+}
+
+.ordens thead > :first-child th::before {
+	content: "";
+	margin-left: -34px;
+	height: 1px;
+	background-color: rgba(255, 255, 255, 0.788);
+	position: absolute;
+	bottom: 0;
+	width: 25rem;
+}
+
+.ordens thead > :first-child .ant-table-cell {
+	font-size: 30px;
+}
+
+.ant-table-column-sorter svg {
+	color: white;
+}

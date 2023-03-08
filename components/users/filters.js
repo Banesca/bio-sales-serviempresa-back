@@ -104,7 +104,7 @@ const UserFilters = ({ setQuery }) => {
 							md={{ span: 9, offset: 3 }}
 						>
 							<Form.Item style={{ margin: '0 .5rem 0 0' }}>
-								<Button htmlType="submit" type="primary" block>
+								<Button htmlType="submit" type="success" block>
 									Buscar
 								</Button>
 							</Form.Item>

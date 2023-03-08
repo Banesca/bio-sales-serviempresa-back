@@ -9,16 +9,18 @@ import { message } from 'antd';
 import { useRouter } from 'next/router';
 
 export const statusNames = {
+	'En proceso': 1,
 	Facturado: 2,
-	'Completada': 3,
-	Procesada: 4,
-	Retenida: 5
+	'Recibido': 3,
+	Procesado: 4,
+	Retenido: 5
 };
 
 export default function ChangeOrderStatus({
 	status,
 	orderId,
 	handleChangeStatus,
+	handleOrder
 }) {
 	const initialModalState = {
 		visible: false,
@@ -29,6 +31,14 @@ export default function ChangeOrderStatus({
 	const [modal, setModal] = useState(initialModalState);
 
 	const actions = {
+		1: () => {
+			setModal((prev) => ({
+				...prev,
+				visible: true,
+				action: orderStatusToUse[statusNames['En proceso']],
+				status: statusNames['En proceso'],
+			}));
+		},
 		2: () => {
 			setModal((prev) => ({
 				...prev,
@@ -41,24 +51,24 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames['Completada']],
-				status: statusNames['Completada'],
+				action: orderStatusToUse[statusNames['Recibido']],
+				status: statusNames['Recibido'],
 			}));
 		},
 		4: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Procesada],
-				status: statusNames.Procesada,
+				action: orderStatusToUse[statusNames.Procesado],
+				status: statusNames.Procesado,
 			}));
 		},
 		5: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Retenida],
-				status: statusNames.Retenida,
+				action: orderStatusToUse[statusNames.Retenido],
+				status: statusNames.Retenido,
 			}));
 		},
 	};
@@ -78,12 +88,24 @@ export default function ChangeOrderStatus({
 					<List.Item>
 						<h3>Actualizar Estado</h3>
 						<Space>
+							{status == 1 && (
+								<>
+									<Button
+										onClick={() =>
+											handleOrder()
+										}
+										type="info"
+									>
+										Concluir pedido
+									</Button>
+								</>
+							)}
 							{status == 3 && (
 								<>
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames['Completada']
+												statusNames['Recibido']
 											)
 										}
 										type="warning"
@@ -93,7 +115,7 @@ export default function ChangeOrderStatus({
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames.Retenida
+												statusNames.Retenido
 											)
 										}
 										type="primary"
@@ -111,7 +133,7 @@ export default function ChangeOrderStatus({
 												statusNames.Facturado
 											)
 										}
-										type="warning"
+										type="success"
 									>
 										Facturar
 									</Button>
@@ -122,7 +144,7 @@ export default function ChangeOrderStatus({
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames['Completada']
+												statusNames['Recibido']
 											)
 										}
 										type="warning"

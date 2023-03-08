@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, List, Table, Modal, Form, Select, message } from 'antd';
-import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
+import { AimOutlined, ArrowLeftOutlined, DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -220,6 +220,18 @@ const UserDetail = () => {
 		}
 	};
 
+	/* 	const getLocation = async (id) => {
+		setLoading(true);
+		const res = await requestHandler.get(`user/locations/${id}`)
+		https://www.google.com/maps/place/19%C2%B004'38.9%22N+98%C2%B011'42.1%22W/@19.0774823,-98.1955812,19z/data=!3m1!4b1!4m4!3m3!8m2!3d19.077481!4d-98.195034
+		router.push('https://www.google.com/maps/@19.0774869,-98.1952265,21z')
+		if (res.isLeft()) {
+			setLoading(false);
+			message.error('Ha ocurrido un error');
+		}
+		console.log(res);
+	};
+ */
 	const clientAlreadyAssigned = (id) => {
 		const exists = sellerClients.some((c) => c.idClient === id);
 		return exists;
@@ -285,7 +297,7 @@ const UserDetail = () => {
 							)}
 						</>
 					</Title>
-					<List
+					<List className='form'
 						style={{
 							width: '100%',
 							backgroundColor: 'white',
@@ -304,6 +316,10 @@ const UserDetail = () => {
 						<List.Item style={{padding: '10px 25px'}}>
 							<p>Perfil</p>
 							<p>{profile?.name}</p>
+						</List.Item>
+						<List.Item style={{padding: '10px 25px'}}>
+							<p>Ultima ubicación</p>
+							<Button type='primary' /* onClick={() => getLocation(id)} */ >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
 						</List.Item>
 					</List>
 					{profile?.id != PROFILES.MASTER && (

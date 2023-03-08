@@ -40,6 +40,7 @@ const UsersTable = ({
 		},
 		{
 			title: 'Acciones',
+			align: 'center',
 			width: '40px',
 			key: 5,
 			render: (_, record) => (

@@ -20,7 +20,7 @@ export default function SubCategoriesContainer() {
 			render: (text) => text,
 		},
 		{
-			title: 'Acciones',
+			title: 'Acción',
 			width: '20px',
 			key: 2,
 			render: (_, item) => (

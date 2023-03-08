@@ -66,23 +66,29 @@ const ClientDetail = () => {
 				switch (record.idStatusOrder) {
 				case 1:
 					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+						<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 2:
 					return (
-						<p style={{ color: '#00b894', fontWeight: 'bold' }}>
+						<p style={{ color: '#06a800', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 3:
 					return (
-						<p style={{ color: '#43FAFF', fontWeight: 'bold' }}>
+						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
+					return (
+						<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
+				case 5:
 					return (
 						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
 							{orderStatusToUse[record.idStatusOrder]}

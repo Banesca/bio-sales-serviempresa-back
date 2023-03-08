@@ -53,6 +53,7 @@ const UpdateOrderPage = () => {
 	const [total, setTotal] = useState(0);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
+	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 
 	const getOrderRequest = async (id) => {
 		setLoading(true);
@@ -166,17 +167,32 @@ const UpdateOrderPage = () => {
 		setDeleteOpen(false);
 	};
 
-	const handleCloseOrder = async () => {
+	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
 			await changeStatus(
-				statusNames['En Proceso'],
+				statusNames['Recibido'],
 				currentOrder.idOrderH
 			);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
 			console.error(error);
-			message.error('Error al procesar pedido');
+			message.error('Error al recibir pedido');
+		} finally {
+			setLoading(false);
+		}
+	};
+	const handlePauseOrder = async () => {
+		setLoading(true);
+		try {
+			await changeStatus(
+				statusNames['En proceso'],
+				currentOrder.idOrderH
+			)
+			router.push('/dashboard/orders');
+		} catch (error) {
+			console.error(error);
+			message.error('Error al pausar pedido');
 		} finally {
 			setLoading(false);
 		}
@@ -238,12 +254,27 @@ const UpdateOrderPage = () => {
 					</h1>
 					<div>
 						<Button
+							onClick={() => setIsCancelOrderModal(true)}
+							type="primary"
+							danger
+							style={{ marginRight: '1rem' }}
+						>
+							Eliminar
+						</Button>
+						<Button
+							onClick={() => setIsPauseOrderModal(true)}
+							type="info"
+							style={{ marginRight: '1rem'}}
+						>
+							Pausar
+						</Button>
+						<Button
 							onClick={() => setIsCloseOrderModal(true)}
-							type="warning"
+							type="primary"
 							style={{ marginRight: '1rem' }}
 							disabled={!currentOrder?.body}
 						>
-							Procesar
+							Recibir
 						</Button>
 					</div>
 				</div>
@@ -266,15 +297,7 @@ const UpdateOrderPage = () => {
 					</Col>
 					<Col span={12}>
 						<Typography>
-							<h2
-								style={{
-									height: '46px',
-									textAlign: 'center',
-									margin: '0 0 2rem 0',
-								}}
-							>
-								{`Orden ${currentOrder?.numberOrden}`}
-							</h2>
+
 							<ProductsInOrder
 								order={currentOrder}
 								openDeleteModal={openDeleteModal}
@@ -310,12 +333,14 @@ const UpdateOrderPage = () => {
 				</p>
 			</Modal>
 			<Modal
-				title="Procesar"
+				title="Recibir"
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
-				onOk={() => handleCloseOrder()}
+				onOk={() => handleReceiveOrder()}
 				cancelText="Cancelar"
-				okText="Procesar"
+				okText="Recibir"
+				okType='primary'
+				closable='false'
 			>
 				<List
 					dataSource={currentOrder?.body}
@@ -350,10 +375,34 @@ const UpdateOrderPage = () => {
 				</List>
 			</Modal>
 			<Modal
-				title="Anular Orden"
+				title="Pausar pedido"
+				open={pauseOrderModal}
+				onCancel={() => setIsPauseOrderModal(false)}
+				onOk={handlePauseOrder}
+				closable='false'
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsPauseOrderModal(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="info"
+						onClick={handlePauseOrder}
+					>
+						Pausar
+					</Button>,
+				]}
+			>
+				<p>¿Estas seguro de que deseas pausar la toma de este pedido?, <br />Podras acceder a el en el modulo de pedidos.</p>
+			</Modal>
+			<Modal
+				title="Eliminar"
 				open={cancelOrderModal}
 				onCancel={() => setIsCancelOrderModal(false)}
-				onOk={handleCancelOrder}
+				onOk={handlePauseOrder}
 				footer={[
 					<Button
 						key="cancel"
@@ -365,13 +414,13 @@ const UpdateOrderPage = () => {
 						key="delete"
 						danger
 						type="primary"
-						onClick={handleCancelOrder}
+						onClick={handlePauseOrder}
 					>
-						Anular
+						Eliminar
 					</Button>,
 				]}
 			>
-				<p>Estas seguro de que deseas anular esta orden?</p>
+				<p>¿Estas seguro de que deseas eliminar esta orden?</p>
 			</Modal>
 		</DashboardLayout>
 	);

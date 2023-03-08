@@ -73,7 +73,7 @@ export default function BrandsModals({
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="success"
 						onClick={handleCreateBrand}
 					>
 						Agregar

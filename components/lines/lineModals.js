@@ -73,7 +73,7 @@ export default function LinesModals({
 					>
 						Cancelar
 					</Button>,
-					<Button key="delete" type="primary" onClick={handleAddLine}>
+					<Button key="delete" type="success" onClick={handleAddLine}>
 						Agregar
 					</Button>,
 				]}

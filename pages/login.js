@@ -21,7 +21,7 @@ export default function Login() {
 	const handleDelete = () => {
 		setDeleteModalOpen(false);
 	};
-
+	
 	// display message
 	const [messageApi, contextHolder] = message.useMessage();
 	const handleLoginError = (error) => {
@@ -132,19 +132,22 @@ export default function Login() {
 							paddingInline: '4rem',
 						}}
 					>
-						<Typography>
+						<Typography style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 							<h1
 								style={{
 									fontWeight: 'bold',
 									fontSize: '4rem',
+									marginBottom: '0'
 								}}
 							>
 								SiempreOL
 							</h1>
+							<h5 style={{ marginTop: '0' }}>v0.1.0</h5>
 							<h2
 								style={{
 									fontSize: '2rem',
 									textAlign: 'center',
+									marginTop: '0'
 								}}
 							>
 								Iniciar Sesión
@@ -195,13 +198,13 @@ export default function Login() {
 									onCancel={() => setDeleteModalOpen(false)}
 									footer={null}
 								>
-									<p>
+									<p style={{marginTop: '20px'}}>
 										Para recuperar su acceso comuniquese con un administrador
 									</p>
 								</Modal>
 							</Form.Item>
 							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end', marginTop: '-15px'}} justify='end'>
-								<Button type="primary" htmlType="submit" style={{margin: '0'}} block>
+								<Button type="success" htmlType="submit" style={{margin: '0'}} block>
 									Acceder
 								</Button>
 							</Form.Item>

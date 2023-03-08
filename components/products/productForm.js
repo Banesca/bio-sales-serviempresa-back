@@ -181,7 +181,7 @@ const ProductForm = (props) => {
 	};
 
 	return (
-		<>
+		<div className='form'>
 			<h1
 				style={{
 					fontSize: '2rem',
@@ -192,7 +192,7 @@ const ProductForm = (props) => {
 			</h1>
 			<Card>
 				<Form
-					style={{ width: '100%' }}
+					style={{ width: '100%', fontWeight: 'bold' }}
 					name="addProduct"
 					initialValues={{
 						nameProduct: product.nameProduct,
@@ -883,7 +883,7 @@ const ProductForm = (props) => {
 					</Row>
 				</Form>
 			</Card>
-		</>
+		</div>
 	);
 };
 

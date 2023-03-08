@@ -137,40 +137,43 @@ const UserDetail = () => {
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
-							margin: '15px'
+							margin: '15px',
 						}}
 					>
 						Mi perfil
 					</h1>
 					<List
 						style={{
-							width: '100%',
-							backgroundColor: 'white',
-							borderRadius: '.5rem',
+							width: '96%',
+							borderRadius: '15px',
 							marginBottom: '1rem',
+							backgroundColor: 'rgba(128, 128, 128, 0.04)'
 						}}
 					>
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
 							<p style={{fontWeight: 'bold'}}>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
 							<p style={{fontWeight: 'bold'}}>Email</p>
 							<p>{user?.mail}</p>
 						</List.Item >
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
 							<p style={{fontWeight: 'bold'}}>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 10px'}}>
-							<Button type='link' style={{fontWeight: 'bold'}}
+						<List.Item style={{padding: '15px 20px', textDecoration: '', color: 'black', fontSize: '16px'}}>
+							<p style={{padding: '15px 15px', fontWeight: 'bold'}} >Cambiar contraseña</p>
+							<Button type='link' style={{fontWeight: 'bold', fontSize: '16px'}}
 								onClick={() => {
 									handleOpenModal();
 								}}
-							>Cambiar contraseña</Button>
+							>Ingresa nueva contraseña</Button>
 						</List.Item>
 						<Modal
-							title={'Cambio de contraseña'}
+							title={'Ingresa nueva contraseña'}
+							closable={false}
+							style={{textAlign: 'center'}}
 							open={isModalOpen}
 							onOk={() => handleCloseModal(true)}
 							onCancel={() => handleCloseModal(false)}
@@ -182,7 +185,7 @@ const UserDetail = () => {
 							Cancelar
 								</Button>,
 								<Button
-									type="primary"
+									type="success"
 									key="delete"
 									onClick={() => finishForm(userData)}
 								>
@@ -190,8 +193,7 @@ const UserDetail = () => {
 								</Button>,
 							]}
 						>
-							<List.Item>
-								<h4 style={{marginLeft: '0'}}>Ingresa una nueva contraseña</h4>
+							<List.Item style={{marginTop: '30px', fontWeight: 'bold'}}>
 								<Form 
 									name="login"
 									autoComplete="off"

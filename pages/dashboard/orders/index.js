@@ -15,11 +15,11 @@ import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
 
 export const orderStatusToUse = {
-	1: 'vacio',
+	1: 'Inconcluso',
 	2: 'Facturado',
-	3: 'Completada',
-	4: 'Procesada',
-	5: 'Retenida'
+	3: 'Recibido',
+	4: 'Procesado',
+	5: 'Retenido'
 };
 
 export default function OrdersPage() {
@@ -92,9 +92,11 @@ export default function OrdersPage() {
 				}}
 			>
 				<Title title={'Pedidos'}>
-					<Button type="success">
-						<Link href="orders/add">Agregar</Link>
-					</Button>
+					<Link href="orders/add">
+						<Button type="success">
+							Agregar
+						</Button>
+					</Link>
 				</Title>
 				<OrdersFilters
 					setQuery={setQuery}

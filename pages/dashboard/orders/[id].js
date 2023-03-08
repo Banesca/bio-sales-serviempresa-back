@@ -1,5 +1,5 @@
 import DashboardLayout from '../../../components/shared/layout';
-import { List, message } from 'antd';
+import { Button, List, message } from 'antd';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -35,18 +35,19 @@ const OrderDetail = () => {
 		let status = currentOrder.idStatusOrder;
 		let color = '';
 		console.log(status);
-		if(status == 2) {
-			color = '#00b894';
+		if(status == 1) {
+			color = '#ff6c0b';
+		} else if (status == 2) {
+			color = '#06a800';
 		} else if (status == 3) {
-			color = '#43FAFF';
-		} else if (status == 4) {
 			color = '#0984e3';
+		} else if (status == 4) {
+			color = '#ffd034';
 		} else if (status == 5) {
 			color = '#d63031';
 		} else {
 			color = '#969696';
 		}
-		console.log(color);
 		return color;
 	};
 	const handleChangeStatus = async (status) => {
@@ -60,6 +61,12 @@ const OrderDetail = () => {
 			setLoading(false);
 		}
 	};
+
+	const handleOrder = () => {
+		setLoading(true);
+		router.push(`/dashboard/orders/update/${currentOrder.idOrderH}`);
+		console.log(currentOrder.idOrderH)
+	}
 
 	useEffect(() => {
 		setLoading(true);
@@ -90,10 +97,13 @@ const OrderDetail = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<Title title="Información General" path="/dashboard/orders" />
-				<List style={{ width: '100%', padding: '10px 15px', backgroundColor: 'white', marginBottom: '25px'}}>
+				<div style={{display: 'flex', width: '100%'}}>
+					<Title title="Información General" path="/dashboard/orders" />
+				</div>
+				<List style={{ width: '96%', padding: '10px 30px', backgroundColor: 'rgba(128, 128, 128, 0.05)', marginBottom: '25px', borderRadius: '15px'}}>
 					<ChangeOrderStatus
 						status={currentOrder.idStatusOrder}
+						handleOrder={handleOrder}
 						orderId={id}
 						handleChangeStatus={handleChangeStatus}
 					/>
@@ -103,7 +113,7 @@ const OrderDetail = () => {
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Usuario - Vendedor</p>
-						<p>{user.fullname}</p>
+						<p>{user?.fullname}</p>
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Estado</p>

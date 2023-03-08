@@ -15,59 +15,65 @@ export default function ProductsInOrder({
 }) {
 	const orderColumns = [
 		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
-			key: 2,
-			render: (text, record) => (
-				<p style={{ color: record.isPromo == '1' && 'green' }}>
+			title: `Orden ${order?.numberOrden}`,
+			children: [
+
+				{
+					title: 'Nombre',
+					dataIndex: 'nameProduct',
+					key: 1,
+					render: (text) => <p>{text}</p>,
+				},
+				{
+					title: 'Precio',
+					dataIndex: 'priceSale',
+					key: 2,
+					render: (text, record) => (
+						<p style={{ color: record.isPromo == '1' && 'green' }}>
 					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
-			),
-		},
-		{
-			title: 'Cantidad',
-			dataIndex: 'weight',
-			key: 3,
-			render: (number, record, index) => (
-				<Space>
-					<Input
-						type="number"
-						style={{ width: '60px' }}
-						value={order?.body[index].weight}
-						onChange={(e) =>
-							setProductsQuantity(e.target.value, index)
-						}
-					/>
-					<Button
-						type="primary"
-						onClick={() => handleUpdateProduct(record)}
-					>
+						</p>
+					),
+				},
+				{
+					title: 'Cantidad',
+					dataIndex: 'weight',
+					key: 3,
+					render: (number, record, index) => (
+						<Space>
+							<Input
+								type="number"
+								style={{ width: '60px' }}
+								value={order?.body[index].weight}
+								onChange={(e) =>
+									setProductsQuantity(e.target.value, index)
+								}
+							/>
+							<Button
+								type="primary"
+								onClick={() => handleUpdateProduct(record)}
+							>
 						Ok
-					</Button>
-				</Space>
-			),
-		},
-		{
-			title: 'Acciones',
-			key: 3,
-			render: (record) => (
-				<Space>
-					<Button
-						onClick={() => openDeleteModal(record)}
-						type="primary"
-						danger
-					>
-						<DeleteOutlined />
-					</Button>
-				</Space>
-			),
-		},
+							</Button>
+						</Space>
+					),
+				},
+				{
+					title: 'Acciones',
+					key: 3,
+					render: (record) => (
+						<Space>
+							<Button
+								onClick={() => openDeleteModal(record)}
+								type="primary"
+								danger
+							>
+								<DeleteOutlined />
+							</Button>
+						</Space>
+					),
+				}, 
+			]
+		}
 	];
 
 	const { setLoading } = useLoadingContext();
@@ -115,6 +121,7 @@ export default function ProductsInOrder({
 				columns={orderColumns}
 				loading={loading}
 				dataSource={productList}
+				className='ordens'
 			/>
 		</ConfigProvider>
 	);

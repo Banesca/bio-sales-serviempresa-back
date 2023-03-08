@@ -146,39 +146,39 @@ const Product = () => {
 				}}
 			>
 				<Title title="Detalles" path="/dashboard/products" />
-				<List style={{ width: '100%', backgroundColor: 'white', padding: '10px 25px' }}>
+				<List style={{ width: '100%', backgroundColor: 'rgba(128, 128, 128, 0.096)', padding: '10px 25px' }}>
 					<List.Item>
-						<p>Nombre</p>
+						<p style={{fontWeight: 'bold'}}>Nombre</p>
 						<p>{currentProduct?.nameProduct}</p>
 					</List.Item>
 					<List.Item>
-						<p>Código</p>
+						<p style={{fontWeight: 'bold'}}>Código</p>
 						<p>{currentProduct?.barCode}</p>
 					</List.Item>
 					<List.Item>
-						<p>Precio</p>
+						<p style={{fontWeight: 'bold'}}>Precio</p>
 						<p>$ {currentProduct?.priceSale}</p>
 					</List.Item>
 					<List.Item>
-						<p>Categoría</p>
+						<p style={{fontWeight: 'bold'}}>Categoría</p>
 						<p>{currentCategory?.name}</p>
 					</List.Item>
 					<List.Item>
-						<p>Sub Categoría</p>
+						<p style={{fontWeight: 'bold'}}>Sub Categoría</p>
 						<p>{currentSubCategory?.nameSubFamily}</p>
 					</List.Item>
 					{currentLine?.name && (
 						<List.Item>
-							<p>Linea</p>
+							<p style={{fontWeight: 'bold'}}>Linea</p>
 							<p>{currentLine?.name}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p>Marca</p>
+						<p style={{fontWeight: 'bold'}}>Marca</p>
 						<p>{currentBrand.name}</p>
 					</List.Item>
 					<List.Item>
-						<p>En Promoción</p>
+						<p style={{fontWeight: 'bold'}}>En Promoción</p>
 						<div
 							style={{
 								display: 'flex',
@@ -203,12 +203,12 @@ const Product = () => {
 
 					{currentProduct?.isPromo == '1' && (
 						<List.Item>
-							<p>Precio de Promoción</p>
+							<p style={{fontWeight: 'bold'}}>Precio de Promoción</p>
 							<p>$ {currentProduct.marketPrice}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p>Medida</p>
+						<p style={{fontWeight: 'bold'}}>Medida</p>
 						<p>
 							{currentProduct.idUnitMeasureSaleFk === 17
 								? 'Unidad'
@@ -218,36 +218,36 @@ const Product = () => {
 					<List.Item>
 						{currentProduct.idUnitMeasureSaleFk === 17 ? (
 							<>
-								<p>Unidad por Caja</p>
+								<p style={{fontWeight: 'bold'}}>Unidad por Caja</p>
 								<p>{currentProduct.unitByBox}</p>
 							</>
 						) : (
 							<>
-								<p>Peso por unidad</p>
+								<p style={{fontWeight: 'bold'}}>Peso por unidad</p>
 								<p>{currentProduct.unitweight} KG</p>
 							</>
 						)}
 					</List.Item>
 					<List.Item>
-						<p>EAN13</p>
+						<p style={{fontWeight: 'bold'}}>EAN13</p>
 						<p>{currentProduct.ean}</p>
 					</List.Item>
 					<List.Item>
-						<p>CPE</p>
+						<p style={{fontWeight: 'bold'}}>CPE</p>
 						<p>{currentProduct.cpe}</p>
 					</List.Item>
 					<List.Item>
-						<p>Registro Sanitario</p>
+						<p style={{fontWeight: 'bold'}}>Registro Sanitario</p>
 						<p>{currentProduct.healthRegister}</p>
 					</List.Item>
 					{currentProduct.observation && (
 						<List.Item>
-							<p>Observación</p>
+							<p style={{fontWeight: 'bold'}}>Observación</p>
 							<p>{currentProduct.observation}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p>Stock</p>
+						<p style={{fontWeight: 'bold'}}>Stock</p>
 						<p>
 							{/* {currentProduct?.stock.length > 0
 								? currentProduct.stock[0].stock

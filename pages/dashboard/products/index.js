@@ -78,9 +78,10 @@ export default function Products() {
 		},
 		{
 			title: 'Acciones',
+			align: 'center',
 			key: 6,
 			render: (product, index) => (
-				<Space size="middle">
+				<Space size="middle" style={{justifyContent: 'center', display: 'flex'}}>
 					<Button
 						type="primary"
 						onClick={() => {

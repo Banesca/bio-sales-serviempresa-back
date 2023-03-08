@@ -45,9 +45,10 @@ export default function ClientsPage() {
 		},
 		{
 			title: 'Acciones',
+			align: 'center',
 			key: 4,
 			render: (_, index) => (
-				<Space size="middle">
+				<Space size="middle" style={{display: 'flex', justifyContent: 'center'}}>
 					<Button
 						type="primary"
 						onClick={() => router.push(`clients/${index.idClient}`)}
@@ -68,6 +69,7 @@ export default function ClientsPage() {
 
 	const [currentClient, setCurrentClient] = useState();
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const { clients, listClients, deleteClient } = useClients();
 
 
 	const handleOpenDeleteModal = (client) => {
@@ -109,7 +111,7 @@ export default function ClientsPage() {
 
 	// clients
 	// const [clients, setClients] = useState([]);
-	const { clients, listClients, deleteClient } = useClients();
+
 	const [query, setQuery] = useState({
 		nameClient: '',
 		phone: '',
@@ -251,7 +253,7 @@ export default function ClientsPage() {
 									<Col span={12}>
 										<Form.Item
 											wrapperCol={{
-												span: 12,
+												span: 16,
 												offset: 8,
 											}}
 										>
@@ -263,13 +265,13 @@ export default function ClientsPage() {
 									<Col span={12}>
 										<Form.Item
 											wrapperCol={{
-												span: 12,
+												span: 16,
 												offset: 8,
 											}}
 										>
 											<Button
 												htmlType="submit"
-												type="primary"
+												type="success"
 												block
 											>
 												Buscar

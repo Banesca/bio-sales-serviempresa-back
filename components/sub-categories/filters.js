@@ -82,7 +82,7 @@ export default function SubCategoryFilters({ setQuery, setSelectedCategory }) {
 							md={{ span: 8, offset: 8 }}
 						>
 							<Form.Item style={{ margin: '0 .5rem' }}>
-								<Button htmlType="submit" type="primary" block>
+								<Button htmlType="submit" type="success" block>
 									Buscar
 								</Button>
 							</Form.Item>
