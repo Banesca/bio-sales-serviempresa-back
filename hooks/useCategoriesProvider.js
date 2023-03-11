@@ -157,6 +157,19 @@ export function CategoriesProvider({ children }) {
 		const lines = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_LINES, payload: lines });
 	};
+	const editLines = async (name, lineToDelete) => {
+		const res = await requestHandler.put('api/v2/line/update', {
+			name: name,
+			idSubFamilyFk: lineToDelete.idSubF,
+			idSucursalFk: lineToDelete.idSucFk,
+			idLine: lineToDelete.idLine
+		});
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		console.log(name);
+		await getLines(businessId);
+	};
 
 	const getLineById = async (id) => {
 		const res = await requestHandler.get(`/api/v2/line/get/${id}`);
@@ -202,6 +215,7 @@ export function CategoriesProvider({ children }) {
 				addSubCategory,
 				deleteSubCategory,
 				getLines,
+				editLines,
 				getLineById,
 				addLine,
 				deleteLine,

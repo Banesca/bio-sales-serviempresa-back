@@ -5,6 +5,7 @@ import { GeneralContext } from '../../pages/_app';
 import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useRouter } from 'next/router';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const AddOrderForm = (props) => {
 	const [loading, setLoading] = useState(false);
@@ -77,21 +78,41 @@ const AddOrderForm = (props) => {
 		form.resetFields();
 	};
 
+	const router = useRouter();
+
+	const handleReturn = () => {
+		router.push('/dashboard/orders');
+		setLoading(true);
+	};
+
+
 	return (
 		<>
-			<h1
-				style={{
-					fontSize: '2rem',
-					textAlign: 'center',
-				}}
-			>
-				Agregar Pedido
-			</h1>
+			<section style={{
+				textAlign: 'center',
+				fontSize: '2.5rem',
+				margin: '1rem',
+				display: 'flex',
+				width: '100%',
+				backgroundColor: 'white !important'
+			}}>
+				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+					<ArrowLeftOutlined
+						style={{ fontSize: '1.5rem', marginRight: '50%'}}
+					/>
+				</Button>
+				<h2 style={{fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px'}}>
+					Agregar pedido
+				</h2>
+			</section>	
 			<div
 				style={{
-					maxWidth: '850px',
-					margin: '4rem auto',
+					maxWidth: '800px',
 					padding: '0 2rem',
+					margin: '1rem auto',
+					backgroundColor: 'rgba(0, 0, 0, 0.04)',
+					padding: '60px',
+					borderRadius: '20px'
 				}}
 			>
 				<Form

@@ -8,6 +8,7 @@ import { message } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import Loading from '../../../components/shared/loading';
 import { useRequest } from '../../../hooks/useRequest';
+import { useRouter } from 'next/router';
 
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -22,9 +23,14 @@ export default function AddClient() {
 		form.resetFields();
 	};
 
+	const router = useRouter();
+
+
 	const handleSubmit = async (values) => {
 		await createClient(values);
 		form.resetFields()
+		router.push('/dashboard/clients');
+		setLoading(true);
 	};
 
 	const createClient = async (data) => {
@@ -56,11 +62,17 @@ export default function AddClient() {
 				}}
 			>
 				<Title
-					goBack={false}
+					goBack={1}
 					path={'/dashboard/clients'}
 					title="Agregar Cliente"
 				></Title>
-				<Card>
+				<div style={{
+					maxWidth: '900px',
+					margin: '1rem 2rem',
+					backgroundColor: 'rgba(0, 0, 0, 0.04)',
+					padding: '60px',
+					borderRadius: '20px'
+				}}>
 					<Form
 						style={{ width: '100%' }}
 						form={form}
@@ -252,7 +264,7 @@ export default function AddClient() {
 							</Col>
 						</Row>
 					</Form>
-				</Card>
+				</div>
 			</div>
 			<Loading isLoading={loading} />
 		</DashboardLayout>

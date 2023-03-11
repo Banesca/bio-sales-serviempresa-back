@@ -104,16 +104,15 @@ export default function Users() {
 					}}
 				>
 					<Title title="Usuarios" goBack={false}>
-						{userProfile != PROFILES.BILLER && userProfile != PROFILES.ADMIN && (
-							<Button
-								type="success"
-							>
-								<Link
-									href='users/add'
+						{userProfile != PROFILES.BILLER && userProfile !== PROFILES.ADMIN && (
+							<Link href='users/add'>
+								<Button
+									style={{marginRight: '-2.3rem'}}
+									type="success"
 								>
 									Agregar
-								</Link>
-							</Button>
+								</Button>
+							</Link>
 						)}
 					</Title>
 					<UserFilters setQuery={setQuery} />

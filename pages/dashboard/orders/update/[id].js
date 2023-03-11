@@ -18,6 +18,7 @@ import { useProducts } from '../../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -225,6 +226,12 @@ const UpdateOrderPage = () => {
 		return subTotal;
 	};
 
+	const handleReturn = () => {
+		router.push('/dashboard/orders');
+		setLoading(true)
+	};
+
+
 	return (
 		<DashboardLayout>
 			<div
@@ -243,11 +250,18 @@ const UpdateOrderPage = () => {
 						alignItems: 'center',
 					}}
 				>
-					<div></div>
+					<div style={{position: 'absolute'}}>
+						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+							<ArrowLeftOutlined
+								style={{ fontSize: '1.5rem', marginRight: '50%'}}
+							/>
+						</Button>
+					</div>
 					<h1
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
+							marginLeft: '15%'
 						}}
 					>
 						Tomar pedido
@@ -274,7 +288,7 @@ const UpdateOrderPage = () => {
 							style={{ marginRight: '1rem' }}
 							disabled={!currentOrder?.body}
 						>
-							Recibir
+							Enviar
 						</Button>
 					</div>
 				</div>
@@ -333,12 +347,12 @@ const UpdateOrderPage = () => {
 				</p>
 			</Modal>
 			<Modal
-				title="Recibir"
+				title="Enviar"
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
 				onOk={() => handleReceiveOrder()}
 				cancelText="Cancelar"
-				okText="Recibir"
+				okText="Enviar"
 				okType='primary'
 				closable='false'
 			>

@@ -55,6 +55,7 @@ const OrderDetail = () => {
 		try {
 			await changeStatus(status, id);
 			message.success('Estado actualizado');
+			console.log(status);
 		} catch (error) {
 			message.error('Error al actualizar orden');
 		} finally {
@@ -98,7 +99,7 @@ const OrderDetail = () => {
 				}}
 			>
 				<div style={{display: 'flex', width: '100%'}}>
-					<Title title="Información General" path="/dashboard/orders" />
+					<Title title="Información General" path="/dashboard/orders"  goBack={1} />
 				</div>
 				<List style={{ width: '96%', padding: '10px 30px', backgroundColor: 'rgba(128, 128, 128, 0.05)', marginBottom: '25px', borderRadius: '15px'}}>
 					<ChangeOrderStatus

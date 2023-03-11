@@ -3,8 +3,8 @@ import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/shared/loading';
-import { Button, Col, Row, Table, message, ConfigProvider, Empty } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Table, message, ConfigProvider, Empty, Space } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import BrandsFilters from '../../../components/brands/brandsFilters';
@@ -25,17 +25,27 @@ const BrandsPage = () => {
 		},
 		{
 			title: 'Acciones',
+			align: 'center',
 			key: 2,
 			width: '20px',
 			render: (_, item) => (
-				<Button
-					danger
-					type="primary"
-					disabled={userProfile == PROFILES.BILLER}
-					onClick={() => handleOpenDeleteModal(item)}
-				>
-					<DeleteOutlined />
-				</Button>
+				<Space>
+					<Button
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => handleOpenDeleteModal(item)}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
+						danger
+						type="primary"
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => handleOpenDeleteModal(item)}
+					>
+						<DeleteOutlined />
+					</Button>
+				</Space>
+
 			),
 		},
 	];
@@ -132,6 +142,7 @@ const BrandsPage = () => {
 						{userProfile != PROFILES.BILLER && (
 							<Button
 								type="success"
+								style={{marginRight: '-2.3rem'}}
 								onClick={handleOpenCreateModal}
 							>
 								Agregar

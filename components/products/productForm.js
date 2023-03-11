@@ -10,7 +10,7 @@ import {
 	Row,
 	message,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
@@ -180,16 +180,33 @@ const ProductForm = (props) => {
 		form.resetFields();
 	};
 
+	const handleReturn = () => {
+		router.push('/dashboard/products');
+		setLoading(true);
+	};
+
 	return (
-		<div className='form'>
-			<h1
-				style={{
-					fontSize: '2rem',
-					textAlign: 'center',
-				}}
-			>
-				{props.update ? 'Actualizar Producto' : 'Agregar Producto'}
-			</h1>
+		<div className='form' style={{
+			margin: '1rem',
+		}}>
+			<section style={{
+				textAlign: 'center',
+				fontSize: '2.5rem',
+				margin: '0px',
+				display: 'flex',
+				width: '100%',
+				backgroundColor: 'white !important'
+			}}>
+				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+					<ArrowLeftOutlined
+						style={{ fontSize: '1.5rem', marginRight: '50%'}}
+					/>
+				</Button>
+				<h2 style={{fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px'}}>
+					{props.update ? 'Actualizar Producto' : 'Agregar Producto'}
+
+				</h2>
+			</section>
 			<Card>
 				<Form
 					style={{ width: '100%', fontWeight: 'bold' }}

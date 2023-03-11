@@ -62,7 +62,7 @@ const UsersTable = ({
 						<EditOutlined />
 					</Button>
 					{userProfile != PROFILES.BILLER &&
-						userProfile != PROFILES.ADMIN && (
+						userProfile !== PROFILES.ADMIN && (
 						<Button
 							type="primary"
 							danger

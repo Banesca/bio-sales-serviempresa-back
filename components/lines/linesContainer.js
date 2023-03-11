@@ -1,5 +1,5 @@
-import { Button, Col, Row, Table } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, ConfigProvider, Empty, Row, Space, Table } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { addKeys } from '../../util/setKeys';
@@ -20,18 +20,27 @@ export default function LinesContainer() {
 			render: (text) => text,
 		},
 		{
-			title: 'Acción',
+			title: 'Acciones',
 			key: 2,
 			width: '20px',
 			render: (_, item) => (
-				<Button
-					danger
-					type="primary"
-					disabled={userProfile == PROFILES.BILLER}
-					onClick={() => openDeleteModal(item)}
-				>
-					<DeleteOutlined />
-				</Button>
+				<Space>
+					<Button
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => openEditModal(item)}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
+						danger
+						type="primary"
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => openDeleteModal(item)}
+					>
+						<DeleteOutlined />
+					</Button>
+				</Space>
+
 			),
 		},
 	];
@@ -46,6 +55,7 @@ export default function LinesContainer() {
 
 	// delete brand
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [lineToDelete, setLineToDelete] = useState();
 
 	// create
@@ -69,10 +79,33 @@ export default function LinesContainer() {
 
 	// End Filters
 
+	const openEditModal = (value) => {
+		setIsEditModalOpen(true);
+		setLineToDelete(value)
+		console.log(lineToDelete)
+
+	}
+
 	const openDeleteModal = (value) => {
 		setLineToDelete(value);
 		setIsDeleteModalOpen(true);
 	};
+
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+
+		</Empty>
+	);
 
 	return (
 		<>
@@ -80,6 +113,7 @@ export default function LinesContainer() {
 				{userProfile != PROFILES.BILLER && (
 					<Button
 						type="success"
+						style={{marginRight: '-2.3rem'}}
 						onClick={() => setIsCreateModalOpen(true)}
 					>
 						Agregar
@@ -90,10 +124,14 @@ export default function LinesContainer() {
 				setQuery={setQuery}
 				setSelectedSubCategory={setSelectedSubCategory}
 			/>
-			<Table bordered dataSource={linesList} columns={columns} />
+			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<Table bordered dataSource={linesList} columns={columns} />
+			</ConfigProvider>
 			<LinesModals
 				isCreateModalOpen={isCreateModalOpen}
 				isDeleteModalOpen={isDeleteModalOpen}
+				isEditModalOpen={isEditModalOpen}
+				setIsEditModalOpen={setIsEditModalOpen}
 				setIsDeleteModalOpen={setIsDeleteModalOpen}
 				setIsCreateModalOpen={setIsCreateModalOpen}
 				lineToDelete={lineToDelete}

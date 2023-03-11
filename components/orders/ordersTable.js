@@ -1,7 +1,7 @@
 import { Button, ConfigProvider, Empty, Table } from 'antd';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Space } from 'antd';
-import { EditOutlined, EyeTwoTone } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
 import { orderStatusToUse } from '../../pages/dashboard/orders';
 import { useRouter } from 'next/router';
 
@@ -130,6 +130,12 @@ export default function OrdersTable({ orders }) {
 							<EditOutlined/>
 						</Button>
 					}
+					<Button
+						type='primary'
+						danger
+					>
+						<DeleteOutlined/>
+					</Button>
 				</Space>
 			),
 		},

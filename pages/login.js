@@ -142,7 +142,7 @@ export default function Login() {
 							>
 								SiempreOL
 							</h1>
-							<h5 style={{ marginTop: '0' }}>v0.1.0</h5>
+							<h5 style={{ marginTop: '0' }}>v0.9.5</h5>
 							<h2
 								style={{
 									fontSize: '2rem',

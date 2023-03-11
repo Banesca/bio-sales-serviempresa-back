@@ -24,6 +24,12 @@ import { SmileOutlined } from '@ant-design/icons';
 const ImportProducts = () => {
 	const columns = [
 		{
+			title: 'ID',
+			dataIndex: 'idProductFk',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
 			key: 1,
@@ -37,7 +43,51 @@ const ImportProducts = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Precio',
+			title: 'Referencia',
+			dataIndex: 'efectivo',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Categoría',
+			dataIndex: 'nameFamily',
+			responsive: ['lg'],
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Marca',
+			dataIndex: 'nameSubFamily',
+			responsive: ['lg'],
+			key: 6,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Cantidad',
+			dataIndex: 'quantity',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Unidad de medida',
+			responsive: ['xs'],
+			dataIndex: 'idUnidadMedida',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Precio Tienda',
+			dataIndex: 'pricePurchase',
+			key: 3,
+			render: (text, record) =>
+				record.isPromo == '1' ? (
+					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+				) : (
+					<p>$ {text}</p>
+				),
+		},
+		{
+			title: 'Precio venta',
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) =>
@@ -48,46 +98,10 @@ const ImportProducts = () => {
 				),
 		},
 		{
-			title: 'Categoría',
-			dataIndex: 'nameFamily',
-			responsive: ['lg'],
-			key: 4,
+			title: 'Almacen',
+			dataIndex: 'wareHouse',
+			key: 1,
 			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Sub Categoría',
-			dataIndex: 'nameSubFamily',
-			responsive: ['xl'],
-			key: 5,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Marca',
-			dataIndex: 'nameBrand',
-			responsive: ['lg'],
-			key: 6,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Promoción',
-			dataIndex: 'isPromo',
-			key: 7,
-			responsive: ['md'],
-			render: (bool) => {
-				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool == '1' ? (
-							<CheckCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'green' }}
-							/>
-						) : (
-							<CloseCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'red' }}
-							/>
-						)}
-					</div>
-				);
-			},
 		},
 		{
 			title: 'Acciones',
@@ -162,7 +176,7 @@ const ImportProducts = () => {
 
 	const [api, contextHolder] = notification.useNotification();
 
-	const categoryListRequest = async (business = 1) => {
+	/* const categoryListRequest = async (business = 1) => {
 		const response = await requestHandler.get(
 			`/api/v2/family/list/${business}`
 		);
@@ -182,13 +196,13 @@ const ImportProducts = () => {
 		}
 		const value = response.value.getValue().response;
 		setBrands(value);
-	};
+	}; */
 
 	useEffect(() => {
 		if (selectedBusiness && generalContext) {
 			setLoading(true);
-			categoryListRequest(selectedBusiness.idSucursal);
-			brandListRequest(selectedBusiness.idSucursal);
+			/* categoryListRequest(selectedBusiness.idSucursal); */
+			/* brandListRequest(selectedBusiness.idSucursal); */
 			setLoading(false);
 		}
 	}, [selectedBusiness, generalContext]);
@@ -196,43 +210,37 @@ const ImportProducts = () => {
 	const getFileExtension = (filename) => {
 		return filename.split('.').pop();
 	};
-
+	
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				nameProduct: row.nombre,
-				pricePurchase: 0,
-				priceSale: row.precio,
-				idUnitMeasurePurchaseFk: 17,
-				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
-				idSucursalFk: selectedBusiness.idSucursal,
+				idUserAddFk: 1,
+				idProduction: 1,
+				idProductionCenter: 0,
+				pricePurchase: row?.PRECIO_TIENDA,
+				nameFamily: row.Categoria || 'No especificada',
+				nameSubFamily: row.Marca || 'No especificada',
+				nameProduct: row?.Nombre,
+				barCode: String(row?.Codigo_de_barra_global),
+				quantity: row?.Cantidad,
+				efectivo: row?.REFERENCIA,
+				wareHouse: row?.Almacen,
+				idInventaryB: 0,
+				idProductFk: row.id_de_producto,
+				priceSale: row?.PRECIO_TIENDA,
+				idSucursalFk: 1, /* idSucursalFk: selectedBusiness?.idSucursal */
+				/* idInventaryHFK: selectedBusiness?.idInventory, */
 				idTypeProductFk: 1,
-				is5050: 1,
-				isPromo: row.en_promocion ? 1 : 0,
-				maxProducVenta: '',
-				minStock: 0,
-				apply_inventory: true,
-				efectivo: 0,
+				isPromo: 0,
 				linkPago: 0,
-				maxAditionals: 0,
-				minAditionals: 0,
-				marketPrice: row.precio_promocion || 0,
-				percentageOfProfit: 0,
 				isheavy: 0,
-				idAdicionalCategoryFk: 0,
-				barCode: String(row.codigo),
-				nameKitchen: '',
-				unitweight: row.peso_unitario || null,
-				observation: row.observacion || '',
-				nameBrand: row.marca || null,
-				nameLine: row.linea || null,
-				nameFamily: row.categoria,
-				nameSubFamily: row.subcategoria,
-				unitByBox: row.unidades_por_caja || null,
-				ean: row.ean || '',
-				healthRegister: row.registro_sanitario || '',
-				cpe: row.cpe || '',
+				apply_inventory: true,
+				nameKitchen: 1,
+				idStatusFk: 1,
+				idUnidadMedida: row?.Unidad_de_medida,
+				idRestaurantFk: 1,
+				minStock: 0,
 			};
 			uploadData.push(obj);
 		}
@@ -268,6 +276,7 @@ const ImportProducts = () => {
 			// }
 			addKeys(uploadData);
 			setData(uploadData);
+			console.log(uploadData);
 		};
 	};
 
@@ -290,7 +299,7 @@ const ImportProducts = () => {
 		if (newFileList[0].status == 'done') {
 			setLoading(true);
 			handleConvertFileToJson([selectedFile]);
-			//message.success(`${newFileList[0].name} ha sido cargado`);
+			message.success(`${newFileList[0].name} ha sido cargado`);
 		} else if (newFileList[0].status == 'error') {
 			message.error('Ha ocurrido un error');
 		}
@@ -305,15 +314,28 @@ const ImportProducts = () => {
 		},
 	};
 
+	const body = {
+		idUserAddFk: 1,
+		idProductionCenter: 80,
+		isProduction: 9
+	}
+
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-
+		console.log(formatData);
 		setLoading(true);
-		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
-			lista: formatData,
+		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
+			list : formatData,
 		});
-		console.log(data);
-		if (res.isLeft()) {
+		const rest = await requestHandler.get('/api/v2/product/listint/lite/1')
+
+		/* console.log(rest);
+		console.log(restt);
+		console.log(res); */
+		console.log(rest.value);
+		console.log(res);
+		if (rest.isLeft()) {
+			setLoading(false);
 			return message.error('Ha ocurrido un error');
 		}
 		message.success('Productos agregados exitosamente');
@@ -356,7 +378,7 @@ const ImportProducts = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Title title="Importar" path="/dashboard/products" goBack={1} />
+					<Title title="Importar" path="/dashboard/stock" goBack={1} />
 					
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
@@ -385,9 +407,11 @@ const ImportProducts = () => {
 					</Row>
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
+							style={{overflow: 'scroll'}}
+							scroll={{x: '100vw'}}
 							columns={columns}
 							dataSource={data}
-							style={{ overflowX: 'scroll' }}
+
 						/>
 					</ConfigProvider>
 				</div>

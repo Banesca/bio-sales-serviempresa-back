@@ -39,6 +39,17 @@ export function useUser() {
 		}
 		setSellerClients(res.value.getValue().data);
 	};
+	const upPass = async (id, data) => {
+		const res = await requestHandler.put(`/api/v2/user/edit/pass`, {
+			pin: data.pin,
+			idUser: id,
+			mail: data.mail
+		});
+		if (res.isLeft()) {
+			return res.value.getErrorValue();
+		}
+		setSellerClients(res.value.getValue().data);
+	};
 
 	const assignClientToSeller = async ({ idUserFk, idClientFk }) => {
 		const res = await requestHandler.post('/api/v2/user/assign/client', {
@@ -141,6 +152,7 @@ export function useUser() {
 	return {
 		users,
 		sellerClients,
+		upPass,
 		routes,
 		getUsers,
 		getUserById,

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { DeleteOutlined } from '@ant-design/icons';
-import { ConfigProvider, Empty, Input, Table } from 'antd';
+import { DeleteOutlined, EditFilled, EditOutlined } from '@ant-design/icons';
+import { ConfigProvider, Empty, Input, Space, Table } from 'antd';
 import { Modal } from 'antd';
 import { Form } from 'antd';
 import { Button, Col, Row } from 'antd';
@@ -26,18 +26,28 @@ export default function CategoryContainer() {
 			render: (text) => text,
 		},
 		{
-			title: 'Acción',
+			title: 'Acciones',
+			align: 'center',
 			key: 2,
-			width: '20px',
+			className: 'hola',
+			width: '200px',
 			render: (_, item) => (
-				<Button
-					danger
-					type="primary"
-					onClick={() => handleOpenDeleteModal(item)}
-					disabled={userProfile == PROFILES.BILLER}
-				>
-					<DeleteOutlined />
-				</Button>
+				<Space size='middle' style={{justifyContent: 'center', display: 'flex'}}>
+					<Button
+						onClick={() => handleOpenDeleteModal(item)}
+						disabled={userProfile == PROFILES.BILLER}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
+						danger
+						type="primary"
+						onClick={() => handleOpenDeleteModal(item)}
+						disabled={userProfile == PROFILES.BILLER}
+					>
+						<DeleteOutlined />
+					</Button>
+				</Space>
 			),
 		},
 	];
@@ -173,7 +183,7 @@ export default function CategoryContainer() {
 			<Title title="Categorías">
 				{userProfile !=
 					PROFILES.BILLER && (
-					<Button type="success" onClick={handleOpenCreateModal}>
+					<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
 							Agregar
 					</Button>
 				)}

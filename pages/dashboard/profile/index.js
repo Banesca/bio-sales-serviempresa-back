@@ -93,6 +93,7 @@ const UserDetail = () => {
 				pin: data,
 				idUser: id
 			})
+			console.log(id);
 			message.success('Contraseña actualizada');
 		} catch (error) {
 			message.error('Error al actualizar contraseña');
@@ -121,6 +122,9 @@ const UserDetail = () => {
 		onSubmit(values)
 	}
 
+	const router = useRouter();
+
+	console.log(user)
 	return (
 		<>
 			<DashboardLayout>
@@ -161,14 +165,6 @@ const UserDetail = () => {
 						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
 							<p style={{fontWeight: 'bold'}}>Perfil</p>
 							<p>{profile?.name}</p>
-						</List.Item>
-						<List.Item style={{padding: '15px 20px', textDecoration: '', color: 'black', fontSize: '16px'}}>
-							<p style={{padding: '15px 15px', fontWeight: 'bold'}} >Cambiar contraseña</p>
-							<Button type='link' style={{fontWeight: 'bold', fontSize: '16px'}}
-								onClick={() => {
-									handleOpenModal();
-								}}
-							>Ingresa nueva contraseña</Button>
 						</List.Item>
 						<Modal
 							title={'Ingresa nueva contraseña'}
@@ -257,6 +253,15 @@ const UserDetail = () => {
 							</List.Item>
 						</Modal>
 					</List>
+					<div style={{width: '89%'}}>
+						<Button
+							style={{height: '45px', fontSize: '1rem'}}
+							onClick={() => {
+								router.push(`/dashboard/users/update/${user.idUser}`);
+							}}
+						>Editar Perfil
+						</Button>
+					</div>
 					
 				</div>
 			</DashboardLayout>

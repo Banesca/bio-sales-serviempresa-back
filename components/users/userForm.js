@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
+import Title from '../shared/title';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const { requestHandler } = useRequest();
@@ -101,22 +103,40 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		return <Loading isLoading={true} />;
 	}
 
+	const handleReturn = () => {
+		router.push('/dashboard/users');
+		setLoading(true)
+	};
+
 	return (
-		<div>
+		<div style={{overfl: 'scroll'}}>
+			<section style={{
+				textAlign: 'center',
+				fontSize: '2.5rem',
+				margin: '.9rem',
+				display: 'flex',
+				width: '100%',
+				backgroundColor: 'white !important'
+			}}>
+				<Button style={{marginRight: '48%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+					<ArrowLeftOutlined
+						style={{ fontSize: '1.5rem', marginRight: '50%'}}
+					/>
+				</Button>
+				<h2 style={{fontSize: '2.8rem', marginTop: '0px', marginLeft: '-180px'}}>
+					{update ? 'Editar Usuario' : 'Agregar Usuario'}
+				</h2>
+			</section>	
 			<div
 				style={{
-					maxWidth: '500px',
-					margin: '4rem auto',
+					width: '70%', 
+					maxWidth: '750px',
+					margin: '.5rem auto',
+					backgroundColor: 'rgba(0, 0, 0, 0.04)',
+					padding: '60px',
+					borderRadius: '20px'
 				}}
 			>
-				<h1
-					style={{
-						fontSize: '2rem',
-						textAlign: 'center',
-					}}
-				>
-					{update ? 'Actualizar Usuario' : 'Agregar Usuario'}
-				</h1>
 				<Form
 					name="addProduct"
 					labelCol={{ span: 6 }}

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Table, Col, Row } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Table, Col, Row, Space, ConfigProvider, Empty } from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
@@ -20,18 +20,27 @@ export default function SubCategoriesContainer() {
 			render: (text) => text,
 		},
 		{
-			title: 'Acción',
+			title: 'Acciones',
 			width: '20px',
 			key: 2,
 			render: (_, item) => (
-				<Button
-					danger
-					type="primary"
-					disabled={userProfile == PROFILES.BILLER}
-					onClick={() => openDeleteModal(item)}
-				>
-					<DeleteOutlined />
-				</Button>
+				<Space>
+					<Button
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => openDeleteModal(item)}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
+						danger
+						type="primary"
+						disabled={userProfile == PROFILES.BILLER}
+						onClick={() => openDeleteModal(item)}
+					>
+						<DeleteOutlined />
+					</Button>
+				</Space>
+
 			),
 		},
 	];
@@ -84,6 +93,22 @@ export default function SubCategoriesContainer() {
 		setIsDeleteModalOpen(true);
 	};
 
+	const customizeRenderEmpty = () => (
+		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+			style={{
+				textAlign: 'center',
+				marginBottom: '30px'
+			}}
+			description={
+				<span>
+					Sin datos
+				</span>
+			}
+		>
+
+		</Empty>
+	);
+
 	return (
 		<>
 			{/* <Row style={{ alignItems: 'center' }}>
@@ -118,7 +143,7 @@ export default function SubCategoriesContainer() {
 			</Row> */}
 			<Title title="Sub Categorías" goBack={false}>
 				{userProfile != PROFILES.BILLER && (
-					<Button type="success" onClick={handleOpenCreateModal}>
+					<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
 						Agregar
 					</Button>
 				)}
@@ -127,7 +152,9 @@ export default function SubCategoriesContainer() {
 				setQuery={setQuery}
 				setSelectedCategory={setSelectedCategory}
 			/>
-			<Table bordered dataSource={subCategoryList} columns={columns} />
+			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<Table bordered dataSource={subCategoryList} columns={columns} />
+			</ConfigProvider>
 			<SubCategoryModals
 				isCreateModalOpen={isCreateModalOpen}
 				isDeleteModalOpen={isDeleteModalOpen}

@@ -93,7 +93,7 @@ export default function OrdersPage() {
 			>
 				<Title title={'Pedidos'}>
 					<Link href="orders/add">
-						<Button type="success">
+						<Button type="success" style={{marginRight: '-2.3rem'}}>
 							Agregar
 						</Button>
 					</Link>

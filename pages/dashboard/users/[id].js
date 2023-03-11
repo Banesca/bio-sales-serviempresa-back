@@ -220,18 +220,22 @@ const UserDetail = () => {
 		}
 	};
 
-	/* 	const getLocation = async (id) => {
+	const getLocation = async (id) => {
 		setLoading(true);
-		const res = await requestHandler.get(`user/locations/${id}`)
-		https://www.google.com/maps/place/19%C2%B004'38.9%22N+98%C2%B011'42.1%22W/@19.0774823,-98.1955812,19z/data=!3m1!4b1!4m4!3m3!8m2!3d19.077481!4d-98.195034
-		router.push('https://www.google.com/maps/@19.0774869,-98.1952265,21z')
-		if (res.isLeft()) {
-			setLoading(false);
-			message.error('Ha ocurrido un error');
+		try {
+			const rest = await requestHandler.get(`/api/v2/user/locations/${id}`)
+			console.log(rest);
+			router.push('https://www.google.com/maps/@19.0774869,-98.1952265,21z')
+		} catch {
+			if (res.isLeft()) {
+				setLoading(false);
+				message.error('Ha ocurrido un error');
+			}
+		} finally {
+			setLoading(false)
 		}
-		console.log(res);
 	};
- */
+
 	const clientAlreadyAssigned = (id) => {
 		const exists = sellerClients.some((c) => c.idClient === id);
 		return exists;
@@ -263,7 +267,7 @@ const UserDetail = () => {
 						justifyContent: 'center',
 					}}
 				>
-					<Title title="Información General" path="/dashboard/users">
+					<Title title="Información General" path="/dashboard/users" goBack={1}>
 						<>
 							{profile?.id != PROFILES.MASTER &&
 								userProfile == PROFILES.MASTER && (
@@ -300,7 +304,6 @@ const UserDetail = () => {
 					<List className='form'
 						style={{
 							width: '100%',
-							backgroundColor: 'white',
 							borderRadius: '.5rem',
 							marginBottom: '1rem',
 						}}
@@ -319,7 +322,7 @@ const UserDetail = () => {
 						</List.Item>
 						<List.Item style={{padding: '10px 25px'}}>
 							<p>Ultima ubicación</p>
-							<Button type='primary' /* onClick={() => getLocation(id)} */ >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
+							<Button type='primary' onClick={() => getLocation(id)} >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
 						</List.Item>
 					</List>
 					{profile?.id != PROFILES.MASTER && (

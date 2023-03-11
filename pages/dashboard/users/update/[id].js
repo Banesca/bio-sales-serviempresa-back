@@ -20,7 +20,7 @@ const UpdateUser = () => {
 
 	const { requestHandler } = useRequest();
 
-	const { getUserById, updateUser } = useUser();
+	const { getUserById, updateUser, upPass } = useUser();
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
@@ -48,6 +48,8 @@ const UpdateUser = () => {
 
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
+		console.log(data);
+		await upPass(id, data)
 	};
 
 	const generalContext = useContext(GeneralContext);

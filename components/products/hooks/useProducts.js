@@ -87,6 +87,16 @@ export function useProducts() {
 		setProducts(value);
 	};
 
+	const getProductsInv = async (businessId = 1) => {
+		const response = await requestHandler.get(
+			`/api/v2/product/listint/lite/${businessId}`
+		);
+		if (response.isLeft()) {
+			throw response.value.getErrorValue();
+		}
+		console.log(response.value)
+	};
+
 	const validateBarCode = async (barCode, idSucursalFk) => {
 		const res = await requestHandler.post(
 			'/api/v2/product/find/bybarcode',
@@ -159,6 +169,7 @@ export function useProducts() {
 		products,
 		currentProduct,
 		getProducts,
+		getProductsInv,
 		addProduct,
 		getProductById,
 		updateProduct,

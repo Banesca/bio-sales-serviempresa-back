@@ -104,8 +104,16 @@ export default function ChangeOrderStatus({
 								<>
 									<Button
 										onClick={() =>
+											handleOrder()
+										}
+										type="success"
+									>
+										Modificar
+									</Button>
+									<Button
+										onClick={() =>
 											handleOpenModal(
-												statusNames['Recibido']
+												statusNames.Procesado
 											)
 										}
 										type="warning"
@@ -160,10 +168,11 @@ export default function ChangeOrderStatus({
 			<Modal
 				open={modal.visible}
 				title="Actualizar estado"
-				okText="Actualizar"
+				okText="Aceptar"
 				cancelText="Cancelar"
 				onCancel={handleCloseModal}
 				onOk={() => handleChangeStatus(modal.status)}
+				okType='primary'
 			>
 				<p>{`Deseas marcar este pedido como '${modal.action}' ?`}</p>
 			</Modal>

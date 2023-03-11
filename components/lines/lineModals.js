@@ -14,10 +14,13 @@ export default function LinesModals({
 	isCreateModalOpen,
 	isDeleteModalOpen,
 	setIsDeleteModalOpen,
+	setIsEditModalOpen,
 	setIsCreateModalOpen,
 	lineToDelete,
+	isEditModalOpen
 }) {
-	const { lines, subCategories, addLine, deleteLine } = useCategoryContext();
+	
+	const { lines, subCategories, addLine, deleteLine, editLines } = useCategoryContext();
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 	const { setLoading } = useLoadingContext();
@@ -56,6 +59,19 @@ export default function LinesModals({
 		} catch (error) {
 			setLoading(false);
 			message.error('Error al eliminar Linea');
+		}
+	};
+
+	const handleEditLine = async () => {
+		try {
+			setLoading(true);
+			setIsEditModalOpen(false);
+			await editLines( lineBody.name, lineToDelete);
+			console.log(lineBody.name)
+			message.success('Linea actualizada');
+		} catch (error) {
+			setLoading(false);
+			message.error('Error al actualizar Linea');
 		}
 	};
 
@@ -159,6 +175,52 @@ export default function LinesModals({
 				<p>
 					{`Estas seguro de que deseas eliminar la linea ${lineToDelete?.name}?`}
 				</p>
+			</Modal>
+			<Modal
+				title="Actualizar Linea"
+				open={isEditModalOpen}
+				onCancel={() => setIsEditModalOpen(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsEditModalOpen(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={() => handleEditLine()}
+					>
+						Aceptar
+					</Button>,
+				]}
+			>
+				<Form form={createForm}>
+					<Form.Item
+						label="Nombre"
+						name="name"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un nuevo nombre',
+							},
+						]}
+					>
+						<Input
+							allowClear
+							value={lineBody}
+							name="name"
+							onChange={(e) =>
+								setLineBody((prev) => ({
+									...prev,
+									[e.target.name]: e.target.value,
+								}))
+							}
+						/>
+					</Form.Item>
+				</Form>
 			</Modal>
 		</>
 	);

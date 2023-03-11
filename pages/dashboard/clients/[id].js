@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button, ConfigProvider, Empty, List, Table } from 'antd';
-import { ArrowLeftOutlined, EyeTwoTone } from '@ant-design/icons';
+import { ArrowLeftOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
@@ -99,14 +99,14 @@ const ClientDetail = () => {
 		},
 		{
 			title: 'Acciones',
+			align: 'center',
 			key: 5,
 			render: (order) => (
-				<Space size="middle">
+				<Space size="middle" display={{display: 'flex', justifyContent: 'center'}}>
 					<Button
-						type="primary"
 						onClick={() => handleSeeDetail(order)}
 					>
-						<EyeTwoTone />
+						<EditOutlined />
 					</Button>
 				</Space>
 			),
@@ -207,14 +207,10 @@ const ClientDetail = () => {
 					display: 'flex'
 				}}
 			>
-				<ArrowLeftOutlined
-					style={{ fontSize: '1.5rem' }}
-					onClick={handleReturn}
-				/>
 				<div
 					style={{
 						width: '100%',
-						marginTop: '20px',
+						marginTop: '10px',
 						display: 'flex',
 						flexDirection: 'column',
 						backgroundColor: 'white',
@@ -225,21 +221,34 @@ const ClientDetail = () => {
 					<h1
 						style={{
 							textAlign: 'center',
-							fontSize: '2rem',
-							margin: '15px'
+							fontSize: '2.5rem',
+							margin: '0px',
+							display: 'flex',
+							width: '100%'
 						}}
 					>
-						{client?.nameClient}
+						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+							<ArrowLeftOutlined
+								style={{ fontSize: '1.5rem', marginRight: '50%'}}
+								
+								
+							/>
+						</Button>
+						<div style={{marginLeft: '-140px'}}>
+							{client?.nameClient}
+						</div>
+
 					</h1>
-					<h3
+					<h2
 						style={{
 							textAlign: 'center',
+							marginTop: '5px'
 						}}
 					>
 					Información General
-					</h3>
+					</h2>
 				</div>
-				<List style={{backgroundColor: 'white'}}>
+				<List style={{backgroundColor: 'rgba(128, 128, 128, 0.04)', borderRadius: '15px'}}>
 					<List.Item style={{padding: '10px 25px'}}>
 						<p style={{fontWeight: 'bold'}}>Rif</p>
 						<p>{client?.numberDocument}</p>

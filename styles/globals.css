@@ -27,6 +27,7 @@ h6 {
 .form > div {
 	background-color: rgba(128, 128, 128, 0.09) !important;
 	margin-bottom: 1rem !important;
+	border-radius: 15px;
 }
 
 .ant-table-thead tr{
@@ -65,18 +66,34 @@ td {
 
 .ordens thead > :first-child th::before {
 	content: "";
-	margin-left: -34px;
+	margin-left: -77px;
 	height: 1px;
 	background-color: rgba(255, 255, 255, 0.788);
 	position: absolute;
 	bottom: 0;
-	width: 25rem;
+	width: 30rem;
 }
 
 .ordens thead > :first-child .ant-table-cell {
-	font-size: 30px;
+	font-size: 35px;
 }
 
 .ant-table-column-sorter svg {
 	color: white;
+}
+
+.version {
+	display: none;
+
+}
+
+
+@media (min-width: 992px) {
+	.version {
+		position: absolute;
+		bottom: 20px;
+		font-size: 1rem;
+		display: flex;
+	}
+
 }

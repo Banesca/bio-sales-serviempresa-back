@@ -56,6 +56,11 @@ export default function ClientsPage() {
 						<EyeTwoTone />
 					</Button>
 					<Button
+						onClick={() => router.push(`clients/${index.idClient}`)}
+					>
+						<EditOutlined />
+					</Button>
+					<Button
 						type="primary"
 						danger
 						onClick={() => handleOpenDeleteModal(index)}
@@ -204,7 +209,7 @@ export default function ClientsPage() {
 			>
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="success">Agregar</Button>
+						<Button type="success" style={{marginRight: '-2.3rem'}}>Agregar</Button>
 					</Link>
 				</Title>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>

@@ -32,6 +32,12 @@ export default function Products() {
 	const router = useRouter();
 	const columns = [
 		{
+			title: 'ID',
+			dataIndex: 'idProductFk',
+			key: 1,
+			render: (text) => <p>{text ? text : Math.floor(Math.random() * 10)}</p>,
+		},
+		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
 			key: 1,
@@ -39,48 +45,73 @@ export default function Products() {
 		},
 		{
 			title: 'Código',
-			width: '160px',
 			dataIndex: 'barCode',
-			responsive: ['md'],
+			responsive: ['sm'],
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Precio',
-			width: '160px',
-			dataIndex: 'priceSale',
-			responsive: ['sm'],
-			key: 3,
-			render: (text, record) => (
-				<p style={{ color: record.isPromo == '1' && 'green' }}>
-					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
-			),
+			title: 'Referencia',
+			dataIndex: 'efectivo',
+			key: 1,
+			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Promoción',
-			align: 'center',
-			width: '20px',
-			dataIndex: 'isPromo',
+			title: 'Categoría',
+			dataIndex: 'nameFamily',
 			responsive: ['lg'],
-			key: 5,
-			render: (text) => {
-				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{text != 0 ? (
-							<CheckCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'green' }}
-							/>
-						) : (
-							<CloseCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'red' }}
-							/>
-						)}
-					</div>
-				);
-			},
+			key: 4,
+			render: (text) => <p>{text ? text : "Indefinida"}</p>,
 		},
 		{
+			title: 'Marca',
+			dataIndex: 'nameSubFamily',
+			responsive: ['lg'],
+			key: 6,
+			render: (text) => <p>{text ? text : "Indefinida"}</p>,
+		},
+		{
+			title: 'Cantidad',
+			dataIndex: 'quantity',
+			key: 1,
+			render: (text) => <p>{text ? text : "Indefinida"}</p>,
+		},
+		{
+			title: 'Unidad de medida',
+			responsive: ['xs'],
+			dataIndex: 'idUnidadMedida',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Precio Tienda',
+			dataIndex: 'pricePurchase',
+			key: 3,
+			render: (text, record) =>
+				record.isPromo == '1' ? (
+					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+				) : (
+					<p>$ {text}</p>
+				),
+		},
+		{
+			title: 'Precio venta',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text, record) =>
+				record.isPromo == '1' ? (
+					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+				) : (
+					<p>$ {text}</p>
+				),
+		},
+		{
+			title: 'Almacen',
+			dataIndex: 'wareHouse',
+			key: 1,
+			render: (text) => <p>{text ? text : "No definido"}</p>,
+		},
+		/* {
 			title: 'Acciones',
 			align: 'center',
 			key: 6,
@@ -116,7 +147,7 @@ export default function Products() {
 					</Button>
 				</Space>
 			),
-		},
+		}, */
 	];
 	const { userProfile } = useAuthContext();
 	const { loading, setLoading } = useLoadingContext();
@@ -244,24 +275,24 @@ export default function Products() {
 						flexDirection: 'column',
 					}}
 				>
-					<Title goBack={false} title={'Productos'}>
-						{userProfile != PROFILES.BILLER && (
+					<Title goBack={false} title={'Inventario'}>
+						{/* {userProfile != PROFILES.BILLER && (
 							<Button
 								style={{ marginRight: '1rem' }}
 								type="success"
 								disabled={userProfile == PROFILES.BILLER}
 								onClick={() =>
-									router.push('/dashboard/products/add')
+									router.push('/dashboard/stocks')
 								}
 							>
 								Agregar
 							</Button>
-						)}
+						)} */}
 						<Button
 							type="warning"
 							style={{marginRight: '-2.3rem'}}
 							onClick={() =>
-								router.push('/dashboard/products/import')
+								router.push('/dashboard/stock/imp')
 							}
 						>
 							Importar
@@ -270,7 +301,6 @@ export default function Products() {
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
-							style={{ overflowX: 'scroll' }}
 							columns={columns}
 							dataSource={filtered()}
 							loading={loading}

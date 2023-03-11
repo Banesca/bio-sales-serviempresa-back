@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import {
 	ImportOutlined,
 	ProfileOutlined,
@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(ShoppingCartOutlined),
 		},
 		{
-			key: '/dashboard/orders',
+			key: '/dashboard/stock',
 			label: 'Inventario',
 			icon: React.createElement(InboxOutlined),
 		},
@@ -62,6 +62,10 @@ export default function DashboardLayout({ children }) {
 			key: '/login',
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),
+		},
+		{
+			class: 'version',
+			label: 'Version 0.9.5',
 		},
 	];
 
