@@ -112,7 +112,6 @@ export default function Products() {
 			),
 		},
 	];
-	const { userProfile } = useAuthContext();
 	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
