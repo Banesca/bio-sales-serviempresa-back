@@ -105,7 +105,7 @@ const UserDetail = () => {
 			setProfile(
 				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
 			);
-			console.log(user)
+			(user)
 			if (user.idProfileFk === 3) {
 				await getSellerClientsRequest(user.idUser);
 			}
@@ -223,14 +223,13 @@ const UserDetail = () => {
 	const getLocation = async (id) => {
 		setLoading(true);
 		try {
-			const rest = await requestHandler.get(`/api/v2/user/locations/${id}`)
-			console.log(rest);
-			router.push('https://www.google.com/maps/@19.0774869,-98.1952265,21z')
+			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
+			let lat = res.value._value.data[0].latitud;
+			let long = res.value._value.data[0].longitud;
+			window(`https://www.google.com/maps/@${lat},${long},21z`, '_blank')
 		} catch {
-			if (res.isLeft()) {
-				setLoading(false);
-				message.error('Ha ocurrido un error');
-			}
+			setLoading(false);
+			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false)
 		}

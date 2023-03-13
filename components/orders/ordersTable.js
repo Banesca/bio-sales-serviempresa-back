@@ -13,7 +13,6 @@ export default function OrdersTable({ orders }) {
 	const handleSeeDetail = (order) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/${order.idOrderH}`);
-		 console.log(order);
 	};
 
 	const columns = [
@@ -22,44 +21,45 @@ export default function OrdersTable({ orders }) {
 			dataIndex: 'created_at',
 			key: 0,
 			sorter: (a, b) => {
+				let aDay = a.created_at.substring(5, 7);
+				let bDay = b.created_at.substring(8, 10);
+				
+				let aMonth = a.created_at.substring(5, 7);
+				let bMonth = b.created_at.substring(5, 7);
+				
 				let aYear = a.created_at.substring(0, 4);
 				let bYear = b.created_at.substring(0, 4);
 
-				let aMonth = a.created_at.substring(5, 7);
-				let bMonth = b.created_at.substring(5, 7);
-
-				let aDay = a.created_at.substring(5, 7);
-				let bDay = b.created_at.substring(8, 10);
-
-				let aDate = new Date(aYear, aMonth, aDay);
-				let bDate = new Date(bYear, bMonth, bDay);
+				let aDate = new Date(aDay, aMonth, aYear);
+				let bDate = new Date(aDay, aMonth, aYear);
 
 				return aDate - bDate
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.split(' ', 1)}</p>,
+			render: (text) => <p>{text.slice(0, 10).split('-').reverse().join('-')}</p>,
 		},
 		{
 			title: 'Ultima actualización',
 			dataIndex: 'updated_at',
 			key: 0,
 			sorter: (a, b) => {
-				let aYear = a.updated_at.substring(0, 4);
-				let bYear = b.updated_at.substring(0, 4);
-
+				let aDay = a.updated_at.substring(5, 7);
+				let bDay = b.updated_at.substring(8, 10);
+				
 				let aMonth = a.updated_at.substring(5, 7);
 				let bMonth = b.updated_at.substring(5, 7);
 
-				let aDay = a.updated_at.substring(5, 7);
-				let bDay = b.updated_at.substring(8, 10);
+				let aYear = a.updated_at.substring(0, 4);
+				let bYear = b.updated_at.substring(0, 4);
 
-				let aDate = new Date(aYear, aMonth, aDay);
-				let bDate = new Date(bYear, bMonth, bDay);
+				let aDate = new Date(aDay, aMonth, aYear);
+				let bDate = new Date(bDay, bMonth, bYear);
 
 				return aDate - bDate
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.split(' ', 1)}</p>,
+			render: (text) => (
+				<p>{text.slice(0, 10).split('-').reverse().join('-')}</p>),
 		},
 		{
 			title: 'Vendedor',

@@ -16,7 +16,6 @@ export default function useClients() {
 
 	const deleteClient = async (idClient) => {
 		const res = await requestHandler.delete(`/api/v2/client/delete/${idClient}`)
-		console.log('cliente eliminado')
 		if (res.isLeft()) {
 			throw res.value.getErrorValue()
 		}

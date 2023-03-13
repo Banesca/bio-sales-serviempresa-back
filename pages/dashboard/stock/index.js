@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty } from 'antd';
+import { Table, Space, Modal, ConfigProvider, Empty, Form, Input } from 'antd';
 import Button from 'antd-button-color';
 import {
 	CheckCircleOutlined,
@@ -33,9 +33,9 @@ export default function Products() {
 	const columns = [
 		{
 			title: 'ID',
-			dataIndex: 'idProductFk',
+			dataIndex: 'idProduct',
 			key: 1,
-			render: (text) => <p>{text ? text : Math.floor(Math.random() * 10)}</p>,
+			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Nombre',
@@ -44,37 +44,49 @@ export default function Products() {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Código',
-			dataIndex: 'barCode',
-			responsive: ['sm'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Referencia',
-			dataIndex: 'efectivo',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Categoría',
+			title: 'Familia',
 			dataIndex: 'nameFamily',
 			responsive: ['lg'],
 			key: 4,
-			render: (text) => <p>{text ? text : "Indefinida"}</p>,
+			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
 		},
 		{
-			title: 'Marca',
+			title: 'Subfamilia',
 			dataIndex: 'nameSubFamily',
 			responsive: ['lg'],
 			key: 6,
-			render: (text) => <p>{text ? text : "Indefinida"}</p>,
+			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
 		},
 		{
-			title: 'Cantidad',
-			dataIndex: 'quantity',
+			title: 'Precio Compra',
+			dataIndex: 'pricePurchase',
+			key: 3,
+			render: (text) => <p>${text}</p>
+		},
+		{
+			title: 'Precio venta',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text) => <p>${text}</p>
+		},
+		{
+			title: 'Stock mínimo',
+			dataIndex: 'minStock',
 			key: 1,
-			render: (text) => <p>{text ? text : "Indefinida"}</p>,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Valor total',
+			dataIndex: 'totalPrice',
+			responsive: ['sm'],
+			key: 2,
+			render: (text) => <p>${text}</p>,
+		},
+		{
+			title: 'Stock',
+			dataIndex: 'stock',
+			key: 1,
+			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Unidad de medida',
@@ -84,70 +96,21 @@ export default function Products() {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Precio Tienda',
-			dataIndex: 'pricePurchase',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
-		},
-		{
-			title: 'Precio venta',
-			dataIndex: 'priceSale',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
-		},
-		{
-			title: 'Almacen',
-			dataIndex: 'wareHouse',
-			key: 1,
-			render: (text) => <p>{text ? text : "No definido"}</p>,
-		},
-		/* {
 			title: 'Acciones',
 			align: 'center',
 			key: 6,
 			render: (product, index) => (
 				<Space size="small" style={{justifyContent: 'center', display: 'flex'}}>
 					<Button
-						type="primary"
 						onClick={() => {
-							setLoading(true);
-							router.push(
-								`/dashboard/products/${product.idProduct}`
-							);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(
-								`/dashboard/products/update/${product.idProduct}`
-							);
+							openEditModal(product)
 						}}
 					>
 						<EditOutlined />
 					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button>
 				</Space>
 			),
-		}, */
+		},
 	];
 	const { userProfile } = useAuthContext();
 	const { loading, setLoading } = useLoadingContext();
@@ -157,20 +120,33 @@ export default function Products() {
 	const { getCategories, getSubCategories, getLines } = useCategoryContext();
 	const { getBrands } = useBrandContext();
 
-	const { getProducts, deleteProduct, products } = useProducts();
+	const { getProducts, deleteProduct, products, updateProductInv, productsInv, getProductsInv } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [createForm] = Form.useForm();
+
+	const [object, setObject] = useState();
+	
+
+	const [lineBody, setLineBody] = useState({
+		counter: '',
+	});
+	const [lineBodys, setLineBodys] = useState({
+		reference: '',
+	});
+
 	useEffect(() => {
-		let list = products;
+		let list = productsInv;
 		addKeys(list);
 		setProduct(list);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [products]);
+	}, [productsInv]);
 
 	const getProductsRequest = async (businessId) => {
 		setLoading(true);
 		try {
-			await getProducts(businessId);
+			await getProductsInv(businessId);
 		} catch (error) {
 			console.error(error);
 			message.error('Error al cargar productos');
@@ -192,6 +168,28 @@ export default function Products() {
 			setLoading(false);
 		}
 	};
+
+	const openEditModal = (value) => {
+		setIsEditModalOpen(true);
+		setObject(value);
+	}
+
+	const handleUpdateStock = async () => {
+		try {
+			setLoading(true);
+			setIsEditModalOpen(false);
+			(object.idProduct);
+			(lineBody.undefined);
+			(lineBodys.undefined)
+			/* (object) */
+			await updateProductInv(object.idProduct, lineBody.undefined, lineBodys.undefined, selectedBusiness.idSucursal);
+			message.success('Stock actualizado');
+		} catch (error) {
+			message.error('Error al cargar marcas');
+		} finally {
+			setLoading(false);
+		}
+	}
 
 	const brandListRequest = async (business = 1) => {
 		setLoading(true);
@@ -276,18 +274,6 @@ export default function Products() {
 					}}
 				>
 					<Title goBack={false} title={'Inventario'}>
-						{/* {userProfile != PROFILES.BILLER && (
-							<Button
-								style={{ marginRight: '1rem' }}
-								type="success"
-								disabled={userProfile == PROFILES.BILLER}
-								onClick={() =>
-									router.push('/dashboard/stocks')
-								}
-							>
-								Agregar
-							</Button>
-						)} */}
 						<Button
 							type="warning"
 							style={{marginRight: '-2.3rem'}}
@@ -333,6 +319,75 @@ export default function Products() {
 						Estas seguro de que deseas eliminar
 						{` ${currentProduct?.nameProduct}`}
 					</p>
+				</Modal>
+				<Modal
+					title="Ajustar inventario"
+					open={isEditModalOpen}
+					onCancel={() => setIsEditModalOpen(false)}
+					footer={[
+						<Button
+							key="cancel"
+							onClick={() => setIsEditModalOpen(false)}
+						>
+							Cancelar
+						</Button>,
+						<Button
+							key="delete"
+							type="primary"
+							onClick={() => handleUpdateStock()}
+						>
+							Aceptar
+						</Button>,
+					]}
+				>
+					<Form form={createForm}>
+						<Form.Item
+							label="Cantidad a ajustar"
+							name="counter"
+							required
+							rules={[
+								{
+									required: true,
+									message: 'Ingresa la cantidad que desee cambiar',
+								},
+							]}
+						>
+							<Input
+								allowClear
+								value={lineBody}
+								name="counter"
+								onChange={(e) =>
+									setLineBody((prev) => ({
+										...prev,
+										[e.target.counter]: e.target.value,
+									}))
+								}
+							/>
+						</Form.Item>
+						<Form.Item
+							label="Motivo"
+							name="reference"
+							required
+							rules={[
+								{
+									required: true,
+									message: 'Motivo',
+								},
+							]}
+						>
+							<Input
+								allowClear
+								value={lineBodys}
+								name="reference"
+								onChange={(e) =>
+									setLineBodys((prev) => ({
+										...prev,
+										[e.target.reference]: e.target.value,
+									}))
+								}
+							/>
+						</Form.Item>
+					</Form>
 				</Modal>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

@@ -83,8 +83,8 @@ td {
 }
 
 .version {
-	display: none;
-
+	position: absolute;
+	bottom: 0;
 }
 
 

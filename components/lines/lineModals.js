@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import { Select } from 'antd';
 import { Button, Modal } from 'antd';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
-import { useBusinessProvider } from '../../hooks/useBusinessProvider';
+import { BusinessProvider, useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { useRequest } from '../../hooks/useRequest';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { useEffect, useState } from 'react';
@@ -54,7 +54,6 @@ export default function LinesModals({
 			setLoading(true);
 			setIsDeleteModalOpen(false);
 			await deleteLine(lineToDelete.idLine, selectedBusiness.idSucursal);
-			setLoading(false);
 			message.success('Linea eliminada');
 		} catch (error) {
 			setLoading(false);
@@ -66,13 +65,15 @@ export default function LinesModals({
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await editLines( lineBody.name, lineToDelete);
-			console.log(lineBody.name)
+			await editLines( lineBody.name, lineBody.idSubFamilyFk, lineToDelete, selectedBusiness.idSucursal);
 			message.success('Linea actualizada');
 		} catch (error) {
 			setLoading(false);
 			message.error('Error al actualizar Linea');
+		} finally {
+			setLoading(false);
 		}
+		
 	};
 
 	return (
@@ -219,6 +220,37 @@ export default function LinesModals({
 								}))
 							}
 						/>
+					</Form.Item>
+					<Form.Item
+						label="Sub Categoría"
+						name="idSubFamilyFk"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Elige una sub categoría',
+							},
+						]}
+					>
+						<Select
+							value={lineBody.idSubFamilyFk}
+							onChange={(value) =>
+								setLineBody((prev) => ({
+									...prev,
+									idSubFamilyFk: value,
+								}))
+							}
+						>
+							{subCategories &&
+								subCategories.map((c) => (
+									<Select.Option
+										key={c.idProductSubFamily}
+										value={c.idProductSubFamily}
+									>
+										{c.nameSubFamily}
+									</Select.Option>
+								))}
+						</Select>
 					</Form.Item>
 				</Form>
 			</Modal>

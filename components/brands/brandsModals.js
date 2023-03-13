@@ -10,17 +10,22 @@ import { useState } from 'react';
 export default function BrandsModals({
 	isCreateModalOpen,
 	isDeleteModalOpen,
+	isEditModalOpen,
 	setIsCreateModalOpen,
+	setIsEditModalOpen,
 	selectedBrand,
 	setIsDeleteModalOpen,
+	lineBody,
+	setLineBody
 }) {
 	const { setLoading } = useLoadingContext();
-	const { addBrand, getBrands, deleteBrand } = useBrandContext();
+	const { addBrand, getBrands, deleteBrand, updateBrand } = useBrandContext();
 	const { selectedBusiness } = useBusinessProvider();
 
 	const [createForm] = Form.useForm();
 
 	const [brandName, setBrandName] = useState('');
+
 
 	const handleCloseCreateModal = async () => {
 		setIsCreateModalOpen(false);
@@ -59,6 +64,23 @@ export default function BrandsModals({
 			setLoading(false)
 			message.error('Error al eliminar marca');
 		}
+	};
+
+
+
+	const handleEditLine = async () => {
+		try {
+			setLoading(true);
+			setIsEditModalOpen(false);
+			await updateBrand( lineBody.name, lineBody.idB, selectedBusiness.idSucursal);
+			message.success('Linea actualizada');
+		} catch (error) {
+			setLoading(false);
+			message.error('Error al actualizar Linea');
+		} finally {
+			setLoading(false);
+		}
+		
 	};
 
 	return (
@@ -125,6 +147,52 @@ export default function BrandsModals({
 				<p>
 					{`Estas seguro de que deseas eliminar la marca ${selectedBrand?.name}`}
 				</p>
+			</Modal>
+			<Modal
+				title="Actualizar Linea"
+				open={isEditModalOpen}
+				onCancel={() => setIsEditModalOpen(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsEditModalOpen(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={() => handleEditLine()}
+					>
+						Aceptar
+					</Button>,
+				]}
+			>
+				<Form form={createForm}>
+					<Form.Item
+						label="Nombre"
+						name="name"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un nuevo nombre',
+							},
+						]}
+					>
+						<Input
+							allowClear
+							value={lineBody}
+							name="name"
+							onChange={(e) =>
+								setLineBody((prev) => ({
+									...prev,
+									[e.target.name]: e.target.value,
+								}))
+							}
+						/>
+					</Form.Item>
+				</Form>
 			</Modal>
 		</>
 	);

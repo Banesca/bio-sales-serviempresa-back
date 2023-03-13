@@ -96,6 +96,19 @@ export function CategoriesProvider({ children }) {
 		await getCategories(businessId);
 	};
 
+	const editCategories = async (name, idS, idP, id) => {
+		(name);
+		const res = await requestHandler.put('/api/v2/family/update/lite', {
+			name,
+			idStatusFk: idS,
+			idProductFamily: idP
+		});
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getCategories(id);
+	};
+
 	const addCategory = async (name, businessId) => {
 		const res = await requestHandler.post(`/api/v2/family/add`, {
 			name: name,
@@ -129,6 +142,19 @@ export function CategoriesProvider({ children }) {
 		dispatch({ type: ACTIONS.SET_CURRENT_SUB_CATEGORIES, payload: value });
 	};
 
+	const editSubCategories = async (idProductFamily, nameSubFamily, idStatus, idProductSubFamily, id) => {
+		const res = await requestHandler.put('/api/v2/subfamily/update/lite', {
+			idProductFamilyFk: idProductFamily,
+			nameSubFamily: nameSubFamily,
+			idStatusFk: idStatus,
+			idProductSubFamily: idProductSubFamily
+		});
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getSubCategories(id);
+	};
+
 	const addSubCategory = async (body, businessId) => {
 		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
 		if (res.isLeft()) {
@@ -157,18 +183,18 @@ export function CategoriesProvider({ children }) {
 		const lines = res.value.getValue().response;
 		dispatch({ type: ACTIONS.SET_LINES, payload: lines });
 	};
-	const editLines = async (name, lineToDelete) => {
-		const res = await requestHandler.put('api/v2/line/update', {
-			name: name,
-			idSubFamilyFk: lineToDelete.idSubF,
-			idSucursalFk: lineToDelete.idSucFk,
+
+	const editLines = async (name, subFamily, lineToDelete, id) => {
+		const res = await requestHandler.put('/api/v2/line/update', {
+			name,
+			idSubFamilyFk: subFamily,
+			idSucursalFk: lineToDelete.idSucursalFk,
 			idLine: lineToDelete.idLine
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
-		console.log(name);
-		await getLines(businessId);
+		await getLines(id);
 	};
 
 	const getLineById = async (id) => {
@@ -216,6 +242,8 @@ export function CategoriesProvider({ children }) {
 				deleteSubCategory,
 				getLines,
 				editLines,
+				editSubCategories,
+				editCategories,
 				getLineById,
 				addLine,
 				deleteLine,

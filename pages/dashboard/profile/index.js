@@ -93,7 +93,7 @@ const UserDetail = () => {
 				pin: data,
 				idUser: id
 			})
-			console.log(id);
+			(id);
 			message.success('Contraseña actualizada');
 		} catch (error) {
 			message.error('Error al actualizar contraseña');
@@ -124,7 +124,7 @@ const UserDetail = () => {
 
 	const router = useRouter();
 
-	console.log(user)
+	(user)
 	return (
 		<>
 			<DashboardLayout>

@@ -240,27 +240,6 @@ const ImportProducts = () => {
 		return uploadData;
 	};
 
-	const newInventory = (id, type = 1) => {
-		const body = {
-			idUserAddFk: localStorage.getItem('idUser'),
-			idProductionCenter: id,
-			isProduction: 1
-		};
-		
-		this.serviceInventory.addInventoryHeader(body).subscribe((resp) => {
-
-			this.toastr.success('Nueva recepción creada');
-			this.idInventory = resp.data[0];
-			if (type == 1) {
-				this.addProduction();
-			} else {
-				this.addProductionMassive();
-			}
-		}, (error) => {
-			this.toastr.error('No se pudo crear');
-		});
-	}
-
 	const existCategory = (name) => {
 		const filter = categories.filter(
 			(c) => c.name.toLowerCase() === name.toLowerCase()
@@ -290,7 +269,6 @@ const ImportProducts = () => {
 			// }
 			addKeys(uploadData);
 			setData(uploadData);
-			console.log(uploadData);
 		};
 	};
 
@@ -329,27 +307,21 @@ const ImportProducts = () => {
 	};
 
 	const body = {
-		idUserAddFk: '2',
+		idUserAddFk: '0',
 		idProductionCenter: '1',
 		isProduction: '2'
 	}
 
 	const handleSendData = async () => {
-		const formatData = removeKeys(data);
-		console.log(data);
+		(data);
 		setLoading(true);
-		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
+		/* const res = await requestHandler.post('/api/v2/production/product/add/masive', {
 			body,
-		});
+		}); */
 		const restt = await requestHandler.post('/api/v2/production/product/add', {
 			data,
 		});
-		const rest = await requestHandler.get('/api/v2/product/listint/lite/1')
-		/*console.log(rest);
-		console.log(restt);
-	console.log(res); */
-		console.log(rest);
-		console.log(rest);
+		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
 		if (rest.isLeft()) {
 			setLoading(false);
 			return message.error('Ha ocurrido un error');

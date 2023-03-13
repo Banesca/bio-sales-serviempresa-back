@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Typography } from 'antd';
 import { useRouter } from 'next/router';
 
@@ -30,7 +30,7 @@ export default function Title({ title, path, children, goBack, update }) {
 			>
 				{goBack && (
 					<Button onClick={handleReturn} style={{borderRadius: '20px', height: '42px'}}>
-						<ArrowLeftOutlined
+						<LeftOutlined
 							style={{ fontSize: '1.5rem' }}
 						/>
 					</Button>
@@ -70,10 +70,10 @@ export default function Title({ title, path, children, goBack, update }) {
 			</Col>
 			{children 
 				? <Col
-					lg={{ span: children ? 2 : 0 }}
-					md={{ span: children ? 2 : 0, offset: 0 }}
-					sm={{ span: children ? 2 : 0 }}
-					xs={{ span: children ? 2 : 0 }}
+					lg={{ span: children ? 0 : 0 }}
+					md={{ span: children ? 0 : 0, offset: 0 }}
+					sm={{ span: children ? 0 : 0 }}
+					xs={{ span: children ? 23 : 0}}
 					style={{
 						justifyContent: 'end',
 						display: 'flex',

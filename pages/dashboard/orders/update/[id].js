@@ -18,7 +18,7 @@ import { useProducts } from '../../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -252,7 +252,7 @@ const UpdateOrderPage = () => {
 				>
 					<div style={{position: 'absolute'}}>
 						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-							<ArrowLeftOutlined
+							<LeftOutlined
 								style={{ fontSize: '1.5rem', marginRight: '50%'}}
 							/>
 						</Button>

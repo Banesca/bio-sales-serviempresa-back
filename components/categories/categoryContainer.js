@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { DeleteOutlined, EditFilled, EditOutlined } from '@ant-design/icons';
-import { ConfigProvider, Empty, Input, Space, Table } from 'antd';
+import { ConfigProvider, Empty, Input, Select, Space, Table } from 'antd';
 import { Modal } from 'antd';
 import { Form } from 'antd';
 import { Button, Col, Row } from 'antd';
@@ -34,7 +34,7 @@ export default function CategoryContainer() {
 			render: (_, item) => (
 				<Space size='middle' style={{justifyContent: 'center', display: 'flex'}}>
 					<Button
-						onClick={() => handleOpenDeleteModal(item)}
+						onClick={() => openEditModal(item)}
 						disabled={userProfile == PROFILES.BILLER}
 					>
 						<EditOutlined />
@@ -54,7 +54,7 @@ export default function CategoryContainer() {
 
 	const { userProfile } = useAuthContext();
 
-	const { categories, addCategory, deleteCategory } = useCategoryContext();
+	const { categories, addCategory, deleteCategory, editCategories } = useCategoryContext();
 
 	const [query, setQuery] = useState('');
 	// const [loading, setLoading] = useState(false);
@@ -71,6 +71,14 @@ export default function CategoryContainer() {
 
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	
+
+	const [lineBody, setLineBody] = useState({
+		name: '',
+		idP: '',
+		idS: ''
+	});
 
 	const addCategoryRequest = async (value) => {
 		try {
@@ -112,6 +120,27 @@ export default function CategoryContainer() {
 	};
 
 	//End Delete modal
+
+
+	const openEditModal = (value) => {
+		setIsEditModalOpen(true);
+		setLineBody({name: '', idP: value.idProductFamily, idS: value.idStatus});
+	}
+
+	const handleEditLine = async () => {
+		try {
+			setLoading(true);
+			setIsEditModalOpen(false);
+			await editCategories( lineBody.name, lineBody.idS, lineBody.idP, selectedBusiness.idSucursal);
+			message.success('Linea actualizada');
+		} catch (error) {
+			setLoading(false);
+			message.error('Error al actualizar Linea');
+		} finally {
+			setLoading(false);
+		}
+		
+	};
 
 	// Create Category Modal
 	const handleOpenCreateModal = () => {
@@ -182,7 +211,7 @@ export default function CategoryContainer() {
 		<>
 			<Title title="Categorías">
 				{userProfile !=
-					PROFILES.BILLER && (
+					PROFILES.BILLER && PROFILES.ADMIN && (
 					<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
 							Agregar
 					</Button>
@@ -238,7 +267,7 @@ export default function CategoryContainer() {
 			</Modal>
 			<Modal
 				title="Eliminar"
-				open={isDeleteModalOpen}
+				open={isEditModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
 					<Button
@@ -260,6 +289,52 @@ export default function CategoryContainer() {
 				<p>
 					{`Estas seguro de que deseas eliminar la categoría ${currentCategory?.name}`}
 				</p>
+			</Modal>
+			<Modal
+				title="Actualizar Linea"
+				open={isEditModalOpen}
+				onCancel={() => setIsEditModalOpen(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsEditModalOpen(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={() => handleEditLine()}
+					>
+						Aceptar
+					</Button>,
+				]}
+			>
+				<Form form={createForm}>
+					<Form.Item
+						label="Nombre"
+						name="name"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un nuevo nombre',
+							},
+						]}
+					>
+						<Input
+							allowClear
+							value={lineBody}
+							name="name"
+							onChange={(e) =>
+								setLineBody((prev) => ({
+									...prev,
+									[e.target.name]: e.target.value,
+								}))
+							}
+						/>
+					</Form.Item>
+				</Form>
 			</Modal>
 			{/* <Loading isLoading={loading} /> */}
 		</>

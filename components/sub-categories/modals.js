@@ -11,15 +11,22 @@ import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 export default function SubCategoryModals({
 	isCreateModalOpen,
 	isDeleteModalOpen,
+	isEditModalOpen,
 	setIsDeleteModalOpen,
 	setIsCreateModalOpen,
+	setIsEditModalOpen,
 	setLoading,
 	currentBrands,
 }) {
-	const { categories, deleteSubCategory, addSubCategory, getSubCategories } =
+	const { categories, deleteSubCategory, addSubCategory, getSubCategories, editSubCategories } =
 		useCategoryContext();
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
+
+	const [lineBody, setLineBody] = useState({
+		name: '',
+		idSubFamilyFk: '',
+	});
 
 	const [modals, setModals] = useState({
 		add: isCreateModalOpen,
@@ -111,6 +118,21 @@ export default function SubCategoryModals({
 	const handleCloseCreateModal = async () => {
 		setIsCreateModalOpen(false);
 		createForm.resetFields();
+	};
+
+	const handleEditLine = async () => {
+		try {
+			setLoading(true);
+			setIsEditModalOpen(false);
+			await editSubCategories(currentBrands.idProductFamily, lineBody.name, currentBrands.idStatus, lineBody.idSubFamilyFk, selectedBusiness.idSucursal);
+			message.success('Subcategoria actualizada');
+		} catch (error) {
+			setLoading(false);
+			message.error('Error al actualizar subcategoria');
+		} finally {
+			setLoading(false);
+		}
+		
 	};
 
 	return (
@@ -206,6 +228,83 @@ export default function SubCategoryModals({
 				<p>
 					{`Estas seguro de que deseas eliminar la sub categoría ${currentBrands?.nameSubFamily}`}
 				</p>
+			</Modal>
+			<Modal
+				title="Actualizar Linea"
+				open={isEditModalOpen}
+				onCancel={() => setIsEditModalOpen(false)}
+				footer={[
+					<Button
+						key="cancel"
+						onClick={() => setIsEditModalOpen(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={() => handleEditLine()}
+					>
+						Aceptar
+					</Button>,
+				]}
+			>
+				<Form form={createForm}>
+					<Form.Item
+						label="Nombre"
+						name="name"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un nuevo nombre',
+							},
+						]}
+					>
+						<Input
+							allowClear
+							value={lineBody}
+							name="name"
+							onChange={(e) =>
+								setLineBody((prev) => ({
+									...prev,
+									[e.target.name]: e.target.value,
+								}))
+							}
+						/>
+					</Form.Item>
+					<Form.Item
+						label="Sub Categoría"
+						name="idSubFamilyFk"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Elige una sub categoría',
+							},
+						]}
+					>
+						<Select
+							value={lineBody.idSubFamilyFk}
+							onChange={(value) =>
+								setLineBody((prev) => ({
+									...prev,
+									idSubFamilyFk: value,
+								}))
+							}
+						>
+							{categories &&
+								categories.map((c) => (
+									<Select.Option
+										key={c.idProductFamily}
+										value={c.idProductFamily}
+									>
+										{c.name}
+									</Select.Option>
+								))}
+						</Select>
+					</Form.Item>
+				</Form>
 			</Modal>
 		</>
 	);

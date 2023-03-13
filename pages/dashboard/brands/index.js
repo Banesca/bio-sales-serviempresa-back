@@ -32,7 +32,7 @@ const BrandsPage = () => {
 				<Space>
 					<Button
 						disabled={userProfile == PROFILES.BILLER}
-						onClick={() => handleOpenDeleteModal(item)}
+						onClick={() => openEditModal(item)}
 					>
 						<EditOutlined />
 					</Button>
@@ -128,6 +128,19 @@ const BrandsPage = () => {
 		</Empty>
 	);
 
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [lineBody, setLineBody] = useState({
+		name: '',
+		idB: '',
+	});
+
+
+	const openEditModal = (value) => {
+		setIsEditModalOpen(true);
+		(value);
+		setLineBody({name: '', idB: value.idBrand})
+	}
+
 	return (
 		<>
 			<DashboardLayout>
@@ -158,6 +171,10 @@ const BrandsPage = () => {
 							setIsCreateModalOpen={setIsCreateModalOpen}
 							setIsDeleteModalOpen={setIsDeleteModalOpen}
 							selectedBrand={selectedBrand}
+							isEditModalOpen={isEditModalOpen}
+							lineBody={lineBody}
+							setLineBody={setLineBody}
+							setIsEditModalOpen={setIsEditModalOpen}
 						/>
 					</ConfigProvider>
 

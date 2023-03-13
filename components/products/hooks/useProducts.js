@@ -74,6 +74,8 @@ export function useProducts() {
 	const { requestHandler } = useRequest();
 
 	const [products, setProducts] = useState([]);
+	const [productsInv, setProductsInv] = useState([]);
+
 	const [currentProduct, setCurrentProduct] = useState({});
 
 	const getProducts = async (businessId = 1) => {
@@ -94,7 +96,9 @@ export function useProducts() {
 		if (response.isLeft()) {
 			throw response.value.getErrorValue();
 		}
-		console.log(response.value)
+		const value = response.value.getValue().data;
+		(response.value)
+		setProductsInv(value)
 	};
 
 	const validateBarCode = async (barCode, idSucursalFk) => {
@@ -155,6 +159,21 @@ export function useProducts() {
 		}
 	};
 
+	const updateProductInv = async (idP, quantity, reference, id) => {
+		const res = await requestHandler.post(
+			'/api/v2/inventary/adjustment', {
+				IdProductFk: idP,
+				quantity,
+				reference
+			}
+		);
+		('hola')
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		getProductsInv(id);
+	};
+
 	const deleteProduct = async (productId, businessId) => {
 		const res = await requestHandler.delete(
 			`/api/v2/product/delete/${productId}`
@@ -167,6 +186,8 @@ export function useProducts() {
 
 	return {
 		products,
+		productsInv,
+		updateProductInv,
 		currentProduct,
 		getProducts,
 		getProductsInv,

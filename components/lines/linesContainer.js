@@ -82,7 +82,6 @@ export default function LinesContainer() {
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setLineToDelete(value)
-		console.log(lineToDelete)
 
 	}
 

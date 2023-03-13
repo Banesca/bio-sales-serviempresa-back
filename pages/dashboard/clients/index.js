@@ -96,7 +96,7 @@ export default function ClientsPage() {
 	const handleDelete = async (name, id) => {
 		try {
 			await deleteClient(id);
-			console.log(id);
+			(id);
 			message.success(`El usuario ${name} ha sido eliminado`);
 		} catch (error) {
 			message.error('Error al eliminar cliente');

@@ -36,35 +36,47 @@ const ImportProducts = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Código',
-			dataIndex: 'barCode',
-			responsive: ['sm'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
+			title: 'Familia',
+			dataIndex: 'nameFamily',
+			responsive: ['lg'],
+			key: 4,
+			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
 		},
 		{
-			title: 'Referencia',
-			dataIndex: 'efectivo',
+			title: 'Subfamilia',
+			dataIndex: 'nameSubFamily',
+			responsive: ['lg'],
+			key: 6,
+			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
+		},
+		{
+			title: 'Precio Compra',
+			dataIndex: 'pricePurchase',
+			key: 3,
+			render: (text) => <p>${text}</p>
+		},
+		{
+			title: 'Precio venta',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text) => <p>${text}</p>
+		},
+		{
+			title: 'Stock mínimo',
+			dataIndex: 'minStock',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Categoría',
-			dataIndex: 'nameFamily',
-			responsive: ['lg'],
-			key: 4,
-			render: (text) => <p>{text}</p>,
+			title: 'Valor total',
+			dataIndex: 'totalPrice',
+			responsive: ['sm'],
+			key: 2,
+			render: (text) => <p>${text}</p>,
 		},
 		{
-			title: 'Marca',
-			dataIndex: 'nameSubFamily',
-			responsive: ['lg'],
-			key: 6,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Cantidad',
-			dataIndex: 'quantity',
+			title: 'Stock',
+			dataIndex: 'stock',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -72,34 +84,6 @@ const ImportProducts = () => {
 			title: 'Unidad de medida',
 			responsive: ['xs'],
 			dataIndex: 'idUnidadMedida',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio Tienda',
-			dataIndex: 'pricePurchase',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
-		},
-		{
-			title: 'Precio venta',
-			dataIndex: 'priceSale',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
-		},
-		{
-			title: 'Almacen',
-			dataIndex: 'wareHouse',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -276,7 +260,7 @@ const ImportProducts = () => {
 			// }
 			addKeys(uploadData);
 			setData(uploadData);
-			console.log(uploadData);
+			(uploadData);
 		};
 	};
 
@@ -322,18 +306,18 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData);
+		(formatData);
 		setLoading(true);
 		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
-			list : formatData,
+			list : data,
 		});
 		const rest = await requestHandler.get('/api/v2/product/listint/lite/1')
 
-		/* console.log(rest);
-		console.log(restt);
-		console.log(res); */
-		console.log(rest.value);
-		console.log(res);
+		/* (rest);
+		(restt);
+		(res); */
+		(rest.value);
+		(res);
 		if (rest.isLeft()) {
 			setLoading(false);
 			return message.error('Ha ocurrido un error');

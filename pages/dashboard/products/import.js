@@ -312,7 +312,7 @@ const ImportProducts = () => {
 		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
 			lista: formatData,
 		});
-		console.log(data);
+		(data);
 		if (res.isLeft()) {
 			return message.error('Ha ocurrido un error');
 		}

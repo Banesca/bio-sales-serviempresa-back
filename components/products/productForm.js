@@ -10,7 +10,7 @@ import {
 	Row,
 	message,
 } from 'antd';
-import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
@@ -198,7 +198,7 @@ const ProductForm = (props) => {
 				backgroundColor: 'white !important'
 			}}>
 				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<ArrowLeftOutlined
+					<LeftOutlined
 						style={{ fontSize: '1.5rem', marginRight: '50%'}}
 					/>
 				</Button>

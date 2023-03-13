@@ -84,7 +84,7 @@ export default function Users() {
 	const handleDelete = async (idUser, name) => {
 		try {
 			await deleteUser(idUser);
-			console.log(idUser)
+			(idUser)
 			message.success(`El usuario ${name} ha sido eliminado`);
 		} catch (error) {
 			message.error('Error al eliminar usuario');
@@ -104,7 +104,7 @@ export default function Users() {
 					}}
 				>
 					<Title title="Usuarios" goBack={false}>
-						{userProfile != PROFILES.BILLER && userProfile !== PROFILES.ADMIN && (
+						{userProfile != PROFILES.BILLER && userProfile !== PROFILES.ADMIN && userProfile !== PROFILES.SELLER && (
 							<Link href='users/add'>
 								<Button
 									style={{marginRight: '-2.3rem'}}

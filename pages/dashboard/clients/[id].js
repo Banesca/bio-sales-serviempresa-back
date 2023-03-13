@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button, ConfigProvider, Empty, List, Table } from 'antd';
-import { ArrowLeftOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
+import { ArrowLeftOutlined, EditOutlined, EyeTwoTone, LeftOutlined } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
@@ -228,7 +228,7 @@ const ClientDetail = () => {
 						}}
 					>
 						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-							<ArrowLeftOutlined
+							<LeftOutlined
 								style={{ fontSize: '1.5rem', marginRight: '50%'}}
 								
 								

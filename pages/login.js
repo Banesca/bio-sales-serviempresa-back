@@ -142,7 +142,6 @@ export default function Login() {
 							>
 								SiempreOL
 							</h1>
-							<h5 style={{ marginTop: '0' }}>v0.9.5</h5>
 							<h2
 								style={{
 									fontSize: '2rem',
@@ -152,6 +151,7 @@ export default function Login() {
 							>
 								Iniciar Sesión
 							</h2>
+							<h5 style={{marginTop: '-15px'}}>v0.9.5</h5>
 						</Typography>
 						<Form
 							name="login"

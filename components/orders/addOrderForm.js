@@ -5,7 +5,7 @@ import { GeneralContext } from '../../pages/_app';
 import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useRouter } from 'next/router';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 
 const AddOrderForm = (props) => {
 	const [loading, setLoading] = useState(false);
@@ -97,7 +97,7 @@ const AddOrderForm = (props) => {
 				backgroundColor: 'white !important'
 			}}>
 				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<ArrowLeftOutlined
+					<LeftOutlined
 						style={{ fontSize: '1.5rem', marginRight: '50%'}}
 					/>
 				</Button>

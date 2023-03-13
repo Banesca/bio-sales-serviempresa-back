@@ -14,7 +14,7 @@ export const ApiProvider = (props) => {
 				);
 				setApiData(response.data.restaurante);
 			} catch (error) {
-				console.log(error);
+				(error);
 			}
 		}
 		setApi();

@@ -52,7 +52,7 @@ export default function Products() {
 			responsive: ['sm'],
 			key: 3,
 			render: (text, record) => (
-				<p style={{ color: record.isPromo == '1' && 'green' }}>
+				<p>
 					${record.isPromo == '1' ? record.marketPrice : text}
 				</p>
 			),

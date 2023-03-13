@@ -48,7 +48,7 @@ export function useRequest() {
 
 				return right(Result.ok(response.data));
 			} catch (error) {
-				console.log(error);
+				(error);
 				return left(Result.fail(error));
 			}
 		},

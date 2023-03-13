@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
 			);
 			setGeneralData(response.data.restaurante);
 		} catch (error) {
-			console.log(error);
+			(error);
 		}
 	}
 

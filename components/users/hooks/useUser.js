@@ -133,7 +133,7 @@ export function useUser() {
 			pin: data.pin,
 			idUser: id
 		});
-		console.log('actualizado')
+		('actualizado')
 		if (res.isLeft() && rest.isLeft()) {
 			throw res.value.getErrorValue();
 		}

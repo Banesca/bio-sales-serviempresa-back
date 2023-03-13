@@ -34,7 +34,7 @@ const OrderDetail = () => {
 	const getStatus = () => {
 		let status = currentOrder.idStatusOrder;
 		let color = '';
-		console.log(status);
+		(status);
 		if(status == 1) {
 			color = '#ff6c0b';
 		} else if (status == 2) {
@@ -55,7 +55,7 @@ const OrderDetail = () => {
 		try {
 			await changeStatus(status, id);
 			message.success('Estado actualizado');
-			console.log(status);
+			(status);
 		} catch (error) {
 			message.error('Error al actualizar orden');
 		} finally {
@@ -66,7 +66,7 @@ const OrderDetail = () => {
 	const handleOrder = () => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${currentOrder.idOrderH}`);
-		console.log(currentOrder.idOrderH)
+		(currentOrder.idOrderH)
 	}
 
 	useEffect(() => {

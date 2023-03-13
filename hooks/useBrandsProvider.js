@@ -41,6 +41,17 @@ export function BrandsProvider({ children }) {
 		dispatch({ type: ACTIONS.SET_BRANDS, payload: value });
 	};
 
+	const updateBrand = async (name, idBrand, businessId) => {
+		const res = await requestHandler.put(`/api/v2/brand/update/lite`, {
+			name,
+			idBrand
+		});
+		if (res.isLeft()) {
+			throw new Error(res.value.getErrorValue());
+		}
+		await getBrands(businessId);
+	};
+
 	const getBrandById = async (id) => {
 		const res = await requestHandler.get(`/api/v2/brand/get/${id}`);
 		if (res.isLeft()) {
@@ -82,6 +93,7 @@ export function BrandsProvider({ children }) {
 				getBrandById,
 				addBrand,
 				deleteBrand,
+				updateBrand
 			}}
 		>
 			{children}

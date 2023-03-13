@@ -48,7 +48,7 @@ const UpdateUser = () => {
 
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
-		console.log(data);
+		(data);
 		await upPass(id, data)
 	};
 

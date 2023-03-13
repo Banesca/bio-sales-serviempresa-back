@@ -8,7 +8,7 @@ import { useRequest } from '../../hooks/useRequest';
 import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import Title from '../shared/title';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 
 const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 	const { requestHandler } = useRequest();
@@ -119,7 +119,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 				backgroundColor: 'white !important'
 			}}>
 				<Button style={{marginRight: '48%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<ArrowLeftOutlined
+					<LeftOutlined
 						style={{ fontSize: '1.5rem', marginRight: '50%'}}
 					/>
 				</Button>

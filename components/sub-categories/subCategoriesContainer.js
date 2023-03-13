@@ -27,7 +27,7 @@ export default function SubCategoriesContainer() {
 				<Space>
 					<Button
 						disabled={userProfile == PROFILES.BILLER}
-						onClick={() => openDeleteModal(item)}
+						onClick={() => openEditModal(item)}
 					>
 						<EditOutlined />
 					</Button>
@@ -47,6 +47,7 @@ export default function SubCategoriesContainer() {
 
 	const { subCategories } = useCategoryContext();
 	const { userProfile } = useAuthContext();
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 	// const [loading, setLoading] = useState(false);
 	const { setLoading } = useLoadingContext();
@@ -92,6 +93,11 @@ export default function SubCategoriesContainer() {
 		setCurrentBrand(value);
 		setIsDeleteModalOpen(true);
 	};
+
+	const openEditModal = (value) => {
+		setIsEditModalOpen(true);
+		setCurrentBrand(value);
+	}
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -162,6 +168,8 @@ export default function SubCategoriesContainer() {
 				setIsCreateModalOpen={setIsCreateModalOpen}
 				setLoading={setLoading}
 				currentBrands={currentBrands}
+				isEditModalOpen={isEditModalOpen}
+				setIsEditModalOpen={setIsEditModalOpen}
 			/>
 		</>
 	);
