@@ -15,7 +15,7 @@ export default function ProductsInOrder({
 }) {
 	const orderColumns = [
 		{
-			title: `Orden ${order?.numberOrden}`,
+			title: `Pedido Nro. ${order?.numberOrden}`,
 			children: [
 
 				{
@@ -29,7 +29,7 @@ export default function ProductsInOrder({
 					dataIndex: 'priceSale',
 					key: 2,
 					render: (text, record) => (
-						<p style={{ color: record.isPromo == '1' && 'green' }}>
+						<p>
 					${record.isPromo == '1' ? record.marketPrice : text}
 						</p>
 					),

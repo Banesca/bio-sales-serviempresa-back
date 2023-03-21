@@ -21,7 +21,8 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		pin: user.pin || '',
 		idProfileFk: user.idProfileFk || null,
 	});
-
+	
+	const regexpTlp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
 	const [loading, setLoading] = useState(false);
 	const [businessByUser, setBusinessByUser] = useState(userBusiness);
 
@@ -91,9 +92,10 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		} catch (error) {
 			message.error(
 				update
-					? 'Error al actualizar usuario'
-					: ' Error al agregar usuario'
+					? `${error.response.data.message}`
+					: `${error.response.data.message}`
 			);
+			console.log(error)
 		} finally {
 			setLoading(false);
 		}
@@ -116,7 +118,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 				margin: '.9rem',
 				display: 'flex',
 				width: '100%',
-				backgroundColor: 'white !important'
+				backgroundColor: 'white !important',
 			}}>
 				<Button style={{marginRight: '48%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
 					<LeftOutlined
@@ -132,9 +134,11 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 					width: '70%', 
 					maxWidth: '750px',
 					margin: '.5rem auto',
-					backgroundColor: 'rgba(0, 0, 0, 0.04)',
+					backgroundColor: 'white',
 					padding: '60px',
-					borderRadius: '20px'
+					borderRadius: '20px',
+					boxShadow: '6px 6px 10px rgba(180, 180, 180, 0.479)',
+
 				}}
 			>
 				<Form
@@ -198,9 +202,14 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 								min: 8,
 								message: 'Escribe una contraseña de minimo 8 caracteres',
 							},
+							{
+								pattern: regexpTlp,
+								message:
+									'Las contraseña debe tener: de 8 a 16 caracteres, 1 mayuscula, 1 minuscula y 1 caracter especial'
+							}
 						]}
 					>
-						<Input
+						<Input.Password
 							type="password"
 							name="pin"
 							value={userData.pin}
@@ -228,7 +237,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 							}),
 						]}
 					>
-						<Input
+						<Input.Password
 							type="password"
 							name="Repit"
 							value={userData.pin}
@@ -317,7 +326,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 									offset: 12,
 								}}
 							>
-								<Button type='primary' block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

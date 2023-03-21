@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
 	Button,
 	Switch,
@@ -10,20 +11,23 @@ import {
 	Row,
 	message,
 } from 'antd';
+import { ip } from '../../util/environment';
 import { ArrowLeftOutlined, LeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { useBrandContext } from '../../hooks/useBrandsProvider';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
-import { MEASURE_UNITS } from './hooks/useProducts';
+import { MEASURE_UNITS, useProducts } from './hooks/useProducts';
 import { useRouter } from 'next/router';
 import Card from '../shared/card';
+import { useRequest } from '../../hooks/useRequest';
 
 const ProductForm = (props) => {
 	const router = useRouter();
 	const { setLoading } = useLoadingContext();
 	const { brands, getBrands } = useBrandContext();
+	const { getProductById, currentProduct } = useProducts();
 	const {
 		categories,
 		getCategories,
@@ -56,6 +60,25 @@ const ProductForm = (props) => {
 		observation: props.product.observation || '',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
+	};
+
+	const { requestHandler } = useRequest();
+	const [c, setC] = useState();
+	
+
+	const codeListRequest = async (business = 1) => {
+		let code = [];
+		const response = await requestHandler.get(
+			`/api/v2/product/list/0/0/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().data;
+		for ( let i = 0; i < value?.length; i++) {
+			setC(code.push(value[i].barCode));
+		}
+		setC(code);
 	};
 
 	const [product, setProduct] = useState(initialState);
@@ -160,6 +183,7 @@ const ProductForm = (props) => {
 				idRestaurantFk: selectedBusiness.idSucursal,
 			});
 			setLoading(false);
+			codeListRequest(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
@@ -172,12 +196,14 @@ const ProductForm = (props) => {
 		if (!props.update) {
 			return onReset();
 		}
+
 	};
 
 	const [form] = Form.useForm();
 	const onReset = () => {
 		setProduct(initialState);
 		form.resetFields();
+		codeListRequest(selectedBusiness.idSucursal);
 	};
 
 	const handleReturn = () => {
@@ -287,6 +313,16 @@ const ProductForm = (props) => {
 										required: true,
 										message: 'Ingresa un código',
 									},
+									/* ({}) => ({
+										validator(_, value) {
+											if (!value || !(c?.includes(value))) {
+												return Promise.resolve();
+											}
+											return Promise.reject(
+												new Error('Este código ya se encuentra en uso')
+											);
+										},
+									}), */
 								]}
 								labelCol={{
 									md: { span: 10 },
@@ -880,7 +916,7 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 5 }}
 						>
 							<Form.Item>
-								<Button block onClick={onReset} type='primary' >
+								<Button block onClick={onReset} type='warning' >
 									Limpiar
 								</Button>
 							</Form.Item>

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 /* import Button from 'antd-button-color';
  */
-import { Input, Typography, Form, Layout, Button, message, Modal } from 'antd';
+import { Input, Typography, Form, Layout, message, Modal, Button, Image } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -21,6 +21,9 @@ export default function Login() {
 	const handleDelete = () => {
 		setDeleteModalOpen(false);
 	};
+
+	const regexpTlp = /^(?=.\d)(?=.[\u0021-\u002b\u003c-\u0040])(?=.[A-Z])(?=.[a-z])\S{8,16}$/g
+
 	
 	// display message
 	const [messageApi, contextHolder] = message.useMessage();
@@ -72,11 +75,13 @@ export default function Login() {
 			return handleLoginError('Usuario o contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
+		console.log(value);
 		localStorage.setItem('accessToken', value.token);
 		if (value.idProfileFk != PROFILES.MASTER) {
 			const businessByUser = await getUserBusiness(value.idUser);
-			if (businessByUser.length < 1) {
+			if (businessByUser.length < 1 || value.idProfileFk == 3) {
 				handleLoginError('Acceso denegado');
+				setLoading(false);
 				return;
 			}
 			const businessIdsList = value.branch.map((b) => b.idSucursal);
@@ -110,6 +115,7 @@ export default function Login() {
 		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
 	}, [generalContext.api_port]);
 
+
 	return (
 		<>
 			{contextHolder}
@@ -126,89 +132,90 @@ export default function Login() {
 					}}
 				>
 					<div
+						className='login'
 						style={{
 							backgroundColor: 'white',
-							borderRadius: '1rem',
-							paddingInline: '4rem',
+							borderRadius: '1.5rem',
 						}}
 					>
-						<Typography style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-							<h1
-								style={{
-									fontWeight: 'bold',
-									fontSize: '4rem',
-									marginBottom: '0'
-								}}
-							>
-								SiempreOL
-							</h1>
-							<h2
-								style={{
-									fontSize: '2rem',
-									textAlign: 'center',
-									marginTop: '0'
-								}}
-							>
-								Iniciar Sesión
-							</h2>
-							<h5 style={{marginTop: '-15px'}}>v0.9.5</h5>
-						</Typography>
-						<Form
-							name="login"
-							autoComplete="off"
-							labelCol={{ span: 8 }}
-							onFinish={onSubmit}
-						>
-							<Form.Item
-								label="Correo"
-								name="mail"
-								rules={[
-									{
-										required: true,
-										message: 'Ingresa un correo',
-									},
-									{
-										type: 'email',
-										message: 'Ingresa un email valido',
-									},
-								]}
-							>
-								<Input />
-							</Form.Item>
-							<Form.Item
-								label="Contraseña"
-								name="pin"
-								rules={[
-									{
-										required: true,
-										message: 'Ingresa una contraseña',
-									},
-								]}
-							>
-								<Input.Password />
-							</Form.Item>
-							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end', marginTop: '-25px'}} justify='end'>
-								<Button type="link" style={{margin: '0'}} onClick={() => setDeleteModalOpen(true)} block>
-									¿Olvidó su contraseña?
-								</Button>
-								<Modal
-									title="¿Olvidó su contraseña?"
-									style={{textAlign: 'center'}}
-									open={deleteModalOpen}
-									onCancel={() => setDeleteModalOpen(false)}
-									footer={null}
+						<div className='imagen' >
+							<Typography style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+								<h1
+									style={{
+										fontWeight: 'bold',
+										fontSize: '4rem',
+										marginBottom: '0'
+									}}
 								>
-									<p style={{marginTop: '20px'}}>
+								SiempreOL
+								</h1>
+							</Typography>
+						</div>
+						<div className='login-form' style={{marginRight:'-30px'}}>
+
+							<Form 
+								name="login"
+								autoComplete="off"
+								labelCol={{ span: 6, offset: 0 }}
+								onFinish={onSubmit}
+							>
+								<section style={{marginRight: '105px'}}>
+
+									<Form.Item
+										label="Correo"
+										name="mail"
+										rules={[
+											{
+												required: true,
+												message: 'Ingresa un correo',
+											},
+											{
+												type: 'email',
+												message: 'Ingresa un email valido',
+											},
+										]}
+									>
+										<Input />
+									</Form.Item>
+									<Form.Item
+										label="Contraseña"
+										name="pin"
+										rules={[
+											{
+												required: true,
+												message: 'Ingresa una contraseña',
+											},
+										]}
+									>
+										<Input.Password />
+									</Form.Item>
+								</section>
+
+								<Form.Item wrapperCol={{ span: 14, offset: 0 }} style={{display: 'flex-end', marginTop: '-40px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}} justify='center'>
+									<Button type="link" style={{marginTop: '30px', boxShadow: 'none'}} onClick={() => setDeleteModalOpen(true)} block>
+									¿Olvidó su contraseña?
+									</Button>
+									<Modal
+										title="¿Olvidó su contraseña?"
+										style={{textAlign: 'center'}}
+										open={deleteModalOpen}
+										onCancel={() => setDeleteModalOpen(false)}
+										footer={null}
+									>
+										<p style={{marginTop: '20px'}}>
 										Para recuperar su acceso comuniquese con un administrador
-									</p>
-								</Modal>
-							</Form.Item>
-							<Form.Item wrapperCol={{ span: 16, offset: 8 }} style={{display: 'flex-end', marginTop: '-15px'}} justify='end'>
-								<Button type="success" htmlType="submit" style={{margin: '0'}} block>
-									Acceder
-								</Button>
-							</Form.Item>
-						</Form>
+										</p>
+									</Modal>
+								</Form.Item>
+								<Form.Item wrapperCol={{ span: 14, offset: 0 }} style={{display: 'flex-end', marginTop: '-15px'}} justify='center'>
+									<Button type="primary" htmlType="submit" style={{margin: '0'}} block>
+									Iniciar sesión
+									</Button>
+								</Form.Item>
+							</Form>
+							<h5 style={{marginTop: '8px', marginBottom: '5px', color: '#333'}}>Versión 0.9.5</h5>
+						</div>
+
 					</div>
 				</Content>
 			</Layout>

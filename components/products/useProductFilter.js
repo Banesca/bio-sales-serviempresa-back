@@ -10,6 +10,10 @@ export const INITIAL_QUERY_VALUES = {
 	nameSubFamily: '',
 	idLineFk: '',
 	idBrandFk: '',
+	idProduct: '',
+	stock: '',
+	priceSale: '',
+	pricePurschase: ''
 };
 
 
@@ -50,6 +54,11 @@ export function useProductFilter() {
 				(p) => p.priceSale > Number(state.query.minPrice)
 			);
 		}
+		if (state.query.minPrice) {
+			list = list.filter(
+				(p) => p.priceSale > Number(state.query.minPrice)
+			);
+		}
 		if (state.query.maxPrice) {
 			list = list.filter(
 				(p) => p.priceSale < Number(state.query.maxPrice)
@@ -70,6 +79,26 @@ export function useProductFilter() {
 		}
 		if (state.query.idLineFk) {
 			list = list.filter((p) => p.idLineFk == state.query.idLineFk);
+		}
+		if (state.query.stock) {
+			list = list.filter(
+				(p) => p.stock == state.query.stock
+			);
+		}
+		if (state.query.idProduct) {
+			list = list.filter(
+				(p) => p.idProduct
+			);
+		}
+		if (state.query.pricePurchase) {
+			list = list.filter(
+				(p) => p.pricePurchase == state.query.pricePurchase
+			);
+		}
+		if (state.query.priceSale) {
+			list = list.filter(
+				(p) => p.priceSale == state.query.priceSale
+			);
 		}
 		addKeys(list);
 		return list;

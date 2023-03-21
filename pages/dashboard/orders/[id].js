@@ -10,12 +10,17 @@ import ChangeOrderStatus from '../../../components/orders/detail/changeStatus';
 import Title from '../../../components/shared/title';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useOrders } from '../../../components/orders/hooks/useOrders';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
+import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles'
+
+
 const OrderDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
 	const { loading, setLoading } = useLoadingContext();
 	const { user, currentOrder, getOrderById, changeStatus } = useOrders();
+	const { userProfile } = useAuthContext();
 
 	const generalContext = useContext(GeneralContext);
 
@@ -45,6 +50,8 @@ const OrderDetail = () => {
 			color = '#ffd034';
 		} else if (status == 5) {
 			color = '#d63031';
+		} else if (status == 6) {
+			color = '#d63031';
 		} else {
 			color = '#969696';
 		}
@@ -54,10 +61,10 @@ const OrderDetail = () => {
 		setLoading(true);
 		try {
 			await changeStatus(status, id);
-			message.success('Estado actualizado');
+			message.success('Pedido actualizado');
 			(status);
 		} catch (error) {
-			message.error('Error al actualizar orden');
+			message.error('Error al actualizar pedido');
 		} finally {
 			setLoading(false);
 		}
@@ -65,14 +72,15 @@ const OrderDetail = () => {
 
 	const handleOrder = () => {
 		setLoading(true);
-		router.push(`/dashboard/orders/update/${currentOrder.idOrderH}`);
-		(currentOrder.idOrderH)
+		router.push('/dashboard/orders');
+
 	}
 
 	useEffect(() => {
 		setLoading(true);
 		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
+			console.log(user);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	
@@ -101,39 +109,47 @@ const OrderDetail = () => {
 				<div style={{display: 'flex', width: '100%'}}>
 					<Title title="Información General" path="/dashboard/orders"  goBack={1} />
 				</div>
-				<List style={{ width: '96%', padding: '10px 30px', backgroundColor: 'rgba(128, 128, 128, 0.05)', marginBottom: '25px', borderRadius: '15px'}}>
-					<ChangeOrderStatus
-						status={currentOrder.idStatusOrder}
-						handleOrder={handleOrder}
-						orderId={id}
-						handleChangeStatus={handleChangeStatus}
-					/>
+				<List style={{ width: '96%', padding: '10px 30px', backgroundColor: 'white', marginBottom: '25px', borderRadius: '15px', boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)'}}>
+					{localStorage.userId == user?.isUser || userProfile == PROFILES.MASTER || userProfile == PROFILES.ADMIN ? 					
+						<ChangeOrderStatus
+							status={currentOrder.idStatusOrder}
+							handleOrder={handleOrder}
+							orderId={id}
+							handleChangeStatus={handleChangeStatus}
+						/>
+						: <></>
+					}
+
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Numero de Orden</p>
+						<p style={{fontWeight: 'bold'}}>Número de pedido:</p>
 						<p>{currentOrder.numberOrden}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Usuario - Vendedor</p>
+						<p style={{fontWeight: 'bold'}}>Vendedor:</p>
 						<p>{user?.fullname}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Estado</p>
+						<p style={{fontWeight: 'bold'}}>Estado:</p>
 						<p style={{color: `${getStatus()}`, fontWeight: 'bold'}}>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Cliente</p>
+						<p style={{fontWeight: 'bold'}}>Observacion (opcional):</p>
+						<p style={{}}>{currentOrder.comments}</p>
+					</List.Item>
+					<List.Item>
+						<p style={{fontWeight: 'bold'}}>Cliente:</p>
 						<p>{currentOrder.fullNameClient}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Numero de teléfono - Cliente</p>
+						<p style={{fontWeight: 'bold'}}>Contacto:</p>
 						<p>{currentOrder.phoneClient}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Dirección</p>
+						<p style={{fontWeight: 'bold'}}>Dirección:</p>
 						<p>{currentOrder.address}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Fecha de creación</p>
+						<p style={{fontWeight: 'bold'}}>Fecha de creación:</p>
 						<p>
 							{new Date(
 								currentOrder.fechaEntrega

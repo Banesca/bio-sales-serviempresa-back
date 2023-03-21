@@ -24,6 +24,17 @@ export function useOrders() {
 		setOrders(value);
 	};
 
+	const deleteOrder = async ({ idBranchFk, dateStart, dateEnd, id }) => {
+		const res = await requestHandler.post(`/api/v2/order/delete/${id}`);
+
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		const value = res.value.getValue().data;
+		addKeys(value);
+		setOrders(value);
+	};
+
 	const setProductsQuantity = async (value, index) => {
 		let obj = currentOrder;
 		obj.body[index].weight = value;

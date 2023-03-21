@@ -17,7 +17,7 @@ import { addKeys } from '../../../util/setKeys';
 import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { message } from 'antd';
-import ProductFilter from '../../../components/products/productFilter';
+import Filter from './Filter/Filter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import Loading from '../../../components/shared/loading';
 import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
@@ -40,6 +40,12 @@ export default function Products() {
 		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Código',
+			dataIndex: 'barCode',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -116,10 +122,7 @@ export default function Products() {
 
 	const generalContext = useContext(GeneralContext);
 
-	const { getCategories, getSubCategories, getLines } = useCategoryContext();
-	const { getBrands } = useBrandContext();
-
-	const { getProducts, deleteProduct, products, updateProductInv, productsInv, getProductsInv } = useProducts();
+	const { updateProductInv, productsInv, getProductsInv } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -148,25 +151,12 @@ export default function Products() {
 			await getProductsInv(businessId);
 		} catch (error) {
 			console.error(error);
-			message.error('Error al cargar productos');
+			message.error('Error al obtener inventario');
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const categoryListRequest = async (id = 1) => {
-		setLoading(true);
-		try {
-			await getCategories(id);
-			await getSubCategories(id);
-			await getLines(id);
-			setLoading(false);
-		} catch (error) {
-			return message.error('Error al cargar las categorías');
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
@@ -177,10 +167,6 @@ export default function Products() {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			(object.idProduct);
-			(lineBody.undefined);
-			(lineBodys.undefined)
-			/* (object) */
 			await updateProductInv(object.idProduct, lineBody.undefined, lineBodys.undefined, selectedBusiness.idSucursal);
 			message.success('Stock actualizado');
 		} catch (error) {
@@ -190,28 +176,7 @@ export default function Products() {
 		}
 	}
 
-	const brandListRequest = async (business = 1) => {
-		setLoading(true);
-		try {
-			await getBrands(business);
-		} catch (error) {
-			message.error('Error al cargar marcas');
-		} finally {
-			setLoading(false);
-		}
-	};
 
-	const deleteProductRequest = async (id) => {
-		setLoading(true);
-		try {
-			await deleteProduct(id, selectedBusiness.idSucursal);
-		} catch (error) {
-			console.error(error);
-			message.error('Error al eliminar producto');
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	const { selectedBusiness } = useBusinessProvider();
 
@@ -222,29 +187,14 @@ export default function Products() {
 			Object.keys(generalContext).length > 0 &&
 			Object.keys(selectedBusiness).length > 0
 		) {
-			categoryListRequest(selectedBusiness.idSucursal);
-			brandListRequest(selectedBusiness.idSucursal);
 			getProductsRequest(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
 	// Delete Modal
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 	// which modal component
-	const [currentProduct, setCurrentProduct] = useState();
-
-	const handleOpenDeleteModal = (product) => {
-		setCurrentProduct(product);
-		setDeleteModalOpen(true);
-	};
-
-	const handleDelete = () => {
-		// request delete product
-		deleteProductRequest(currentProduct.idProduct);
-		setDeleteModalOpen(false);
-	};
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -283,7 +233,7 @@ export default function Products() {
 							Importar
 						</Button>
 					</Title>
-					<ProductFilter setQuery={setQuery} clean={clean} />
+					<Filter setQuery={setQuery} clean={clean} />
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
 							columns={columns}
@@ -293,39 +243,13 @@ export default function Products() {
 					</ConfigProvider>
 				</div>
 				<Modal
-					title="Eliminar"
-					open={deleteModalOpen}
-					onCancel={() => setDeleteModalOpen(false)}
-					onOk={handleDelete}
-					footer={[
-						<Button
-							key="cancel"
-							onClick={() => setDeleteModalOpen(false)}
-						>
-							Cancelar
-						</Button>,
-						<Button
-							key="delete"
-							danger
-							type="primary"
-							onClick={handleDelete}
-						>
-							Eliminar
-						</Button>,
-					]}
-				>
-					<p>
-						Estas seguro de que deseas eliminar
-						{` ${currentProduct?.nameProduct}`}
-					</p>
-				</Modal>
-				<Modal
 					title="Ajustar inventario"
 					open={isEditModalOpen}
 					onCancel={() => setIsEditModalOpen(false)}
 					footer={[
 						<Button
 							key="cancel"
+							danger
 							onClick={() => setIsEditModalOpen(false)}
 						>
 							Cancelar

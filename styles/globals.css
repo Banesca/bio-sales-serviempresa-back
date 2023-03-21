@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300&display=swap');
+
 html,
 body {
 	padding: 0;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	font-family: 'Open Sans', sans-serif !important;
+	color: #333333;
+}
+
+* {
+	font-family: 'Open Sans', sans-serif !important;
 }
 
 a {
@@ -24,14 +30,38 @@ h6 {
 	color: 'white';
 }
 
+.login {
+	box-shadow: 4px 4px 8px rgb(180, 180, 180) !important;
+	width: fit-content;
+	overflow: hidden;
+}
+
+#login {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	
+}
+
+.login-form {
+	margin: 30px 20px 0px 0px;
+	padding: 8px;
+}
+
 .form > div {
-	background-color: rgba(128, 128, 128, 0.09) !important;
+	background-color: rgb(255, 255, 255) !important;
+	box-shadow: 6px 6px 10px rgba(180, 180, 180, 0.479) !important;
 	margin-bottom: 1rem !important;
 	border-radius: 15px;
 }
 
+.ant-table {
+	box-shadow: 6px 6px 10px rgba(180, 180, 180, 0.479) !important;
+	overflow: visible;
+}
+
 .ant-table-thead tr{
-	background-color: rgba(0, 0, 0, 0.952);
+	background-color: rgb(0, 0, 0);
 	font-size: 16px;
 }
 
@@ -54,10 +84,10 @@ td {
 }
 
 .ant-table-tbody > :nth-child(2n + 1) {
-	background-color: #ffffff2c !important;
+	background-color: #ffffff15 !important;
 }
 .ant-table-tbody > :nth-child(2n + 2) {
-	background-color: #d6d6d64d !important;
+	background-color: #dbdbdb6b !important;
 }
 
 .ant-table-cell-row-hover {
@@ -83,17 +113,119 @@ td {
 }
 
 .version {
-	position: absolute;
+	position: sticky !important;
 	bottom: 0;
 }
 
 
-@media (min-width: 992px) {
+@media (max-width: 992px) {
 	.version {
-		position: absolute;
-		bottom: 20px;
-		font-size: 1rem;
-		display: flex;
+		display: none !important;
 	}
 
+}
+
+.header {
+	box-shadow: -4px 4px 8px rgb(180, 180, 180) ;
+	height: 60px;
+	background: rgb(150,188,255);
+	background: linear-gradient(300deg, rgb(54, 158, 255) 0%, rgba(9,132,227,1) 100%);
+}
+
+.menu {
+	box-shadow: 4px 3px 8px 2px #c2c2c280  !important;
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-top: 5px !important;
+}
+
+.menu li:hover {
+	background-color: rgb(241, 241, 241) !important;
+	color: rgb(0, 0, 0) !important;
+	box-shadow: 2px 3px 10px 2px #9c9c9c63  !important;
+}
+
+.ant-menu-item {
+	transition: all 1s ease;
+}
+.ant-menu-item:hover {
+	background-color: #b1b5bd !important;
+	transform: scale(1.03);
+	color: white !important;
+	transition: all 1s ease;
+}
+
+.ant-btn {
+	box-shadow: 4px 3px 8px 2px #9c9c9c5d;
+}
+
+button:hover {
+	transform: scale(1.02);
+}
+
+.ant-collpse-header {
+	background-color: white !important;
+}
+
+.ant-collapse-item {
+	box-shadow: 4px 4px 8px rgba(207, 207, 207, 0.479);
+	border-radius: 15px !important;
+	overflow: hidden !important;
+	background-color: white !important;
+}
+
+.ant-collapse-content-box {
+	background-color: #f0f0f04f !important;
+}
+
+.imagen {
+	 background-image: url(../public/Images/Fondo.jpg);
+	 background-size: 550px;
+	 background-repeat: no-repeat;
+	 background-position: center center;
+	 width: 500px;
+
+}
+
+.imagen h1 {
+	color: white !important;
+	margin: 25px;
+	margin-bottom: 25px !important;
+}
+
+.login-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.list-product {
+	box-shadow: 4px 4px 8px rgba(180, 180, 180, 0.479) !important;
+}
+
+.send .ant-modal-header {
+	background-color: black !important;
+	height: 70px;
+	width: 100%;
+	margin-left: -24px;
+	position: absolute;
+	margin-top: -20px;
+}
+
+.send .ant-modal-header::before {
+	position: relative;
+	content: '';
+	width: 100px;
+}
+
+.send .ant-modal-title {
+	margin: 25px !important;
+	color: white !important;
+}
+
+.send .ant-modal-body {
+	margin-top: 50px;
 }

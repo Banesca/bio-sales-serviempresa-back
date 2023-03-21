@@ -61,8 +61,7 @@ const UsersTable = ({
 					>
 						<EditOutlined />
 					</Button>
-					{userProfile != PROFILES.BILLER &&
-						userProfile !== PROFILES.ADMIN && userProfile !== PROFILES.SELLER && (
+					{userProfile == PROFILES.MASTER && (
 						<Button
 							type="primary"
 							danger
@@ -113,7 +112,6 @@ const UsersTable = ({
 					columns={columns}
 					dataSource={users}
 					loading={loading}
-					style={{ overflowX: 'scroll' }}
 					//onChange={(some) => setPage(some.current)}
 				/>
 			</ConfigProvider>
@@ -126,6 +124,7 @@ const UsersTable = ({
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => handleCloseModal(false)}
 					>
 						Cancelar

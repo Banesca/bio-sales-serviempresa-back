@@ -33,15 +33,7 @@ export default function SubCategoryFilters({ setQuery, setSelectedCategory }) {
 					form={searchForm}
 				>
 					<Row>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Nombre"
-								name="nameSubFamily"
-								style={{ padding: '0 .5rem' }}
-							>
-								<Input allowClear />
-							</Form.Item>
-						</Col>
+
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
 								label="Categoría"
@@ -61,6 +53,15 @@ export default function SubCategoryFilters({ setQuery, setSelectedCategory }) {
 								</Select>
 							</Form.Item>
 						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Subcategoría"
+								name="nameSubFamily"
+								style={{ padding: '0 .5rem' }}
+							>
+								<Input allowClear />
+							</Form.Item>
+						</Col>
 					</Row>
 					<Row>
 						<Col
@@ -70,7 +71,7 @@ export default function SubCategoryFilters({ setQuery, setSelectedCategory }) {
 							md={{ span: 8 }}
 						>
 							<Form.Item style={{ padding: '0 .5rem' }}>
-								<Button block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

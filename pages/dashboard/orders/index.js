@@ -19,7 +19,8 @@ export const orderStatusToUse = {
 	2: 'Facturado',
 	3: 'Recibido',
 	4: 'Procesado',
-	5: 'Retenido'
+	5: 'Retenido', 
+	6: 'Anulada'
 };
 
 export default function OrdersPage() {

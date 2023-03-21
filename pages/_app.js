@@ -55,6 +55,7 @@ function MyApp({ Component, pageProps }) {
 				},
 			}}
 		>
+			
 			<GeneralContext.Provider value={generalData}>
 				<ProfileProvider>
 					<BusinessProvider>

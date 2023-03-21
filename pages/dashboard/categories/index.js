@@ -70,7 +70,7 @@ const CategoriesPage = () => {
 		},
 		{
 			key: '2',
-			label: 'Sub Categorías',
+			label: 'Subcategorías',
 			children: <SubCategoriesContainer />,
 		},
 		{
@@ -99,7 +99,7 @@ const CategoriesPage = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Tabs items={tabItems} defaultActiveKey="1" />
+					<Tabs items={tabItems} style={{fontWeight: 'bold'}} defaultActiveKey="1" />
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

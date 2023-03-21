@@ -59,6 +59,7 @@ export default function LinesModals({
 			setLoading(false);
 			message.error('Error al eliminar Linea');
 		}
+		setLoading(false);
 	};
 
 	const handleEditLine = async () => {
@@ -86,6 +87,7 @@ export default function LinesModals({
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => setIsCreateModalOpen(false)}
 					>
 						Cancelar
@@ -97,13 +99,13 @@ export default function LinesModals({
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="Nombre"
+						label="Línea"
 						name="name"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nombre',
+								message: 'Ingresa una línea',
 							},
 						]}
 					>
@@ -178,34 +180,36 @@ export default function LinesModals({
 				</p>
 			</Modal>
 			<Modal
-				title="Actualizar Linea"
+				title="Actualizar Línea"
 				open={isEditModalOpen}
 				onCancel={() => setIsEditModalOpen(false)}
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => setIsEditModalOpen(false)}
 					>
 						Cancelar
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="success"
 						onClick={() => handleEditLine()}
 					>
-						Aceptar
+						Actualizar
 					</Button>,
 				]}
 			>
 				<Form form={createForm}>
+					
 					<Form.Item
-						label="Nombre"
+						label="Línea"
 						name="name"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nuevo nombre',
+								message: 'Ingresa una nueva línea',
 							},
 						]}
 					>
@@ -222,13 +226,13 @@ export default function LinesModals({
 						/>
 					</Form.Item>
 					<Form.Item
-						label="Sub Categoría"
+						label="Subcategoría"
 						name="idSubFamilyFk"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Elige una sub categoría',
+								message: 'Elige una subcategoría',
 							},
 						]}
 					>

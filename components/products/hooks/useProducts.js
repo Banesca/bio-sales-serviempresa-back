@@ -89,7 +89,7 @@ export function useProducts() {
 		setProducts(value);
 	};
 
-	const getProductsInv = async (businessId = 1) => {
+	const getProductsInv = async (businessId) => {
 		const response = await requestHandler.get(
 			`/api/v2/product/listint/lite/${businessId}`
 		);
@@ -97,7 +97,7 @@ export function useProducts() {
 			throw response.value.getErrorValue();
 		}
 		const value = response.value.getValue().data;
-		(response.value)
+		console.log(response.value);
 		setProductsInv(value)
 	};
 
@@ -162,12 +162,12 @@ export function useProducts() {
 	const updateProductInv = async (idP, quantity, reference, id) => {
 		const res = await requestHandler.post(
 			'/api/v2/inventary/adjustment', {
-				IdProductFk: idP,
+				idProductFk: idP,
 				quantity,
 				reference
 			}
 		);
-		('hola')
+		console.log(res);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

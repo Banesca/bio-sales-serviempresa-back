@@ -240,6 +240,7 @@ export default function Products() {
 				<div
 					style={{
 						margin: '1rem',
+						padding: '15px',
 						display: 'flex',
 						flexDirection: 'column',
 					}}
@@ -270,7 +271,6 @@ export default function Products() {
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
-							style={{ overflowX: 'scroll' }}
 							columns={columns}
 							dataSource={filtered()}
 							loading={loading}
@@ -285,6 +285,7 @@ export default function Products() {
 					footer={[
 						<Button
 							key="cancel"
+							danger
 							onClick={() => setDeleteModalOpen(false)}
 						>
 							Cancelar

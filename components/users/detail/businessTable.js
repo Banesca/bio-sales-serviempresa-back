@@ -1,5 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Empty, Table } from 'antd';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
 
 export default function UserBusinessTable({
 	business,
@@ -21,6 +22,7 @@ export default function UserBusinessTable({
 				<Button
 					type="primary"
 					danger
+					disabled={userProfile == 1 ? false : true}
 					onClick={() => openConfirmDelete(item)}
 				>
 					<DeleteOutlined />
@@ -32,7 +34,11 @@ export default function UserBusinessTable({
 	const openConfirmDelete = (item) => {
 		setBusinessToRemove(item);
 		setConfirmDelete(true);
+		console.log(userProfile);
 	};
+
+	const { userProfile } = useAuthContext();
+
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

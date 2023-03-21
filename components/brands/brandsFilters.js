@@ -29,7 +29,7 @@ export default function BrandsFilters({ setQuery }) {
 					<Row>
 						<Col span={24}>
 							<Form.Item
-								label="Nombre"
+								label="Marca"
 								name="name"
 								style={{ marginInline: '.5rem' }}
 							>
@@ -45,7 +45,7 @@ export default function BrandsFilters({ setQuery }) {
 							md={{ span: 8 }}
 						>
 							<Form.Item style={{ padding: '0 .5rem' }}>
-								<Button block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

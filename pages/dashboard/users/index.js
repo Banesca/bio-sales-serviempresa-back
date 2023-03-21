@@ -104,7 +104,7 @@ export default function Users() {
 					}}
 				>
 					<Title title="Usuarios" goBack={false}>
-						{userProfile != PROFILES.BILLER && userProfile !== PROFILES.ADMIN && userProfile !== PROFILES.SELLER && (
+						{userProfile !== PROFILES.SELLER && (
 							<Link href='users/add'>
 								<Button
 									style={{marginRight: '-2.3rem'}}

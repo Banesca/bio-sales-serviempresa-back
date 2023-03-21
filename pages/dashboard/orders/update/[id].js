@@ -61,7 +61,7 @@ const UpdateOrderPage = () => {
 		try {
 			await getOrderById(id);
 		} catch (error) {
-			message.error('Error al cargar orden');
+			message.error('Error al cargar pedido');
 		} finally {
 			setLoading(false);
 		}
@@ -201,14 +201,18 @@ const UpdateOrderPage = () => {
 
 	const handleCancelOrder = async () => {
 		setLoading(true);
-		const res = await requestHandler.get(`/api/v2/order/satus/${id}/4`);
-		if (res.isLeft()) {
-			return message.error('Ha ocurrido un error');
+		try {
+			await changeStatus(
+				statusNames.Anulada,
+				currentOrder.idOrderH
+			)
+			router.push('/dashboard/orders');
+		} catch (error) {
+			console.error(error);
+			message.error('Error al anular pedido');
+		} finally {
+			setLoading(false);
 		}
-		setIsCancelOrderModal(false);
-		await getOrderRequest(id);
-		setLoading(false);
-		message.success('Orden cancelada');
 	};
 
 	const calculateSubTotal = (item) => {
@@ -273,7 +277,7 @@ const UpdateOrderPage = () => {
 							danger
 							style={{ marginRight: '1rem' }}
 						>
-							Eliminar
+							Anular
 						</Button>
 						<Button
 							onClick={() => setIsPauseOrderModal(true)}
@@ -323,10 +327,10 @@ const UpdateOrderPage = () => {
 				</Row>
 			</div>
 			<Modal
-				title="Eliminar"
+				title="Anular"
 				open={deleteOpen}
 				onCancel={() => setDeleteOpen(false)}
-				onOk={handleDelete}
+				onOk={handleCancelOrder}
 				footer={[
 					<Button key="cancel" onClick={() => setDeleteOpen(false)}>
 						Cancelar
@@ -335,9 +339,9 @@ const UpdateOrderPage = () => {
 						key="delete"
 						danger
 						type="primary"
-						onClick={handleDelete}
+						onClick={handleCancelOrder}
 					>
-						Eliminar
+						Anular
 					</Button>,
 				]}
 			>
@@ -347,7 +351,8 @@ const UpdateOrderPage = () => {
 				</p>
 			</Modal>
 			<Modal
-				title="Enviar"
+				title='Enviar'
+				className='send'
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
 				onOk={() => handleReceiveOrder()}
@@ -355,6 +360,22 @@ const UpdateOrderPage = () => {
 				okText="Enviar"
 				okType='primary'
 				closable='false'
+				footer={[
+					<Button
+						key="cancel"
+						danger
+						onClick={() => setIsCloseOrderModal(false)}
+					>
+						Cancelar
+					</Button>,
+					<Button
+						key="delete"
+						type="primary"
+						onClick={() => handleReceiveOrder()}
+					>
+						Enviar
+					</Button>,
+				]}
 			>
 				<List
 					dataSource={currentOrder?.body}
@@ -397,6 +418,7 @@ const UpdateOrderPage = () => {
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => setIsPauseOrderModal(false)}
 					>
 						Cancelar
@@ -410,13 +432,13 @@ const UpdateOrderPage = () => {
 					</Button>,
 				]}
 			>
-				<p>¿Estas seguro de que deseas pausar la toma de este pedido?, <br />Podras acceder a el en el modulo de pedidos.</p>
+				<p> ¿Estás seguro que deseas pausar el pedido? Podrás acceder previamente al pedido pausado desde el módulo de pedidos. <br /></p>
 			</Modal>
 			<Modal
 				title="Eliminar"
 				open={cancelOrderModal}
 				onCancel={() => setIsCancelOrderModal(false)}
-				onOk={handlePauseOrder}
+				onOk={handleCancelOrder}
 				footer={[
 					<Button
 						key="cancel"
@@ -428,13 +450,13 @@ const UpdateOrderPage = () => {
 						key="delete"
 						danger
 						type="primary"
-						onClick={handlePauseOrder}
+						onClick={handleCancelOrder}
 					>
-						Eliminar
+						Anular 
 					</Button>,
 				]}
 			>
-				<p>¿Estas seguro de que deseas eliminar esta orden?</p>
+				<p>¿Estas seguro de que deseas anular esta orden?</p>
 			</Modal>
 		</DashboardLayout>
 	);

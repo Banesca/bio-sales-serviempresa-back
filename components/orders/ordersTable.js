@@ -1,20 +1,65 @@
-import { Button, ConfigProvider, Empty, Table } from 'antd';
+import { Button, ConfigProvider, Empty, message, Table } from 'antd';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Space } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
 import { orderStatusToUse } from '../../pages/dashboard/orders';
 import { useRouter } from 'next/router';
+import { useOrders } from './hooks/useOrders';
+import { useEffect, useState } from 'react';
+import { useUser } from '../users/hooks/useUser';
+import { useAuthContext } from '../../context/useUserProfileProvider';
+import { PROFILES, PROFILE_LIST } from '../shared/profiles'
 
 export default function OrdersTable({ orders }) {
 	const router = useRouter();
 
 	const { loading, setLoading } = useLoadingContext();
+	const { user } = useOrders();
 
-	const handleSeeDetail = (order) => {
+
+	const handleSeeDetail = (order, record) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/${order.idOrderH}`);
+		console.log(order.idStatusOrder);
 	};
 
+	const [users, setUsers] = useState({});
+	const {
+		getUserById,
+	} = useUser();
+
+
+	const getUserRequest = async () => {
+		setLoading(true);
+		const loggedUser = localStorage.userId
+		try {
+			const u = await getUserById(loggedUser);
+			if (!u) {
+				return u
+			}
+			setUsers(u);
+			setProfile(
+				PROFILE_LIST.filter((p) => p.id === u.idProfileFk)[0]
+			);
+			if (u.idProfileFk === 3) {
+				await getSellerClientsRequest(u.idUser);
+			}
+		} catch (error) {
+			console.log('todo ok');
+		} finally {
+			setLoading(false);
+			/* console.log(users); */
+		}
+	};
+
+	const { userProfile } = useAuthContext();
+
+
+	useEffect(() => {
+	  getUserRequest();
+	
+	}, []);
+	
 	const columns = [
 		{
 			title: 'Fecha de creación',
@@ -109,37 +154,55 @@ export default function OrdersTable({ orders }) {
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
+				case 6:
+					return (
+						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
+							{orderStatusToUse[record.idStatusOrder]}
+						</p>
+					);
 				}
 			},
 		},
 		{
 			title: 'Acción',
+			dataIndex: 'fullNameClient',
 			key: 5,
-			render: (order, record) => (
+			render: (text, order, record) => (
 				<Space size="middle" style={{display: 'flex', justifyContent: 'center'}}>
-					{orderStatusToUse[record.idStatusOrder] == 'Facturado' 
-						? <Button
-							type='primary'
-							onClick={() => handleSeeDetail(order)}
-						>
-							<EyeTwoTone/>
-						</Button>
-						: <Button
-							onClick={() => handleSeeDetail(order)}
-						>
-							<EditOutlined/>
-						</Button>
+					{userProfile == PROFILES.MASTER ? 
+						(order.idStatusOrder == 2 || order.idStatusOrder == 6
+							? <Button
+								type='primary'
+								onClick={() => handleSeeDetail(order)}
+							>
+								<EyeTwoTone/>
+							</Button>
+							: <Button
+								onClick={() => handleSeeDetail(order, record)}
+							>
+								<EditOutlined/>
+							</Button>
+						)
+						:
+						(users.fullname !== text || order.idStatusOrder == 2 || order.idStatusOrder == 6
+							? <Button
+								type='primary'
+								onClick={() => handleSeeDetail(order)}
+							>
+								<EyeTwoTone/>
+							</Button>
+							: <Button
+								onClick={() => handleSeeDetail(order, record)}
+							>
+								<EditOutlined/>
+							</Button>
+						)
 					}
-					<Button
-						type='primary'
-						danger
-					>
-						<DeleteOutlined/>
-					</Button>
 				</Space>
 			),
 		},
 	];
+
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

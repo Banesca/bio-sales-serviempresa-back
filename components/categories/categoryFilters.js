@@ -45,7 +45,7 @@ export default function CategoryFilters({ setQuery }) {
 							md={{ span: 8 }}
 						>
 							<Form.Item style={{ margin: '0 .5rem' }}>
-								<Button block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

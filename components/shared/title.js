@@ -17,7 +17,7 @@ export default function Title({ title, path, children, goBack, update }) {
 				display: 'flex',
 				flexDirection: 'row',
 				alignItems: 'center',
-				marginBottom: '1rem',
+				marginBottom: '1.2rem',
 				gap: '21%'
 			}}
 		>
@@ -26,7 +26,6 @@ export default function Title({ title, path, children, goBack, update }) {
 				xs={{span: children ? 2 : 0}}
 				md={{ span: goBack ? 2 : 0 }}
 				lg={{ span: goBack ? 2 : 0 }}
-				style={{gap: '500px'}}
 			>
 				{goBack && (
 					<Button onClick={handleReturn} style={{borderRadius: '20px', height: '42px'}}>
@@ -73,9 +72,9 @@ export default function Title({ title, path, children, goBack, update }) {
 					lg={{ span: children ? 0 : 0 }}
 					md={{ span: children ? 0 : 0, offset: 0 }}
 					sm={{ span: children ? 0 : 0 }}
-					xs={{ span: children ? 23 : 0}}
+					xs={{ span: children ? 23 : 0, offset: 0}}
 					style={{
-						justifyContent: 'end',
+						justifyContent: 'flex-end',
 						display: 'flex',
 					}}
 				>

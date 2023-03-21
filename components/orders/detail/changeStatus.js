@@ -3,6 +3,7 @@ import { Button, Space } from 'antd';
 import { List } from 'antd';
 import { useEffect, useState } from 'react';
 import { orderStatusToUse } from '../../../pages/dashboard/orders';
+import PROFILES from '../../../components/shared/profiles'
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useOrders } from '../hooks/useOrders';
 import { message } from 'antd';
@@ -13,7 +14,8 @@ export const statusNames = {
 	Facturado: 2,
 	'Recibido': 3,
 	Procesado: 4,
-	Retenido: 5
+	Retenido: 5,
+	Anulada: 6
 };
 
 export default function ChangeOrderStatus({
@@ -71,6 +73,14 @@ export default function ChangeOrderStatus({
 				status: statusNames.Retenido,
 			}));
 		},
+		6: () => {
+			setModal((prev) => ({
+				...prev,
+				visible: true,
+				action: orderStatusToUse[statusNames.Anulado],
+				status: statusNames.Anulado,
+			}));
+		},
 	};
 
 	const handleOpenModal = (status) => {
@@ -81,6 +91,11 @@ export default function ChangeOrderStatus({
 		setModal(initialModalState);
 	};
 
+	const perfil = async () => {
+		console.log(localStorage);
+	}
+	perfil();
+
 	return (
 		<>
 			{status != 2 && (
@@ -90,6 +105,16 @@ export default function ChangeOrderStatus({
 						<Space>
 							{status == 1 && (
 								<>
+									<Button
+										onClick={() =>
+											handleOpenModal(
+												statusNames.Anulado
+											)
+										}
+										danger
+									>
+										Anular pedido
+									</Button>
 									<Button
 										onClick={() =>
 											handleOrder()
@@ -104,21 +129,13 @@ export default function ChangeOrderStatus({
 								<>
 									<Button
 										onClick={() =>
-											handleOrder()
-										}
-										type="success"
-									>
-										Modificar
-									</Button>
-									<Button
-										onClick={() =>
 											handleOpenModal(
-												statusNames.Procesado
+												statusNames.Anulado
 											)
 										}
-										type="warning"
+										danger
 									>
-										Procesar
+										Anular pedido
 									</Button>
 									<Button
 										onClick={() =>
@@ -131,10 +148,30 @@ export default function ChangeOrderStatus({
 									>
 										Retener
 									</Button>
+									<Button
+										onClick={() =>
+											handleOpenModal(
+												statusNames.Procesado
+											)
+										}
+										type="warning"
+									>
+										Procesar
+									</Button>
 								</>
 							)}
 							{status == 4 && (
 								<>
+									<Button
+										onClick={() =>
+											handleOpenModal(
+												statusNames.Anulado
+											)
+										}
+										danger
+									>
+										Anular pedido
+									</Button>
 									<Button
 										onClick={() =>
 											handleOpenModal(
@@ -152,7 +189,17 @@ export default function ChangeOrderStatus({
 									<Button
 										onClick={() =>
 											handleOpenModal(
-												statusNames['Recibido']
+												statusNames.Anulado
+											)
+										}
+										danger
+									>
+										Anular pedido
+									</Button>
+									<Button
+										onClick={() =>
+											handleOpenModal(
+												statusNames['Procesado']
 											)
 										}
 										type="warning"
@@ -161,6 +208,7 @@ export default function ChangeOrderStatus({
 									</Button>
 								</>
 							)}
+							{status == 6 && (<></>)}
 						</Space>
 					</List.Item>
 				</List>

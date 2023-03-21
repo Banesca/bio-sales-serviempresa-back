@@ -46,9 +46,10 @@ export default function ClientsPage() {
 		{
 			title: 'Acciones',
 			align: 'center',
+			dataIndex: 'statusName',
 			key: 4,
-			render: (_, index) => (
-				<Space size="middle" style={{display: 'flex', justifyContent: 'center'}}>
+			render: (text, index) => (
+				<Space size="middle" style={{display: 'flex', justifyContent: 'flex-start', width: '100px'}}>
 					<Button
 						type="primary"
 						onClick={() => router.push(`clients/${index.idClient}`)}
@@ -56,17 +57,20 @@ export default function ClientsPage() {
 						<EyeTwoTone />
 					</Button>
 					<Button
-						onClick={() => router.push(`clients/${index.idClient}`)}
+						onClick={() => router.push(`clients/update/${index.idClient}`)}
 					>
 						<EditOutlined />
 					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(index)}
-					>
-						<DeleteOutlined />
-					</Button>
+					{text == 'Eliminado' 
+					 ? <></>
+					 : <Button
+							type="primary"
+							danger
+							onClick={() => handleOpenDeleteModal(index)}
+						>
+							<DeleteOutlined />
+						</Button>
+					}
 				</Space>
 			),
 		},
@@ -171,6 +175,7 @@ export default function ClientsPage() {
 				);
 			}
 		}
+		console.log(list);
 		return list;
 	}, [query, clients]);
 
@@ -262,7 +267,7 @@ export default function ClientsPage() {
 												offset: 8,
 											}}
 										>
-											<Button onClick={onReset} block>
+											<Button type='warning' onClick={onReset} block>
 												Limpiar
 											</Button>
 										</Form.Item>

@@ -34,7 +34,7 @@ const ClientDetail = () => {
 				return aDate.getTime() - bDate.getTime();
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.split(' ', 1)}</p>,
+			render: (text) => <p>{text.slice(0, 10).split('-').reverse().join('-')}</p>,
 		},
 		{
 			title: 'Ultima actualización',
@@ -56,7 +56,7 @@ const ClientDetail = () => {
 				return aDate.getTime() - bDate.getTime();
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.split(' ', 1)}</p>,
+			render: (text) => <p>{text.slice(0, 10).split('-').reverse().join('-')}</p>,
 		},
 		{
 			title: 'Estado',
@@ -179,6 +179,8 @@ const ClientDetail = () => {
 		if (Object.keys(client).length) {
 			getOrderByClient(client.phone);
 		}
+
+		console.log(client.statusName);
 	}, [client]);
 
 	const customizeRenderEmpty = () => (
@@ -207,6 +209,35 @@ const ClientDetail = () => {
 					display: 'flex'
 				}}
 			>
+				<h1
+					style={{
+						textAlign: 'center',
+						fontSize: '2.5rem',
+						margin: '0px',
+						display: 'flex',
+						width: '100%'
+					}}
+				>
+					<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+						<LeftOutlined
+							style={{ fontSize: '1.5rem', marginRight: '50%'}}
+								
+								
+						/>
+					</Button>
+					<div style={{marginLeft: '-140px'}}>
+						{client?.nameClient}
+					</div>
+
+				</h1>
+				<h2
+					style={{
+						textAlign: 'center',
+						marginTop: '5px'
+					}}
+				>
+					Información General
+				</h2>
 				<div
 					style={{
 						width: '100%',
@@ -218,37 +249,8 @@ const ClientDetail = () => {
 						alignItems: 'center',
 					}}
 				>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2.5rem',
-							margin: '0px',
-							display: 'flex',
-							width: '100%'
-						}}
-					>
-						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-							<LeftOutlined
-								style={{ fontSize: '1.5rem', marginRight: '50%'}}
-								
-								
-							/>
-						</Button>
-						<div style={{marginLeft: '-140px'}}>
-							{client?.nameClient}
-						</div>
-
-					</h1>
-					<h2
-						style={{
-							textAlign: 'center',
-							marginTop: '5px'
-						}}
-					>
-					Información General
-					</h2>
 				</div>
-				<List style={{backgroundColor: 'rgba(128, 128, 128, 0.04)', borderRadius: '15px'}}>
+				<List style={{backgroundColor: 'white', borderRadius: '15px', boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)'}}>
 					<List.Item style={{padding: '10px 25px'}}>
 						<p style={{fontWeight: 'bold'}}>Rif</p>
 						<p>{client?.numberDocument}</p>
@@ -258,8 +260,8 @@ const ClientDetail = () => {
 						<p>{client?.phone}</p>
 					</List.Item>
 					<List.Item style={{padding: '10px 25px'}}>
-						<p style={{fontWeight: 'bold'}}>Estado</p>
-						<p>{client?.statusName}</p>
+						<p style={{fontWeight: 'bold' }}>Estado</p>
+						<p style={{color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'}`}}>{client?.statusName}</p>
 					</List.Item>
 					<List.Item style={{padding: '10px 25px'}}>
 						<p style={{fontWeight: 'bold'}}>Dirección</p>
@@ -269,6 +271,7 @@ const ClientDetail = () => {
 				<h3
 					style={{
 						textAlign: 'center',
+						fontSize: '1.5rem'
 					}}
 				>
 					Pedidos

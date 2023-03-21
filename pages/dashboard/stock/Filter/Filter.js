@@ -1,12 +1,12 @@
 import { Button, Input, Select, Col, Form, Collapse, Row } from 'antd';
 
-import { useCategoryContext } from '../../hooks/useCategoriesProvider';
-import { useBrandContext } from '../../hooks/useBrandsProvider';
-import { PROFILES } from '../shared/profiles';
-import SelectBusiness from '../business/selectBusiness';
-import { useAuthContext } from '../../context/useUserProfileProvider';
+import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
+import { useBrandContext } from '../../../../hooks/useBrandsProvider';
+import { PROFILES } from '../../../../components/shared/profiles';
+import SelectBusiness from '../../../../components/business/selectBusiness';
+import { useAuthContext } from '../../../../context/useUserProfileProvider';
 
-const ProductFilter = ({ setQuery, clean }) => {
+const Filter = ({ setQuery, clean }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
 	const { userProfile } = useAuthContext();
@@ -20,15 +20,16 @@ const ProductFilter = ({ setQuery, clean }) => {
 
 	const onSubmit = (values) => {
 		setQuery({
-			nameProduct: values.nameProduct || '',
-			barCode: values.barCode || '',
-			maxPrice: values.maxPrice || '',
-			minPrice: values.minPrice || '',
-			nameFamily: values.nameFamily || 0,
-			nameSubFamily: values.nameSubFamily || 0,
-			idBrandFk: values.idBrandFk || 0,
-			idLineFk: values.idLineFk || 0,
+			nameProduct: values?.nameProduct || '',
+			barCode: values?.barCode || '',
+			pricePurchase: values?.pricePurchase || '',
+			priceSale: values?.priceSale || '',
+			family: values?.family || '',
+			nameSubFamily: values?.nameSubFamily || 0,
+			stock: values?.stock || 0,
+			idProduct: values?.idProduct || 0,
 		});
+		console.log(values);
 	};
 
 	return (
@@ -81,8 +82,8 @@ const ProductFilter = ({ setQuery, clean }) => {
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label="Precio min"
-									name="minPrice"
+									label="Precio compra"
+									name="priceSale"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -100,8 +101,8 @@ const ProductFilter = ({ setQuery, clean }) => {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label="Precio max"
-									name="maxPrice"
+									label="Precio venta"
+									name="pricePurchase"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -199,10 +200,10 @@ const ProductFilter = ({ setQuery, clean }) => {
 							</Col>
 						</Row>
 						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label="Linea"
-									name="idLineFk"
+									label="Stock"
+									name="stock"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -215,33 +216,13 @@ const ProductFilter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Select
-										showSearch
-										allowClear
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
-										}}
-									>
-										{lines &&
-											lines.map((line, i) => (
-												<Select.Option
-													key={line.idLine}
-													value={line.idLine}
-												>
-													{line.name}
-												</Select.Option>
-											))}
-									</Select>
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label="Marca"
-									name="idBrandFk"
+									label="ID"
+									name="idProduct"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -254,30 +235,11 @@ const ProductFilter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Select
-										showSearch
-										allowClear
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
-										}}
-									>
-										{brands &&
-											brands.map((c, i) => (
-												<Select.Option
-													key={c.idBrand}
-													value={c.idBrand}
-												>
-													{c.name}
-												</Select.Option>
-											))}
-									</Select>
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 						</Row>
+						
 						<Row>
 							<Col
 								sm={{ span: 12, offset: 0 }}
@@ -323,4 +285,4 @@ const ProductFilter = ({ setQuery, clean }) => {
 	);
 };
 
-export default ProductFilter;
+export default Filter;

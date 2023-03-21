@@ -19,19 +19,24 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
-import { SmileOutlined } from '@ant-design/icons';
 
 const ImportProducts = () => {
 	const columns = [
 		{
 			title: 'ID',
-			dataIndex: 'idProductFk',
+			dataIndex: 'idProduct',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Código',
+			dataIndex: 'barCode',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -201,26 +206,25 @@ const ImportProducts = () => {
 			const obj = {
 				idUserAddFk: 1,
 				idProduction: 1,
-				idProductionCenter: 0,
+				idProductionCenter: 1,
 				pricePurchase: row?.PRECIO_TIENDA,
-				nameFamily: row.Categoria || 'No especificada',
-				nameSubFamily: row.Marca || 'No especificada',
+				nameFamily: row?.Categoria || 'No especificada',
+				nameSubFamily: row?.Marca || 'No especificada',
 				nameProduct: row?.Nombre,
 				barCode: String(row?.Codigo_de_barra_global),
 				quantity: row?.Cantidad,
 				efectivo: row?.REFERENCIA,
 				wareHouse: row?.Almacen,
-				idInventaryB: 0,
-				idProductFk: row.id_de_producto,
+				idInventaryB: 1,
+				stock: row?.Stock,
+				totalPrice: row?.Total,
+				idProductFk: 1,
+				idProduct: row?.Id_de_producto,
+				key: 0,
 				priceSale: row?.PRECIO_TIENDA,
-				idSucursalFk: 1, /* idSucursalFk: selectedBusiness?.idSucursal */
-				/* idInventaryHFK: selectedBusiness?.idInventory, */
-				idTypeProductFk: 1,
-				isPromo: 0,
-				linkPago: 0,
-				isheavy: 0,
+				idSucursalFk: selectedBusiness?.idSucursal, /* idSucursalFk: selectedBusiness?.idSucursal */
 				apply_inventory: true,
-				nameKitchen: 1,
+				nameKitchen: '1',
 				idStatusFk: 1,
 				idUnidadMedida: row?.Unidad_de_medida,
 				idRestaurantFk: 1,
@@ -228,22 +232,11 @@ const ImportProducts = () => {
 			};
 			uploadData.push(obj);
 		}
+		console.log(uploadData);
+		console.log(selectedBusiness);
 		return uploadData;
 	};
 
-	const existCategory = (name) => {
-		const filter = categories.filter(
-			(c) => c.name.toLowerCase() === name.toLowerCase()
-		);
-		return filter.length > 0;
-	};
-
-	const existBrand = (name) => {
-		const filter = brands.filter(
-			(b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
-		);
-		return filter.length > 0;
-	};
 
 	const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });
@@ -298,26 +291,20 @@ const ImportProducts = () => {
 		},
 	};
 
-	const body = {
-		idUserAddFk: 1,
-		idProductionCenter: 80,
-		isProduction: 9
-	}
-
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		(formatData);
+		console.log(formatData);
 		setLoading(true);
-		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
-			list : data,
-		});
-		const rest = await requestHandler.get('/api/v2/product/listint/lite/1')
-
+		const res = await requestHandler.post('/api/v2/production/product/add/masive', formatData);
+		/* const restt = await requestHandler.post('/api/v2/production/product/add/masive', {
+			data,
+		}); */
+		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
+		console.log(res);
+		console.log(data);
 		/* (rest);
 		(restt);
 		(res); */
-		(rest.value);
-		(res);
 		if (rest.isLeft()) {
 			setLoading(false);
 			return message.error('Ha ocurrido un error');

@@ -132,10 +132,10 @@ export default function CategoryContainer() {
 			setLoading(true);
 			setIsEditModalOpen(false);
 			await editCategories( lineBody.name, lineBody.idS, lineBody.idP, selectedBusiness.idSucursal);
-			message.success('Linea actualizada');
+			message.success('Categoría actualizada');
 		} catch (error) {
 			setLoading(false);
-			message.error('Error al actualizar Linea');
+			message.error('Error al actualizar categoría');
 		} finally {
 			setLoading(false);
 		}
@@ -160,10 +160,10 @@ export default function CategoryContainer() {
 		try {
 			await createForm.validateFields(['name']);
 			const invalidName = await validateCategoryName(categoryName);
-			if (invalidName) {
+			/* if (invalidName) {
 				setLoading(false);
 				return message.error(`La categoría ${categoryName} ya existe`);
-			}
+			} */
 			handleCloseCreateModal();
 			await addCategoryRequest(categoryName);
 		} catch (error) {
@@ -210,12 +210,12 @@ export default function CategoryContainer() {
 	return (
 		<>
 			<Title title="Categorías">
-				{userProfile !=
-					PROFILES.BILLER && PROFILES.ADMIN && (
-					<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
+				{userProfile ==
+					PROFILES.MASTER || userProfile == PROFILES.ADMIN ? (
+						<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
 							Agregar
-					</Button>
-				)}
+						</Button>
+					) : ''}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
 			<ConfigProvider renderEmpty={customizeRenderEmpty}>
@@ -230,6 +230,7 @@ export default function CategoryContainer() {
 				onCancel={() => handleCloseCreateModal()}
 				footer={[
 					<Button
+						danger
 						key="cancel"
 						onClick={() => handleCloseCreateModal()}
 					>
@@ -246,14 +247,14 @@ export default function CategoryContainer() {
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="nombre"
+						label="Categoría"
 						name="name"
 						style={{ padding: '0 .5rem' }}
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nombre',
+								message: 'Ingresa una categoría',
 							},
 						]}
 					>
@@ -267,7 +268,7 @@ export default function CategoryContainer() {
 			</Modal>
 			<Modal
 				title="Eliminar"
-				open={isEditModalOpen}
+				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
 					<Button
@@ -291,34 +292,35 @@ export default function CategoryContainer() {
 				</p>
 			</Modal>
 			<Modal
-				title="Actualizar Linea"
+				title="Actualizar categoría"
 				open={isEditModalOpen}
 				onCancel={() => setIsEditModalOpen(false)}
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => setIsEditModalOpen(false)}
 					>
 						Cancelar
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="success"
 						onClick={() => handleEditLine()}
 					>
-						Aceptar
+						Actualizar
 					</Button>,
 				]}
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="Nombre"
+						label="Categoría"
 						name="name"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nuevo nombre',
+								message: 'Ingresa una nueva categoría',
 							},
 						]}
 					>

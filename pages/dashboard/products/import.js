@@ -41,11 +41,9 @@ const ImportProducts = () => {
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
-				) : (
+				(
 					<p>$ {text}</p>
-				),
+				)
 		},
 		{
 			title: 'Categoría',
@@ -156,13 +154,27 @@ const ImportProducts = () => {
 
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
+	const [code, setCode] = useState();
+	const [warningModal, setWarningModal] = useState(false);
+	
 
 	const [rejectedBrands, setRejectedBrands] = useState([]);
 	const [rejectedCategories, setRejectedCategories] = useState([]);
 
 	const [api, contextHolder] = notification.useNotification();
 
-	const categoryListRequest = async (business = 1) => {
+	const codeListRequest = async (business) => {
+		const response = await requestHandler.get(
+			`/api/v2/product/list/0/0/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().data;
+		setCode(value);
+		console.log(value);
+	};
+	const categoryListRequest = async (business) => {
 		const response = await requestHandler.get(
 			`/api/v2/family/list/${business}`
 		);
@@ -173,7 +185,7 @@ const ImportProducts = () => {
 		setCategories(value);
 	};
 
-	const brandListRequest = async (business = 1) => {
+	const brandListRequest = async (business) => {
 		const response = await requestHandler.get(
 			`/api/v2/subfamily/list/${business}`
 		);
@@ -188,6 +200,7 @@ const ImportProducts = () => {
 		if (selectedBusiness && generalContext) {
 			setLoading(true);
 			categoryListRequest(selectedBusiness.idSucursal);
+			codeListRequest(selectedBusiness.idSucursal);
 			brandListRequest(selectedBusiness.idSucursal);
 			setLoading(false);
 		}
@@ -269,6 +282,7 @@ const ImportProducts = () => {
 			addKeys(uploadData);
 			setData(uploadData);
 		};
+		console.log(data);
 	};
 
 	const handleChange = (info) => {
@@ -307,7 +321,33 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
+		for (let product in data) {
+			for (let c in code) {
+				if(product.barCode == c.barCode) {
+					setWarningModal(true);
+					break;
+				} else {
+					setLoading(true);
+					const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
+						lista: formatData,
+					});
+					(data);
+					if (res.isLeft()) {
+						return message.error('Ha ocurrido un error');
+					}
+					message.success('Productos agregados exitosamente');
+					setData([]);
+					setRejectedBrands([]);
+					setRejectedCategories([]);
+					setFileList([]);
+					setLoading(false);
+				}
+			}
+		}
+	};
 
+	const handleSend = async () => {
+		const formatData = removeKeys(data);
 		setLoading(true);
 		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
 			lista: formatData,
@@ -322,7 +362,8 @@ const ImportProducts = () => {
 		setRejectedCategories([]);
 		setFileList([]);
 		setLoading(false);
-	};
+		setWarningModal(false)
+	}
 
 	useEffect(() => {
 		if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
@@ -400,6 +441,18 @@ const ImportProducts = () => {
 					cancelText="Cancelar"
 				>
 					<p>Estas seguro de que deseas eliminar este producto</p>
+				</Modal>
+				<Modal
+					title="Advertencia"
+					open={warningModal}
+					onCancel={() => setWarningModal(false)}
+					onOk={handleSend}
+					okText="Importar"
+					okType='warning'
+					cancelText="Cancelar"
+				>
+					<p>Algunos de los productos que intentas exportar ya estan en existencia. Si continuas los datos de estos productos se sobreescribiran con los previos, <br /> <br /> ¿Deseas continuar?
+					</p>
 				</Modal>
 				<Modal
 					title="Notificación"

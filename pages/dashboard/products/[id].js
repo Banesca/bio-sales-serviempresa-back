@@ -146,7 +146,7 @@ const Product = () => {
 				}}
 			>
 				<Title title='Detalles' path="/dashboard/products"  goBack={1} />
-				<List style={{ width: '100%', borderRadius: '15px', backgroundColor: 'rgba(128, 128, 128, 0.04)', padding: '10px 25px' }}>
+				<List className='list-product' style={{ width: '100%', borderRadius: '15px', backgroundColor: 'white', padding: '10px 25px' }}>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Nombre</p>
 						<p>{currentProduct?.nameProduct}</p>
@@ -249,9 +249,9 @@ const Product = () => {
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Stock</p>
 						<p>
-							{/* {currentProduct?.stock.length > 0
+							{currentProduct?.stock?.length > 0
 								? currentProduct.stock[0].stock
-								: '0'} */}
+								: '0'}
 						</p>
 					</List.Item>
 					<List.Item

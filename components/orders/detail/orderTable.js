@@ -68,11 +68,12 @@ export default function DetailOrderTable({ products, total }) {
 				title={() => (
 					<Typography
 						style={{
-							fontSize: '1.5rem',
+							fontSize: '2rem',
 							fontWeight: 'bold',
+							textAlign: 'center'
 						}}
 					>
-						Productos
+						Pedidos
 					</Typography>
 				)}
 				footer={() => (

@@ -12,6 +12,7 @@ import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import Title from '../../../components/shared/title';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { useRequest } from '../../../hooks/useRequest';
+import { UserOutlined } from '@ant-design/icons';
 
 const UserDetail = () => {
 
@@ -57,7 +58,7 @@ const UserDetail = () => {
 				await getSellerClientsRequest(user.idUser);
 			}
 		} catch (error) {
-			message.error('Ha ocurrido un error user request');
+			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
 		}
@@ -102,10 +103,6 @@ const UserDetail = () => {
 		}
 	};
 
-	const handleOpenModal = () => {
-		setIsModalOpen(true);
-	};
-
 	const handleCloseModal = async (bool) => {
 		setIsModalOpen(false);
 		if (!bool) {
@@ -137,32 +134,51 @@ const UserDetail = () => {
 						justifyContent: 'center',
 					}}
 				>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							margin: '15px',
-						}}
-					>
-						Mi perfil
-					</h1>
 					<List
 						style={{
 							width: '96%',
 							borderRadius: '15px',
+							marginTop: '2rem',
 							marginBottom: '1rem',
-							backgroundColor: 'rgba(128, 128, 128, 0.04)'
+							backgroundColor: 'white',
+							boxShadow: '4px 3px 8px 2px #9c9c9c5d'
+
 						}}
 					>
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
+						<List.Item style={{display: 'flex', justifyContent: 'center'}} >
+							<h1
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									justifyContent: 'center',
+									alignItems: 'center',
+									textAlign: 'center',
+									fontSize: '3rem',
+									gap: '20px',
+									margin: '20px',
+								}}
+							>
+									Mi perfil
+								<UserOutlined style={{fontSize: '6rem'}}/>
+								<Button
+									style={{height: '45px', fontSize: '1rem'}}
+									onClick={() => {
+										router.push(`/dashboard/users/update/${user.idUser}`);
+									}}
+								>Editar Perfil
+								</Button>
+							</h1>
+						</List.Item>
+
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
 							<p style={{fontWeight: 'bold'}}>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
 							<p style={{fontWeight: 'bold'}}>Email</p>
 							<p>{user?.mail}</p>
 						</List.Item >
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '16px'}}>
+						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
 							<p style={{fontWeight: 'bold'}}>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
@@ -176,6 +192,7 @@ const UserDetail = () => {
 							footer={[
 								<Button
 									key="cancel"
+									danger
 									onClick={() => handleCloseModal(false)}
 								>
 							Cancelar
@@ -215,7 +232,7 @@ const UserDetail = () => {
 											},
 										]}
 									>
-										<Input
+										<Input.Password
 											type="password"
 											name="pin"
 											value={userData.pin}
@@ -243,7 +260,7 @@ const UserDetail = () => {
 											}),
 										]}
 									>
-										<Input
+										<Input.Password
 											type="password"
 											name="Repit"
 											value={userData.pin}
@@ -254,13 +271,7 @@ const UserDetail = () => {
 						</Modal>
 					</List>
 					<div style={{width: '89%'}}>
-						<Button
-							style={{height: '45px', fontSize: '1rem'}}
-							onClick={() => {
-								router.push(`/dashboard/users/update/${user.idUser}`);
-							}}
-						>Editar Perfil
-						</Button>
+						
 					</div>
 					
 				</div>

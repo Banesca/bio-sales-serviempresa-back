@@ -154,15 +154,7 @@ export function CategoriesProvider({ children }) {
 		}
 		await getSubCategories(id);
 	};
-
-	const addSubCategory = async (body, businessId) => {
-		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
-		if (res.isLeft()) {
-			throw res.value.getErrorValue();
-		}
-		await getSubCategories(businessId);
-	};
-
+	
 	const deleteSubCategory = async (subCategoryId, businessId) => {
 		const res = await requestHandler.delete(
 			`/api/v2/subfamily/delete/${subCategoryId}`
@@ -172,6 +164,15 @@ export function CategoriesProvider({ children }) {
 		}
 		await getCategories(businessId);
 	};
+	
+	const addSubCategory = async (body, businessId) => {
+		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await getSubCategories(businessId);
+	};
+
 	// End Sub Categories
 
 	// Lines

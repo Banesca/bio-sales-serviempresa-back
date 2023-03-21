@@ -75,7 +75,7 @@ const ImportProducts = () => {
 			key: 3,
 			render: (text, record) =>
 				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+					<p>$ {record.marketPrice}</p>
 				) : (
 					<p>$ {text}</p>
 				),
@@ -86,7 +86,7 @@ const ImportProducts = () => {
 			key: 3,
 			render: (text, record) =>
 				record.isPromo == '1' ? (
-					<p style={{ color: 'green' }}>$ {record.marketPrice}</p>
+					<p>$ {record.marketPrice}</p>
 				) : (
 					<p>$ {text}</p>
 				),

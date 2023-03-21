@@ -231,6 +231,7 @@ export default function Routes() {
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => {
 							setIsModalOpen(false);
 							setFormState(FORM_INITIAL_STATE);

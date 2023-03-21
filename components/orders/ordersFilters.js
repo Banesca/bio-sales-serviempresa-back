@@ -102,6 +102,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								<Button
 									htmlType="submit"
 									block
+									type='warning'
 									onClick={onReset}
 								>
 									Limpiar

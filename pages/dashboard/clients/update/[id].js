@@ -1,16 +1,16 @@
 import { Button, Col, Row } from 'antd';
-import DashboardLayout from '../../../components/shared/layout';
+import DashboardLayout from '../../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
-import Title from '../../../components/shared/title';
-import Card from '../../../components/shared/card';
+import Title from '../../../../components/shared/title';
 import { message } from 'antd';
-import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import Loading from '../../../components/shared/loading';
-import { useRequest } from '../../../hooks/useRequest';
+import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
+import Loading from '../../../../components/shared/loading';
+import { useRequest } from '../../../../hooks/useRequest';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-export default function AddClient() {
+export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest()
 
@@ -18,16 +18,38 @@ export default function AddClient() {
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g
 
 	const [form] = Form.useForm();
+	const [client, setClient] = useState({});
 
 	const onReset = () => {
 		form.resetFields();
+		console.log(client);
 	};
 
 	const router = useRouter();
+	const { id } = router.query;
+	
+	const getClientRequest = async () => {
+		setLoading(true);
+		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
+		if (res.isLeft()) {
+			setLoading(false);
+			return console.log('error')
+		}
+		const value = res.value.getValue();
+		if (!value.data) {
+			setLoading(false);
+			return message.error('Cliente no encontrado');
+		}
+		setClient(value.data);
+		setLoading(false);
+	};
+	
 
 
 	const handleSubmit = async (values) => {
 		await createClient(values);
+		console.log(values);
+		console.log(client);
 		form.resetFields()
 		router.push('/dashboard/clients');
 		setLoading(true);
@@ -36,21 +58,32 @@ export default function AddClient() {
 	const createClient = async (data) => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.post('/api/v2/client/add', {
+			const res = await requestHandler.put('/api/v2/client/update', {
 				nameClient: data.fullNameClient,
 				phone: data.phoneClient,
+				mail: null,
 				numberDocument: data.rif,
 				address: data.address,
-				idStatusFK: 1,
+				idStatusFK: '1',
 				observacion: data.comments,
+				idClient: client.idClient
 			});
-			message.success('Cliente agregado');
+			console.log(data);
+			message.success('Cliente actualizado');
 		} catch (error) {
-			message.error('Error al agregar cliente');
+			console.log(data);
+			message.error('Error al actualizar cliente');
 		} finally {
 			setLoading(false);
 		}
 	};
+	
+	if (Object.entries(client).length === 0) {
+		getClientRequest();
+		return <Loading isLoading={true} />;
+	}
+	
+
 
 	return (
 		<DashboardLayout>
@@ -64,7 +97,7 @@ export default function AddClient() {
 				<Title
 					goBack={1}
 					path={'/dashboard/clients'}
-					title="Agregar Cliente"
+					title="Actualizar Cliente"
 				></Title>
 				<div style={{
 					maxWidth: '900px',
@@ -78,6 +111,12 @@ export default function AddClient() {
 						style={{ width: '100%' }}
 						form={form}
 						onFinish={handleSubmit}
+						initialValues={{
+							fullNameClient: client?.nameClient,
+							phoneClient: client?.phone,
+							address: client?.address,
+							rif: client?.numberDocument,
+						}}
 					>
 						<Row>
 							<Col
@@ -106,8 +145,9 @@ export default function AddClient() {
 										},
 									]}
 									name="fullNameClient"
+									value={{fullNameClient: client.nameClient}}
 								>
-									<Input type="text" />
+									<Input type="text"  />
 								</Form.Item>
 							</Col>
 							<Col
@@ -259,7 +299,7 @@ export default function AddClient() {
 										type="success"
 										block
 									>
-										Agregar
+										Actualizar
 									</Button>
 								</Form.Item>
 							</Col>

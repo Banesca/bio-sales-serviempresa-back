@@ -120,17 +120,20 @@ export default function SubCategoryModals({
 		createForm.resetFields();
 	};
 
+
 	const handleEditLine = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await editSubCategories(currentBrands.idProductFamily, lineBody.name, currentBrands.idStatus, lineBody.idSubFamilyFk, selectedBusiness.idSucursal);
+			console.log(currentBrands);
+			await editSubCategories(currentBrands.idProductFamily, lineBody.name, currentBrands.idStatus, currentBrands.idProductSubFamily, selectedBusiness.idSucursal);
 			message.success('Subcategoria actualizada');
 		} catch (error) {
 			setLoading(false);
 			message.error('Error al actualizar subcategoria');
 		} finally {
 			setLoading(false);
+			createForm.resetFields()
 		}
 		
 	};
@@ -145,6 +148,7 @@ export default function SubCategoryModals({
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => handleCloseCreateModal()}
 					>
 						Cancelar
@@ -160,13 +164,13 @@ export default function SubCategoryModals({
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="Nombre"
+						label="Subcategoría"
 						name="nameSubFamily"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nombre',
+								message: 'Ingresa una subcategoría',
 							},
 						]}
 					>
@@ -189,6 +193,7 @@ export default function SubCategoryModals({
 					>
 						<Select
 							value={createCategory}
+							allowClear
 							onChange={(value) => setCreateCategory(value)}
 						>
 							{categories &&
@@ -230,34 +235,35 @@ export default function SubCategoryModals({
 				</p>
 			</Modal>
 			<Modal
-				title="Actualizar Linea"
+				title="Actualizar subcategoria"
 				open={isEditModalOpen}
 				onCancel={() => setIsEditModalOpen(false)}
 				footer={[
 					<Button
 						key="cancel"
+						danger
 						onClick={() => setIsEditModalOpen(false)}
 					>
 						Cancelar
 					</Button>,
 					<Button
 						key="delete"
-						type="primary"
+						type="success"
 						onClick={() => handleEditLine()}
 					>
-						Aceptar
+						Actualizar
 					</Button>,
 				]}
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="Nombre"
+						label="Subcategoría"
 						name="name"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nuevo nombre',
+								message: 'Ingresa una nueva categoría',
 							},
 						]}
 					>
@@ -274,13 +280,13 @@ export default function SubCategoryModals({
 						/>
 					</Form.Item>
 					<Form.Item
-						label="Sub Categoría"
+						label="Categoría"
 						name="idSubFamilyFk"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Elige una sub categoría',
+								message: 'Elige una subcategoría',
 							},
 						]}
 					>

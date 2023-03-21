@@ -52,20 +52,20 @@ const AddOrderForm = (props) => {
 	const onSubmit = async (values) => {
 		setLoading(true);
 		const data = {
-			address: isNewClient ? values.address : null,
+			address: isNewClient ? values.address : clients[values.selectClient]?.address,
 			comments: values.comments,
 			deliveryEnLocal: false,
 			deliveryEnTienda: false,
 			deliveryExterno: false,
 			fullNameClient: isNewClient
 				? values.fullNameClient
-				: values.selectClient,
+				: clients[values.selectClient]?.nameClient,
 			idBranchFk: selectedBusiness.idSucursal,
 			idEnvironmentFk: 0, // No estoy seguro de que es environment
 			idTableFk: 0,
 			idUserOpenFk: Number(localStorage.getItem('userId')),
 			moso: null,
-			phoneClient: isNewClient ? values.phoneClient : null,
+			phoneClient: isNewClient ? values.phoneClient : clients[values.selectClient]?.phone,
 		};
 		if (isNewClient) {
 			await createClient(values);
@@ -76,6 +76,7 @@ const AddOrderForm = (props) => {
 
 	const onReset = () => {
 		form.resetFields();
+		console.log(clients);
 	};
 
 	const router = useRouter();
@@ -110,7 +111,8 @@ const AddOrderForm = (props) => {
 					maxWidth: '800px',
 					padding: '0 2rem',
 					margin: '1rem auto',
-					backgroundColor: 'rgba(0, 0, 0, 0.04)',
+					backgroundColor: 'white',
+					boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
 					padding: '60px',
 					borderRadius: '20px'
 				}}
@@ -150,7 +152,7 @@ const AddOrderForm = (props) => {
 										{clients &&
 											clients.map((c, i) => (
 												<Select.Option
-													value={c.nameClient}
+													values={c}
 													key={i}
 												>
 													{c.nameClient}
@@ -253,7 +255,7 @@ const AddOrderForm = (props) => {
 									offset: 8,
 								}}
 							>
-								<Button type='primary' block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

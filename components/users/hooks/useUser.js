@@ -40,7 +40,7 @@ export function useUser() {
 		setSellerClients(res.value.getValue().data);
 	};
 	const upPass = async (id, data) => {
-		const res = await requestHandler.put(`/api/v2/user/edit/pass`, {
+		const res = await requestHandler.put('/api/v2/user/edit/pass', {
 			pin: data.pin,
 			idUser: id,
 			mail: data.mail

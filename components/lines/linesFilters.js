@@ -34,16 +34,7 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
-								label="Nombre"
-								name="nameSubFamily"
-								style={{ padding: '0 .5rem' }}
-							>
-								<Input allowClear />
-							</Form.Item>
-						</Col>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Sub Categoría"
+								label="Subcategoría"
 								name="idSubFamily"
 								style={{ padding: '0 .5rem' }}
 							>
@@ -60,6 +51,15 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 								</Select>
 							</Form.Item>
 						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Línea"
+								name="nameSubFamily"
+								style={{ padding: '0 .5rem' }}
+							>
+								<Input allowClear />
+							</Form.Item>
+						</Col>
 					</Row>
 					<Row>
 						<Col
@@ -69,7 +69,7 @@ export default function LinesFilters({ setQuery, setSelectedSubCategory }) {
 							md={{ span: 8 }}
 						>
 							<Form.Item style={{ margin: '0 .5rem' }}>
-								<Button block onClick={onReset}>
+								<Button type='warning' block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

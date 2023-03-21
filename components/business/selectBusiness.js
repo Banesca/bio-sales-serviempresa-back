@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { message, Select, Col, Row } from 'antd';
 import { Form } from 'antd';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
@@ -20,6 +20,7 @@ const SelectBusiness = () => {
 			'selectedBusiness',
 			JSON.stringify(filterBusiness)
 		);
+		localStorage.setItem('bs', filterBusiness.nombre);
 		handleMessage(filterBusiness.nombre);
 	};
 

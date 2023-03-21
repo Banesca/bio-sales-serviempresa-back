@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, List, Table, Modal, Form, Select, message } from 'antd';
+import { Button, List, Table, Modal, Form, Select, message, Card } from 'antd';
 import { AimOutlined, ArrowLeftOutlined, DeleteOutlined, SendOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
@@ -117,12 +117,17 @@ const UserDetail = () => {
 	};
 
 	const { business } = useBusinessProvider();
+	const [disabled, setDisabled] = useState();
+	
 
 	useEffect(() => {
 		if (Object.keys(generalContext).length) {
 			getUserRequest(id);
 			getUserBusiness(id);
 			getClientsRequest();
+		}
+		if (profile?.id == PROFILES.SELLER) {
+			getLoc(id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
@@ -226,10 +231,26 @@ const UserDetail = () => {
 			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
 			let lat = res.value._value.data[0].latitud;
 			let long = res.value._value.data[0].longitud;
-			window(`https://www.google.com/maps/@${lat},${long},21z`, '_blank')
+			window.open(`https://www.google.com/maps/place/${lat}+${long}`, '_blank')
 		} catch {
 			setLoading(false);
 			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false)
+		}
+	};
+
+	const getLoc = async (id) => {
+		setLoading(true);
+		try {
+			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
+			console.log(res.value._value);
+			let lat = res.value._value.data[0].latitud;
+			let long = res.value._value.data[0].longitud;
+			res.value._value.data == '' ? setDisabled(true) : setDisabled(false);
+		} catch {
+			setLoading(false);
+			setDisabled(true);
 		} finally {
 			setLoading(false)
 		}
@@ -268,36 +289,8 @@ const UserDetail = () => {
 				>
 					<Title title="Información General" path="/dashboard/users" goBack={1}>
 						<>
-							{profile?.id != PROFILES.MASTER &&
-								userProfile == PROFILES.MASTER && (
-								<Button
-									onClick={() => setIsModalOpen(true)}
-									type="primary"
-									style={{ marginRight: '.5rem' }}
-								>
-										Empresas
-								</Button>
-							)}
-							{profile?.id == PROFILES.SELLER && (
-								<>
-									<Button
-										onClick={() =>
-											setIsAssignClientOpen(true)
-										}
-										type="primary"
-										style={{ marginRight: '.5rem' }}
-									>
-										Clientes
-									</Button>
-									<Button type="primary">
-										<Link
-											href={`/dashboard/users/routes/${id}`}
-										>
-											Rutas
-										</Link>
-									</Button>
-								</>
-							)}
+							
+							
 						</>
 					</Title>
 					<List className='form'
@@ -319,10 +312,51 @@ const UserDetail = () => {
 							<p>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 25px'}}>
-							<p>Ultima ubicación</p>
-							<Button type='primary' onClick={() => getLocation(id)} >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
-						</List.Item>
+						{profile?.id == PROFILES.SELLER && (
+							<List.Item style={{padding: '10px 25px'}}>
+								<p>Ultima ubicación</p>
+								<Button type='primary' disabled={disabled} onClick={() => getLocation(id)} >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
+							</List.Item>
+						)}
+						{profile?.id !== PROFILES.MASTER &&
+						(<List.Item style={{padding: '10px 25px'}}>
+							<p>Acciones</p>
+							<div>
+
+								{profile?.id != PROFILES.MASTER &&
+								userProfile == PROFILES.MASTER && (
+									<Button
+										onClick={() => setIsModalOpen(true)}
+										type="primary"
+										style={{ marginRight: '.5rem' }}
+									>
+										Empresas
+									</Button>
+								)}
+								{profile?.id == PROFILES.SELLER && (
+									<>
+										<Button
+											onClick={() =>
+												setIsAssignClientOpen(true)
+											}
+											type="primary"
+											style={{ marginRight: '.5rem' }}
+										>
+										Clientes
+										</Button>
+										<Button type="primary" style={{ marginRight: '0rem' }}>
+											<Link
+												href={`/dashboard/users/routes/${id}`}
+											>
+											Rutas
+											</Link>
+										</Button>
+									</>
+								)}
+							</div>
+
+						</List.Item>)
+						}
 					</List>
 					{profile?.id != PROFILES.MASTER && (
 						<>
@@ -349,7 +383,7 @@ const UserDetail = () => {
 					open={isModalOpen}
 					onCancel={() => closeModal(false)}
 					footer={[
-						<Button key="cancel" onClick={() => closeModal(false)}>
+						<Button danger key="cancel" onClick={() => closeModal(false)}>
 							Cancelar
 						</Button>,
 						<Button
@@ -391,6 +425,7 @@ const UserDetail = () => {
 					footer={[
 						<Button
 							key="cancel"
+							danger
 							onClick={() => {
 								setIsAssignClientOpen(false);
 								setClientsToAssign([]);
@@ -433,11 +468,11 @@ const UserDetail = () => {
 				<Modal
 					open={confirmDelete}
 					title="Remover Permisos"
-					onCancel={() => closeRemoveModal(false)}
+					onCancel={() => setConfirmDelete(false)}
 					footer={[
 						<Button
 							key="cancel"
-							onClick={() => closeRemoveModal(false)}
+							onClick={() => setConfirmDelete(false)}
 						>
 							Cancelar
 						</Button>,
@@ -465,7 +500,7 @@ const UserDetail = () => {
 					footer={[
 						<Button
 							key="cancel"
-							onClick={() => setClientToRemove(false)}
+							onClick={() => setConfirmRemoveClient(false)}
 						>
 							Cancelar
 						</Button>,

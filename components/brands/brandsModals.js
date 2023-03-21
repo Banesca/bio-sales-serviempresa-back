@@ -73,10 +73,10 @@ export default function BrandsModals({
 			setLoading(true);
 			setIsEditModalOpen(false);
 			await updateBrand( lineBody.name, lineBody.idB, selectedBusiness.idSucursal);
-			message.success('Linea actualizada');
+			message.success('Marca actualizada');
 		} catch (error) {
 			setLoading(false);
-			message.error('Error al actualizar Linea');
+			message.error('Error al actualizar marca');
 		} finally {
 			setLoading(false);
 		}
@@ -90,7 +90,7 @@ export default function BrandsModals({
 				open={isCreateModalOpen}
 				onCancel={handleCloseCreateModal}
 				footer={[
-					<Button key="cancel" onClick={handleCloseCreateModal}>
+					<Button danger key="cancel" onClick={handleCloseCreateModal}>
 						Cancelar
 					</Button>,
 					<Button
@@ -104,7 +104,7 @@ export default function BrandsModals({
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="nombre"
+						label="Marca"
 						name="name"
 						style={{ padding: '0 .5rem' }}
 						required
@@ -149,11 +149,12 @@ export default function BrandsModals({
 				</p>
 			</Modal>
 			<Modal
-				title="Actualizar Linea"
+				title="Actualizar marca"
 				open={isEditModalOpen}
 				onCancel={() => setIsEditModalOpen(false)}
 				footer={[
 					<Button
+						danger
 						key="cancel"
 						onClick={() => setIsEditModalOpen(false)}
 					>
@@ -170,13 +171,14 @@ export default function BrandsModals({
 			>
 				<Form form={createForm}>
 					<Form.Item
-						label="Nombre"
+						label="Marca"
+						initialValue={lineBody.name}
 						name="name"
 						required
 						rules={[
 							{
 								required: true,
-								message: 'Ingresa un nuevo nombre',
+								message: 'Ingresa una nueva marca',
 							},
 						]}
 					>
