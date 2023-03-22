@@ -233,7 +233,6 @@ export default function Products() {
 
 		</Empty>
 	);
-
 	return (
 		<>
 			<DashboardLayout>
