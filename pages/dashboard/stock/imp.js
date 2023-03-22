@@ -216,11 +216,13 @@ const ImportProducts = () => {
 				efectivo: row?.REFERENCIA,
 				wareHouse: row?.Almacen,
 				idInventaryB: 1,
+				key: '',
 				stock: row?.Stock,
 				totalPrice: row?.Total,
-				idProductFk: 1,
+				idProductFk: row?.Id_de_producto,
+				isTypeProduct: 1,
 				idProduct: row?.Id_de_producto,
-				key: 0,
+				key: row?.Id_de_producto,
 				priceSale: row?.PRECIO_TIENDA,
 				idSucursalFk: selectedBusiness?.idSucursal, /* idSucursalFk: selectedBusiness?.idSucursal */
 				apply_inventory: true,
@@ -295,12 +297,20 @@ const ImportProducts = () => {
 		const formatData = removeKeys(data);
 		console.log(formatData);
 		setLoading(true);
-		const res = await requestHandler.post('/api/v2/production/product/add/masive', formatData);
+		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
+			data
+		});
+		const restt = await requestHandler.post('/api/v2/production/product/add', {
+			data
+		});
+		console.log(restt);
+		console.log(res);
+		/* console.log(restt);
+		console.log(res); */
 		/* const restt = await requestHandler.post('/api/v2/production/product/add/masive', {
 			data,
 		}); */
 		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
-		console.log(res);
 		console.log(data);
 		/* (rest);
 		(restt);

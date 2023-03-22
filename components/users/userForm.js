@@ -92,8 +92,8 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 		} catch (error) {
 			message.error(
 				update
-					? `${error.response.data.message}`
-					: `${error.response.data.message}`
+					? `${error.response.data.status}`
+					: `${error.response.data.status}`
 			);
 			console.log(error)
 		} finally {

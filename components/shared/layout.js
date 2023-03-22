@@ -126,7 +126,8 @@ export default function DashboardLayout({ children }) {
 	
 	useEffect(() => {
 		setCurrentBusiness(localStorage.getItem('bs'));
-		getUserBusiness(2);
+		/* setCurrentBusiness(business?.map(b => b.nombre)); */
+		getUserBusiness();
 	}, [children]);
 	
 
@@ -153,15 +154,10 @@ export default function DashboardLayout({ children }) {
 		if (res.isLeft()) {
 			return;
 		}
-		const value = res.value.getValue().data;
-		setBusiness(value);
+		const value = res.value._value.data;
+		localStorage.setItem('bus', value[0].nombre)
+		setBusiness(value[0].nombre);
 	};
-
-	const list = () => {
-		business.map((bus, index) => {
-			<div key={index}>{bus.nombre}</div>
-		})
-	}
 
 	return (
 		<>
@@ -195,7 +191,7 @@ export default function DashboardLayout({ children }) {
 						color: 'white'
 					}}>
 						{/* {business == '' ? '' : business} */}
-						{currentBusiness ? currentBusiness : 'Principal'}
+						{currentBusiness !== [] ? business : currentBusiness}
 					</p>
 					<p></p>
 				</Header>

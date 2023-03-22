@@ -42,7 +42,7 @@ export function BrandsProvider({ children }) {
 	};
 
 	const updateBrand = async (name, idBrand, businessId) => {
-		const res = await requestHandler.put(`/api/v2/brand/update/lite`, {
+		const res = await requestHandler.put('/api/v2/brand/update/lite', {
 			name,
 			idBrand
 		});
@@ -62,7 +62,7 @@ export function BrandsProvider({ children }) {
 	};
 
 	const addBrand = async (name, idSucursalFk) => {
-		const res = await requestHandler.post(`/api/v2/brand/add`, {
+		const res = await requestHandler.post('/api/v2/brand/add', {
 			name,
 			idSucursalFk,
 		});

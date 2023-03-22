@@ -70,6 +70,7 @@ const UserDetail = () => {
 		}
 		const value = res.value.getValue().data;
 		setBusinessByUser(value);
+		console.log(value.map(b => b.nombre));
 	};
 
 	const getSellerClientsRequest = async (id) => {
@@ -126,9 +127,7 @@ const UserDetail = () => {
 			getUserBusiness(id);
 			getClientsRequest();
 		}
-		if (profile?.id == PROFILES.SELLER) {
-			getLoc(id);
-		}
+		getLoc(id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
@@ -148,6 +147,8 @@ const UserDetail = () => {
 		}
 		await getUserBusiness(id);
 		setLoading(false);
+		console.log(businessToAdd);
+		console.log(businessByUser.map(b => b.nombre));
 		message.success('Empresa asignada');
 	};
 
@@ -248,6 +249,7 @@ const UserDetail = () => {
 			let lat = res.value._value.data[0].latitud;
 			let long = res.value._value.data[0].longitud;
 			res.value._value.data == '' ? setDisabled(true) : setDisabled(false);
+			console.log(res.value);
 		} catch {
 			setLoading(false);
 			setDisabled(true);
@@ -324,26 +326,30 @@ const UserDetail = () => {
 							<div>
 
 								{profile?.id != PROFILES.MASTER &&
-								userProfile == PROFILES.MASTER && (
-									<Button
-										onClick={() => setIsModalOpen(true)}
-										type="primary"
-										style={{ marginRight: '.5rem' }}
-									>
-										Empresas
-									</Button>
-								)}
-								{profile?.id == PROFILES.SELLER && (
-									<>
+								userProfile == PROFILES.MASTER ? (
 										<Button
-											onClick={() =>
-												setIsAssignClientOpen(true)
-											}
+											onClick={() => setIsModalOpen(true)}
 											type="primary"
 											style={{ marginRight: '.5rem' }}
 										>
-										Clientes
+										Empresas
 										</Button>
+									)
+									:
+									<></>
+								}
+								{/* {userProfile == PROFILES.ADMIN && localStorage } */}
+								<Button
+									onClick={() =>
+										setIsAssignClientOpen(true)
+									}
+									type="primary"
+									style={{ marginRight: '.5rem' }}
+								>
+										Clientes
+								</Button>
+								{profile?.id == PROFILES.SELLER && (
+									<>
 										<Button type="primary" style={{ marginRight: '0rem' }}>
 											<Link
 												href={`/dashboard/users/routes/${id}`}
@@ -360,13 +366,11 @@ const UserDetail = () => {
 					</List>
 					{profile?.id != PROFILES.MASTER && (
 						<>
-							{userProfile == PROFILES.MASTER && (
-								<UserBusinessTable
-									business={businessByUser}
-									setConfirmDelete={setConfirmDelete}
-									setBusinessToRemove={setBusinessToRemove}
-								/>
-							)}
+							<UserBusinessTable
+								business={businessByUser}
+								setConfirmDelete={setConfirmDelete}
+								setBusinessToRemove={setBusinessToRemove}
+							/>
 							{profile?.id == PROFILES.SELLER && (
 								<UserClientsTable
 									clients={sellerClients}

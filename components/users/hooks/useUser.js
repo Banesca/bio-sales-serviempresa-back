@@ -29,6 +29,7 @@ export function useUser() {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue().data;
+		console.log(value);
 		return !!value === true ? value[0] : null;
 	};
 

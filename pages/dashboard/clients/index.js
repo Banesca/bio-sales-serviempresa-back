@@ -48,8 +48,11 @@ export default function ClientsPage() {
 			align: 'center',
 			dataIndex: 'statusName',
 			key: 4,
+			defaultSortOrder: 'ascend',
+			sortDirections: ['ascend'],
+			sorter: (a, b) => a.statusName.length - b.statusName.length,
 			render: (text, index) => (
-				<Space size="middle" style={{display: 'flex', justifyContent: 'flex-start', width: '100px'}}>
+				<Space size="middle" style={{ width: '150px', margin: '0 auto', marginLeft: '-15px'}}>
 					<Button
 						type="primary"
 						onClick={() => router.push(`clients/${index.idClient}`)}

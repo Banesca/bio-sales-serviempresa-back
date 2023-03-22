@@ -13,6 +13,8 @@ import OrdersTable from '../../../components/orders/ordersTable';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
+import PROFILES from '../../../components/shared/profiles'
 
 export const orderStatusToUse = {
 	1: 'Inconcluso',
@@ -29,6 +31,8 @@ export default function OrdersPage() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
+	const { userProfile } = useAuthContext();
+
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -98,6 +102,7 @@ export default function OrdersPage() {
 							Agregar
 						</Button>
 					</Link>
+
 				</Title>
 				<OrdersFilters
 					setQuery={setQuery}

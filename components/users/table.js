@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Space, Button, Table, Modal, ConfigProvider, Empty } from 'antd';
+import { Space, Button, Table, Modal, ConfigProvider, Empty, message } from 'antd';
 import PropTypes from 'prop-types';
 
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { useAuthContext } from '../../context/useUserProfileProvider';
+import { useRequest } from '../../hooks/useRequest';
+import { right } from '../../util/result';
 
 const UsersTable = ({
 	users,
@@ -15,7 +17,27 @@ const UsersTable = ({
 	handleOpenModal,
 	currentUser,
 	isModalOpen,
+	h
 }) => {
+
+	const { requestHandler } = useRequest();	
+	useEffect(() => {
+		console.log(h);	
+	  
+	}, []);
+	
+	
+/* 	const getUserBusiness = async (userId) => {
+		try {
+			const res = await requestHandler.get(`/api/v2/user/branch/${userId}`);
+			console.log(res);
+			return res;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
+	};
+ */
 	const columns = [
 		{
 			title: 'Nombre',
@@ -40,11 +62,15 @@ const UsersTable = ({
 		},
 		{
 			title: 'Acciones',
-			align: 'center',
+			dataIndex: 'idProfileFk',
+			align: 'start',
 			width: '40px',
 			key: 5,
-			render: (_, record) => (
-				<Space size="middle">
+			defaultSortOrder: 'descend',
+			sortDirections: ['descend'],
+			sorter: (a, b) => a.idProfileFk > b.idProfileFk,
+			render: (text, _, record) => (
+				<Space size="middle" style={{}}>
 					<Button
 						type="primary"
 						onClick={() => {
@@ -52,15 +78,21 @@ const UsersTable = ({
 							setLoading(true);
 						}}
 					>
+						{/* <div>{text == PROFILES.SELLER ? getUserBusiness(_.idUser) : 'hola'}</div> */}
 						<EyeTwoTone />
 					</Button>
-					<Button
-						onClick={() => {
-							router.push(`/dashboard/users/update/${_.idUser}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
+					{(userProfile !== PROFILES.BILLER && text !== PROFILES.MASTER) && text == PROFILES.SELLER ? (
+						<Button
+							onClick={() => {
+								router.push(`/dashboard/users/update/${_.idUser}`);
+							}}
+						>
+							<EditOutlined />
+						</Button>
+					)
+						:
+						<></>
+					}
 					{userProfile == PROFILES.MASTER && (
 						<Button
 							type="primary"
@@ -81,13 +113,16 @@ const UsersTable = ({
 	const { userProfile } = useAuthContext();
 
 	// const [loading, setLoading] = useState(true);
-	const { loading, setLoading } = useLoadingContext();
+	const { loading, setLoading } = useLoadingContext();	
 
 	useEffect(() => {
 		if (users) {
 			setLoading(false);
 		}
+		console.log(users);
 	}, [users]);
+
+
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

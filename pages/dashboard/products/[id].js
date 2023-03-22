@@ -126,6 +126,7 @@ const Product = () => {
 		if (currentProduct.idBrandFk) {
 			getBrandRequest(currentProduct.idBrandFk);
 		}
+		console.log(currentBrand.length == undefined ? 'Indefinida' : currentBrand?.name);
 	}, [currentProduct]);
 
 	if (loading) {
@@ -175,7 +176,7 @@ const Product = () => {
 					)}
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Marca</p>
-						<p>{currentBrand.name}</p>
+						<p>{currentBrand.length == undefined ? 'Indefinida' : currentBrand?.name}</p>
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>En Promoción</p>
@@ -219,26 +220,26 @@ const Product = () => {
 						{currentProduct.idUnitMeasureSaleFk === 17 ? (
 							<>
 								<p style={{fontWeight: 'bold'}}>Unidad por Caja</p>
-								<p>{currentProduct.unitByBox}</p>
+								<p>{!currentProduct.unitByBox ? 'Indefinido' : currentProduct.unitByBox}</p>
 							</>
 						) : (
 							<>
 								<p style={{fontWeight: 'bold'}}>Peso por unidad</p>
-								<p>{currentProduct.unitweight} KG</p>
+								<p>{!currentProduct.unitweight ? 'Indefinido' : currentProduct.unitweight} KG</p>
 							</>
 						)}
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>EAN13</p>
-						<p>{currentProduct.ean}</p>
+						<p>{!currentProduct.ean ? 'Indefinido' : currentProduct.ean}</p>
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>CPE</p>
-						<p>{currentProduct.cpe}</p>
+						<p>{!currentProduct.cpe ? 'Indefinido' : currentProduct.ean}</p>
 					</List.Item>
 					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Registro Sanitario</p>
-						<p>{currentProduct.healthRegister}</p>
+						<p>{!currentProduct.healthRegister ? 'Ideninido' : currentProduct.healthRegister}</p>
 					</List.Item>
 					{currentProduct.observation && (
 						<List.Item>
@@ -247,11 +248,15 @@ const Product = () => {
 						</List.Item>
 					)}
 					<List.Item>
+						<p style={{fontWeight: 'bold'}}>Stock mínimo</p>
+						<p>
+							{currentProduct?.minStock}
+						</p>
+					</List.Item>
+					<List.Item>
 						<p style={{fontWeight: 'bold'}}>Stock</p>
 						<p>
-							{currentProduct?.stock?.length > 0
-								? currentProduct.stock[0].stock
-								: '0'}
+							{!currentProduct?.stock?.length ? '0' : currentProduct?.stock[0].stock}
 						</p>
 					</List.Item>
 					<List.Item

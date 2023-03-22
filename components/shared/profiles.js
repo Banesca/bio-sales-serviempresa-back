@@ -8,6 +8,6 @@ export const PROFILE_LIST = [
 export const PROFILES = {
 	MASTER: 1,
 	ADMIN: 2,
-	BILLER: 4,
 	SELLER: 3,
+	BILLER: 4,
 };

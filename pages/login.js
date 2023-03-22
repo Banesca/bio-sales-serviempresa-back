@@ -112,6 +112,8 @@ export default function Login() {
 	const generalContext = useContext(GeneralContext);
 
 	useEffect(() => {
+		localStorage.clear();
+		console.log('hola');
 		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
 	}, [generalContext.api_port]);
 

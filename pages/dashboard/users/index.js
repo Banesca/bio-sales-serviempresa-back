@@ -19,7 +19,10 @@ export default function Users() {
 	const { userProfile } = useAuthContext();
 
 	const { loading, setLoading } = useLoadingContext();
-	const { users, deleteUser, getUsers } = useUser();
+	const { users, deleteUser, getUsers, getUserById } = useUser();
+	const { requestHandler } = useRequest();
+	const [businessByUser, setBusinessByUser] = useState([]);
+
 	// const [loading, setLoading] = useState(true);
 
 	// const [users, setUsers] = useState([]);
@@ -27,7 +30,20 @@ export default function Users() {
 		fullname: '',
 		mail: '',
 		idProfileFk: 0,
+		idBusiness: 0,
 	});
+
+	let h = [];
+
+	const getUserBusiness = async (id) => {
+		const res = await requestHandler.get(`/api/v2/user/branch/${id}`);
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value._value.data;
+		h.push(value);
+		console.log(h);
+	};
 
 	const generalContext = useContext(GeneralContext);
 
@@ -35,6 +51,10 @@ export default function Users() {
 		setLoading(true);
 		if (Object.keys(generalContext).length) {
 			getUsers();
+			for(let x in users) {
+				// iterar sobre usuarios para obtener su empresa asignada
+				getUserBusiness(users[x].idUser);
+			}
 			setLoading(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +62,7 @@ export default function Users() {
 
 	const usersList = useMemo(() => {
 		let usersList = users;
+		let us = businessByUser;
 		if (query.fullname) {
 			usersList = usersList.filter((u) =>
 				u.fullname.toLowerCase().includes(query.fullname.toLowerCase())
@@ -104,7 +125,7 @@ export default function Users() {
 					}}
 				>
 					<Title title="Usuarios" goBack={false}>
-						{userProfile !== PROFILES.SELLER && (
+						{userProfile == PROFILES.MASTER && (
 							<Link href='users/add'>
 								<Button
 									style={{marginRight: '-2.3rem'}}
@@ -122,6 +143,7 @@ export default function Users() {
 						handleOpenModal={handleOpenModal}
 						isModalOpen={isModalOpen}
 						currentUser={currentUser}
+						h={h}
 					/>
 				</div>
 			</DashboardLayout>
