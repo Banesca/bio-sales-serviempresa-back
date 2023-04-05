@@ -125,7 +125,6 @@ export default function SubCategoryModals({
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			console.log(currentBrands);
 			await editSubCategories(currentBrands.idProductFamily, lineBody.name, currentBrands.idStatus, currentBrands.idProductSubFamily, selectedBusiness.idSucursal);
 			message.success('Subcategoria actualizada');
 		} catch (error) {

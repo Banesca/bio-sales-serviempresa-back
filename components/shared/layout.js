@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { IoBriefcaseOutline } from 'react-icons/io5';
+import { IoBriefcase, IoBriefcaseOutline } from 'react-icons/io5';
 import { Button, Layout, Menu } from 'antd';
 import {
 	ImportOutlined,
@@ -10,12 +10,22 @@ import {
 	UserOutlined,
 	UsergroupAddOutlined,
 	InboxOutlined,
+	BellOutlined,
+	BellFilled,
+	ShoppingFilled,
+	ShopFilled,
+	DownOutlined,
+	HomeOutlined,
+	HomeFilled,
+	SettingFilled,
+	DiffFilled,
 } from '@ant-design/icons';
-
+import {BsFillCartFill} from 'react-icons/bs';
 import Loading from './loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
+import { FaUserAlt, FaUserFriends } from 'react-icons/fa';
 
 
 const { Header, Content, Sider } = Layout;
@@ -23,11 +33,16 @@ const { Header, Content, Sider } = Layout;
 export default function DashboardLayout({ children }) {
 	const sidebarLinks = [
 		{
-			key: '/dashboard/products',
-			label: 'Productos',
-			icon: React.createElement(ShoppingOutlined),
+			key: '/dashboard/home',
+			label: 'Inicio',
+			icon: React.createElement(HomeFilled),
 		},
 		{
+			key: '/dashboard/products',
+			label: 'Catalogo',
+			icon: React.createElement(ShoppingFilled),
+		},
+		/* {
 			key: '/dashboard/categories',
 			label: 'Categorías',
 			icon: React.createElement(ProfileOutlined),
@@ -36,31 +51,46 @@ export default function DashboardLayout({ children }) {
 			key: '/dashboard/brands',
 			label: 'Marcas',
 			icon: React.createElement(ProfileOutlined),
-		},
-		{
+		}, */
+		/* {
 			key: '/dashboard/users',
 			label: 'Usuarios',
 			icon: React.createElement(UserOutlined),
-		},
-		{
-			key: '/dashboard/clients',
-			label: 'Clientes',
-			icon: React.createElement(UsergroupAddOutlined),
-		},
+		}, */
 		{
 			key: '/dashboard/orders',
 			label: 'Pedidos',
-			icon: React.createElement(IoBriefcaseOutline),
+			icon: React.createElement(IoBriefcase),
 		},
 		{
+			key: '/dashboard/shopping',
+			label: 'Carrito de compras',
+			icon: React.createElement(BsFillCartFill),
+		},
+		/* {
 			key: '/dashboard/stock',
 			label: 'Inventario',
 			icon: React.createElement(InboxOutlined),
+		}, */
+		{
+			key: '/dashboard/clients',
+			label: 'Clientes',
+			icon: React.createElement(FaUserFriends),
+		},
+		{
+			key: '/dashboard/reports',
+			label: 'Reportes',
+			icon: React.createElement(DiffFilled),
+		},
+		{
+			key: '/dashboard/settings',
+			label: 'Configuración',
+			icon: React.createElement(SettingFilled),
 		},
 		{
 			key: '/dashboard/profile',
 			label: 'Mi perfil',
-			icon: React.createElement(UserOutlined),
+			icon: React.createElement(FaUserAlt),
 		},
 		{
 			key: '/login',
@@ -69,6 +99,11 @@ export default function DashboardLayout({ children }) {
 		}
 	];
 	const sidebar = [
+		{
+			key: '/dashboard/products',
+			label: 'Inicio',
+			icon: React.createElement(ShoppingOutlined),
+		},
 		{
 			key: '/dashboard/products',
 			label: 'Productos',
@@ -125,9 +160,9 @@ export default function DashboardLayout({ children }) {
 	}, [router.pathname]);
 	
 	useEffect(() => {
+		getUserBusiness();
 		setCurrentBusiness(localStorage.getItem('bs'));
 		/* setCurrentBusiness(business?.map(b => b.nombre)); */
-		getUserBusiness();
 	}, [children]);
 	
 
@@ -155,9 +190,9 @@ export default function DashboardLayout({ children }) {
 			return;
 		}
 		const value = res.value._value.data;
-		localStorage.setItem('bus', value[0].nombre)
-		setBusiness(value[0].nombre);
-	};
+		localStorage.setItem('bus', value[0]?.nombre)
+		setBusiness(value[0]?.nombre);
+	}
 
 	return (
 		<>
@@ -175,25 +210,29 @@ export default function DashboardLayout({ children }) {
 					}}
 				>
 					<p
+						className='logo'
 						style={{
 							marginLeft: '-25px',
 							fontWeight: 'bolder',
 							fontSize: '1.5rem',
-							color: 'white',
+							color: 'black',
 						}}
 					>
-						SiempreOL
 					</p>
 					<p style={{
 						alignSelf: 'center', 
 						fontWeight: 'bolder',
 						fontSize: '1.8rem',
-						color: 'white'
+						color: 'black'
 					}}>
 						{/* {business == '' ? '' : business} */}
-						{currentBusiness !== [] ? business : currentBusiness}
+						{currentBusiness == [] ? business : currentBusiness}
 					</p>
-					<p></p>
+					<p className='header-icons'>
+						<Button className='layout-btn'><BellFilled></BellFilled></Button>
+						<Button className='layout-btn'><BsFillCartFill></BsFillCartFill></Button>
+						<Button className='layout-btn'><UserOutlined></UserOutlined> web<DownOutlined></DownOutlined></Button>
+					</p>
 				</Header>
 				<Layout style={{ minHeight: 'fit-content' }} hasSider>
 					<Sider
@@ -207,9 +246,9 @@ export default function DashboardLayout({ children }) {
 							className='menu'
 							items={userProfile == PROFILES.BILLER ? sidebar : sidebarLinks}
 							onSelect={(e) => handleNavigation(e)}
-							style={{ height: '100%', marginTop: '10px' }}
+							style={{ height: '100%', marginTop: '10px'}}
 						/>
-						<h1 className='version' style={{position: 'sticky', marginTop: '-30px', marginLeft: '15px'}}>Version 0.9.5</h1>
+						{/* <h1 className='version' style={{position: 'sticky', marginTop: '-30px', marginLeft: '15px'}}>Version 0.9.5</h1> */}
 					</Sider>
 					<Layout>
 						<Content

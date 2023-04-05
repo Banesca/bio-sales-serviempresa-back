@@ -234,8 +234,6 @@ const ImportProducts = () => {
 			};
 			uploadData.push(obj);
 		}
-		console.log(uploadData);
-		console.log(selectedBusiness);
 		return uploadData;
 	};
 
@@ -295,7 +293,6 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData);
 		setLoading(true);
 		const res = await requestHandler.post('/api/v2/production/product/add/masive', {
 			data
@@ -303,15 +300,12 @@ const ImportProducts = () => {
 		const restt = await requestHandler.post('/api/v2/production/product/add', {
 			data
 		});
-		console.log(restt);
-		console.log(res);
 		/* console.log(restt);
 		console.log(res); */
 		/* const restt = await requestHandler.post('/api/v2/production/product/add/masive', {
 			data,
 		}); */
 		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
-		console.log(data);
 		/* (rest);
 		(restt);
 		(res); */

@@ -29,7 +29,6 @@ const Filter = ({ setQuery, clean }) => {
 			stock: values?.stock || 0,
 			idProduct: values?.idProduct || 0,
 		});
-		console.log(values);
 	};
 
 	return (

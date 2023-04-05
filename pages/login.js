@@ -75,7 +75,6 @@ export default function Login() {
 			return handleLoginError('Usuario o contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
-		console.log(value);
 		localStorage.setItem('accessToken', value.token);
 		if (value.idProfileFk != PROFILES.MASTER) {
 			const businessByUser = await getUserBusiness(value.idUser);
@@ -113,7 +112,6 @@ export default function Login() {
 
 	useEffect(() => {
 		localStorage.clear();
-		console.log('hola');
 		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
 	}, [generalContext.api_port]);
 
@@ -123,6 +121,7 @@ export default function Login() {
 			{contextHolder}
 			<Layout>
 				<Content
+					className='layout-login'
 					style={{
 						display: 'flex',
 						alignItems: 'center',
@@ -133,6 +132,18 @@ export default function Login() {
 						paddingInline: '1rem',
 					}}
 				>
+					<h1
+						className='logo'
+						style={{
+							fontWeight: 'bold',
+							fontSize: '4rem',
+							marginTop: '0px',
+							marginBottom: '25px',
+							height: '60px'
+						}}
+					>
+							
+					</h1>
 					<div
 						className='login'
 						style={{
@@ -141,16 +152,8 @@ export default function Login() {
 						}}
 					>
 						<div className='imagen' >
-							<Typography style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-								<h1
-									style={{
-										fontWeight: 'bold',
-										fontSize: '4rem',
-										marginBottom: '0'
-									}}
-								>
-								SiempreOL
-								</h1>
+							<Typography style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+								<h1>INGRESAR</h1>
 							</Typography>
 						</div>
 						<div className='login-form' style={{marginRight:'-30px'}}>
@@ -177,7 +180,7 @@ export default function Login() {
 											},
 										]}
 									>
-										<Input />
+										<Input className='login-input' placeholder='CEDULA'/>
 									</Form.Item>
 									<Form.Item
 										label="Contraseña"
@@ -189,7 +192,7 @@ export default function Login() {
 											},
 										]}
 									>
-										<Input.Password />
+										<Input.Password className='login-input password' placeholder='CONTRASEÑA' />
 									</Form.Item>
 								</section>
 
@@ -215,7 +218,7 @@ export default function Login() {
 									</Button>
 								</Form.Item>
 							</Form>
-							<h5 style={{marginTop: '8px', marginBottom: '5px', color: '#333'}}>Versión 0.9.5</h5>
+							<h5 style={{marginTop: '8px', marginBottom: '5px', color: '#fff'}}>Versión 0.9.5</h5>
 						</div>
 
 					</div>

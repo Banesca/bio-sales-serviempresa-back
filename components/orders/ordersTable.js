@@ -20,7 +20,6 @@ export default function OrdersTable({ orders }) {
 	const handleSeeDetail = (order, record) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/${order.idOrderH}`);
-		console.log(order.idStatusOrder);
 	};
 
 	const [users, setUsers] = useState({});
@@ -45,10 +44,8 @@ export default function OrdersTable({ orders }) {
 				await getSellerClientsRequest(u.idUser);
 			}
 		} catch (error) {
-			console.log('todo ok');
 		} finally {
 			setLoading(false);
-			/* console.log(users); */
 		}
 	};
 
@@ -61,6 +58,12 @@ export default function OrdersTable({ orders }) {
 	}, []);
 	
 	const columns = [
+		{
+			title: 'Cliente',
+			dataIndex: 'fullNameClient',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
 		{
 			title: 'Fecha de creación',
 			dataIndex: 'created_at',
@@ -113,50 +116,45 @@ export default function OrdersTable({ orders }) {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Cliente',
-			dataIndex: 'fullNameClient',
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Estado',
+			title: 'ESTATUS',
+			class: '',
 			dataIndex: 'statusOrder',
 			key: 3,
 			render: (text, record) => {
 				switch (record.idStatusOrder) {
 				case 1:
 					return (
-						<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
+						<p className='status'  style={{ color: '#ff6c0b', fontWeight: 'bold', backgroundColor: '#ff6c0b31' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 2:
 					return (
-						<p style={{ color: '#06a800', fontWeight: 'bold' }}> 
+						<p className='status' style={{ color: '#06a800', fontWeight: 'bold', backgroundColor: '#06a80031' }}> 
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 3:
 					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+						<p className='status' style={{ color: '#0984e3', fontWeight: 'bold', backgroundColor: '#0985e331' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 4:
 					return (
-						<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
+						<p className='status' style={{ color: '#ffd034', fontWeight: 'bold', backgroundColor: '#ffd03431' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 5:
 					return (
-						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
+						<p className='status' style={{ color: '#d63031', fontWeight: 'bold', backgroundColor: '#d6303131' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);
 				case 6:
 					return (
-						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
+						<p className='status' style={{ color: '#d63031', fontWeight: 'bold', backgroundColor: '#d6303131' }}>
 							{orderStatusToUse[record.idStatusOrder]}
 						</p>
 					);

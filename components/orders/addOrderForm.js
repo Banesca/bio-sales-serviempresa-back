@@ -76,7 +76,6 @@ const AddOrderForm = (props) => {
 
 	const onReset = () => {
 		form.resetFields();
-		console.log(clients);
 	};
 
 	const router = useRouter();

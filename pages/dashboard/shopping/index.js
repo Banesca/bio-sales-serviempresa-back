@@ -1,15 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty } from 'antd';
+import { Table, Space, Modal, ConfigProvider, Empty, Image, Card } from 'antd';
 import Button from 'antd-button-color';
 import {
+	ArrowRightOutlined,
 	CheckCircleOutlined,
 	CloseCircleOutlined,
 	DeleteOutlined,
 	DownOutlined,
 	EditOutlined,
 	EyeTwoTone,
+	RightOutlined,
+	ShoppingFilled,
 } from '@ant-design/icons';
-
+import { FaUsers } from 'react-icons/fa';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -28,6 +31,9 @@ import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
+import { IoBriefcaseOutline } from 'react-icons/io5';
+import {BsFillCartFill} from 'react-icons/bs';
+
 
 export default function Products() {
 	const router = useRouter();
@@ -218,6 +224,7 @@ export default function Products() {
 		deleteProductRequest(currentProduct.idProduct);
 		setDeleteModalOpen(false);
 	};
+	
 
 	const customizeRenderEmpty = () => (
 		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -245,31 +252,29 @@ export default function Products() {
 						flexDirection: 'column',
 					}}
 				>
-					<Title goBack={false} title={'Productos'}>
-						{userProfile != PROFILES.BILLER && (
-							<Button
-								style={{ marginRight: '1rem' }}
-								type="success"
-								disabled={userProfile == PROFILES.BILLER}
-								onClick={() =>
-									router.push('/dashboard/products/add')
-								}
-							>
-								Filtro
-								<DownOutlined></DownOutlined>
-							</Button>
-						)}
-						{/* <Button
-							type="warning"
-							style={{marginRight: '-2.3rem'}}
-							onClick={() =>
-								router.push('/dashboard/products/import')
-							}
-						>
-							Importar
-						</Button> */}
-					</Title>
-					<ProductFilter setQuery={setQuery} clean={clean} />
+
+					<section style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+						<div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+							<h1 style={{color: '#012258', fontSize: '2.5rem', margin: '0'}}>Carrito de compras</h1>
+							<BsFillCartFill style={{fontSize: '2.5rem', color: '#012258'}}></BsFillCartFill>
+						</div>
+						<div style={{backgroundColor: 'white', padding: '20px', borderRadius: '15px', display: 'flex', flexDirection: 'column'}}>
+							<p style={{}}>Seleccionar cliente</p>
+							<Card>
+								<footer style={{display: 'flex'}}>
+									<Image src="#" alt="Cliente" />
+									<h1 style={{color: '#012258', fontSize: '1.5rem', margin: '0'}}>Cliente Rio Supermarket C.A</h1>
+								</footer>
+								<RightOutlined/>
+							</Card>
+						</div>
+					</section>
+					{/* <ProductFilter setQuery={setQuery} clean={clean} /> */}
+
+
+
+					{/* Data table */}
+					<h1 style={{color: '#012258', fontSize: '2rem'}}>Productos</h1>
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
 							columns={columns}
@@ -278,6 +283,8 @@ export default function Products() {
 						/>
 					</ConfigProvider>
 				</div>
+
+				{/* Modals */}
 				<Modal
 					title="Eliminar"
 					open={deleteModalOpen}

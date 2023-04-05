@@ -22,12 +22,11 @@ const UsersTable = ({
 
 	const { requestHandler } = useRequest();	
 	useEffect(() => {
-		console.log(h);	
 	  
 	}, []);
 	
 	
-/* 	const getUserBusiness = async (userId) => {
+	/* 	const getUserBusiness = async (userId) => {
 		try {
 			const res = await requestHandler.get(`/api/v2/user/branch/${userId}`);
 			console.log(res);
@@ -119,7 +118,6 @@ const UsersTable = ({
 		if (users) {
 			setLoading(false);
 		}
-		console.log(users);
 	}, [users]);
 
 

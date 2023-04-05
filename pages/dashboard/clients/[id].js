@@ -180,7 +180,6 @@ const ClientDetail = () => {
 			getOrderByClient(client.phone);
 		}
 
-		console.log(client.statusName);
 	}, [client]);
 
 	const customizeRenderEmpty = () => (

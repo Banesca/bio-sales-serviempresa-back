@@ -5,7 +5,7 @@ body {
 	padding: 0;
 	margin: 0;
 	font-family: 'Open Sans', sans-serif !important;
-	color: #333333;
+	color: #97999b !important;
 }
 
 * {
@@ -30,10 +30,41 @@ h6 {
 	color: 'white';
 }
 
+.login-input {
+	background-color: #012258 !important;
+	border-color: #168ae3;
+}
+
+.ant-input::placeholder {
+	color: white;
+}
+
+#login_pin {
+	background-color: transparent;
+	color: white;
+}
+
+.anticon {
+	color: white !important;
+}
+
+.layout-login {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1000' height='1000' preserveAspectRatio='none' viewBox='0 0 1000 1000'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1021%26quot%3b)' fill='none'%3e%3crect width='1000' height='1000' x='0' y='0' fill='rgba(255%2c 255%2c 255%2c 1)'%3e%3c/rect%3e%3cpath d='M71 1000L1071 0L1402.5 0L402.5 1000z' fill='url(%23SvgjsLinearGradient1022)'%3e%3c/path%3e%3cpath d='M937 1000L-63 0L-291 0L709 1000z' fill='url(%23SvgjsLinearGradient1023)'%3e%3c/path%3e%3cpath d='M333.94670212829385 1000L1000 333.94670212829385L1000 1000z' fill='url(%23SvgjsLinearGradient1022)'%3e%3c/path%3e%3cpath d='M0 1000L666.0532978717061 1000L 0 333.94670212829385z' fill='url(%23SvgjsLinearGradient1023)'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1021'%3e%3crect width='1000' height='1000' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='0%25' y1='100%25' x2='100%25' y2='0%25' id='SvgjsLinearGradient1022'%3e%3cstop stop-color='rgba(219%2c 221%2c 227%2c 1)' offset='0'%3e%3c/stop%3e%3cstop stop-opacity='0' stop-color='rgba(219%2c 221%2c 227%2c 1)' offset='0.66'%3e%3c/stop%3e%3c/linearGradient%3e%3clinearGradient x1='100%25' y1='100%25' x2='0%25' y2='0%25' id='SvgjsLinearGradient1023'%3e%3cstop stop-color='rgba(219%2c 221%2c 227%2c 1)' offset='0'%3e%3c/stop%3e%3cstop stop-opacity='0' stop-color='rgba(219%2c 221%2c 227%2c 1)' offset='0.66'%3e%3c/stop%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e");
+	background-size: 100vw;
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 500px;
+}
+
 .login {
+	background-color: #012258 !important;
 	box-shadow: 4px 4px 8px rgb(180, 180, 180) !important;
 	width: fit-content;
 	overflow: hidden;
+}
+
+.ant-form-item-required {
+	color: white !important;
 }
 
 #login {
@@ -57,11 +88,13 @@ h6 {
 
 .ant-table {
 	box-shadow: 6px 6px 10px rgba(180, 180, 180, 0.479) !important;
+	color: #012258 !important;
+	font-weight: bolder;
 	overflow: visible;
 }
 
 .ant-table-thead tr{
-	background-color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 255);
 	font-size: 16px;
 }
 
@@ -71,9 +104,13 @@ th {
 	font-weight: bolder !important;
 }
 
-td {
-	border: 1px solid rgba(0, 0, 0, 0.06);
+tr th {
+	background-color: #f2f7fccc !important;
+	color: #012258 !important;
+	font-weight: 500 !important;
+	text-transform: uppercase;
 }
+
 
 .ant-space {
 	align-self: center !important;
@@ -81,21 +118,6 @@ td {
 
 .ant-table-footer {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-}
-
-.ant-table-tbody > :nth-child(2n + 1) {
-	background-color: #ffffff15 !important;
-}
-.ant-table-tbody > :nth-child(2n + 2) {
-	background-color: #dbdbdb6b !important;
-}
-
-.ant-table-tbody :nth-child(2n + 1) .ant-table-cell-row-hover {
-	background-color: #fafafa !important;
-}
-
-.ant-table-tbody :nth-child(2n + 2) .ant-table-cell-row-hover {
-	background-color: #fafafa !important;
 }
 
 .ant-table-column-sort {
@@ -114,7 +136,7 @@ td {
 	content: "";
 	margin-left: -77px;
 	height: 1px;
-	background-color: rgba(255, 255, 255, 0.788);
+	background-color: rgb(255, 255, 255);
 	position: absolute;
 	bottom: 0;
 	width: 30rem;
@@ -122,6 +144,7 @@ td {
 
 .ordens thead > :first-child .ant-table-cell {
 	font-size: 35px;
+	background-color: white;
 }
 
 .ant-table-column-sorter svg {
@@ -142,19 +165,38 @@ td {
 }
 
 .header {
-	box-shadow: -4px 4px 8px rgb(180, 180, 180) ;
-	height: 60px;
-	background: rgb(150,188,255);
-	background: linear-gradient(300deg, rgb(54, 158, 255) 0%, rgba(9,132,227,1) 100%);
+	height: 100px;
+	background: rgb(255, 255, 255) !important;
+}
+
+.header-icons {
+	color: black;
+	gap: 10px;
+	width: 250px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .menu {
-	box-shadow: 4px 3px 8px 2px #c2c2c280  !important;
-	background-color: #fff;
+	background-color: #012258;
+	color: white;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	margin-top: 5px !important;
+	gap: 0px;
+	width: 250px;
+	margin-top: 0px !important;
+}
+
+.menu :nth-child(1) {
+	margin-top: 0px !important;
+}
+
+.menu li {
+	height: 60px !important;
+	border-bottom: 1px solid rgba(92, 120, 246, 0.453);
+	border-radius: 0px !important;
+	text-transform: uppercase;
 }
 
 .menu li:hover {
@@ -163,9 +205,15 @@ td {
 	box-shadow: 2px 3px 10px 2px #9c9c9c63  !important;
 }
 
+.ant-menu {
+	display: flex;
+	padding-top: 60px;
+}
+
 .ant-menu-item {
 	transition: all 1s ease;
 }
+
 .ant-menu-item:hover {
 	background-color: #b1b5bd !important;
 	transform: scale(1.03);
@@ -173,8 +221,9 @@ td {
 	transition: all 1s ease;
 }
 
-.ant-btn {
-	box-shadow: 4px 3px 8px 2px #9c9c9c5d;
+.content {
+	width: 90% !important;
+	margin-left: 100px;
 }
 
 button:hover {
@@ -197,12 +246,11 @@ button:hover {
 }
 
 .imagen {
-	 background-image: url(../public/Images/Fondo.jpg);
-	 background-size: 550px;
-	 background-repeat: no-repeat;
-	 background-position: center center;
-	 width: 500px;
-
+	background-color: #168ae3;
+	background-size: 550px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 500px;
 }
 
 .imagen h1 {
@@ -244,4 +292,28 @@ button:hover {
 
 .send .ant-modal-body {
 	margin-top: 50px;
+}
+
+.status {
+	border-radius: 20px;
+	padding: 3px 15px 3px 15px;
+	text-align: center;
+}
+
+.layout-btn {
+	background-color: #ebeef2;
+	border: none;
+}
+
+.layout-btn svg {
+	color: #012258;
+}
+
+.logo {
+	margin-top: 50px;
+	width: 250px;
+	height: 100px;
+	background-image: url(../public/Images/LOGO.png);
+	background-repeat: no-repeat;
+	background-size: 250px;
 }

@@ -15,6 +15,8 @@ import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import PROFILES from '../../../components/shared/profiles'
+import { FaUsers } from 'react-icons/fa';
+import { RightOutlined, ShoppingFilled } from '@ant-design/icons';
 
 export const orderStatusToUse = {
 	1: 'Inconcluso',
@@ -96,18 +98,69 @@ export default function OrdersPage() {
 					flexDirection: 'column',
 				}}
 			>
-				<Title title={'Pedidos'}>
+				{/* <Title title={'Pedidos'}>
 					<Link href="orders/add">
 						<Button type="success" style={{marginRight: '-2.3rem'}}>
 							Agregar
 						</Button>
 					</Link>
 
-				</Title>
-				<OrdersFilters
+				</Title> */}
+
+				<h1 style={{color: '#012258', fontSize: '2rem', margin: '0'}}>Inicio</h1>
+				<h3>Bienvenido <span style={{color: '#012258'}}>Pedro</span>, este es el estado de tus clientes</h3>
+				{/* <ProductFilter setQuery={setQuery} clean={clean} /> */}
+
+
+				<div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+					
+					{/* First informative picture  */}
+					<div style={{width: '33vw', height: 'fit-content', backgroundColor: '#fff', marginTop: '25px', marginBottom: '25px', borderRadius: '15px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '.5px .5px 5px 1px #e6e6e6'}}>
+						<header style={{display: 'flex', justifyContent: 'space-between', margin: '25px'}}>
+							<section>
+								<span style={{color: '#012258', fontSize: '2rem', fontWeight: 'bolder'}}>32</span>
+								<h1 style={{marginTop: '0px', fontSize: '1rem'}}>Ordenes pendientes</h1>
+							</section>
+							<section style={{display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#012258', fontSize: '2rem', border: '2px solid', padding: '15px', borderRadius: '50%', width: 'fit-contents', height: 'fit-content'}}>
+								<ShoppingFilled style={{width: '40px', height: '40px', display: 'flex', justifyContent: 'center'}}/>
+							</section>
+						</header>
+						<footer style={{background: '#f2f7fccc', color: '#012258', width: '100%', marginBottom: '0px', padding: '6px', borderRadius: '8px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+							<h1 style={{margin: '0px auto 0px 20px', width: 'fit-content', position: 'relative'}}>
+								Ver ordenes pendientes 
+							</h1>
+							<a>
+								<RightOutlined/>
+							</a>
+						</footer>
+					</div>
+
+					{/*  Second informative picture */}
+					<div style={{width: '33vw', height: 'fit-content', backgroundColor: '#fff', marginTop: '25px', marginBottom: '25px', borderRadius: '15px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '.5px .5px 5px 1px #e6e6e6'}}>
+						<header style={{display: 'flex', justifyContent: 'space-between', margin: '25px'}}>
+							<section>
+								<span style={{color: '#012258', fontSize: '2rem', fontWeight: 'bolder'}}>10</span>
+								<h1 style={{marginTop: '0px', fontSize: '1rem'}}>Visitas por realizar</h1>
+							</section>
+							<section style={{display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#012258', fontSize: '2rem', border: '2px solid', padding: '15px', borderRadius: '50%', width: 'fit-contents', height: 'fit-content'}}>
+								<FaUsers style={{width: '40px', height: '40px', display: 'flex', justifyContent: 'center'}}/>
+							</section>
+						</header>
+						<footer style={{background: '#f2f7fccc', color: '#012258', width: '100%', marginBottom: '0px', padding: '6px', borderRadius: '8px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+							<h1 style={{margin: '0px auto 0px 20px', width: 'fit-content', position: 'relative'}}>
+								Ver visitas pendientes 
+							</h1>
+							<a>
+								<RightOutlined/>
+							</a>
+						</footer>
+					</div>
+
+				</div>
+				{/* <OrdersFilters
 					setQuery={setQuery}
 					getOrdersRequest={getOrdersRequest}
-				/>
+				/> */}
 				<OrdersTable orders={ordersList} />
 			</div>
 			<Modal

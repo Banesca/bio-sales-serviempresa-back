@@ -95,7 +95,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness }) => {
 					? `${error.response.data.status}`
 					: `${error.response.data.status}`
 			);
-			console.log(error)
 		} finally {
 			setLoading(false);
 		}

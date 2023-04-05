@@ -178,7 +178,6 @@ export default function ClientsPage() {
 				);
 			}
 		}
-		console.log(list);
 		return list;
 	}, [query, clients]);
 

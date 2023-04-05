@@ -92,7 +92,6 @@ export default function ChangeOrderStatus({
 	};
 
 	const perfil = async () => {
-		console.log(localStorage);
 	}
 	perfil();
 

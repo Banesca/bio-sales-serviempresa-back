@@ -34,7 +34,6 @@ export default function UserBusinessTable({
 	const openConfirmDelete = (item) => {
 		setBusinessToRemove(item);
 		setConfirmDelete(true);
-		console.log(userProfile);
 	};
 
 	const { userProfile } = useAuthContext();

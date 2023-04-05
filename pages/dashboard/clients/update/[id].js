@@ -22,7 +22,6 @@ export default function EditClient() {
 
 	const onReset = () => {
 		form.resetFields();
-		console.log(client);
 	};
 
 	const router = useRouter();
@@ -33,7 +32,6 @@ export default function EditClient() {
 		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
 		if (res.isLeft()) {
 			setLoading(false);
-			return console.log('error')
 		}
 		const value = res.value.getValue();
 		if (!value.data) {
@@ -48,8 +46,6 @@ export default function EditClient() {
 
 	const handleSubmit = async (values) => {
 		await createClient(values);
-		console.log(values);
-		console.log(client);
 		form.resetFields()
 		router.push('/dashboard/clients');
 		setLoading(true);
@@ -68,10 +64,8 @@ export default function EditClient() {
 				observacion: data.comments,
 				idClient: client.idClient
 			});
-			console.log(data);
 			message.success('Cliente actualizado');
 		} catch (error) {
-			console.log(data);
 			message.error('Error al actualizar cliente');
 		} finally {
 			setLoading(false);
