@@ -98,6 +98,14 @@ h6 {
 	font-size: 16px;
 }
 
+.footer-icon svg {
+	color: #012258;
+}
+
+.fc {
+	width: 66vw;
+}
+
 th {
 	background-color: #2e2e2e85 !important;
 	color: white !important;

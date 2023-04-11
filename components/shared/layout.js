@@ -19,6 +19,8 @@ import {
 	HomeFilled,
 	SettingFilled,
 	DiffFilled,
+	ApiFilled,
+	CalendarFilled,
 } from '@ant-design/icons';
 import {BsFillCartFill} from 'react-icons/bs';
 import Loading from './loading';
@@ -81,6 +83,11 @@ export default function DashboardLayout({ children }) {
 			key: '/dashboard/reports',
 			label: 'Reportes',
 			icon: React.createElement(DiffFilled),
+		},
+		{
+			key: '/dashboard/calendar',
+			label: 'Calendario',
+			icon: React.createElement(CalendarFilled),
 		},
 		{
 			key: '/dashboard/settings',
