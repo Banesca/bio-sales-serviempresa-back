@@ -105,7 +105,7 @@ export default function Login() {
 		businessContext.handleSetSelectedBusiness(value.branch);
 		setLoading(false);
 		handleLoginSuccess();
-		router.push('/dashboard/products');
+		router.push('/dashboard/home');
 	};
 
 	const generalContext = useContext(GeneralContext);
@@ -149,14 +149,16 @@ export default function Login() {
 						style={{
 							backgroundColor: 'white',
 							borderRadius: '1.5rem',
+							border: '5px solid #168ae3'
 						}}
 					>
 						<div className='imagen' >
-							<Typography style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-								<h1>INGRESAR</h1>
+							<Typography style={{display: 'flex', flexDirection: 'row', position: 'relative', justifyContent: 'space-between'}}>
+								<h1 style={{fontSize: '1.8rem', width: '45%', textAlign: 'center'}}>INGRESAR</h1>
+								<Button style={{width: '55%', height: '80px', fontSize: '1.8rem', borderTopRightRadius: '25px', position: 'relative', right: '0'}}>REGISTRO</Button>
 							</Typography>
 						</div>
-						<div className='login-form' style={{marginRight:'-30px'}}>
+						<div className='login-form'>
 
 							<Form 
 								name="login"
@@ -164,10 +166,9 @@ export default function Login() {
 								labelCol={{ span: 6, offset: 0 }}
 								onFinish={onSubmit}
 							>
-								<section style={{marginRight: '105px'}}>
+								<section style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
 
 									<Form.Item
-										label="Correo"
 										name="mail"
 										rules={[
 											{
@@ -180,10 +181,9 @@ export default function Login() {
 											},
 										]}
 									>
-										<Input className='login-input' placeholder='CEDULA'/>
+										<Input className='login-input' placeholder='CORREO' style={{width: '350px'}}/>
 									</Form.Item>
 									<Form.Item
-										label="Contraseña"
 										name="pin"
 										rules={[
 											{
@@ -192,8 +192,14 @@ export default function Login() {
 											},
 										]}
 									>
-										<Input.Password className='login-input password' placeholder='CONTRASEÑA' />
+										<Input.Password className='login-input password' placeholder='CONTRASEÑA' style={{width: '350px'}}/>
 									</Form.Item>
+									{/* <Form.Item
+										name="pin"
+									>
+										<Input type='checkbox' className='login-input password' placeholder='CONTRASEÑA' style={{width: '350px'}}/>
+									</Form.Item> */}
+
 								</section>
 
 								<Form.Item wrapperCol={{ span: 14, offset: 0 }} style={{display: 'flex-end', marginTop: '-40px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}} justify='center'>

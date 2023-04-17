@@ -28,11 +28,14 @@ import { useRequest } from '../../hooks/useRequest';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { FaUserAlt, FaUserFriends } from 'react-icons/fa';
+import MdSell from 'react-icons/md';
 
 
 const { Header, Content, Sider } = Layout;
 
 export default function DashboardLayout({ children }) {
+
+	/* perfil  */
 	const sidebarLinks = [
 		{
 			key: '/dashboard/home',
@@ -44,7 +47,44 @@ export default function DashboardLayout({ children }) {
 			label: 'Catalogo',
 			icon: React.createElement(ShoppingFilled),
 		},
-		/* {
+		{
+			key: '/dashboard/shopping',
+			label: 'Carrito de compras',
+			icon: React.createElement(BsFillCartFill),
+		},
+		{
+			key: '/dashboard/clients',
+			label: 'Clientes',
+			icon: React.createElement(FaUserFriends),
+		},
+		{
+			key: '/dashboard/reports',
+			label: 'Reportes',
+			icon: React.createElement(DiffFilled),
+		},
+		{
+			key: '/dashboard/calendar',
+			label: 'Calendario',
+			icon: React.createElement(CalendarFilled),
+		},
+		{
+			key: '/dashboard/settings',
+			label: 'Configuración',
+			icon: React.createElement(SettingFilled),
+		}
+	];
+	/* 	const sidebarLinks = [
+		{
+			key: '/dashboard/home',
+			label: 'Inicio',
+			icon: React.createElement(HomeFilled),
+		},
+		{
+			key: '/dashboard/products',
+			label: 'Catalogo',
+			icon: React.createElement(ShoppingFilled),
+		},
+		{
 			key: '/dashboard/categories',
 			label: 'Categorías',
 			icon: React.createElement(ProfileOutlined),
@@ -53,12 +93,12 @@ export default function DashboardLayout({ children }) {
 			key: '/dashboard/brands',
 			label: 'Marcas',
 			icon: React.createElement(ProfileOutlined),
-		}, */
-		/* {
+		},
+		{
 			key: '/dashboard/users',
 			label: 'Usuarios',
 			icon: React.createElement(UserOutlined),
-		}, */
+		},
 		{
 			key: '/dashboard/orders',
 			label: 'Pedidos',
@@ -69,11 +109,11 @@ export default function DashboardLayout({ children }) {
 			label: 'Carrito de compras',
 			icon: React.createElement(BsFillCartFill),
 		},
-		/* {
+		{
 			key: '/dashboard/stock',
 			label: 'Inventario',
 			icon: React.createElement(InboxOutlined),
-		}, */
+		},
 		{
 			key: '/dashboard/clients',
 			label: 'Clientes',
@@ -104,7 +144,7 @@ export default function DashboardLayout({ children }) {
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),
 		}
-	];
+	]; */
 	const sidebar = [
 		{
 			key: '/dashboard/products',
@@ -237,7 +277,6 @@ export default function DashboardLayout({ children }) {
 					</p>
 					<p className='header-icons'>
 						<Button className='layout-btn'><BellFilled></BellFilled></Button>
-						<Button className='layout-btn'><BsFillCartFill></BsFillCartFill></Button>
 						<Button className='layout-btn'><UserOutlined></UserOutlined> web<DownOutlined></DownOutlined></Button>
 					</p>
 				</Header>
@@ -253,7 +292,7 @@ export default function DashboardLayout({ children }) {
 							className='menu'
 							items={userProfile == PROFILES.BILLER ? sidebar : sidebarLinks}
 							onSelect={(e) => handleNavigation(e)}
-							style={{ height: '100%', marginTop: '10px'}}
+							style={{ height: '100%', marginTop: '10px', fontWeight: 'bolder'}}
 						/>
 						{/* <h1 className='version' style={{position: 'sticky', marginTop: '-30px', marginLeft: '15px'}}>Version 0.9.5</h1> */}
 					</Sider>

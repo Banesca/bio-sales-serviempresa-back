@@ -8,6 +8,8 @@ import {
 	EditOutlined,
 	EyeTwoTone,
 	RightOutlined,
+	ShopFilled,
+	ShoppingCartOutlined,
 } from '@ant-design/icons';
 import { FaUsers } from 'react-icons/fa';
 import DashboardLayout from '../../../components/shared/layout';
@@ -29,6 +31,10 @@ import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { IoBriefcaseOutline } from 'react-icons/io5';
+import InfoCard from '../../../components/common/InfoCard';
+import { BsShop } from 'react-icons/bs';
+import Graphic from '../../../components/common/Graphic';
+import TimeJobCard from '../../../components/common/TimeJobCard';
 
 export default function Products() {
 	const router = useRouter();
@@ -254,59 +260,24 @@ export default function Products() {
 					<div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'space-between'}}>
 
 						{/* First informative picture  */}
-						<div style={{width: '33vw', height: 'fit-content', backgroundColor: '#fff', marginTop: '25px', marginBottom: '25px', borderRadius: '15px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '.5px .5px 5px 1px #e6e6e6'}}>
-							<header style={{display: 'flex', justifyContent: 'space-between', margin: '25px'}}>
-								<section>
-									<span style={{color: '#012258', fontSize: '2rem', fontWeight: 'bolder'}}>10</span>
-									<h1 style={{marginTop: '0px', fontSize: '1rem'}}>Visitas por realizar</h1>
-								</section>
-								<section style={{display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#012258', fontSize: '2rem', border: '2px solid', padding: '15px', borderRadius: '50%', width: 'fit-contents', height: 'fit-content'}}>
-									<FaUsers style={{width: '40px', height: '40px', display: 'flex', justifyContent: 'center'}}/>
-								</section>
-							</header>
-							<footer style={{background: '#f2f7fccc', color: '#012258', width: '100%', marginBottom: '0px', padding: '6px', borderRadius: '8px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-								<h1 style={{margin: '0px auto 0px 20px', width: 'fit-content', position: 'relative'}}>
-								Ver visitas pendientes 
-								</h1>
-								<a className='footer-icon'>
-									<RightOutlined/>
-								</a>
-							</footer>
-						</div>
+						<InfoCard title={'visitas'} icon={FaUsers} />
 
 						{/*  Second informative picture */}
-						<div style={{width: '33vw', height: 'fit-content', backgroundColor: '#fff', marginTop: '25px', marginBottom: '25px', borderRadius: '15px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '.5px .5px 5px 1px #e6e6e6'}}>
-							<header style={{display: 'flex', justifyContent: 'space-between', margin: '25px'}}>
-								<section>
-									<span style={{color: '#012258', fontSize: '2rem', fontWeight: 'bolder'}}>10</span>
-									<h1 style={{marginTop: '0px', fontSize: '1rem'}}>Visitas por realizar</h1>
-								</section>
-								<section style={{display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#012258', fontSize: '2rem', border: '2px solid', padding: '15px', borderRadius: '50%', width: 'fit-contents', height: 'fit-content'}}>
-									<FaUsers style={{width: '40px', height: '40px', display: 'flex', justifyContent: 'center'}}/>
-								</section>
-							</header>
-							<footer style={{background: '#f2f7fccc', color: '#012258', width: '100%', marginBottom: '0px', padding: '6px', borderRadius: '8px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-								<h1 style={{margin: '0px auto 0px 20px', width: 'fit-content', position: 'relative'}}>
-								Ver visitas pendientes 
-								</h1>
-								<a className='footer-icon'>
-									<RightOutlined/>
-								</a>
-							</footer>
-						</div>
+						<TimeJobCard/>
 
 					</div>
 
 
 					{/* Data table */}
-					<h1 style={{color: '#012258', fontSize: '2rem'}}>Pedidos recientes</h1>
+					{/* <h1 style={{color: '#012258', fontSize: '2rem'}}>Pedidos recientes</h1>
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
 							columns={columns}
 							dataSource={filtered()}
 							loading={loading}
 						/>
-					</ConfigProvider>
+					</ConfigProvider> */}
+					<Graphic/>
 				</div>
 
 				{/* Modals */}

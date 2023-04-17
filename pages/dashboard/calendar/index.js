@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, List } from 'antd';
+import { Button, Calendar, List } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
@@ -10,6 +10,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 const UserDetail = () => {
 
 	const { loading, setLoading } = useLoadingContext();
+	const onPanelChange = (value, mode) => {
+		console.log(value.format('YYYY-MM-DD'), mode);
+	};
 
 
 	const [events, setEvents] = useState([
@@ -62,7 +65,7 @@ const UserDetail = () => {
 									margin: '20px',
 								}}
 							>
-									CALENDARIO
+									CALENDARIO LABORAL
 							</h1>
 						</List.Item>
 
@@ -71,37 +74,7 @@ const UserDetail = () => {
 							{/* Calendar */}
 						
 							<div style={{height: '100%'}}>
-								<FullCalendar
-									plugins={[dayGridPlugin, timeGridPlugin]}
-									initialView="timeGridWeek"
-									events={events}
-									editable={true}
-									selectable={true}
-									selectMirror={true}
-									dayMaxEvents={true}
-									headerToolbar={{
-										left: 'prev,next today',
-										center: 'title',
-										right: 'dayGridMonth,timeGridWeek,timeGridDay',
-									}}
-									select={(info) => {
-										const title = prompt('Ingrese el título del evento:');
-										if (title) {
-											setEvents([
-												...events,
-												{ title, start: info.startStr, end: info.endStr },
-											]);
-										}
-									}}
-									eventContent={(eventInfo) => {
-										return (
-											<>
-												<b>{eventInfo.timeText}</b>
-												<p>{eventInfo.event.title}</p>
-											</>
-										);
-									}}
-								/>
+								<Calendar onPanelChange={onPanelChange} />
 							</div>
 
 							<Button type='success' style={{margin: '20px'}}>
