@@ -12,7 +12,6 @@
     "@ant-design/icons": "^4.8.0",
     "admin-lte": "^3.1.0",
     "antd": "^5.2.3",
-    "antd-button-color": "^1.0.4",
     "axios": "^1.2.2",
     "convert-csv-to-json": "^1.5.0",
     "eslint": "8.29.0",
