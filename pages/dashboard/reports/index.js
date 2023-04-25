@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
 	Button,
 	List,
@@ -15,23 +14,8 @@ import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import { useUser } from '../../../components/users/hooks/useUser';
-import useClients from '../../../components/clients/hooks/useClients';
-import Link from 'next/link';
-import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
-import Title from '../../../components/shared/title';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { useRequest } from '../../../hooks/useRequest';
-import { UserOutlined } from '@ant-design/icons';
 import SelectBusiness from '../../../components/business/selectBusiness';
-import {
-	CheckCircleOutlined,
-	CloseCircleOutlined,
-	DeleteOutlined,
-	EditOutlined,
-	EyeTwoTone,
-	UploadOutlined,
-} from '@ant-design/icons';
 
 const UserDetail = () => {
 	const columns = [
@@ -60,7 +44,9 @@ const UserDetail = () => {
 			key: 5,
 			render: (text) => {
 				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>${text}</div>
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						${text}
+					</div>
 				);
 			},
 		},
