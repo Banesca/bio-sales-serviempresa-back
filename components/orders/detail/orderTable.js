@@ -1,7 +1,8 @@
-import { Col, ConfigProvider, Empty, Row, Typography } from 'antd';
+import { Col, ConfigProvider, Row, Typography } from 'antd';
 import { Table } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
+import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
 
 export default function DetailOrderTable({ products, total }) {
 	const columns = [
@@ -33,33 +34,15 @@ export default function DetailOrderTable({ products, total }) {
 			title: 'Sub Total',
 			dataIndex: 'weight',
 			key: 3,
-			render: (quantity, record) => (
-				<p>$ {record.priceSale * quantity}</p>
-			),
+			render: (quantity, record) => <p>$ {record.priceSale * quantity}</p>,
 		},
 	];
 
 	const { loading } = useLoadingContext();
-	addKeys(products)
-
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
-	);
+	addKeys(products);
 
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 			<Table
 				style={{ width: '100%' }}
 				columns={columns}
@@ -70,7 +53,7 @@ export default function DetailOrderTable({ products, total }) {
 						style={{
 							fontSize: '2rem',
 							fontWeight: 'bold',
-							textAlign: 'center'
+							textAlign: 'center',
 						}}
 					>
 						Pedidos
@@ -104,6 +87,5 @@ export default function DetailOrderTable({ products, total }) {
 				)}
 			/>
 		</ConfigProvider>
-
 	);
 }

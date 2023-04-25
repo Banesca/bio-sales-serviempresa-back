@@ -1,4 +1,4 @@
-import { Button, Col, ConfigProvider, Empty, Form, Row, Space, Table } from 'antd';
+import { Button, ConfigProvider, Form, Space, Table } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -6,17 +6,16 @@ import { addKeys } from '../../util/setKeys';
 import LinesFilters from './linesFilters';
 import LinesModals from './lineModals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
-import { Typography } from 'antd';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import Title from '../shared/title';
 import { PROFILES } from '../shared/profiles';
+import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
 
 export default function LinesContainer() {
-
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
+		setLog(localStorage.getItem('userProfile'));
 	}, []);
 
 	const columns = [
@@ -47,7 +46,6 @@ export default function LinesContainer() {
 						<DeleteOutlined />
 					</Button>
 				</Space>
-
 			),
 		},
 	];
@@ -90,38 +88,21 @@ export default function LinesContainer() {
 
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
-		setLineToDelete(value)
+		setLineToDelete(value);
 		setTimeout(() => {
 			createFormTwo.resetFields();
 		}, 100);
-
-	}
+	};
 
 	const closeEditModal = () => {
 		setIsEditModalOpen(false);
 		createFormTwo.resetFields();
-	}
+	};
 
 	const openDeleteModal = (value) => {
 		setLineToDelete(value);
 		setIsDeleteModalOpen(true);
 	};
-
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
-	);
 
 	return (
 		<>
@@ -129,7 +110,7 @@ export default function LinesContainer() {
 				{localStorage.getItem('userProfile') != PROFILES.BILLER && (
 					<Button
 						type="success"
-						style={{marginRight: '-2.3rem'}}
+						style={{ marginRight: '-2.3rem' }}
 						onClick={() => setIsCreateModalOpen(true)}
 					>
 						Agregar
@@ -140,7 +121,7 @@ export default function LinesContainer() {
 				setQuery={setQuery}
 				setSelectedSubCategory={setSelectedSubCategory}
 			/>
-			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 				<Table bordered dataSource={linesList} columns={columns} />
 			</ConfigProvider>
 			<LinesModals

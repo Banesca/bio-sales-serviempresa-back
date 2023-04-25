@@ -1,19 +1,18 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Table } from 'antd';
+import { Button, ConfigProvider, Table } from 'antd';
 import { useEffect, useState } from 'react';
+import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
 
 export default function UserClientsTable({
 	clients,
 	setClientToRemove,
 	setConfirmDelete,
 }) {
-
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
 
 	const clientColumns = [
 		{
@@ -44,30 +43,13 @@ export default function UserClientsTable({
 		setConfirmDelete(true);
 	};
 
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
-	);
-
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 			<Table
 				style={{ width: '100%' }}
 				columns={clientColumns}
 				dataSource={clients}
 			/>
 		</ConfigProvider>
-
 	);
 }

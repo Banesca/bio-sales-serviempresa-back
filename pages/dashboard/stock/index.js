@@ -1,41 +1,20 @@
 import { useContext, useEffect, useState } from 'react';
-import {
-	Table,
-	Space,
-	Modal,
-	ConfigProvider,
-	Empty,
-	Form,
-	Input,
-	Button,
-} from 'antd';
-import {
-	CheckCircleOutlined,
-	CloseCircleOutlined,
-	DeleteOutlined,
-	EditOutlined,
-	EyeTwoTone,
-} from '@ant-design/icons';
-
+import { Table, Space, Modal, ConfigProvider, Form, Input, Button } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { GeneralContext } from '../../_app';
 import { addKeys } from '../../../util/setKeys';
-import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import Filter from './Filter/Filter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import Loading from '../../../components/shared/loading';
-import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useProducts } from '../../../components/products/hooks/useProducts';
-import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import Title from '../../../components/shared/title';
-import { PROFILES } from '../../../components/shared/profiles';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
 import * as XLSX from 'xlsx';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 export default function Products() {
 	const router = useRouter();
@@ -210,17 +189,6 @@ export default function Products() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<>
 			<DashboardLayout>
@@ -246,7 +214,7 @@ export default function Products() {
 						</Button>
 					</Title>
 					<Filter setQuery={setQuery} clean={clean} />
-					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 						<Table
 							columns={columns}
 							dataSource={filtered()}

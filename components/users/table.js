@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Space, Button, Table, Modal, ConfigProvider, Empty } from 'antd';
+import { Space, Button, Table, Modal, ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
+import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
 
 const UsersTable = ({
 	users,
@@ -117,20 +118,9 @@ const UsersTable = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [users]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<div>
-			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 				<Table columns={columns} dataSource={users} loading={loading} />
 			</ConfigProvider>
 

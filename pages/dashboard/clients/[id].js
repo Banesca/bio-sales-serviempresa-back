@@ -1,15 +1,8 @@
 /* eslint-disable indent */
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
-import { Button, ConfigProvider, Empty, List, Table } from 'antd';
-import {
-	ArrowLeftOutlined,
-	EditOutlined,
-	EyeTwoTone,
-	LeftOutlined,
-} from '@ant-design/icons';
-
+import { Button, ConfigProvider, List, Table } from 'antd';
+import { EditOutlined, LeftOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -17,6 +10,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';
 import { Space } from 'antd';
 import { orderStatusToUse } from '../orders';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const ClientDetail = () => {
 	const columns = [
@@ -193,17 +187,6 @@ const ClientDetail = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [client]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<DashboardLayout>
 			<div
@@ -288,7 +271,7 @@ const ClientDetail = () => {
 				>
 					Pedidos
 				</h3>
-				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 					<Table loading={loading} columns={columns} dataSource={orders} />
 				</ConfigProvider>
 			</div>

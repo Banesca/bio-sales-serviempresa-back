@@ -1,20 +1,18 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Table } from 'antd';
+import { Button, ConfigProvider, Table } from 'antd';
 import { useEffect, useState } from 'react';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
+import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
 
 export default function UserBusinessTable({
 	business,
 	setConfirmDelete,
 	setBusinessToRemove,
 }) {
-
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
+		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
 
 	const columns = [
 		{
@@ -45,35 +43,13 @@ export default function UserBusinessTable({
 		setConfirmDelete(true);
 	};
 
-	const { userProfile } = useAuthContext();
-
-
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
-	);
-
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
-
-
+		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 			<Table
 				columns={columns}
 				style={{ width: '100%' }}
 				dataSource={business}
 			/>
 		</ConfigProvider>
-
 	);
 }

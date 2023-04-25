@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../../../components/shared/layout';
 import Title from '../../../../components/shared/title';
-import { Button, Collapse, ConfigProvider, Empty, Table } from 'antd';
+import { Button, Collapse, ConfigProvider, Table } from 'antd';
 import { useUser } from '../../../../components/users/hooks/useUser';
 import { message } from 'antd';
 import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
@@ -14,6 +14,7 @@ import { DatePicker } from 'antd';
 import { Select } from 'antd';
 import Loading from '../../../../components/shared/loading';
 import { DeleteOutlined } from '@ant-design/icons';
+import { CustomizeRenderEmpty } from '../../../../components/common/customizeRenderEmpty';
 
 export default function Routes() {
 	const columns = [
@@ -85,7 +86,7 @@ export default function Routes() {
 		try {
 			await getUserRouteByDate(id, data);
 		} catch (error) {
-			message.error('Error al cargar rutas')
+			message.error('Error al cargar rutas');
 		} finally {
 			setLoading(false);
 		}
@@ -95,7 +96,7 @@ export default function Routes() {
 		try {
 			await getSellerClients(id);
 		} catch (error) {
-			message.error('Error al cargar clientes')
+			message.error('Error al cargar clientes');
 		}
 	};
 
@@ -124,7 +125,7 @@ export default function Routes() {
 			await handleAddItemToUserRoute(body);
 			await handleGetUserRoutes();
 		} catch (error) {
-			message.error('Ha ocurrido un error')
+			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
 		}
@@ -139,7 +140,7 @@ export default function Routes() {
 		try {
 			await handleGetUserRoutes({ dateStart, dateEnd });
 		} catch (error) {
-			message.error('Ha ocurrido un error')
+			message.error('Ha ocurrido un error');
 		}
 	};
 
@@ -167,22 +168,6 @@ export default function Routes() {
 		});
 	};
 
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
-	);
-
 	return (
 		<DashboardLayout>
 			<div
@@ -194,18 +179,14 @@ export default function Routes() {
 					justifyContent: 'center',
 				}}
 			>
-				<Title
-					title="Rutas"
-					path={`/dashboard/users/${id}`}
-					goBack={true}
-				>
+				<Title title="Rutas" path={`/dashboard/users/${id}`} goBack={true}>
 					<Button type="success" onClick={() => setIsModalOpen(true)}>
 						Agregar
 					</Button>
 				</Title>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
-					<Collapse.Panel header="Filtros" >
-						<Form style={{display: 'flex', justifyContent: 'center'}}>
+					<Collapse.Panel header="Filtros">
+						<Form style={{ display: 'flex', justifyContent: 'center' }}>
 							<Form.Item>
 								<DatePicker.RangePicker
 									placeholder={['Fecha inicial', 'Fecha final']}
@@ -216,14 +197,13 @@ export default function Routes() {
 						</Form>
 					</Collapse.Panel>
 				</Collapse>
-				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 					<Table
 						columns={columns}
 						style={{ width: '100%' }}
 						dataSource={routes}
 					/>
 				</ConfigProvider>
-
 			</div>
 			<Modal
 				title="Agregar Ruta"
@@ -263,10 +243,7 @@ export default function Routes() {
 						>
 							{sellerClients &&
 								sellerClients.map((c) => (
-									<Select.Option
-										key={c.idClient}
-										value={c.idClient}
-									>
+									<Select.Option key={c.idClient} value={c.idClient}>
 										{c.nameClient}
 									</Select.Option>
 								))}
@@ -276,9 +253,7 @@ export default function Routes() {
 						<DatePicker
 							style={{ width: '100%' }}
 							value={formState.date}
-							onChange={(v) =>
-								setFormState((prev) => ({ ...prev, date: v }))
-							}
+							onChange={(v) => setFormState((prev) => ({ ...prev, date: v }))}
 						/>
 					</Form.Item>
 					<Form.Item name="observation" label="Observación">

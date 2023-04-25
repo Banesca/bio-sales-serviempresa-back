@@ -3,27 +3,17 @@ import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/shared/loading';
-import {
-	Button,
-	Col,
-	Row,
-	Table,
-	message,
-	ConfigProvider,
-	Empty,
-	Space,
-	Form,
-} from 'antd';
+import { Button, Table, message, ConfigProvider, Space, Form } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import BrandsFilters from '../../../components/brands/brandsFilters';
 import BrandsModals from '../../../components/brands/brandsModals';
 import { addKeys } from '../../../util/setKeys';
-import { Typography } from 'antd';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import Title from '../../../components/shared/title';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const BrandsPage = () => {
 	const [log, setLog] = useState();
@@ -115,17 +105,6 @@ const BrandsPage = () => {
 		return list;
 	}, [brands, query]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [lineBody, setLineBody] = useState({
 		name: '',
@@ -166,7 +145,7 @@ const BrandsPage = () => {
 							</Button>
 						)}
 					</Title>
-					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 						<BrandsFilters setQuery={setQuery} />
 						<Table bordered dataSource={brandsList} columns={columns} />
 						<BrandsModals

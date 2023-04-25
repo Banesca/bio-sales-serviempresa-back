@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Empty, Space } from 'antd';
+import { Button, ConfigProvider, Space } from 'antd';
 import { Table } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useRequest } from '../../../hooks/useRequest';
@@ -6,6 +6,7 @@ import { message } from 'antd';
 import { useEffect } from 'react';
 import { useProductOrders } from '../hooks/useProductOrders';
 import { UNIT_TYPE } from '../../../pages/dashboard/orders/update/[id]';
+import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
 
 export default function ProductList({
 	orderId,
@@ -126,19 +127,8 @@ export default function ProductList({
 
 	useEffect(() => {}, [products]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 			<Table dataSource={products} columns={AddColumns} loading={loading} />
 		</ConfigProvider>
 	);

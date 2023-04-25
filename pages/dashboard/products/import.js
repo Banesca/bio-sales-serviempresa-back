@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect } from 'react';
-
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -16,10 +15,8 @@ import {
 	Col,
 	Modal,
 	ConfigProvider,
-	Empty,
 } from 'antd';
 import * as XLSX from 'xlsx';
-
 import DashboardLayout from '../../../components/shared/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
 import Loading from '../../../components/shared/loading';
@@ -28,8 +25,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
 import Title from '../../../components/shared/title';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
-import { SmileOutlined } from '@ant-design/icons';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const ImportProducts = () => {
 	const columns = [
@@ -145,9 +141,7 @@ const ImportProducts = () => {
 	const [fileList, setFileList] = useState([]);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [data, setData] = useState([]);
-
 	const [loading, setLoading] = useState(false);
-
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
 	const [code, setCode] = useState();
@@ -198,6 +192,7 @@ const ImportProducts = () => {
 			brandListRequest(selectedBusiness.idSucursal);
 			setLoading(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedBusiness, generalContext]);
 
 	const getFileExtension = (filename) => {
@@ -363,17 +358,6 @@ const ImportProducts = () => {
 		}
 	}, [rejectedBrands, rejectedCategories]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<>
 			<DashboardLayout>
@@ -411,7 +395,7 @@ const ImportProducts = () => {
 							</Upload>
 						</Col>
 					</Row>
-					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 						<Table
 							columns={columns}
 							dataSource={data}

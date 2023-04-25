@@ -1,8 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-
 import {
-	CheckCircleOutlined,
-	CloseCircleOutlined,
 	DeleteOutlined,
 	ExclamationCircleFilled,
 	UploadOutlined,
@@ -16,10 +13,8 @@ import {
 	Col,
 	Modal,
 	ConfigProvider,
-	Empty,
 } from 'antd';
 import * as XLSX from 'xlsx';
-
 import DashboardLayout from '../../../components/shared/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
 import Loading from '../../../components/shared/loading';
@@ -28,7 +23,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
 import Title from '../../../components/shared/title';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const ImportProducts = () => {
 	const columns = [
@@ -286,17 +281,6 @@ const ImportProducts = () => {
 		}
 	}, [rejectedBrands, rejectedCategories]);
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<>
 			<DashboardLayout>
@@ -334,7 +318,7 @@ const ImportProducts = () => {
 							</Upload>
 						</Col>
 					</Row>
-					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 						<Table columns={columns} dataSource={data} />
 					</ConfigProvider>
 				</div>

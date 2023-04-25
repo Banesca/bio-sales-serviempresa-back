@@ -1,24 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import {
-	Button,
-	Table,
-	Col,
-	Row,
-	Space,
-	ConfigProvider,
-	Empty,
-	Form,
-} from 'antd';
+import { Button, Table, Space, ConfigProvider, Form } from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
 import SubCategoryModals from './modals';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
-import { Typography } from 'antd';
 import Title from '../shared/title';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES } from '../shared/profiles';
+import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
 
 export default function SubCategoriesContainer() {
 	const [log, setLog] = useState();
@@ -110,17 +101,6 @@ export default function SubCategoriesContainer() {
 		createFormTwo.resetFields();
 	};
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<>
 			{/* <Row style={{ alignItems: 'center' }}>
@@ -168,7 +148,7 @@ export default function SubCategoriesContainer() {
 				setQuery={setQuery}
 				setSelectedCategory={setSelectedCategory}
 			/>
-			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 				<Table bordered dataSource={subCategoryList} columns={columns} />
 			</ConfigProvider>
 			<SubCategoryModals

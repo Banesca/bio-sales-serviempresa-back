@@ -15,19 +15,18 @@ import {
 	Table,
 	Form,
 	ConfigProvider,
-	Empty,
 } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
 import { GeneralContext } from '../../_app';
 import Loading from '../../../components/shared/loading';
-import { Typography } from 'antd';
 import useClients from '../../../components/clients/hooks/useClients';
 import { message } from 'antd';
 import Title from '../../../components/shared/title';
 import Link from 'next/link';
 import { useRequest } from '../../../hooks/useRequest';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 export default function ClientsPage() {
 	const columns = [
@@ -236,17 +235,6 @@ export default function ClientsPage() {
 		});
 	};
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<DashboardLayout>
 			<div
@@ -326,7 +314,7 @@ export default function ClientsPage() {
 						</Row>
 					</Collapse.Panel>
 				</Collapse>
-				<ConfigProvider renderEmpty={customizeRenderEmpty}>
+				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 					<Table columns={columns} dataSource={clientsList} />
 				</ConfigProvider>
 			</div>

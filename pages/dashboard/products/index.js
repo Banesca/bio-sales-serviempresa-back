@@ -1,13 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import {
-	Table,
-	Space,
-	Modal,
-	ConfigProvider,
-	Empty,
-	Upload,
-	Button,
-} from 'antd';
+import { Table, Space, Modal, ConfigProvider, Button } from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -15,7 +7,6 @@ import {
 	EditOutlined,
 	EyeTwoTone,
 } from '@ant-design/icons';
-
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
 import { GeneralContext } from '../../_app';
@@ -33,6 +24,7 @@ import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import * as XLSX from 'xlsx';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 export default function Products() {
 	const router = useRouter();
@@ -221,17 +213,6 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	return (
 		<>
 			<DashboardLayout>
@@ -261,7 +242,7 @@ export default function Products() {
 						)}
 					</Title>
 					<ProductFilter setQuery={setQuery} clean={clean} />
-					<ConfigProvider renderEmpty={customizeRenderEmpty}>
+					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 						<Table
 							columns={columns}
 							dataSource={filtered()}

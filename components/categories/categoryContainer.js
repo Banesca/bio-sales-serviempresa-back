@@ -1,23 +1,19 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { DeleteOutlined, EditFilled, EditOutlined } from '@ant-design/icons';
-import { ConfigProvider, Empty, Input, Select, Space, Table } from 'antd';
+import { useState, useMemo, useEffect } from 'react';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { ConfigProvider, Input, Space, Table } from 'antd';
 import { Modal } from 'antd';
 import { Form } from 'antd';
-import { Button, Col, Row } from 'antd';
+import { Button } from 'antd';
 import CategoryFilters from './categoryFilters';
-import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
-import { Typography } from 'antd';
-import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES } from '../shared/profiles';
 import Title from '../shared/title';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
 
 function useForceUpdate() {
 	let [value, setState] = useState(true);
@@ -223,17 +219,6 @@ export default function CategoryContainer() {
 	}, [categories, query, addCategory, deleteCategory]);
 	// End Search
 
-	const customizeRenderEmpty = () => (
-		<Empty
-			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px',
-			}}
-			description={<span>Sin datos</span>}
-		></Empty>
-	);
-
 	const handleForceupdateMethod = useForceUpdate();
 
 	return (
@@ -252,7 +237,7 @@ export default function CategoryContainer() {
 				)}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
-			<ConfigProvider renderEmpty={customizeRenderEmpty}>
+			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 				<Table bordered dataSource={categoriesList} columns={columns} />
 			</ConfigProvider>
 			<Modal

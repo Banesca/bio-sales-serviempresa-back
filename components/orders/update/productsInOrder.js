@@ -1,11 +1,11 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Input, Table } from 'antd';
+import { Button, ConfigProvider, Input, Table } from 'antd';
 import { Space } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { addKeys } from '../../../util/setKeys';
-import { useOrders } from '../hooks/useOrders';
 import { message } from 'antd';
+import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
 
 export default function ProductsInOrder({
 	order,
@@ -17,7 +17,6 @@ export default function ProductsInOrder({
 		{
 			title: `Pedido Nro. ${order?.numberOrden}`,
 			children: [
-
 				{
 					title: 'Nombre',
 					dataIndex: 'nameProduct',
@@ -29,9 +28,7 @@ export default function ProductsInOrder({
 					dataIndex: 'priceSale',
 					key: 2,
 					render: (text, record) => (
-						<p>
-					${record.isPromo == '1' ? record.marketPrice : text}
-						</p>
+						<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
 					),
 				},
 				{
@@ -44,15 +41,13 @@ export default function ProductsInOrder({
 								type="number"
 								style={{ width: '60px' }}
 								value={order?.body[index].weight}
-								onChange={(e) =>
-									setProductsQuantity(e.target.value, index)
-								}
+								onChange={(e) => setProductsQuantity(e.target.value, index)}
 							/>
 							<Button
 								type="primary"
 								onClick={() => handleUpdateProduct(record)}
 							>
-						Ok
+								Ok
 							</Button>
 						</Space>
 					),
@@ -71,9 +66,9 @@ export default function ProductsInOrder({
 							</Button>
 						</Space>
 					),
-				}, 
-			]
-		}
+				},
+			],
+		},
 	];
 
 	const { setLoading } = useLoadingContext();
@@ -98,29 +93,13 @@ export default function ProductsInOrder({
 
 	const { loading } = useLoadingContext();
 
-	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-			style={{
-				textAlign: 'center',
-				marginBottom: '30px'
-			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
-	);
-
 	return (
-		<ConfigProvider renderEmpty={customizeRenderEmpty}>
+		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
 			<Table
 				columns={orderColumns}
 				loading={loading}
 				dataSource={productList}
-				className='ordens'
+				className="ordens"
 			/>
 		</ConfigProvider>
 	);
