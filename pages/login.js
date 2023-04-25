@@ -118,7 +118,7 @@ export default function Login() {
 	useEffect(() => {
 		localStorage.clear();
 		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
-	}, [generalContext.api_port]);
+	}, [generalContext?.api_port]);
 
 	return (
 		<>

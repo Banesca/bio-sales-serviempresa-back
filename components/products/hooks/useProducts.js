@@ -99,6 +99,17 @@ export function useProducts() {
 		setProductsInv(value);
 	};
 
+	const sendNotification = async (businessId) => {
+		const response = await requestHandler.get(
+			`/api/v2/utils/notification/${businessId}`
+		);
+		if (response.isLeft()) {
+			throw response.value.getErrorValue();
+		}
+		const value = response.value.getValue().data;
+		console.log(value);
+	};
+
 	const validateBarCode = async (barCode, idSucursalFk) => {
 		const res = await requestHandler.post('/api/v2/product/find/bybarcode', {
 			barCode,
@@ -190,5 +201,6 @@ export function useProducts() {
 		getProductById,
 		updateProduct,
 		deleteProduct,
+		sendNotification,
 	};
 }

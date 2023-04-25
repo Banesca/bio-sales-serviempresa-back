@@ -9,7 +9,7 @@ export function useAuthContext() {
 }
 
 export const ProfileProvider = ({ children }) => {
-	const [userProfile, setUserProfile] = React.useState(null);
+	const [userProfile, setUserProfile] = React.useState({});
 
 	const router = useRouter();
 

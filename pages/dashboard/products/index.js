@@ -121,7 +121,8 @@ export default function Products() {
 	const { getCategories, getSubCategories, getLines } = useCategoryContext();
 	const { getBrands } = useBrandContext();
 
-	const { getProducts, deleteProduct, products } = useProducts();
+	const { getProducts, deleteProduct, products, sendNotification } =
+		useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
 	const exportToExcel = () => {
@@ -185,6 +186,17 @@ export default function Products() {
 		}
 	};
 
+	const sendNot = async () => {
+		setLoading(true);
+		try {
+			await sendNotification(selectedBusiness.idSucursal);
+		} catch (error) {
+			message.error('Error al eliminar producto');
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
@@ -196,6 +208,7 @@ export default function Products() {
 			categoryListRequest(selectedBusiness.idSucursal);
 			brandListRequest(selectedBusiness.idSucursal);
 			getProductsRequest(selectedBusiness.idSucursal);
+			sendNot();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
