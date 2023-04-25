@@ -39,7 +39,6 @@ export default function Users() {
 			return;
 		}
 		const value = res.value._value.data;
-		console.log(value);
 	};
 
 	const generalContext = useContext(GeneralContext);

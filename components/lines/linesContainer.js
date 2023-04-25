@@ -91,7 +91,6 @@ export default function LinesContainer() {
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setLineToDelete(value)
-		console.log(value);
 		setTimeout(() => {
 			createFormTwo.resetFields();
 		}, 100);

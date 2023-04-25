@@ -99,16 +99,6 @@ export default function CategoryContainer() {
 		idStatusFk: '',
 		idProductFamily: ''
 	});
-
-	
-/* 	useEffect(() => {
-		console.log(lineBody.name);
-	}, [lineBody]); */
-
-	useEffect(() => {
-		/* console.log(lineBody); */
-	}, [lineBody]);
-
 	const addCategoryRequest = async (value) => {
 		try {
 			setLoading(true);
@@ -171,7 +161,6 @@ export default function CategoryContainer() {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			// console.log(lineBody);
 			await editCategories( lineBody.name, lineBody.idStatusFk, lineBody.idProductFamily, selectedBusiness.idSucursal);
 			createForm.resetFields();
 			message.success('Categoría actualizada');

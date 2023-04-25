@@ -28,7 +28,6 @@ export default function AddClient() {
 
 	const onReset = () => {
 		form.resetFields();
-		console.log(clients);
 	};
 
 	const router = useRouter();
@@ -52,8 +51,6 @@ export default function AddClient() {
 	// validator
 
 	const validator = (data) => {
-		console.log(clients);
-		console.log(data);
 		return {
 			val : Object.values(clients.map(client => {
 				if(client.phone == data.phoneClient || client.numberDocument == data.rif) {
@@ -121,20 +118,14 @@ export default function AddClient() {
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
 			} else {
-				console.log(validator(data).prob());
 				message.error(validator(data).prob());
 			}
 		} catch (error) {
-			console.log(error);
 			message.error('Error al agregar cliente');
 		} finally {
 			setLoading(false);
 		}
 	};
-
-
-
-
 	return (
 		<DashboardLayout>
 			<div

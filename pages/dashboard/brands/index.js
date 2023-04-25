@@ -148,7 +148,6 @@ const BrandsPage = () => {
 
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
-		console.log(value);
 		setLineBody(value);
 		setTimeout(() => {
 			createFormTwo.resetFields();

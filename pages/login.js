@@ -1,8 +1,15 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-/* import Button from 'antd-button-color';
- */
-import { Input, Typography, Form, Layout, message, Modal, Button, Image } from 'antd';
+import {
+	Input,
+	Typography,
+	Form,
+	Layout,
+	message,
+	Modal,
+	Button,
+	Image,
+} from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
@@ -22,9 +29,9 @@ export default function Login() {
 		setDeleteModalOpen(false);
 	};
 
-	const regexpTlp = /^(?=.\d)(?=.[\u0021-\u002b\u003c-\u0040])(?=.[A-Z])(?=.[a-z])\S{8,16}$/g
+	const regexpTlp =
+		/^(?=.\d)(?=.[\u0021-\u002b\u003c-\u0040])(?=.[A-Z])(?=.[a-z])\S{8,16}$/g;
 
-	
 	// display message
 	const [messageApi, contextHolder] = message.useMessage();
 	const handleLoginError = (error) => {
@@ -60,14 +67,14 @@ export default function Login() {
 			const error = res.value.getErrorValue();
 			setLoading(false);
 			switch (error.status) {
-			case 400:
-				return handleLoginError(error.data.error);
-			case 404:
-				return handleLoginError('Ha ocurrido un error');
-			case 500:
-				return handleLoginError(error.data.error);
-			default:
-				return handleLoginError('Ha ocurrido un error');
+				case 400:
+					return handleLoginError(error.data.error);
+				case 404:
+					return handleLoginError('Ha ocurrido un error');
+				case 500:
+					return handleLoginError(error.data.error);
+				default:
+					return handleLoginError('Ha ocurrido un error');
 			}
 		}
 		if (!res.value.getValue()) {
@@ -75,7 +82,6 @@ export default function Login() {
 			return handleLoginError('Usuario o contraseña incorrectos');
 		}
 		const value = res.value.getValue().data[0];
-		console.log(value);
 		localStorage.setItem('accessToken', value.token);
 		if (value.idProfileFk != PROFILES.MASTER) {
 			const businessByUser = await getUserBusiness(value.idUser);
@@ -94,10 +100,7 @@ export default function Login() {
 				JSON.stringify(value.branch[selectedBusinessIdx])
 			);
 		} else {
-			localStorage.setItem(
-				'selectedBusiness',
-				JSON.stringify(value.branch[0])
-			);
+			localStorage.setItem('selectedBusiness', JSON.stringify(value.branch[0]));
 		}
 		localStorage.setItem('userId', value.idUser);
 		localStorage.setItem('userProfile', value.idProfileFk);
@@ -113,10 +116,8 @@ export default function Login() {
 
 	useEffect(() => {
 		localStorage.clear();
-		console.log('hola');
 		localStorage.setItem('apiURL', `${ip}:${generalContext.api_port}`);
 	}, [generalContext.api_port]);
-
 
 	return (
 		<>
@@ -134,35 +135,39 @@ export default function Login() {
 					}}
 				>
 					<div
-						className='login'
+						className="login"
 						style={{
 							backgroundColor: 'white',
 							borderRadius: '1.5rem',
 						}}
 					>
-						<div className='imagen' >
-							<Typography style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+						<div className="imagen">
+							<Typography
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+								}}
+							>
 								<h1
 									style={{
 										fontWeight: 'bold',
 										fontSize: '4rem',
-										marginBottom: '0'
+										marginBottom: '0',
 									}}
 								>
-								ServiEmpresa
+									ServiEmpresa
 								</h1>
 							</Typography>
 						</div>
-						<div className='login-form' style={{marginRight:'-30px'}}>
-
-							<Form 
+						<div className="login-form" style={{ marginRight: '-30px' }}>
+							<Form
 								name="login"
 								autoComplete="off"
 								labelCol={{ span: 6, offset: 0 }}
 								onFinish={onSubmit}
 							>
-								<section style={{marginRight: '105px'}}>
-
+								<section style={{ marginRight: '105px' }}>
 									<Form.Item
 										label="Correo"
 										name="mail"
@@ -193,31 +198,68 @@ export default function Login() {
 									</Form.Item>
 								</section>
 
-								<Form.Item wrapperCol={{ span: 14, offset: 0 }} style={{display: 'flex-end', marginTop: '-40px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}} justify='center'>
-									<Button type="link" style={{marginTop: '30px', boxShadow: 'none'}} onClick={() => setDeleteModalOpen(true)} block>
-									¿Olvidó su contraseña?
+								<Form.Item
+									wrapperCol={{ span: 14, offset: 0 }}
+									style={{
+										display: 'flex-end',
+										marginTop: '-40px',
+										display: 'flex',
+										flexDirection: 'column',
+										justifyContent: 'center',
+									}}
+									justify="center"
+								>
+									<Button
+										type="link"
+										style={{
+											marginTop: '30px',
+											boxShadow: 'none',
+										}}
+										onClick={() => setDeleteModalOpen(true)}
+										block
+									>
+										¿Olvidó su contraseña?
 									</Button>
 									<Modal
 										title="¿Olvidó su contraseña?"
-										style={{textAlign: 'center'}}
+										style={{ textAlign: 'center' }}
 										open={deleteModalOpen}
 										onCancel={() => setDeleteModalOpen(false)}
 										footer={null}
 									>
-										<p style={{marginTop: '20px'}}>
-										Para recuperar su acceso comuniquese con un administrador
+										<p style={{ marginTop: '20px' }}>
+											Para recuperar su acceso comuniquese con un administrador
 										</p>
 									</Modal>
 								</Form.Item>
-								<Form.Item wrapperCol={{ span: 14, offset: 0 }} style={{display: 'flex-end', marginTop: '-15px'}} justify='center'>
-									<Button type="primary" htmlType="submit" style={{margin: '0'}} block>
-									Iniciar sesión
+								<Form.Item
+									wrapperCol={{ span: 14, offset: 0 }}
+									style={{
+										display: 'flex-end',
+										marginTop: '-15px',
+									}}
+									justify="center"
+								>
+									<Button
+										type="primary"
+										htmlType="submit"
+										style={{ margin: '0' }}
+										block
+									>
+										Iniciar sesión
 									</Button>
 								</Form.Item>
 							</Form>
-							<h5 style={{marginTop: '8px', marginBottom: '5px', color: '#666'}}>Versión 0.0.1</h5>
+							<h5
+								style={{
+									marginTop: '8px',
+									marginBottom: '5px',
+									color: '#666',
+								}}
+							>
+								Versión 0.0.1
+							</h5>
 						</div>
-
 					</div>
 				</Content>
 			</Layout>

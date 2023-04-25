@@ -84,7 +84,6 @@ export default function OrdersPage() {
 				);
 			}
 		}
-		console.log(list);
 		return list;
 	}, [query, orders]);
 

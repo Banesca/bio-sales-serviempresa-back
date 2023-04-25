@@ -71,8 +71,6 @@ export default function LinesModals({
 				message.error('Actualiza la línea')
 			} else {				
 				setIsEditModalOpen(false);
-				console.log(lineBody);
-				console.log(lineToDelete);
 				await editLines( lineBody.name, lineBody.idSubFamilyFk, lineToDelete, selectedBusiness.idSucursal);
 				message.success('Linea actualizada');
 			}

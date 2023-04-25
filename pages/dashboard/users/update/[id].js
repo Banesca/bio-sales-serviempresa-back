@@ -49,8 +49,6 @@ const UpdateUser = () => {
 		let lg = value.map((b) => b?.pin);
 		// setPin(lg.length == 2 ? lg[0] : lg);
 		setPin(value[0]?.pin);
-		console.log(value);
-		// console.log(lg.length == 2 ? lg[0] : lg);
 	};
 
 	const updateUserRequest = async (data) => {

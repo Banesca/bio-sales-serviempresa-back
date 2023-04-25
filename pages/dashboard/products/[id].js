@@ -126,7 +126,6 @@ const Product = () => {
 		if (currentProduct.idBrandFk) {
 			getBrandRequest(currentProduct.idBrandFk);
 		}
-		console.log(currentBrand.length == undefined ? 'Indefinida' : currentBrand?.name);
 	}, [currentProduct]);
 
 	if (loading) {

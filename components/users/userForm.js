@@ -44,7 +44,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 			idProfileFk: null,
 		});
 		form.resetFields();
-		console.log(pin);
 	};
 
 	const router = useRouter();

@@ -74,7 +74,6 @@ export default function BrandsModals({
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			console.log(lineBody);
 			await updateBrand( lineBody.name, lineBody.idBrand, selectedBusiness.idSucursal);
 			message.success('Marca actualizada');
 		} catch (error) {

@@ -196,7 +196,6 @@ const ProductForm = (props) => {
 
 	const onSubmit = async () => {
 		setLoading(true);
-		console.log(product);
 		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
 		await props.handleRequest(product, file);
 		setLoading(false);
@@ -217,16 +216,6 @@ const ProductForm = (props) => {
 		router.push('/dashboard/products');
 		setLoading(true);
 	};
-
-	useEffect(() => {
-	  console.log(lines);
-	  console.log(product);
-	}, [product]);
-	
-
-
-
-
 
 	return (
 		<div className='form' style={{

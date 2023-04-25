@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty, Form, Input } from 'antd';
-import Button from 'antd-button-color';
+import { Table, Space, Modal, ConfigProvider, Empty, Form, Input, Button } from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -162,7 +161,6 @@ export default function Products() {
 		try {
 			await getProductsInv(businessId);
 		} catch (error) {
-			console.error(error);
 			message.error('Error al obtener inventario');
 		} finally {
 			setLoading(false);

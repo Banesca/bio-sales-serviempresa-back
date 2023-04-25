@@ -20,7 +20,6 @@ export default function OrdersTable({ orders }) {
 	const handleSeeDetail = (order, record) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/${order.idOrderH}`);
-		console.log(order.idStatusOrder);
 	};
 
 	const [users, setUsers] = useState({});
@@ -45,10 +44,8 @@ export default function OrdersTable({ orders }) {
 				await getSellerClientsRequest(u.idUser);
 			}
 		} catch (error) {
-			console.log('todo ok');
 		} finally {
 			setLoading(false);
-			/* console.log(users); */
 		}
 	};
 

@@ -1,6 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, List, Table, Modal, Form, Select, message, Input, DatePicker } from 'antd';
+import {
+	Button,
+	List,
+	Table,
+	Modal,
+	Form,
+	Select,
+	message,
+	Input,
+	DatePicker,
+} from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -24,7 +34,6 @@ import {
 } from '@ant-design/icons';
 
 const UserDetail = () => {
-
 	const columns = [
 		{
 			title: 'Sucursal',
@@ -51,9 +60,7 @@ const UserDetail = () => {
 			key: 5,
 			render: (text) => {
 				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						${text}
-					</div>
+					<div style={{ display: 'flex', justifyContent: 'center' }}>${text}</div>
 				);
 			},
 		},
@@ -96,11 +103,10 @@ const UserDetail = () => {
 		}, */
 	];
 
-
-
-
-
-	const reportsSelect = ['Ventas generales por sucursal', 'Detallado de productos vendidos'];
+	const reportsSelect = [
+		'Ventas generales por sucursal',
+		'Detallado de productos vendidos',
+	];
 	const { requestHandler } = useRequest();
 	const { loading, setLoading } = useLoadingContext();
 	const generalContext = useContext(GeneralContext);
@@ -113,8 +119,6 @@ const UserDetail = () => {
 	}]); */
 
 	const [sells, setSells] = useState();
-	
-
 
 	const getReports = async () => {
 		const res = await requestHandler.post('/api/v2/report/totals');
@@ -122,25 +126,23 @@ const UserDetail = () => {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value._value.response[0];
-		// console.log(value);
 		setReport(value);
 	};
 
 	const getReportsBySuc = async () => {
 		const res = await requestHandler.post('/api/v2/report/venta/general', {
 			dateEnd: '2023-3-27',
-			dateStart: '2023-3-27'
+			dateStart: '2023-3-27',
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value._value.response;
 		setSells(value);
-		console.log(value);
 	};
 
 	useEffect(() => {
-		const id = localStorage.getItem('userId')
+		const id = localStorage.getItem('userId');
 		if (Object.keys(generalContext).length) {
 			getReports();
 			getReportsBySuc();
@@ -149,28 +151,20 @@ const UserDetail = () => {
 	}, [generalContext]);
 
 	const handleSelect = (value) => {
-		console.log(value);
-		if(value.value == 'Detallado de productos vendidos') {
+		if (value.value == 'Detallado de productos vendidos') {
 			setProductsSelling(true);
 		} else {
 			setProductsSelling(false);
 		}
-	}
+	};
 
 	const [filterForm] = Form.useForm();
 	const [reportSearch, setReportSearch] = useState();
 	const [productsSelling, setProductsSelling] = useState(false);
-	
-	
 
 	const onSubmit = (value) => {
 		setReportSearch(value);
-		console.log(value);
-		console.log(JSON.parse(localStorage.selectedBusiness));
-	}
-
-
-
+	};
 	return (
 		<>
 			<DashboardLayout>
@@ -186,10 +180,9 @@ const UserDetail = () => {
 						margin: '0px',
 					}}
 				>
-								Reportes
+					Reportes
 				</h1>
 				<div
-				
 					style={{
 						gap: '15px',
 						display: 'flex',
@@ -205,11 +198,10 @@ const UserDetail = () => {
 							marginTop: '1rem',
 							marginBottom: '1rem',
 							backgroundColor: 'white',
-							boxShadow: '4px 3px 8px 2px #9c9c9c5d'
-
+							boxShadow: '4px 3px 8px 2px #9c9c9c5d',
 						}}
 					>
-						<List.Item style={{display: 'flex', justifyContent: 'center'}} >
+						<List.Item style={{ display: 'flex', justifyContent: 'center' }}>
 							<h1
 								style={{
 									display: 'flex',
@@ -222,36 +214,78 @@ const UserDetail = () => {
 									margin: '0px',
 								}}
 							>
-									Ventas totales
+								Ventas totales
 							</h1>
 						</List.Item>
 
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Acciones</p>
-							<Button type='default'>Exportar</Button>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Acciones</p>
+							<Button type="default">Exportar</Button>
 						</List.Item>
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Promedio de ticket:</p>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Promedio de ticket:</p>
 							<p>{`$${report?.promedioTicket}`}</p>
-						</List.Item >
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Promedio hoy:</p>
+						</List.Item>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Promedio hoy:</p>
 							<p>{`$${report?.promedioHoy}`}</p>
 						</List.Item>
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Total de tickets:</p>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Total de tickets:</p>
 							<p>{`${report?.totalTicket}`}</p>
 						</List.Item>
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Venta de ayer:</p>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Venta de ayer:</p>
 							<p>{`$${report?.ventaAyer}`}</p>
 						</List.Item>
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Venta de hoy:</p>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Venta de hoy:</p>
 							<p>{`$${report?.ventaHoy}`}</p>
 						</List.Item>
-						<List.Item style={{padding: '0px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Pedidos anulados:</p>
+						<List.Item
+							style={{
+								padding: '0px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Pedidos anulados:</p>
 							<p>{`${report?.totalAnulados}`}</p>
 						</List.Item>
 					</List>
@@ -261,8 +295,7 @@ const UserDetail = () => {
 							borderRadius: '15px',
 							marginBottom: '1rem',
 							backgroundColor: 'white',
-							boxShadow: '4px 3px 8px 2px #9c9c9c5d'
-
+							boxShadow: '4px 3px 8px 2px #9c9c9c5d',
 						}}
 					>
 						<h1
@@ -276,55 +309,60 @@ const UserDetail = () => {
 								margin: '10px',
 							}}
 						>
-									Reportes generales de: 
+							Reportes generales de:
 						</h1>
-						<List.Item style={{display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: '25px'}} >
-							{productsSelling 
-								? <SelectBusiness /> 
-								: <></>
-							}
+						<List.Item
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+								flexDirection: 'column',
+								gap: '25px',
+							}}
+						>
+							{productsSelling ? <SelectBusiness /> : <></>}
 							<Form
 								onFinish={onSubmit}
 								form={filterForm}
-								style={{display: 'flex', flexDirection: 'row', gap: '10px'}}
+								style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}
 							>
 								<Form.Item
-									name='selectValue'
+									name="selectValue"
 									rules={[
 										{
 											required: true,
-											message: 'Selecciona un reporte'
-										}
+											message: 'Selecciona un reporte',
+										},
 									]}
 								>
-									<Select style={{width: '270px'}} placeholder='Tipo de reporte' labelInValue onChange={handleSelect}>
+									<Select
+										style={{ width: '270px' }}
+										placeholder="Tipo de reporte"
+										labelInValue
+										onChange={handleSelect}
+									>
 										{reportsSelect.map((r, index) => {
-											return (									
+											return (
 												<Select.Option key={index} value={r}>
 													{r}
 												</Select.Option>
-											)
+											);
 										})}
 									</Select>
 								</Form.Item>
-								<Form.Item
-									name='date'
-								>
+								<Form.Item name="date">
 									<DatePicker.RangePicker
-										placeholder={[
-											'Fecha inicial',
-											'Fecha final',
-										]}
+										placeholder={['Fecha inicial', 'Fecha final']}
 									/>
 								</Form.Item>
 
-								<Button type='success' htmlType='submit'>Generar reporte</Button>
-
+								<Button type="success" htmlType="submit">
+									Generar reporte
+								</Button>
 							</Form>
-
 						</List.Item>
 						<List.Item>
-							<Table style={{width: '100%'}}
+							<Table
+								style={{ width: '100%' }}
 								columns={columns}
 								dataSource={sells}
 								loading={loading}
@@ -360,7 +398,6 @@ const UserDetail = () => {
 							<p>{`${report.totalAnulados}`}</p>
 						</List.Item> */}
 					</List>
-					
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

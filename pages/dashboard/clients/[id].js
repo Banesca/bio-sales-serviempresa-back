@@ -179,8 +179,6 @@ const ClientDetail = () => {
 		if (Object.keys(client).length) {
 			getOrderByClient(client.phone);
 		}
-
-		console.log(client.statusName);
 	}, [client]);
 
 	const customizeRenderEmpty = () => (

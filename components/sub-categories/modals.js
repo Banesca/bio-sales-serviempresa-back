@@ -43,7 +43,6 @@ export default function SubCategoryModals({
 			add: isCreateModalOpen,
 			delete: isDeleteModalOpen,
 		});
-		console.log(categories);
 	}, [isCreateModalOpen, isDeleteModalOpen]);
 
 	// Delete Sub Category
@@ -92,7 +91,6 @@ export default function SubCategoryModals({
 			idSucursalFk: selectedBusiness.idSucursal,
 		});
 		const value = res.value.getValue();
-		console.log(value);
 		return !!value.data;
 	};
 
@@ -129,8 +127,6 @@ export default function SubCategoryModals({
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			console.log(lineBody);
-			console.log(currentBrands);
 			await editSubCategories(lineBody.idSubFamilyFk, lineBody.name, currentBrands.idStatus, currentBrands.idProductSubFamily, selectedBusiness.idSucursal);
 			message.success('Subcategoria actualizada');
 		} catch (error) {

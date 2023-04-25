@@ -100,24 +100,19 @@ export default function ClientsPage() {
 	const handleActivateModal = (value) => {
 		setActivateModal(true);
 		setCurrentClient(value);
-		console.log(value);
 	}
 		
 	const handleCloseActivateModal = () => {
 		setActivateModal(false);
-		console.log('hola');
 	}
 	
 	const changeStateCliente = () => {
 		updateClient();
 		setActivateModal(false);
-		// console.log('El estado del cliente ha cambiado');
-		// console.log(currentClient);
 	}
 
 	const updateClient = async () => {
 		setLoading(false);
-		console.log(currentClient);
 		// await getClientsRequest();
 		try {
 			const res = await requestHandler.put('/api/v2/client/update', {
@@ -131,7 +126,6 @@ export default function ClientsPage() {
 			});
 			message.success('Estado de cliente actualizado');
 		} catch (error) {
-			console.log(currentClient);
 			message.error('Error al actualizar cliente');
 		} finally {
 			setLoading(false);

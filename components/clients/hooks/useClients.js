@@ -9,7 +9,6 @@ export default function useClients() {
 	const listClients = async () => {
 		const res = await requestHandler.get('/api/v2/client/list');
 		if (res.isLeft()) {
-			console.log(res);
 			throw res.value.getErrorValue()
 		}
 		setClients(res.value.getValue().response);

@@ -107,7 +107,6 @@ export default function SubCategoriesContainer() {
 	};
 
 	const openEditModal = (value) => {
-		console.log(value);
 		setIsEditModalOpen(true);
 		setCurrentBrand(value);
 		setTimeout(() => {

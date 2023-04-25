@@ -1,5 +1,5 @@
 import '../styles/globals.css';
-import '../styles/style.css'
+import '../styles/style.css';
 import { createContext, useEffect, useState } from 'react';
 
 import { ConfigProvider, theme } from 'antd';
@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
 			);
 			setGeneralData(response.data.restaurante);
 		} catch (error) {
-			(error);
+			error;
 		}
 	}
 
@@ -55,7 +55,6 @@ function MyApp({ Component, pageProps }) {
 				},
 			}}
 		>
-			
 			<GeneralContext.Provider value={generalData}>
 				<ProfileProvider>
 					<BusinessProvider>

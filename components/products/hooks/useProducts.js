@@ -97,7 +97,6 @@ export function useProducts() {
 			throw response.value.getErrorValue();
 		}
 		const value = response.value.getValue().data;
-		console.log(response.value);
 		setProductsInv(value)
 	};
 
@@ -167,7 +166,6 @@ export function useProducts() {
 				reference
 			}
 		);
-		console.log(res);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

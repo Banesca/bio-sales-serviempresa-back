@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty, Upload } from 'antd';
-import Button from 'antd-button-color';
+import { Table, Space, Modal, ConfigProvider, Empty, Upload, Button } from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -155,7 +154,6 @@ export default function Products() {
 		try {
 			await getProducts(businessId);
 		} catch (error) {
-			console.error(error);
 			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);
@@ -197,7 +195,6 @@ export default function Products() {
 		try {
 			await deleteProduct(id, selectedBusiness.idSucursal);
 		} catch (error) {
-			console.error(error);
 			message.error('Error al eliminar producto');
 		} finally {
 			setLoading(false);
@@ -217,7 +214,6 @@ export default function Products() {
 			brandListRequest(selectedBusiness.idSucursal);
 			getProductsRequest(selectedBusiness.idSucursal);
 		}
-		console.log(filtered());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 

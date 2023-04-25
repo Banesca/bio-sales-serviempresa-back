@@ -86,7 +86,6 @@ const OrderDetail = () => {
 		setLoading(true);
 		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
-			console.log(user);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	

@@ -70,7 +70,6 @@ const UserDetail = () => {
 		}
 		const value = res.value.getValue().data;
 		setBusinessByUser(value);
-		console.log(value.map(b => b.nombre));
 	};
 
 	const getSellerClientsRequest = async (id) => {
@@ -147,8 +146,6 @@ const UserDetail = () => {
 		}
 		await getUserBusiness(id);
 		setLoading(false);
-		console.log(businessToAdd);
-		console.log(businessByUser.map(b => b.nombre));
 		message.success('Empresa asignada');
 	};
 
@@ -243,15 +240,12 @@ const UserDetail = () => {
 	
 	
 	const getLoc = async (id) => {
-		console.log(id);
 		setLoading(true);
 		try {
 			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
-			console.log(res.value._value);
 			let lat = res.value._value.data[0].latitud;
 			let long = res.value._value.data[0].longitud;
 			res.value._value.data == '' ? setDisabled(true) : setDisabled(false);
-			console.log(res.value);
 		} catch {
 			setLoading(false);
 			setDisabled(true);

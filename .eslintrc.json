@@ -1,7 +1,7 @@
 {
-	"extends": "next/core-web-vitals",
-	"rules": {
-		"quotes": ["error", "single"],
-		"indent": ["error", "tab"]
-	}
+  "extends": ["next/core-web-vitals", "eslint-config-prettier"],
+  "rules": {
+    "quotes": ["error", "single"],
+    "indent": ["error", "tab"]
+  }
 }

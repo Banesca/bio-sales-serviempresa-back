@@ -177,7 +177,6 @@ const UpdateOrderPage = () => {
 			);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
-			console.error(error);
 			message.error('Error al recibir pedido');
 		} finally {
 			setLoading(false);
@@ -192,7 +191,6 @@ const UpdateOrderPage = () => {
 			)
 			router.push('/dashboard/orders');
 		} catch (error) {
-			console.error(error);
 			message.error('Error al pausar pedido');
 		} finally {
 			setLoading(false);
@@ -208,7 +206,6 @@ const UpdateOrderPage = () => {
 			)
 			router.push('/dashboard/orders');
 		} catch (error) {
-			console.error(error);
 			message.error('Error al anular pedido');
 		} finally {
 			setLoading(false);

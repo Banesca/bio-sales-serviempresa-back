@@ -172,7 +172,6 @@ const ImportProducts = () => {
 		}
 		const value = response.value.getValue().data;
 		setCode(value);
-		console.log(value);
 	};
 	const categoryListRequest = async (business) => {
 		const response = await requestHandler.get(
@@ -282,7 +281,6 @@ const ImportProducts = () => {
 			addKeys(uploadData);
 			setData(uploadData);
 		};
-		console.log(data);
 	};
 
 	const handleChange = (info) => {

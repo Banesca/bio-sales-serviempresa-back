@@ -84,7 +84,6 @@ export default function ProductsInOrder({
 			await confirmProductQuantity(record.idOrderB, Number(record.weight));
 			message.success('Cantidad actualizada');
 		} catch (error) {
-			console.error(error);
 			message.error('Error al actualizar cantidad');
 		} finally {
 			setLoading(false);

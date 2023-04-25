@@ -31,10 +31,8 @@ const UsersTable = ({
 	/* 	const getUserBusiness = async (userId) => {
 		try {
 			const res = await requestHandler.get(`/api/v2/user/branch/${userId}`);
-			console.log(res);
 			return res;
 		} catch (error) {
-			console.error(error);
 			throw error;
 		}
 	};

@@ -24,7 +24,6 @@ export default function EditClient() {
 
 	const onReset = () => {
 		form.resetFields();
-		console.log(client);
 	};
 
 	const router = useRouter();
@@ -35,7 +34,6 @@ export default function EditClient() {
 		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
 		if (res.isLeft()) {
 			setLoading(false);
-			return console.log('error')
 		}
 		const value = res.value.getValue();
 		if (!value.data) {
@@ -66,8 +64,6 @@ export default function EditClient() {
 	// validator
 	
 	const validator = (data) => {
-		console.log(clients);
-		console.log(data);
 		return {
 			val : Object.values(clients.map(client => {
 				if(client.phone == data.phoneClient || client.numberDocument == data.rif) {
@@ -139,13 +135,11 @@ export default function EditClient() {
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
 			} else {
-				console.log(validator(data).prob());
 				message.error(validator(data).prob());
 			}
 
 
 		} catch (error) {
-			console.log(data);
 			message.error('Error al actualizar cliente');
 		} finally {
 			setLoading(false);

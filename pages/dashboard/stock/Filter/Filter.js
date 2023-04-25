@@ -29,7 +29,6 @@ const Filter = ({ setQuery, clean }) => {
 			stock: values?.stock || 0,
 			idProduct: values?.idProduct || 0,
 		});
-		console.log(values);
 	};
 
 	return (
@@ -200,7 +199,7 @@ const Filter = ({ setQuery, clean }) => {
 							</Col>
 						</Row>
 						<Row>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Stock"
 									name="stock"
