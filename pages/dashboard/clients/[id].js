@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -182,12 +183,14 @@ const ClientDetail = () => {
 		if (Object.keys(generalContext).length) {
 			getClientRequest();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id, generalContext]);
 
 	useEffect(() => {
 		if (Object.keys(client).length) {
 			getOrderByClient(client.phone);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [client]);
 
 	const customizeRenderEmpty = () => (

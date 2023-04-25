@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons';

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import { useRequest } from './useRequest';
 
@@ -108,7 +109,7 @@ export function CategoriesProvider({ children }) {
 	};
 
 	const addCategory = async (name, businessId) => {
-		const res = await requestHandler.post(`/api/v2/family/add`, {
+		const res = await requestHandler.post('/api/v2/family/add', {
 			name: name,
 			order: 0,
 			image: null,
@@ -168,7 +169,7 @@ export function CategoriesProvider({ children }) {
 	};
 
 	const addSubCategory = async (body, businessId) => {
-		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
+		const res = await requestHandler.post('/api/v2/subfamily/add', body);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -206,7 +207,7 @@ export function CategoriesProvider({ children }) {
 	};
 
 	const addLine = async (body) => {
-		const res = await requestHandler.post(`/api/v2/line/add`, body);
+		const res = await requestHandler.post('/api/v2/line/add', body);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

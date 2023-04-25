@@ -466,6 +466,7 @@ const UserDetail = () => {
 					<p>
 						Estas seguro de remover el acceso de la sucursal a {user?.fullname}
 					</p>
+				</Modal>
 				<Modal
 					open={confirmRemoveClient}
 					title="Remover Permisos"
