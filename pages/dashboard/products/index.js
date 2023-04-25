@@ -1,20 +1,25 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty, Upload, Button } from 'antd';
+import {
+	Table,
+	Space,
+	Modal,
+	ConfigProvider,
+	Empty,
+	Upload,
+	Button,
+} from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EyeTwoTone,
-	UploadOutlined,
 } from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { GeneralContext } from '../../_app';
 import { addKeys } from '../../../util/setKeys';
-import SelectBusiness from '../../../components/business/selectBusiness';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
@@ -53,9 +58,7 @@ export default function Products() {
 			responsive: ['sm'],
 			key: 3,
 			render: (text, record) => (
-				<p>
-					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
+				<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
 			),
 		},
 		{
@@ -86,14 +89,15 @@ export default function Products() {
 			align: 'center',
 			key: 6,
 			render: (product, index) => (
-				<Space size="small" style={{justifyContent: 'center', display: 'flex'}}>
+				<Space
+					size="small"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
 					<Button
 						type="primary"
 						onClick={() => {
 							setLoading(true);
-							router.push(
-								`/dashboard/products/${product.idProduct}`
-							);
+							router.push(`/dashboard/products/${product.idProduct}`);
 						}}
 					>
 						<EyeTwoTone />
@@ -101,9 +105,7 @@ export default function Products() {
 					<Button
 						onClick={() => {
 							setLoading(true);
-							router.push(
-								`/dashboard/products/update/${product.idProduct}`
-							);
+							router.push(`/dashboard/products/update/${product.idProduct}`);
 						}}
 					>
 						<EditOutlined />
@@ -130,17 +132,14 @@ export default function Products() {
 	const { getProducts, deleteProduct, products } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
-
 	// Export list products
 
-
-	
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Lista_de_productos.xlsx');
-	}
+	};
 
 	useEffect(() => {
 		let list = products;
@@ -173,11 +172,6 @@ export default function Products() {
 			setLoading(false);
 		}
 	};
-
-
-
-
-
 
 	const brandListRequest = async (business = 1) => {
 		setLoading(true);
@@ -235,44 +229,30 @@ export default function Products() {
 	};
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						padding: '15px',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
+				<div className="m-4 p-4">
 					<Title goBack={false} title={'Productos'}>
 						<div>
 							<Button onClick={exportToExcel} block>
-            	    		  Exportar
+								Exportar
 							</Button>
 						</div>
 						<Button
 							type="warning"
-							style={{marginRight: '1.3rem', marginLeft: '1.3rem'}}
-							onClick={() =>
-								router.push('/dashboard/products/import')
-							}
+							style={{ marginRight: '1.3rem', marginLeft: '1.3rem' }}
+							onClick={() => router.push('/dashboard/products/import')}
 						>
 							Importar
 						</Button>
@@ -281,15 +261,11 @@ export default function Products() {
 								style={{ marginRight: '-2rem' }}
 								type="success"
 								disabled={userProfile == PROFILES.BILLER}
-								onClick={() =>
-									router.push('/dashboard/products/add')
-								}
+								onClick={() => router.push('/dashboard/products/add')}
 							>
 								Agregar
 							</Button>
 						)}
-
-
 					</Title>
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
@@ -313,12 +289,7 @@ export default function Products() {
 						>
 							Cancelar
 						</Button>,
-						<Button
-							key="delete"
-							danger
-							type="primary"
-							onClick={handleDelete}
-						>
+						<Button key="delete" danger type="primary" onClick={handleDelete}>
 							Eliminar
 						</Button>,
 					]}

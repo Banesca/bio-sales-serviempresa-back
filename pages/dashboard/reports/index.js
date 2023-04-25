@@ -1,21 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
-import {
-	Button,
-	List,
-	Table,
-	Modal,
-	Form,
-	Select,
-	message,
-	Input,
-	DatePicker,
-} from 'antd';
+import { Button, List, Table, Form, Select, DatePicker, Card } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useRequest } from '../../../hooks/useRequest';
 import SelectBusiness from '../../../components/business/selectBusiness';
+import TotalSales from '../../../components/reports/totalSales/TotalSales';
+import Graphic from '../../../components/reports/totalSales/Graphic';
 
 const UserDetail = () => {
 	const columns = [
@@ -92,6 +84,23 @@ const UserDetail = () => {
 	const reportsSelect = [
 		'Ventas generales por sucursal',
 		'Detallado de productos vendidos',
+		'Facturacion desde, hasta',
+		'Facturacion de ventas por sucursal',
+		'Productos vendidos por sucursal',
+		'Productos por produccion',
+		'Productos vendidos por desperdicio',
+		'Productos vendidos por unidad de costo fijo',
+		'Productos ingresos/egresos/gastos',
+		'Descuentos aplicados',
+		'Ganancia por producto',
+		'Productos vendidos por familia',
+		'Productos vendidos por subfamilia',
+		'Envio por zona',
+		'Productos por turno',
+		'Reporte IVA',
+		'Gastos y metas',
+		'Ventas por modalidad',
+		'Ventas por modalidad totales',
 	];
 	const { requestHandler } = useRequest();
 	const { loading, setLoading } = useLoadingContext();
@@ -154,127 +163,13 @@ const UserDetail = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<h1
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'center',
-						alignItems: 'center',
-						textAlign: 'center',
-						fontSize: '3rem',
-						gap: '20px',
-						margin: '0px',
-					}}
-				>
-					Reportes
-				</h1>
-				<div
-					style={{
-						gap: '15px',
-						display: 'flex',
-						alignItems: 'center',
-						flexDirection: 'column',
-						justifyContent: 'center',
-					}}
-				>
-					<List
-						style={{
-							width: '95%',
-							borderRadius: '15px',
-							marginTop: '1rem',
-							marginBottom: '1rem',
-							backgroundColor: 'white',
-							boxShadow: '4px 3px 8px 2px #9c9c9c5d',
-						}}
-					>
-						<List.Item style={{ display: 'flex', justifyContent: 'center' }}>
-							<h1
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									justifyContent: 'center',
-									alignItems: 'center',
-									textAlign: 'center',
-									fontSize: '1.6rem',
-									gap: '20px',
-									margin: '0px',
-								}}
-							>
-								Ventas totales
-							</h1>
-						</List.Item>
+				<div className="gap-3 flex flex-col items-center justify-center">
+					<h1 className="text-5xl text-center p-5">REPORTES</h1>
+					<div className="flex justify-between w-[95%]">
+						<TotalSales />
+						<Graphic />
+					</div>
 
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Acciones</p>
-							<Button type="default">Exportar</Button>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Promedio de ticket:</p>
-							<p>{`$${report?.promedioTicket}`}</p>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Promedio hoy:</p>
-							<p>{`$${report?.promedioHoy}`}</p>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Total de tickets:</p>
-							<p>{`${report?.totalTicket}`}</p>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Venta de ayer:</p>
-							<p>{`$${report?.ventaAyer}`}</p>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Venta de hoy:</p>
-							<p>{`$${report?.ventaHoy}`}</p>
-						</List.Item>
-						<List.Item
-							style={{
-								padding: '0px 40px',
-								justifyContent: 'space-between',
-								fontSize: '18px',
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Pedidos anulados:</p>
-							<p>{`${report?.totalAnulados}`}</p>
-						</List.Item>
-					</List>
 					<List
 						style={{
 							width: '95%',
@@ -353,6 +248,11 @@ const UserDetail = () => {
 								dataSource={sells}
 								loading={loading}
 							/>
+						</List.Item>
+						<List.Item>
+							<div className="flex justify-center h-full w-full">
+								<Graphic borderColor={'green'} backgroundColor={'green'} />
+							</div>
 						</List.Item>
 
 						{/* <List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>

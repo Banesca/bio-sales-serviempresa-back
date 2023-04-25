@@ -16,7 +16,7 @@ import Loading from './loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
-
+import MainLogo from '../logos/mainLogo';
 
 const { Header, Content, Sider } = Layout;
 
@@ -71,7 +71,7 @@ export default function DashboardLayout({ children }) {
 			key: '/login',
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),
-		}
+		},
 	];
 	const sidebar = [
 		{
@@ -113,28 +113,25 @@ export default function DashboardLayout({ children }) {
 			key: '/login',
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),
-		}
+		},
 	];
 
 	const router = useRouter();
 	const { userProfile } = useAuthContext();
 
-
 	const [loading, setLoading] = useState(false);
 	const [actualKey, setActualKey] = useState();
 	const [currentBusiness, setCurrentBusiness] = useState();
-	
 
 	useEffect(() => {
 		setActualKey(router.pathname);
 	}, [router.pathname]);
-	
+
 	useEffect(() => {
 		setCurrentBusiness(localStorage.getItem('bs'));
 		/* setCurrentBusiness(business?.map(b => b.nombre)); */
 		getUserBusiness();
 	}, [children]);
-	
 
 	const handleNavigation = (e) => {
 		if (e.key === actualKey) {
@@ -142,7 +139,7 @@ export default function DashboardLayout({ children }) {
 		}
 		// logout
 		if (e.key === '/login') {
-			localStorage.clear()
+			localStorage.clear();
 		}
 		localStorage.setItem('key', e.key);
 		setLoading(true);
@@ -151,17 +148,16 @@ export default function DashboardLayout({ children }) {
 
 	const { requestHandler } = useRequest();
 	const [business, setBusiness] = useState();
-	
 
 	const getUserBusiness = async () => {
-		const loggedUser = localStorage.getItem('userId')
+		const loggedUser = localStorage.getItem('userId');
 		setBusiness(JSON.parse(localStorage.getItem('selectedBusiness')).nombre);
 		const res = await requestHandler.get(`/api/v2/user/branch/${loggedUser}`);
 		if (res.isLeft()) {
 			return;
 		}
 		const value = res.value._value.data;
-		localStorage.setItem('bus', value[0]?.nombre)
+		localStorage.setItem('bus', value[0]?.nombre);
 		/* setBusiness(value[0]?.nombre); */
 	};
 
@@ -169,55 +165,31 @@ export default function DashboardLayout({ children }) {
 		<>
 			<Layout style={{ height: '100vh', width: '100%' }}>
 				<Header
-					className='header'
+					className="flex justify-between items-center bg-white font-bold"
 					theme="light"
-					style={{
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
 				>
-					<p
-						style={{
-							fontSize: '1.5rem',
-							color: 'white',
-						}}
-					>
-						ServiEmpresa
-					</p>
-					<p style={{
-						alignSelf: 'center', 
-						fontWeight: 'bolder',
-						fontSize: '1.8rem',
-						color: 'white'
-					}}>
+					<div className="relative h-12 w-44">
+						<MainLogo />
+					</div>
+					<p className="text-3xl">
 						{/* {business == '' ? '' : business} */}
 						{business}
 					</p>
 					<p></p>
 				</Header>
 				<Layout style={{ minHeight: 'fit-content' }} hasSider>
-					<Sider
-						theme="light"
-						breakpoint="lg"
-						collapsedWidth='3rem'
-						width='10rem'
-					>
+					<Sider theme="light" breakpoint="lg" collapsedWidth="3rem">
 						<Menu
-							mode="inline"
-							className='menu'
 							items={userProfile == PROFILES.BILLER ? sidebar : sidebarLinks}
 							onSelect={(e) => handleNavigation(e)}
-							style={{ height: '100%', marginTop: '10px' }}
+							className="flex flex-col gap-5 h-full bg-[#012258] text-white"
 						/>
-						<h1 className='version' style={{position: 'sticky', marginTop: '-30px', marginLeft: '15px'}}>Version 0.1.0</h1>
+						<h1 className="sticky -mt-8 ml-4">Version 0.1.0</h1>
 					</Sider>
 					<Layout>
-						<Content
-							className='content' style={{ heigh: '100vh', overflow: 'initial', backgroundColor: '#F7F9FB'}}
-						>
-							{children}
-						</Content>
+						<div className="bg-[#F7F9FB">
+							<Content className="w-11/12 mx-auto">{children}</Content>
+						</div>
 					</Layout>
 				</Layout>
 			</Layout>

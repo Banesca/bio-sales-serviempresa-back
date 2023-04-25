@@ -25,7 +25,7 @@ const UserFilters = ({ setQuery }) => {
 	};
 
 	return (
-		<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
+		<Collapse className="w-full mb-8 bg-white shadow-md">
 			<Collapse.Panel header="Filtros">
 				<Form
 					form={form}
@@ -92,7 +92,7 @@ const UserFilters = ({ setQuery }) => {
 							md={{ span: 9, offset: 3 }}
 						>
 							<Form.Item style={{ margin: '0 .5rem 0 0' }}>
-								<Button type='warning' block onClick={onReset}>
+								<Button type="warning" block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import {
@@ -8,7 +9,8 @@ import {
 	message,
 	Modal,
 	Button,
-	Image,
+	List,
+	Tooltip,
 } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
@@ -16,6 +18,8 @@ import { useRequest } from '../hooks/useRequest';
 import { useBusinessProvider } from '../hooks/useBusinessProvider';
 import { ip } from '../util/environment';
 import { PROFILES } from '../components/shared/profiles';
+import Image from 'next/image';
+import MainLogo from '../components/logos/mainLogo';
 
 const { Content } = Layout;
 
@@ -134,131 +138,92 @@ export default function Login() {
 						paddingInline: '1rem',
 					}}
 				>
-					<div
-						className="login"
-						style={{
-							backgroundColor: 'white',
-							borderRadius: '1.5rem',
-						}}
-					>
-						<div className="imagen">
-							<Typography
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-								}}
-							>
-								<h1
-									style={{
-										fontWeight: 'bold',
-										fontSize: '4rem',
-										marginBottom: '0',
-									}}
-								>
-									ServiEmpresa
-								</h1>
-							</Typography>
+					<div className="relative h-[80px] w-11/12 max-w-[300px] m-5">
+						<MainLogo />
+					</div>
+					<div className="overflow-hidden rounded-xl bg-[#0091ff] flex flex-col items-center gap-2 p-1 min-w-[450px] shadow-2xl">
+						<div className="bg-white rounded-lg w-full py-4 flex justify-center items-center">
+							<h1 className="text-center text-4xl">INGRESAR</h1>
 						</div>
-						<div className="login-form" style={{ marginRight: '-30px' }}>
-							<Form
-								name="login"
-								autoComplete="off"
-								labelCol={{ span: 6, offset: 0 }}
-								onFinish={onSubmit}
-							>
-								<section style={{ marginRight: '105px' }}>
-									<Form.Item
-										label="Correo"
-										name="mail"
-										rules={[
-											{
-												required: true,
-												message: 'Ingresa un correo',
-											},
-											{
-												type: 'email',
-												message: 'Ingresa un email valido',
-											},
-										]}
-									>
-										<Input />
-									</Form.Item>
-									<Form.Item
-										label="Contraseña"
-										name="pin"
-										rules={[
-											{
-												required: true,
-												message: 'Ingresa una contraseña',
-											},
-										]}
-									>
-										<Input.Password />
-									</Form.Item>
-								</section>
+						<div className="bg-[#012258] w-full px-16 py-5 text-white rounded-lg">
+							<Form name="login" autoComplete="off" onFinish={onSubmit}>
+								<div className="">
+									<h1 className="text-white">CORREO:</h1>
+									<Tooltip title="Ingrese su correo de usuario">
+										<Form.Item
+											name="mail"
+											rules={[
+												{
+													required: true,
+													message: 'Ingresa un correo',
+												},
+												{
+													type: 'email',
+													message: 'Ingresa un email valido',
+												},
+											]}
+										>
+											<Input />
+										</Form.Item>
+									</Tooltip>
+								</div>
+								<div>
+									<h1 className="text-white">CONTRASENA:</h1>
+									<Tooltip title="Ingresa tu contrasena">
+										<Form.Item
+											name="pin"
+											rules={[
+												{
+													required: true,
+													message: 'Ingresa una contraseña',
+												},
+											]}
+										>
+											<Input.Password />
+										</Form.Item>
+										<Form.Item
+											wrapperCol={{ span: 14, offset: 0 }}
+											justify="center"
+										>
+											<Button
+												type="link"
+												onClick={() => setDeleteModalOpen(true)}
+												block
+											>
+												¿Olvidó su contraseña?
+											</Button>
+											<Modal
+												centered
+												title="¿Olvidó su contraseña?"
+												style={{ textAlign: 'center' }}
+												open={deleteModalOpen}
+												onCancel={() => setDeleteModalOpen(false)}
+												footer={null}
+											>
+												<p style={{ marginTop: '20px' }}>
+													Para recuperar su acceso comuniquese con un
+													administrador
+												</p>
+											</Modal>
+										</Form.Item>
+									</Tooltip>
+								</div>
 
 								<Form.Item
 									wrapperCol={{ span: 14, offset: 0 }}
-									style={{
-										display: 'flex-end',
-										marginTop: '-40px',
-										display: 'flex',
-										flexDirection: 'column',
-										justifyContent: 'center',
-									}}
-									justify="center"
-								>
-									<Button
-										type="link"
-										style={{
-											marginTop: '30px',
-											boxShadow: 'none',
-										}}
-										onClick={() => setDeleteModalOpen(true)}
-										block
-									>
-										¿Olvidó su contraseña?
-									</Button>
-									<Modal
-										title="¿Olvidó su contraseña?"
-										style={{ textAlign: 'center' }}
-										open={deleteModalOpen}
-										onCancel={() => setDeleteModalOpen(false)}
-										footer={null}
-									>
-										<p style={{ marginTop: '20px' }}>
-											Para recuperar su acceso comuniquese con un administrador
-										</p>
-									</Modal>
-								</Form.Item>
-								<Form.Item
-									wrapperCol={{ span: 14, offset: 0 }}
-									style={{
-										display: 'flex-end',
-										marginTop: '-15px',
-									}}
 									justify="center"
 								>
 									<Button
 										type="primary"
 										htmlType="submit"
-										style={{ margin: '0' }}
+										className="bg-blue-600"
 										block
 									>
 										Iniciar sesión
 									</Button>
 								</Form.Item>
 							</Form>
-							<h5
-								style={{
-									marginTop: '8px',
-									marginBottom: '5px',
-									color: '#666',
-								}}
-							>
-								Versión 0.0.1
-							</h5>
+							<h5 className="text-center">Versión 0.0.1</h5>
 						</div>
 					</div>
 				</Content>
