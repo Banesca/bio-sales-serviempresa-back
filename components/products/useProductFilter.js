@@ -13,10 +13,8 @@ export const INITIAL_QUERY_VALUES = {
 	idProduct: '',
 	stock: '',
 	priceSale: '',
-	pricePurschase: ''
+	pricePurschase: '',
 };
-
-
 
 const FILTER_ACTIONS = {
 	SEARCH: 'search',
@@ -50,24 +48,16 @@ export function useProductFilter() {
 			});
 		}
 		if (state.query.minPrice) {
-			list = list.filter(
-				(p) => p.priceSale > Number(state.query.minPrice)
-			);
+			list = list.filter((p) => p.priceSale > Number(state.query.minPrice));
 		}
 		if (state.query.minPrice) {
-			list = list.filter(
-				(p) => p.priceSale > Number(state.query.minPrice)
-			);
+			list = list.filter((p) => p.priceSale > Number(state.query.minPrice));
 		}
 		if (state.query.maxPrice) {
-			list = list.filter(
-				(p) => p.priceSale < Number(state.query.maxPrice)
-			);
+			list = list.filter((p) => p.priceSale < Number(state.query.maxPrice));
 		}
 		if (state.query.nameFamily) {
-			list = list.filter(
-				(p) => p.idProductFamily === state.query.nameFamily
-			);
+			list = list.filter((p) => p.idProductFamily === state.query.nameFamily);
 		}
 		if (state.query.nameSubFamily) {
 			list = list.filter(
@@ -81,24 +71,16 @@ export function useProductFilter() {
 			list = list.filter((p) => p.idLineFk == state.query.idLineFk);
 		}
 		if (state.query.stock) {
-			list = list.filter(
-				(p) => p.stock == state.query.stock
-			);
+			list = list.filter((p) => p.stock == state.query.stock);
 		}
 		if (state.query.idProduct) {
-			list = list.filter(
-				(p) => p.idProduct
-			);
+			list = list.filter((p) => p.idProduct);
 		}
 		if (state.query.pricePurchase) {
-			list = list.filter(
-				(p) => p.pricePurchase == state.query.pricePurchase
-			);
+			list = list.filter((p) => p.pricePurchase == state.query.pricePurchase);
 		}
 		if (state.query.priceSale) {
-			list = list.filter(
-				(p) => p.priceSale == state.query.priceSale
-			);
+			list = list.filter((p) => p.priceSale == state.query.priceSale);
 		}
 		addKeys(list);
 		return list;
@@ -106,29 +88,29 @@ export function useProductFilter() {
 
 	function reducer(state, action) {
 		switch (action.type) {
-		case FILTER_ACTIONS.CLEAR:
-			return {
-				...state,
-				query: INITIAL_QUERY_VALUES,
-				filtered: () => state.products
-			};
-		case FILTER_ACTIONS.GET_PRODUCTS:
-			return {
-				...state,
-				products: action.payload,
-				filtered: () => action.payload,
-			};
-		case FILTER_ACTIONS.SEARCH:
-			return {
-				...state,
-				filtered: () => filterProducts(state),
-			};
+			case FILTER_ACTIONS.CLEAR:
+				return {
+					...state,
+					query: INITIAL_QUERY_VALUES,
+					filtered: () => state.products,
+				};
+			case FILTER_ACTIONS.GET_PRODUCTS:
+				return {
+					...state,
+					products: action.payload,
+					filtered: () => action.payload,
+				};
+			case FILTER_ACTIONS.SEARCH:
+				return {
+					...state,
+					filtered: () => filterProducts(state),
+				};
 
-		case FILTER_ACTIONS.SET_QUERY:
-			return {
-				...state,
-				query: action.payload,
-			};
+			case FILTER_ACTIONS.SET_QUERY:
+				return {
+					...state,
+					query: action.payload,
+				};
 		}
 	}
 
@@ -145,7 +127,6 @@ export function useProductFilter() {
 
 	const clean = () => {
 		dispatch({ type: FILTER_ACTIONS.CLEAR });
-		// setQuery(INITIAL_QUERY_VALUES);
 	};
 
 	return { setQuery, setProduct, clean, filtered };

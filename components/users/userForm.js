@@ -10,7 +10,14 @@ import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import Title from '../shared/title';
 import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 
-const UserForm = ({ user, update, submitFunction, business, userBusiness, pin }) => {
+const UserForm = ({
+	user,
+	update,
+	submitFunction,
+	business,
+	userBusiness,
+	pin,
+}) => {
 	const { requestHandler } = useRequest();
 
 	const { findUserByEmail } = useUser();
@@ -21,8 +28,9 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 		pin: pin || '',
 		idProfileFk: user.idProfileFk || null,
 	});
-	
-	const regexpTlp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
+
+	const regexpTlp =
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
 	const [loading, setLoading] = useState(false);
 	const [businessByUser, setBusinessByUser] = useState(userBusiness);
 
@@ -32,8 +40,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 			[e.target.name]: e.target.value,
 		}));
 	};
-
-	//
 
 	const [form] = Form.useForm();
 	const onReset = () => {
@@ -48,7 +54,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 
 	const router = useRouter();
 
-	// User business
 	const handleAsigne = async (userId, businessId) => {
 		const res = await requestHandler.post('/api/v2/user/branch/add', {
 			idUserFk: userId,
@@ -59,7 +64,6 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 			message.error('Ha ocurrido un error al asignar empresa');
 		}
 	};
-	// User business End
 
 	const handleFindUser = async (email) => {
 		try {
@@ -87,9 +91,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 					await handleAsigne(user.idUser, business);
 				}
 			}
-			message.success(
-				update ? 'Usuario actualizado' : 'Usuario agregado'
-			);
+			message.success(update ? 'Usuario actualizado' : 'Usuario agregado');
 			router.push('/dashboard/users');
 		} catch (error) {
 			message.error(
@@ -108,38 +110,42 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 
 	const handleReturn = () => {
 		router.push('/dashboard/users');
-		setLoading(true)
+		setLoading(true);
 	};
 
 	return (
-		<div style={{overfl: 'scroll'}}>
-			<section style={{
-				textAlign: 'center',
-				fontSize: '2.5rem',
-				margin: '.9rem',
-				display: 'flex',
-				width: '100%',
-				backgroundColor: 'white !important',
-			}}>
-				<Button style={{marginRight: '48%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<LeftOutlined
-						style={{ fontSize: '1.5rem', marginRight: '50%'}}
-					/>
+		<div style={{ overfl: 'scroll' }}>
+			<section
+				style={{
+					textAlign: 'center',
+					fontSize: '2.5rem',
+					margin: '.9rem',
+					display: 'flex',
+					width: '100%',
+					backgroundColor: 'white !important',
+				}}
+			>
+				<Button
+					style={{ marginRight: '48%', height: '42px', borderRadius: '20px' }}
+					onClick={handleReturn}
+				>
+					<LeftOutlined style={{ fontSize: '1.5rem', marginRight: '50%' }} />
 				</Button>
-				<h2 style={{fontSize: '2.8rem', marginTop: '0px', marginLeft: '-180px'}}>
+				<h2
+					style={{ fontSize: '2.8rem', marginTop: '0px', marginLeft: '-180px' }}
+				>
 					{update ? 'Editar Usuario' : 'Agregar Usuario'}
 				</h2>
-			</section>	
+			</section>
 			<div
 				style={{
-					width: '70%', 
+					width: '70%',
 					maxWidth: '750px',
 					margin: '.5rem auto',
 					backgroundColor: 'white',
 					padding: '60px',
 					borderRadius: '20px',
 					boxShadow: '6px 6px 10px rgba(180, 180, 180, 0.479)',
-
 				}}
 			>
 				<Form
@@ -160,9 +166,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 					<Form.Item
 						label="Nombre"
 						name="fullname"
-						rules={[
-							{ required: true, message: 'Ingresa un nombre' },
-						]}
+						rules={[{ required: true, message: 'Ingresa un nombre' }]}
 					>
 						<Input
 							type="text"
@@ -207,8 +211,8 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 							{
 								pattern: regexpTlp,
 								message:
-									'Las contraseña debe tener: de 8 a 16 caracteres, 1 mayuscula, 1 minuscula y 1 caracter especial'
-							}
+									'Las contraseña debe tener: de 8 a 16 caracteres, 1 mayuscula, 1 minuscula y 1 caracter especial',
+							},
 						]}
 					>
 						<Input.Password
@@ -285,22 +289,16 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 								{
 									required:
 										!update &&
-										(userData.idProfileFk ==
-											PROFILES.SELLER ||
-											userData.idProfileFk ==
-												PROFILES.BILLER ||
-											userData.idProfileFk ==
-												PROFILES.ADMIN),
+										(userData.idProfileFk == PROFILES.SELLER ||
+											userData.idProfileFk == PROFILES.BILLER ||
+											userData.idProfileFk == PROFILES.ADMIN),
 									message: 'Elige una empresa',
 								},
 							]}
 						>
 							<Select
 								value={businessByUser}
-								mode={
-									userData.idProfileFk === PROFILES.SELLER &&
-									'multiple'
-								}
+								mode={userData.idProfileFk === PROFILES.SELLER && 'multiple'}
 								onChange={(value) => {
 									if (Array.isArray(value)) {
 										setBusinessByUser(value);
@@ -310,10 +308,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 								}}
 							>
 								{business.map((p) => (
-									<Select.Option
-										key={p.idSucursal}
-										value={p.idSucursal}
-									>
+									<Select.Option key={p.idSucursal} value={p.idSucursal}>
 										{p.nombre}
 									</Select.Option>
 								))}
@@ -328,7 +323,7 @@ const UserForm = ({ user, update, submitFunction, business, userBusiness, pin })
 									offset: 12,
 								}}
 							>
-								<Button type='warning' block onClick={onReset}>
+								<Button type="warning" block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

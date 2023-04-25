@@ -2,7 +2,12 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button, ConfigProvider, Empty, List, Table } from 'antd';
-import { ArrowLeftOutlined, EditOutlined, EyeTwoTone, LeftOutlined } from '@ant-design/icons';
+import {
+	ArrowLeftOutlined,
+	EditOutlined,
+	EyeTwoTone,
+	LeftOutlined,
+} from '@ant-design/icons';
 
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
@@ -34,7 +39,9 @@ const ClientDetail = () => {
 				return aDate.getTime() - bDate.getTime();
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.slice(0, 10).split('-').reverse().join('-')}</p>,
+			render: (text) => (
+				<p>{text.slice(0, 10).split('-').reverse().join('-')}</p>
+			),
 		},
 		{
 			title: 'Ultima actualización',
@@ -56,7 +63,9 @@ const ClientDetail = () => {
 				return aDate.getTime() - bDate.getTime();
 			},
 			showSorterTooltip: false,
-			render: (text) => <p>{text.slice(0, 10).split('-').reverse().join('-')}</p>,
+			render: (text) => (
+				<p>{text.slice(0, 10).split('-').reverse().join('-')}</p>
+			),
 		},
 		{
 			title: 'Estado',
@@ -64,36 +73,36 @@ const ClientDetail = () => {
 			key: 3,
 			render: (text, record) => {
 				switch (record.idStatusOrder) {
-				case 1:
-					return (
-						<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
-							{orderStatusToUse[record.idStatusOrder]}
-						</p>
-					);
-				case 2:
-					return (
-						<p style={{ color: '#06a800', fontWeight: 'bold' }}>
-							{orderStatusToUse[record.idStatusOrder]}
-						</p>
-					);
-				case 3:
-					return (
-						<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
-							{orderStatusToUse[record.idStatusOrder]}
-						</p>
-					);
-				case 4:
-					return (
-						<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
-							{orderStatusToUse[record.idStatusOrder]}
-						</p>
-					);
-				case 5:
-					return (
-						<p style={{ color: '#d63031', fontWeight: 'bold' }}>
-							{orderStatusToUse[record.idStatusOrder]}
-						</p>
-					);
+					case 1:
+						return (
+							<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
+								{orderStatusToUse[record.idStatusOrder]}
+							</p>
+						);
+					case 2:
+						return (
+							<p style={{ color: '#06a800', fontWeight: 'bold' }}>
+								{orderStatusToUse[record.idStatusOrder]}
+							</p>
+						);
+					case 3:
+						return (
+							<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
+								{orderStatusToUse[record.idStatusOrder]}
+							</p>
+						);
+					case 4:
+						return (
+							<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
+								{orderStatusToUse[record.idStatusOrder]}
+							</p>
+						);
+					case 5:
+						return (
+							<p style={{ color: '#d63031', fontWeight: 'bold' }}>
+								{orderStatusToUse[record.idStatusOrder]}
+							</p>
+						);
 				}
 			},
 		},
@@ -102,10 +111,11 @@ const ClientDetail = () => {
 			align: 'center',
 			key: 5,
 			render: (order) => (
-				<Space size="middle" display={{display: 'flex', justifyContent: 'center'}}>
-					<Button
-						onClick={() => handleSeeDetail(order)}
-					>
+				<Space
+					size="middle"
+					display={{ display: 'flex', justifyContent: 'center' }}
+				>
+					<Button onClick={() => handleSeeDetail(order)}>
 						<EditOutlined />
 					</Button>
 				</Space>
@@ -161,7 +171,7 @@ const ClientDetail = () => {
 			const value = res.value.getValue().data;
 			setOrders(value);
 		} catch (error) {
-			message.error('Ha ocurrido un error')
+			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
 		}
@@ -169,7 +179,6 @@ const ClientDetail = () => {
 
 	useEffect(() => {
 		setLoading(true);
-		// handle Request
 		if (Object.keys(generalContext).length) {
 			getClientRequest();
 		}
@@ -182,19 +191,14 @@ const ClientDetail = () => {
 	}, [client]);
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -204,7 +208,7 @@ const ClientDetail = () => {
 					margin: '1rem',
 					display: 'flex',
 					flexDirection: 'column',
-					display: 'flex'
+					display: 'flex',
 				}}
 			>
 				<h1
@@ -213,25 +217,21 @@ const ClientDetail = () => {
 						fontSize: '2.5rem',
 						margin: '0px',
 						display: 'flex',
-						width: '100%'
+						width: '100%',
 					}}
 				>
-					<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-						<LeftOutlined
-							style={{ fontSize: '1.5rem', marginRight: '50%'}}
-								
-								
-						/>
+					<Button
+						style={{ marginRight: '50%', height: '42px', borderRadius: '20px' }}
+						onClick={handleReturn}
+					>
+						<LeftOutlined style={{ fontSize: '1.5rem', marginRight: '50%' }} />
 					</Button>
-					<div style={{marginLeft: '-140px'}}>
-						{client?.nameClient}
-					</div>
-
+					<div style={{ marginLeft: '-140px' }}>{client?.nameClient}</div>
 				</h1>
 				<h2
 					style={{
 						textAlign: 'center',
-						marginTop: '5px'
+						marginTop: '5px',
 					}}
 				>
 					Información General
@@ -246,42 +246,48 @@ const ClientDetail = () => {
 						justifyContent: 'space-between',
 						alignItems: 'center',
 					}}
+				></div>
+				<List
+					style={{
+						backgroundColor: 'white',
+						borderRadius: '15px',
+						boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
+					}}
 				>
-				</div>
-				<List style={{backgroundColor: 'white', borderRadius: '15px', boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)'}}>
-					<List.Item style={{padding: '10px 25px'}}>
-						<p style={{fontWeight: 'bold'}}>Rif</p>
+					<List.Item style={{ padding: '10px 25px' }}>
+						<p style={{ fontWeight: 'bold' }}>Rif</p>
 						<p>{client?.numberDocument}</p>
 					</List.Item>
-					<List.Item style={{padding: '10px 25px'}}>
-						<p style={{fontWeight: 'bold'}}>Teléfono</p>
+					<List.Item style={{ padding: '10px 25px' }}>
+						<p style={{ fontWeight: 'bold' }}>Teléfono</p>
 						<p>{client?.phone}</p>
 					</List.Item>
-					<List.Item style={{padding: '10px 25px'}}>
-						<p style={{fontWeight: 'bold' }}>Estado</p>
-						<p style={{color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'}`}}>{client?.statusName}</p>
+					<List.Item style={{ padding: '10px 25px' }}>
+						<p style={{ fontWeight: 'bold' }}>Estado</p>
+						<p
+							style={{
+								color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'}`,
+							}}
+						>
+							{client?.statusName}
+						</p>
 					</List.Item>
-					<List.Item style={{padding: '10px 25px'}}>
-						<p style={{fontWeight: 'bold'}}>Dirección</p>
+					<List.Item style={{ padding: '10px 25px' }}>
+						<p style={{ fontWeight: 'bold' }}>Dirección</p>
 						<p>{client?.address}</p>
 					</List.Item>
 				</List>
 				<h3
 					style={{
 						textAlign: 'center',
-						fontSize: '1.5rem'
+						fontSize: '1.5rem',
 					}}
 				>
 					Pedidos
 				</h3>
 				<ConfigProvider renderEmpty={customizeRenderEmpty}>
-					<Table
-						loading={loading}
-						columns={columns}
-						dataSource={orders}
-					/>
+					<Table loading={loading} columns={columns} dataSource={orders} />
 				</ConfigProvider>
-
 			</div>
 			<Loading isLoading={loading} />
 		</DashboardLayout>

@@ -51,7 +51,7 @@ const Product = () => {
 		try {
 			await getCategoryById(categoryId);
 		} catch (error) {
-			message.error('Error al cargar categoria')
+			message.error('Error al cargar categoria');
 		} finally {
 			setLoading(false);
 		}
@@ -62,7 +62,7 @@ const Product = () => {
 		try {
 			await getSubCategoryById(subCategoryId);
 		} catch (error) {
-			message.error('Error al cargar sub categoria')
+			message.error('Error al cargar sub categoria');
 		} finally {
 			setLoading(false);
 		}
@@ -73,7 +73,7 @@ const Product = () => {
 		try {
 			await getLineById(lineId);
 		} catch (error) {
-			message.error('Error al cargar linea')
+			message.error('Error al cargar linea');
 		} finally {
 			setLoading(false);
 		}
@@ -84,7 +84,7 @@ const Product = () => {
 		try {
 			await getBrandById(id);
 		} catch (error) {
-			message.error('Error al cargar marca')
+			message.error('Error al cargar marca');
 		} finally {
 			setLoading(false);
 		}
@@ -95,7 +95,7 @@ const Product = () => {
 		try {
 			await getProductById(id);
 		} catch (error) {
-			message.error('Error al cargar producto')
+			message.error('Error al cargar producto');
 		} finally {
 			setLoading(false);
 		}
@@ -145,40 +145,52 @@ const Product = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<Title title='Detalles' path="/dashboard/products"  goBack={1} />
-				<List className='list-product' style={{ width: '100%', borderRadius: '15px', backgroundColor: 'white', padding: '10px 25px' }}>
+				<Title title="Detalles" path="/dashboard/products" goBack={1} />
+				<List
+					className="list-product"
+					style={{
+						width: '100%',
+						borderRadius: '15px',
+						backgroundColor: 'white',
+						padding: '10px 25px',
+					}}
+				>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Nombre</p>
+						<p style={{ fontWeight: 'bold' }}>Nombre</p>
 						<p>{currentProduct?.nameProduct}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Código</p>
+						<p style={{ fontWeight: 'bold' }}>Código</p>
 						<p>{currentProduct?.barCode}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Precio</p>
+						<p style={{ fontWeight: 'bold' }}>Precio</p>
 						<p>$ {currentProduct?.priceSale}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Categoría</p>
+						<p style={{ fontWeight: 'bold' }}>Categoría</p>
 						<p>{currentCategory?.name}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Sub Categoría</p>
+						<p style={{ fontWeight: 'bold' }}>Sub Categoría</p>
 						<p>{currentSubCategory?.nameSubFamily}</p>
 					</List.Item>
 					{currentLine?.name && (
 						<List.Item>
-							<p style={{fontWeight: 'bold'}}>Linea</p>
+							<p style={{ fontWeight: 'bold' }}>Linea</p>
 							<p>{currentLine?.name}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Marca</p>
-						<p>{currentBrand.length == undefined ? 'Indefinida' : currentBrand?.name}</p>
+						<p style={{ fontWeight: 'bold' }}>Marca</p>
+						<p>
+							{currentBrand.length == undefined
+								? 'Indefinida'
+								: currentBrand?.name}
+						</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>En Promoción</p>
+						<p style={{ fontWeight: 'bold' }}>En Promoción</p>
 						<div
 							style={{
 								display: 'flex',
@@ -203,12 +215,12 @@ const Product = () => {
 
 					{currentProduct?.isPromo == '1' && (
 						<List.Item>
-							<p style={{fontWeight: 'bold'}}>Precio de Promoción</p>
+							<p style={{ fontWeight: 'bold' }}>Precio de Promoción</p>
 							<p>$ {currentProduct.marketPrice}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Medida</p>
+						<p style={{ fontWeight: 'bold' }}>Medida</p>
 						<p>
 							{currentProduct.idUnitMeasureSaleFk === 17
 								? 'Unidad'
@@ -218,44 +230,57 @@ const Product = () => {
 					<List.Item>
 						{currentProduct.idUnitMeasureSaleFk === 17 ? (
 							<>
-								<p style={{fontWeight: 'bold'}}>Unidad por Caja</p>
-								<p>{!currentProduct.unitByBox ? 'Indefinido' : currentProduct.unitByBox}</p>
+								<p style={{ fontWeight: 'bold' }}>Unidad por Caja</p>
+								<p>
+									{!currentProduct.unitByBox
+										? 'Indefinido'
+										: currentProduct.unitByBox}
+								</p>
 							</>
 						) : (
 							<>
-								<p style={{fontWeight: 'bold'}}>Peso por unidad</p>
-								<p>{!currentProduct.unitweight ? 'Indefinido' : currentProduct.unitweight} KG</p>
+								<p style={{ fontWeight: 'bold' }}>Peso por unidad</p>
+								<p>
+									{!currentProduct.unitweight
+										? 'Indefinido'
+										: currentProduct.unitweight}{' '}
+									KG
+								</p>
 							</>
 						)}
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>EAN13</p>
+						<p style={{ fontWeight: 'bold' }}>EAN13</p>
 						<p>{!currentProduct.ean ? 'Indefinido' : currentProduct.ean}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>CPE</p>
+						<p style={{ fontWeight: 'bold' }}>CPE</p>
 						<p>{!currentProduct.cpe ? 'Indefinido' : currentProduct.ean}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Registro Sanitario</p>
-						<p>{!currentProduct.healthRegister ? 'Ideninido' : currentProduct.healthRegister}</p>
+						<p style={{ fontWeight: 'bold' }}>Registro Sanitario</p>
+						<p>
+							{!currentProduct.healthRegister
+								? 'Ideninido'
+								: currentProduct.healthRegister}
+						</p>
 					</List.Item>
 					{currentProduct.observation && (
 						<List.Item>
-							<p style={{fontWeight: 'bold'}}>Observación</p>
+							<p style={{ fontWeight: 'bold' }}>Observación</p>
 							<p>{currentProduct.observation}</p>
 						</List.Item>
 					)}
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Stock mínimo</p>
-						<p>
-							{currentProduct?.minStock}
-						</p>
+						<p style={{ fontWeight: 'bold' }}>Stock mínimo</p>
+						<p>{currentProduct?.minStock}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Stock</p>
+						<p style={{ fontWeight: 'bold' }}>Stock</p>
 						<p>
-							{!currentProduct?.stock?.length ? '0' : currentProduct?.stock[0].stock}
+							{!currentProduct?.stock?.length
+								? '0'
+								: currentProduct?.stock[0].stock}
 						</p>
 					</List.Item>
 					<List.Item
@@ -267,8 +292,6 @@ const Product = () => {
 						{Object.keys(currentProduct)?.length && (
 							<Image
 								src={`${ip}:${generalContext?.api_port}/product/${currentProduct?.urlImagenProduct}`}
-								// src={`http://api.menusoftware.info:7002/product/${currentProduct?.urlImagenProduct}`}
-								// src={'http://api.menusoftware.info:7002/product/nodisponiblemdms.png'}
 								height={300}
 								width={300}
 								alt="Producto"

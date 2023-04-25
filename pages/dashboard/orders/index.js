@@ -14,15 +14,15 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
-import PROFILES from '../../../components/shared/profiles'
+import PROFILES from '../../../components/shared/profiles';
 
 export const orderStatusToUse = {
 	1: 'Inconcluso',
 	2: 'Facturado',
 	3: 'Recibido',
 	4: 'Procesado',
-	5: 'Retenido', 
-	6: 'Anulado'
+	5: 'Retenido',
+	6: 'Anulado',
 };
 
 export default function OrdersPage() {
@@ -32,7 +32,6 @@ export default function OrdersPage() {
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 	const { userProfile } = useAuthContext();
-
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -74,14 +73,11 @@ export default function OrdersPage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-	// filters
 	const ordersList = useMemo(() => {
 		let list = orders;
 		if (query.idStatusOrder) {
 			if (list) {
-				list = list.filter(
-					(o) => o.idStatusOrder == query.idStatusOrder
-				);
+				list = list.filter((o) => o.idStatusOrder == query.idStatusOrder);
 			}
 		}
 		return list;
@@ -98,7 +94,7 @@ export default function OrdersPage() {
 			>
 				<Title title={'Pedidos'}>
 					<Link href="orders/add">
-						<Button type="success" style={{marginRight: '-2.3rem'}}>
+						<Button type="success" style={{ marginRight: '-2.3rem' }}>
 							Agregar
 						</Button>
 					</Link>

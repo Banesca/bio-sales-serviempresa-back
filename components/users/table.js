@@ -64,7 +64,6 @@ const UsersTable = ({
 							setLoading(true);
 						}}
 					>
-						{/* <div>{text == PROFILES.SELLER ? getUserBusiness(_.idUser) : 'hola'}</div> */}
 						<EyeTwoTone />
 					</Button>
 					{log == PROFILES.MASTER ? (

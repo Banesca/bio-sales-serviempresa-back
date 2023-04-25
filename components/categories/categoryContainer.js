@@ -19,21 +19,17 @@ import Title from '../shared/title';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-
 function useForceUpdate() {
 	let [value, setState] = useState(true);
 	return () => setState(!value);
 }
 
 export default function CategoryContainer() {
-
 	const [log, setLog] = useState();
-	
-	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
-	}, []);
 
-	
+	useEffect(() => {
+		setLog(localStorage.getItem('userProfile'));
+	}, []);
 
 	const columns = [
 		{
@@ -48,11 +44,14 @@ export default function CategoryContainer() {
 			key: 2,
 			width: '200px',
 			render: (_, item) => (
-				<Space size='middle' style={{justifyContent: 'center', display: 'flex'}}>
+				<Space
+					size="middle"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
 					<Button
 						onClick={() => {
 							openEditModal(item);
-							setLineBody({...item});
+							setLineBody({ ...item });
 							cancelModalPrueba();
 						}}
 						disabled={log == PROFILES.BILLER}
@@ -72,13 +71,11 @@ export default function CategoryContainer() {
 		},
 	];
 
-
-	const { categories, addCategory, deleteCategory, editCategories } = useCategoryContext();
+	const { categories, addCategory, deleteCategory, editCategories } =
+		useCategoryContext();
 
 	const [query, setQuery] = useState('');
-	// const [loading, setLoading] = useState(false);
 	const { setLoading } = useLoadingContext();
-
 	// delete category
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [currentCategory, setCurrentCategory] = useState();
@@ -92,12 +89,11 @@ export default function CategoryContainer() {
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-	
 
 	const [lineBody, setLineBody] = useState({
 		name: '',
 		idStatusFk: '',
-		idProductFamily: ''
+		idProductFamily: '',
 	});
 	const addCategoryRequest = async (value) => {
 		try {
@@ -143,25 +139,28 @@ export default function CategoryContainer() {
 		setCurrentCategory(value);
 		setTimeout(cancelModalPrueba, 100);
 		setIsEditModalOpen(true);
-	}
+	};
 
 	// close modal
 	const cancelModal = async () => {
 		setIsEditModalOpen(false);
 		createFormTwo.resetFields();
-	}
+	};
 	const cancelModalPrueba = async () => {
 		createFormTwo.resetFields();
-	}
-
-
+	};
 
 	// Update category request
 	const handleEditLine = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await editCategories( lineBody.name, lineBody.idStatusFk, lineBody.idProductFamily, selectedBusiness.idSucursal);
+			await editCategories(
+				lineBody.name,
+				lineBody.idStatusFk,
+				lineBody.idProductFamily,
+				selectedBusiness.idSucursal
+			);
 			createForm.resetFields();
 			message.success('Categoría actualizada');
 		} catch (error) {
@@ -170,12 +169,9 @@ export default function CategoryContainer() {
 		} finally {
 			setLoading(false);
 		}
-		
 	};
 
 	// Edit modal open end);
-	
-
 
 	// Create Category Modal
 	const handleOpenCreateModal = () => {
@@ -203,7 +199,7 @@ export default function CategoryContainer() {
 			handleCloseCreateModal();
 			await addCategoryRequest(categoryName);
 		} catch (error) {
-			message.error('Ha ocurrido un error al crear la categoria')
+			message.error('Ha ocurrido un error al crear la categoria');
 		}
 	};
 
@@ -228,38 +224,35 @@ export default function CategoryContainer() {
 	// End Search
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	const handleForceupdateMethod = useForceUpdate();
 
-
-
 	return (
 		<>
 			<Title title="Categorías">
-				{log ==
-					PROFILES.MASTER || log == PROFILES.ADMIN ? (
-						<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
-							Agregar
-						</Button>
-					) : ''}
+				{log == PROFILES.MASTER || log == PROFILES.ADMIN ? (
+					<Button
+						type="success"
+						style={{ marginRight: '-2.3rem' }}
+						onClick={handleOpenCreateModal}
+					>
+						Agregar
+					</Button>
+				) : (
+					''
+				)}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
 			<ConfigProvider renderEmpty={customizeRenderEmpty}>
-
 				<Table bordered dataSource={categoriesList} columns={columns} />
 			</ConfigProvider>
 			<Modal
@@ -268,18 +261,10 @@ export default function CategoryContainer() {
 				onOk={handleCreateCategory}
 				onCancel={() => handleCloseCreateModal()}
 				footer={[
-					<Button
-						danger
-						key="cancel"
-						onClick={() => handleCloseCreateModal()}
-					>
+					<Button danger key="cancel" onClick={() => handleCloseCreateModal()}>
 						Cancelar
 					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={handleCreateCategory}
-					>
+					<Button key="delete" type="success" onClick={handleCreateCategory}>
 						Agregar
 					</Button>,
 				]}
@@ -310,10 +295,7 @@ export default function CategoryContainer() {
 				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => handleCloseDeleteModal(false)}
-					>
+					<Button key="cancel" onClick={() => handleCloseDeleteModal(false)}>
 						Cancelar
 					</Button>,
 					<Button
@@ -332,7 +314,6 @@ export default function CategoryContainer() {
 			</Modal>
 			<Modal
 				title="Actualizar categoría"
-				
 				open={isEditModalOpen}
 				onCancel={() => cancelModal()}
 				footer={[
@@ -345,20 +326,13 @@ export default function CategoryContainer() {
 					>
 						Cancelar
 					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={handleEditLine}
-					>
+					<Button key="delete" type="success" onClick={handleEditLine}>
 						Actualizar
 					</Button>,
 				]}
 			>
 				<div>{lineBody?.name}</div>
-				<Form 
-					form={createFormTwo}
-					initialValues={{name: lineBody?.name}}
-				>
+				<Form form={createFormTwo} initialValues={{ name: lineBody?.name }}>
 					<Form.Item
 						label="Categoría"
 						name="name"
@@ -378,15 +352,12 @@ export default function CategoryContainer() {
 								setLineBody((prev) => ({
 									...prev,
 									[e.target.name]: e.target.value,
-								}))
-							}
-							}
+								}));
+							}}
 						/>
 					</Form.Item>
 				</Form>
 			</Modal>
-			{/* <Loading isLoading={loading} /> */}
 		</>
 	);
 }
-

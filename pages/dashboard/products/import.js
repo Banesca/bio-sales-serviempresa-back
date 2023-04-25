@@ -7,7 +7,17 @@ import {
 	ExclamationCircleFilled,
 	UploadOutlined,
 } from '@ant-design/icons';
-import { Upload, Button, Table, message, Row, Col, Modal, ConfigProvider, Empty } from 'antd';
+import {
+	Upload,
+	Button,
+	Table,
+	message,
+	Row,
+	Col,
+	Modal,
+	ConfigProvider,
+	Empty,
+} from 'antd';
 import * as XLSX from 'xlsx';
 
 import DashboardLayout from '../../../components/shared/layout';
@@ -40,10 +50,7 @@ const ImportProducts = () => {
 			title: 'Precio',
 			dataIndex: 'priceSale',
 			key: 3,
-			render: (text, record) =>
-				(
-					<p>$ {text}</p>
-				)
+			render: (text, record) => <p>$ {text}</p>,
 		},
 		{
 			title: 'Categoría',
@@ -129,25 +136,14 @@ const ImportProducts = () => {
 		setData(filteredProducts);
 		handleSeeModal();
 	};
-
-	// Title
-
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
-
-	// Product to delete
 	const [currentProduct, setCurrentProduct] = useState();
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	//Notification
 	const [notificationOpen, setNotificationOpen] = useState(false);
-
-	// control files
 	const [fileList, setFileList] = useState([]);
 	const [selectedFile, setSelectedFile] = useState(null);
-
-	// Table's Data
 	const [data, setData] = useState([]);
 
 	const [loading, setLoading] = useState(false);
@@ -156,7 +152,6 @@ const ImportProducts = () => {
 	const [brands, setBrands] = useState([]);
 	const [code, setCode] = useState();
 	const [warningModal, setWarningModal] = useState(false);
-	
 
 	const [rejectedBrands, setRejectedBrands] = useState([]);
 	const [rejectedCategories, setRejectedCategories] = useState([]);
@@ -275,9 +270,6 @@ const ImportProducts = () => {
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
 			const uploadData = await convertExcelDataToAPI(data);
-			// if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
-			// 	setNotificationOpen(true);
-			// }
 			addKeys(uploadData);
 			setData(uploadData);
 		};
@@ -302,7 +294,6 @@ const ImportProducts = () => {
 		if (newFileList[0].status == 'done') {
 			setLoading(true);
 			handleConvertFileToJson([selectedFile]);
-			//message.success(`${newFileList[0].name} ha sido cargado`);
 		} else if (newFileList[0].status == 'error') {
 			message.error('Ha ocurrido un error');
 		}
@@ -321,15 +312,18 @@ const ImportProducts = () => {
 		const formatData = removeKeys(data);
 		for (let product in data) {
 			for (let c in code) {
-				if(product.barCode == c.barCode) {
+				if (product.barCode == c.barCode) {
 					setWarningModal(true);
 					break;
 				} else {
 					setLoading(true);
-					const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
-						lista: formatData,
-					});
-					(data);
+					const res = await requestHandler.post(
+						'/api/v2/product/add/masive/sales',
+						{
+							lista: formatData,
+						}
+					);
+					data;
 					if (res.isLeft()) {
 						return message.error('Ha ocurrido un error');
 					}
@@ -350,7 +344,7 @@ const ImportProducts = () => {
 		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
 			lista: formatData,
 		});
-		(data);
+		data;
 		if (res.isLeft()) {
 			return message.error('Ha ocurrido un error');
 		}
@@ -360,8 +354,8 @@ const ImportProducts = () => {
 		setRejectedCategories([]);
 		setFileList([]);
 		setLoading(false);
-		setWarningModal(false)
-	}
+		setWarningModal(false);
+	};
 
 	useEffect(() => {
 		if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
@@ -370,19 +364,14 @@ const ImportProducts = () => {
 	}, [rejectedBrands, rejectedCategories]);
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -396,7 +385,7 @@ const ImportProducts = () => {
 					}}
 				>
 					<Title title="Importar" path="/dashboard/products" goBack={1} />
-					
+
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
 							<Button
@@ -405,7 +394,7 @@ const ImportProducts = () => {
 								type="primary"
 								style={{ marginRight: '1rem' }}
 							>
-                Cargar
+								Cargar
 							</Button>
 						</Col>
 						<Col>
@@ -417,7 +406,7 @@ const ImportProducts = () => {
 								type="file"
 							>
 								<Button icon={<UploadOutlined />} block>
-                  Archivo
+									Archivo
 								</Button>
 							</Upload>
 						</Col>
@@ -446,10 +435,13 @@ const ImportProducts = () => {
 					onCancel={() => setWarningModal(false)}
 					onOk={handleSend}
 					okText="Importar"
-					okType='warning'
+					okType="warning"
 					cancelText="Cancelar"
 				>
-					<p>Algunos de los productos que intentas exportar ya estan en existencia. Si continuas los datos de estos productos se sobreescribiran con los previos, <br /> <br /> ¿Deseas continuar?
+					<p>
+						Algunos de los productos que intentas exportar ya estan en
+						existencia. Si continuas los datos de estos productos se
+						sobreescribiran con los previos, <br /> <br /> ¿Deseas continuar?
 					</p>
 				</Modal>
 				<Modal
@@ -461,18 +453,18 @@ const ImportProducts = () => {
 							key="confirmar"
 							type="primary"
 						>
-              Confirmar
+							Confirmar
 						</Button>,
 					]}
 				>
 					<p>
-            Algunos productos no han sido cargados, ya que, hay categorías y/o
-            marcas que no están registradas, créalas para cargar todos los
-            productos.
+						Algunos productos no han sido cargados, ya que, hay categorías y/o
+						marcas que no están registradas, créalas para cargar todos los
+						productos.
 					</p>
 					{rejectedCategories && (
 						<p>
-              Crea las siguientes categorías{' '}
+							Crea las siguientes categorías{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedCategories.join(', ')}
 							</strong>
@@ -480,7 +472,7 @@ const ImportProducts = () => {
 					)}
 					{rejectedBrands && (
 						<p>
-              Crea las siguientes marcas{' '}
+							Crea las siguientes marcas{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedBrands.join(', ')}
 							</strong>

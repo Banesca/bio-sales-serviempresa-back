@@ -132,8 +132,6 @@ export default function Products() {
 	const { getProducts, deleteProduct, products } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
-	// Export list products
-
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
@@ -198,7 +196,6 @@ export default function Products() {
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
-		// request data
 		setLoading(true);
 		if (
 			Object.keys(generalContext).length > 0 &&
@@ -211,10 +208,7 @@ export default function Products() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-	// Delete Modal
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	// which modal component
 	const [currentProduct, setCurrentProduct] = useState();
 
 	const handleOpenDeleteModal = (product) => {
@@ -223,7 +217,6 @@ export default function Products() {
 	};
 
 	const handleDelete = () => {
-		// request delete product
 		deleteProductRequest(currentProduct.idProduct);
 		setDeleteModalOpen(false);
 	};

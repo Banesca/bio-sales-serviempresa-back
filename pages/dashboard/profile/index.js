@@ -15,45 +15,27 @@ import { useRequest } from '../../../hooks/useRequest';
 import { UserOutlined } from '@ant-design/icons';
 
 const UserDetail = () => {
-
-	const { requestHandler } = useRequest()
-
+	const { requestHandler } = useRequest();
 
 	const { loading, setLoading } = useLoadingContext();
-	const {
-		getUserById,
-	} = useUser();
-
+	const { getUserById } = useUser();
 
 	const [user, setUser] = useState({});
 
 	const [profile, setProfile] = useState();
-
-	// assign clients
-
-
-	// Assign Business
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	// business
-
 	const generalContext = useContext(GeneralContext);
-
-
-
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
-		const loggedUser = localStorage.getItem('userId')
+		const loggedUser = localStorage.getItem('userId');
 		try {
 			const user = await getUserById(loggedUser);
 			if (!user) {
 				return message.error('Hay algun error con tu perfil');
 			}
 			setUser(user);
-			setProfile(
-				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
-			);
+			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
 			if (user.idProfileFk === 3) {
 				await getSellerClientsRequest(user.idUser);
 			}
@@ -65,7 +47,7 @@ const UserDetail = () => {
 	};
 
 	useEffect(() => {
-		const id = localStorage.getItem('userId')
+		const id = localStorage.getItem('userId');
 		if (Object.keys(generalContext).length) {
 			getUserRequest(id);
 		}
@@ -85,16 +67,14 @@ const UserDetail = () => {
 		}));
 	};
 
-
 	const onSubmit = async (data) => {
 		setLoading(true);
 		try {
-			const id = window.localStorage.getItem('userId')
+			const id = window.localStorage.getItem('userId');
 			await requestHandler.put('/api/v2/user/edit/pass', {
 				pin: data,
-				idUser: id
-			})
-			(id);
+				idUser: id,
+			})(id);
 			message.success('Contraseña actualizada');
 		} catch (error) {
 			message.error('Error al actualizar contraseña');
@@ -112,16 +92,15 @@ const UserDetail = () => {
 		}
 	};
 
-
 	const finishForm = async (values) => {
-		await handleCloseModal(true)
-		form.resetFields()
-		onSubmit(values)
-	}
+		await handleCloseModal(true);
+		form.resetFields();
+		onSubmit(values);
+	};
 
 	const router = useRouter();
 
-	(user)
+	user;
 	return (
 		<>
 			<DashboardLayout>
@@ -141,11 +120,10 @@ const UserDetail = () => {
 							marginTop: '2rem',
 							marginBottom: '1rem',
 							backgroundColor: 'white',
-							boxShadow: '4px 3px 8px 2px #9c9c9c5d'
-
+							boxShadow: '4px 3px 8px 2px #9c9c9c5d',
 						}}
 					>
-						<List.Item style={{display: 'flex', justifyContent: 'center'}} >
+						<List.Item style={{ display: 'flex', justifyContent: 'center' }}>
 							<h1
 								style={{
 									display: 'flex',
@@ -158,34 +136,53 @@ const UserDetail = () => {
 									margin: '20px',
 								}}
 							>
-									Mi perfil
-								<UserOutlined style={{fontSize: '6rem'}}/>
+								Mi perfil
+								<UserOutlined style={{ fontSize: '6rem' }} />
 								<Button
-									style={{height: '45px', fontSize: '1rem'}}
+									style={{ height: '45px', fontSize: '1rem' }}
 									onClick={() => {
 										router.push(`/dashboard/users/update/${user.idUser}`);
 									}}
-								>Editar Perfil
+								>
+									Editar Perfil
 								</Button>
 							</h1>
 						</List.Item>
 
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Nombre</p>
+						<List.Item
+							style={{
+								padding: '15px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Email</p>
+						<List.Item
+							style={{
+								padding: '15px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Email</p>
 							<p>{user?.mail}</p>
-						</List.Item >
-						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Perfil</p>
+						</List.Item>
+						<List.Item
+							style={{
+								padding: '15px 40px',
+								justifyContent: 'space-between',
+								fontSize: '18px',
+							}}
+						>
+							<p style={{ fontWeight: 'bold' }}>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
 						<Modal
 							title={'Ingresa nueva contraseña'}
 							closable={false}
-							style={{textAlign: 'center'}}
+							style={{ textAlign: 'center' }}
 							open={isModalOpen}
 							onOk={() => handleCloseModal(true)}
 							onCancel={() => handleCloseModal(false)}
@@ -195,19 +192,19 @@ const UserDetail = () => {
 									danger
 									onClick={() => handleCloseModal(false)}
 								>
-							Cancelar
+									Cancelar
 								</Button>,
 								<Button
 									type="success"
 									key="delete"
 									onClick={() => finishForm(userData)}
 								>
-							Guardar
+									Guardar
 								</Button>,
 							]}
 						>
-							<List.Item style={{marginTop: '30px', fontWeight: 'bold'}}>
-								<Form 
+							<List.Item style={{ marginTop: '30px', fontWeight: 'bold' }}>
+								<Form
 									name="login"
 									autoComplete="off"
 									labelCol={{ span: 8 }}
@@ -217,7 +214,6 @@ const UserDetail = () => {
 									}}
 									onFinish={onSubmit}
 								>
-									
 									<Form.Item
 										label="Contraseña"
 										name="pin"
@@ -228,7 +224,8 @@ const UserDetail = () => {
 											},
 											{
 												min: 8,
-												message: 'Escribe una contraseña de minimo 8 caracteres',
+												message:
+													'Escribe una contraseña de minimo 8 caracteres',
 											},
 										]}
 									>
@@ -270,10 +267,7 @@ const UserDetail = () => {
 							</List.Item>
 						</Modal>
 					</List>
-					<div style={{width: '89%'}}>
-						
-					</div>
-					
+					<div style={{ width: '89%' }}></div>
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

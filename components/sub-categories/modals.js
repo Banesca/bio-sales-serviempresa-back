@@ -18,10 +18,15 @@ export default function SubCategoryModals({
 	setLoading,
 	currentBrands,
 	createFormTwo,
-	close
+	close,
 }) {
-	const { categories, deleteSubCategory, addSubCategory, getSubCategories, editSubCategories } =
-		useCategoryContext();
+	const {
+		categories,
+		deleteSubCategory,
+		addSubCategory,
+		getSubCategories,
+		editSubCategories,
+	} = useCategoryContext();
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 
@@ -45,7 +50,6 @@ export default function SubCategoryModals({
 		});
 	}, [isCreateModalOpen, isDeleteModalOpen]);
 
-	// Delete Sub Category
 	const handleDelete = async (id) => {
 		try {
 			await deleteSubCategory(id, selectedBusiness.idSucursal);
@@ -66,9 +70,6 @@ export default function SubCategoryModals({
 			setLoading(false);
 		}
 	};
-	// Delete Sub Category
-
-	// Add Sub Category
 	const addSubCategoryRequest = async () => {
 		setLoading(true);
 		try {
@@ -122,12 +123,17 @@ export default function SubCategoryModals({
 		createForm.resetFields();
 	};
 
-
 	const handleEditLine = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await editSubCategories(lineBody.idSubFamilyFk, lineBody.name, currentBrands.idStatus, currentBrands.idProductSubFamily, selectedBusiness.idSucursal);
+			await editSubCategories(
+				lineBody.idSubFamilyFk,
+				lineBody.name,
+				currentBrands.idStatus,
+				currentBrands.idProductSubFamily,
+				selectedBusiness.idSucursal
+			);
 			message.success('Subcategoria actualizada');
 		} catch (error) {
 			setLoading(false);
@@ -136,7 +142,6 @@ export default function SubCategoryModals({
 			setLoading(false);
 			createFormTwo.resetFields();
 		}
-		
 	};
 
 	return (
@@ -147,18 +152,10 @@ export default function SubCategoryModals({
 				open={modals.add}
 				onOk={handleAddSubCategory}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => handleCloseCreateModal()}
-					>
+					<Button key="cancel" danger onClick={() => handleCloseCreateModal()}>
 						Cancelar
 					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={handleAddSubCategory}
-					>
+					<Button key="delete" type="success" onClick={handleAddSubCategory}>
 						Agregar
 					</Button>,
 				]}
@@ -215,10 +212,7 @@ export default function SubCategoryModals({
 				open={modals.delete}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => closeDeleteModal(false)}
-					>
+					<Button key="cancel" onClick={() => closeDeleteModal(false)}>
 						Cancelar
 					</Button>,
 					<Button
@@ -240,27 +234,19 @@ export default function SubCategoryModals({
 				open={isEditModalOpen}
 				onCancel={() => close}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => close()}
-					>
+					<Button key="cancel" danger onClick={() => close()}>
 						Cancelar
 					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={() => handleEditLine()}
-					>
+					<Button key="delete" type="success" onClick={() => handleEditLine()}>
 						Actualizar
 					</Button>,
 				]}
 			>
-				<Form 
+				<Form
 					form={createFormTwo}
 					initialValues={{
 						name: currentBrands?.nameSubFamily,
-						idSubFamilyFk: currentBrands?.idProductFamilyFk
+						idSubFamilyFk: currentBrands?.idProductFamilyFk,
 					}}
 				>
 					<Form.Item

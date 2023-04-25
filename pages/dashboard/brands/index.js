@@ -3,7 +3,17 @@ import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/shared/loading';
-import { Button, Col, Row, Table, message, ConfigProvider, Empty, Space, Form } from 'antd';
+import {
+	Button,
+	Col,
+	Row,
+	Table,
+	message,
+	ConfigProvider,
+	Empty,
+	Space,
+	Form,
+} from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
@@ -16,14 +26,11 @@ import { useAuthContext } from '../../../context/useUserProfileProvider';
 import Title from '../../../components/shared/title';
 
 const BrandsPage = () => {
-
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
-
 
 	const columns = [
 		{
@@ -54,7 +61,6 @@ const BrandsPage = () => {
 						<DeleteOutlined />
 					</Button>
 				</Space>
-
 			),
 		},
 	];
@@ -65,18 +71,10 @@ const BrandsPage = () => {
 	const { userProfile } = useAuthContext();
 	const [createFormTwo] = Form.useForm();
 
-
-	// const [loading, setLoading] = useState(false);
 	const { loading } = useLoadingContext();
-
-	// Create Modal
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-	// Delete Modal
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [selectedBrand, setSelectedBrand] = useState();
-
-	// Filters
 	const [query, setQuery] = useState('');
 
 	useEffect(() => {
@@ -97,16 +95,10 @@ const BrandsPage = () => {
 		}
 	};
 
-	//Modals
-	// -> Create
-
-	// -> Delete
 	const handleOpenDeleteModal = (value) => {
 		setSelectedBrand(value);
 		setIsDeleteModalOpen(true);
 	};
-
-	// End Modals
 
 	const handleOpenCreateModal = () => {
 		setIsCreateModalOpen(true);
@@ -124,19 +116,14 @@ const BrandsPage = () => {
 	}, [brands, query]);
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -145,20 +132,18 @@ const BrandsPage = () => {
 		idB: '',
 	});
 
-
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setLineBody(value);
 		setTimeout(() => {
 			createFormTwo.resetFields();
 		}, 100);
-	}
-	
+	};
 
 	const closeEditModal = () => {
 		setIsEditModalOpen(false);
 		createFormTwo.resetFields();
-	}
+	};
 
 	return (
 		<>
@@ -174,14 +159,14 @@ const BrandsPage = () => {
 						{log != PROFILES.BILLER && (
 							<Button
 								type="success"
-								style={{marginRight: '-2.3rem'}}
+								style={{ marginRight: '-2.3rem' }}
 								onClick={handleOpenCreateModal}
 							>
 								Agregar
 							</Button>
 						)}
 					</Title>
-					<ConfigProvider renderEmpty={customizeRenderEmpty}> 
+					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<BrandsFilters setQuery={setQuery} />
 						<Table bordered dataSource={brandsList} columns={columns} />
 						<BrandsModals
@@ -198,7 +183,6 @@ const BrandsPage = () => {
 							closeEditModal={closeEditModal}
 						/>
 					</ConfigProvider>
-
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

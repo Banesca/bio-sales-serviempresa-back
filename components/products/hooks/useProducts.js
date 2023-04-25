@@ -33,14 +33,13 @@ const setData = (data) => {
 		barCode: data.barCode,
 		idProductFamilyFk: data.idProductFamilyFk,
 		idProductSubFamilyFk: data.idProductSubFamilyFk,
-		priceSale: data.priceSale, // normal price
+		priceSale: data.priceSale,
 		isPromo: data.isPromo,
-		marketPrice: data.marketPrice, //promotion price
+		marketPrice: data.marketPrice,
 		idSucursalFk: data.idSucursalFk,
-		// New values
 		idBrandFk: data.idBrandFk,
 		idLineFk: data.idLineFk,
-		idUnitMeasureSaleFk: data.idUnitMeasureSaleFk, // 17 Unidad | 3 Kg
+		idUnitMeasureSaleFk: data.idUnitMeasureSaleFk,
 		unitByBox: data.unitByBox,
 		unitweight: data.unitweight,
 		observation: data.observation || '',
@@ -97,14 +96,14 @@ export function useProducts() {
 			throw response.value.getErrorValue();
 		}
 		const value = response.value.getValue().data;
-		setProductsInv(value)
+		setProductsInv(value);
 	};
 
 	const validateBarCode = async (barCode, idSucursalFk) => {
-		const res = await requestHandler.post(
-			'/api/v2/product/find/bybarcode',
-			{ barCode, idSucursalFk }
-		);
+		const res = await requestHandler.post('/api/v2/product/find/bybarcode', {
+			barCode,
+			idSucursalFk,
+		});
 		const value = res.value.getValue();
 		return !!value.data;
 	};
@@ -159,13 +158,11 @@ export function useProducts() {
 	};
 
 	const updateProductInv = async (idP, quantity, reference, id) => {
-		const res = await requestHandler.post(
-			'/api/v2/inventary/adjustment', {
-				idProductFk: idP,
-				quantity,
-				reference
-			}
-		);
+		const res = await requestHandler.post('/api/v2/inventary/adjustment', {
+			idProductFk: idP,
+			quantity,
+			reference,
+		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

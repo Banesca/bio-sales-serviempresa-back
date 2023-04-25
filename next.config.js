@@ -11,18 +11,8 @@ const nextConfig = {
 		];
 	},
 	images: {
-		domains: ['api.menusoftware.info']
+		domains: ['api.menusoftware.info'],
 	},
-	/* images: {
-		remotePatterns: [
-			{
-				protocol: 'http',
-				hostname: 'api.menusoftware.info',
-				port: '7002',
-				pathname: '/product/**'
-			}
-		]
-	}, */
 };
 
 module.exports = nextConfig;

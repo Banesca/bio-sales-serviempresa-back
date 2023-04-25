@@ -32,42 +32,41 @@ export function CategoriesProvider({ children }) {
 
 	function reducer(state, action) {
 		switch (action.type) {
-		case ACTIONS.SET_CATEGORIES:
-			return {
-				...state,
-				categories: action.payload,
-			};
-		case ACTIONS.SET_CURRENT_CATEGORIES:
-			return {
-				...state,
-				currentCategory: action.payload,
-			};
-		case ACTIONS.SET_SUB_CATEGORIES:
-			return {
-				...state,
-				subCategories: action.payload,
-			};
-		case ACTIONS.SET_CURRENT_SUB_CATEGORIES:
-			return {
-				...state,
-				currentSubCategory: action.payload,
-			};
-		case ACTIONS.SET_LINES:
-			return {
-				...state,
-				lines: action.payload,
-			};
-		case ACTIONS.SET_CURRENT_LINES:
-			return {
-				...state,
-				currentLine: action.payload,
-			};
-		default:
-			return state;
+			case ACTIONS.SET_CATEGORIES:
+				return {
+					...state,
+					categories: action.payload,
+				};
+			case ACTIONS.SET_CURRENT_CATEGORIES:
+				return {
+					...state,
+					currentCategory: action.payload,
+				};
+			case ACTIONS.SET_SUB_CATEGORIES:
+				return {
+					...state,
+					subCategories: action.payload,
+				};
+			case ACTIONS.SET_CURRENT_SUB_CATEGORIES:
+				return {
+					...state,
+					currentSubCategory: action.payload,
+				};
+			case ACTIONS.SET_LINES:
+				return {
+					...state,
+					lines: action.payload,
+				};
+			case ACTIONS.SET_CURRENT_LINES:
+				return {
+					...state,
+					currentLine: action.payload,
+				};
+			default:
+				return state;
 		}
 	}
 
-	// Categories
 	const getCategories = async (id) => {
 		const res = await requestHandler.get(`/api/v2/family/list/${id}`);
 		if (res.isLeft()) {
@@ -100,7 +99,7 @@ export function CategoriesProvider({ children }) {
 		const res = await requestHandler.put('/api/v2/family/update/lite', {
 			name,
 			idStatusFk: idS,
-			idProductFamily: idP
+			idProductFamily: idP,
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
@@ -120,9 +119,7 @@ export function CategoriesProvider({ children }) {
 		}
 		await getCategories(businessId);
 	};
-	// End Categories
 
-	// Sub Categories
 	const getSubCategories = async (id) => {
 		const res = await requestHandler.get(`/api/v2/subFamily/list/${id}`);
 		if (res.isLeft()) {
@@ -141,19 +138,25 @@ export function CategoriesProvider({ children }) {
 		dispatch({ type: ACTIONS.SET_CURRENT_SUB_CATEGORIES, payload: value });
 	};
 
-	const editSubCategories = async (idProductFamily, nameSubFamily, idStatus, idProductSubFamily, id) => {
+	const editSubCategories = async (
+		idProductFamily,
+		nameSubFamily,
+		idStatus,
+		idProductSubFamily,
+		id
+	) => {
 		const res = await requestHandler.put('/api/v2/subfamily/update/lite', {
 			idProductFamilyFk: idProductFamily,
 			nameSubFamily: nameSubFamily,
 			idStatusFk: idStatus,
-			idProductSubFamily: idProductSubFamily
+			idProductSubFamily: idProductSubFamily,
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 		await getSubCategories(id);
 	};
-	
+
 	const deleteSubCategory = async (subCategoryId, businessId) => {
 		const res = await requestHandler.delete(
 			`/api/v2/subfamily/delete/${subCategoryId}`
@@ -163,7 +166,7 @@ export function CategoriesProvider({ children }) {
 		}
 		await getCategories(businessId);
 	};
-	
+
 	const addSubCategory = async (body, businessId) => {
 		const res = await requestHandler.post(`/api/v2/subfamily/add`, body);
 		if (res.isLeft()) {
@@ -171,10 +174,6 @@ export function CategoriesProvider({ children }) {
 		}
 		await getSubCategories(businessId);
 	};
-
-	// End Sub Categories
-
-	// Lines
 	const getLines = async (id) => {
 		const res = await requestHandler.get(`/api/v2/line/list/${id}`);
 		if (res.isLeft()) {
@@ -189,7 +188,7 @@ export function CategoriesProvider({ children }) {
 			name,
 			idSubFamilyFk: subFamily,
 			idSucursalFk: lineToDelete.idSucursalFk,
-			idLine: lineToDelete.idLine
+			idLine: lineToDelete.idLine,
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
@@ -221,8 +220,6 @@ export function CategoriesProvider({ children }) {
 		}
 		await getLines(businessId);
 	};
-	// End Lines
-
 	return (
 		<CategoryContext.Provider
 			value={{

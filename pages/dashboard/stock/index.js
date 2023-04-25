@@ -1,5 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
-import { Table, Space, Modal, ConfigProvider, Empty, Form, Input, Button } from 'antd';
+import {
+	Table,
+	Space,
+	Modal,
+	ConfigProvider,
+	Empty,
+	Form,
+	Input,
+	Button,
+} from 'antd';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -27,7 +36,6 @@ import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import * as XLSX from 'xlsx';
-
 
 export default function Products() {
 	const router = useRouter();
@@ -68,13 +76,13 @@ export default function Products() {
 			title: 'Precio Compra',
 			dataIndex: 'pricePurchase',
 			key: 3,
-			render: (text) => <p>${text}</p>
+			render: (text) => <p>${text}</p>,
 		},
 		{
 			title: 'Precio venta',
 			dataIndex: 'priceSale',
 			key: 3,
-			render: (text) => <p>${text}</p>
+			render: (text) => <p>${text}</p>,
 		},
 		{
 			title: 'Stock mínimo',
@@ -107,10 +115,13 @@ export default function Products() {
 			align: 'center',
 			key: 6,
 			render: (product, index) => (
-				<Space size="small" style={{justifyContent: 'center', display: 'flex'}}>
+				<Space
+					size="small"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
 					<Button
 						onClick={() => {
-							openEditModal(product)
+							openEditModal(product);
 						}}
 					>
 						<EditOutlined />
@@ -130,7 +141,6 @@ export default function Products() {
 	const [createForm] = Form.useForm();
 
 	const [object, setObject] = useState();
-	
 
 	const [lineBody, setLineBody] = useState({
 		counter: '',
@@ -139,15 +149,12 @@ export default function Products() {
 		reference: '',
 	});
 
-	// Export products to Excel
-
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Inventario.xlsx');
-	}
-
+	};
 
 	useEffect(() => {
 		let list = productsInv;
@@ -167,31 +174,32 @@ export default function Products() {
 		}
 	};
 
-
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setObject(value);
-	}
+	};
 
 	const handleUpdateStock = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await updateProductInv(object.idProduct, lineBody.undefined, lineBodys.undefined, selectedBusiness.idSucursal);
+			await updateProductInv(
+				object.idProduct,
+				lineBody.undefined,
+				lineBodys.undefined,
+				selectedBusiness.idSucursal
+			);
 			message.success('Stock actualizado');
 		} catch (error) {
 			message.error('Error al cargar marcas');
 		} finally {
 			setLoading(false);
 		}
-	}
-
-
+	};
 
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
-		// request data
 		setLoading(true);
 		if (
 			Object.keys(generalContext).length > 0 &&
@@ -202,24 +210,15 @@ export default function Products() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-	// Delete Modal
-
-	// which modal component
-
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -235,15 +234,13 @@ export default function Products() {
 					<Title goBack={false} title={'Inventario'}>
 						<div>
 							<Button onClick={exportToExcel} block>
-            	    			  Exportar
+								Exportar
 							</Button>
 						</div>
 						<Button
 							type="warning"
-							style={{marginRight: '-2.3rem', marginLeft: '1.3rem'}}
-							onClick={() =>
-								router.push('/dashboard/stock/imp')
-							}
+							style={{ marginRight: '-2.3rem', marginLeft: '1.3rem' }}
+							onClick={() => router.push('/dashboard/stock/imp')}
 						>
 							Importar
 						</Button>

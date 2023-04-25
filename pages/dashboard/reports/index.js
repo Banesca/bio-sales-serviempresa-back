@@ -107,12 +107,6 @@ const UserDetail = () => {
 	const generalContext = useContext(GeneralContext);
 
 	const [report, setReport] = useState();
-	/* const [sells, setSells] = useState([{
-		created_at: '2023-03-27',
-		total: 10,
-		nombre: 'Principal'
-	}]); */
-
 	const [sells, setSells] = useState();
 
 	const getReports = async () => {

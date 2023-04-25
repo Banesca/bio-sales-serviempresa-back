@@ -14,10 +14,10 @@ import useClients from '../../../../components/clients/hooks/useClients';
 
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
-	const { requestHandler } = useRequest()
+	const { requestHandler } = useRequest();
 
-	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g
-	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g
+	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
+	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 
 	const [form] = Form.useForm();
 	const [client, setClient] = useState({});
@@ -28,7 +28,7 @@ export default function EditClient() {
 
 	const router = useRouter();
 	const { id } = router.query;
-	
+
 	const getClientRequest = async () => {
 		setLoading(true);
 		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
@@ -43,12 +43,9 @@ export default function EditClient() {
 		setClient(value.data);
 		setLoading(false);
 	};
-	
 
-	// Clients list request 
-	
 	const { clients, listClients } = useClients();
-	
+
 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
@@ -59,69 +56,68 @@ export default function EditClient() {
 			setLoading(false);
 		}
 	};
-	
-	
-	// validator
-	
 	const validator = (data) => {
 		return {
-			val : Object.values(clients.map(client => {
-				if(client.phone == data.phoneClient || client.numberDocument == data.rif) {
-					return true;
-				}
-			})).includes(true),
-			prob: () => {
-				let calc = Object.values(clients.map(client => {
-					if(client.phone == data.phoneClient && client.numberDocument == data.rif) {
-						return 1;
-					} else if (client.phone == data.phoneClient) {
-						return 2;
-					} else if (client.numberDocument == data.rif) {
-						return 3;
+			val: Object.values(
+				clients.map((client) => {
+					if (
+						client.phone == data.phoneClient ||
+						client.numberDocument == data.rif
+					) {
+						return true;
 					}
-				}
-				));
-				if(calc.includes(1) || calc.includes(2) && calc.includes(3)) {
+				})
+			).includes(true),
+			prob: () => {
+				let calc = Object.values(
+					clients.map((client) => {
+						if (
+							client.phone == data.phoneClient &&
+							client.numberDocument == data.rif
+						) {
+							return 1;
+						} else if (client.phone == data.phoneClient) {
+							return 2;
+						} else if (client.numberDocument == data.rif) {
+							return 3;
+						}
+					})
+				);
+				if (calc.includes(1) || (calc.includes(2) && calc.includes(3))) {
 					return 'El número de teléfono y el Rif ya están en uso';
 				} else if (calc.includes(2)) {
 					return 'El número de telefono ya esta en uso';
 				} else if (calc.includes(3)) {
 					return 'El número de Rif ya esta en uso';
 				}
-			}
-		}
-	}
-	
+			},
+		};
+	};
+
 	const generalContext = useContext(GeneralContext);
-	
-		
+
 	useEffect(() => {
 		if (Object.keys(generalContext).length) {
 			getClientsRequest();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
-	
-	// Validator end
-	
-
 
 	const handleSubmit = async (values) => {
 		setLoading(true);
-		if(createClient(values)) {
+		if (createClient(values)) {
 			setLoading(false);
 		} else {
-			form.resetFields()
+			form.resetFields();
 			router.push('/dashboard/clients');
 		}
 	};
-
 
 	const createClient = async (data) => {
 		setLoading(true);
 		await getClientsRequest();
 		try {
-			if(!(validator(data).val)) {
+			if (!validator(data).val) {
 				const res = await requestHandler.put('/api/v2/client/update', {
 					nameClient: data.fullNameClient,
 					phone: data.phoneClient,
@@ -130,28 +126,24 @@ export default function EditClient() {
 					address: data.address,
 					idStatusFK: 1,
 					observacion: data.comments,
-					idClient: client.idClient
+					idClient: client.idClient,
 				});
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
 			} else {
 				message.error(validator(data).prob());
 			}
-
-
 		} catch (error) {
 			message.error('Error al actualizar cliente');
 		} finally {
 			setLoading(false);
 		}
 	};
-	
+
 	if (Object.entries(client).length === 0) {
 		getClientRequest();
 		return <Loading isLoading={true} />;
 	}
-	
-
 
 	return (
 		<DashboardLayout>
@@ -167,14 +159,16 @@ export default function EditClient() {
 					path={'/dashboard/clients'}
 					title="Actualizar Cliente"
 				></Title>
-				<div style={{
-					maxWidth: '900px',
-					margin: '1rem 2rem',
-					backgroundColor: 'white',
-					boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
-					padding: '60px',
-					borderRadius: '20px'
-				}}>
+				<div
+					style={{
+						maxWidth: '900px',
+						margin: '1rem 2rem',
+						backgroundColor: 'white',
+						boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
+						padding: '60px',
+						borderRadius: '20px',
+					}}
+				>
 					<Form
 						style={{ width: '100%' }}
 						form={form}
@@ -184,15 +178,11 @@ export default function EditClient() {
 							phoneClient: client?.phone,
 							address: client?.address,
 							rif: client?.numberDocument,
-							comments: client?.observacion
+							comments: client?.observacion,
 						}}
 					>
 						<Row>
-							<Col
-								xs={{ span: 24 }}
-								sm={{ span: 24 }}
-								md={{ span: 12 }}
-							>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Razón Social"
 									style={{
@@ -209,21 +199,16 @@ export default function EditClient() {
 									rules={[
 										{
 											required: true,
-											message:
-												'Razón social es requerido',
+											message: 'Razón social es requerido',
 										},
 									]}
 									name="fullNameClient"
-									value={{fullNameClient: client.nameClient}}
+									value={{ fullNameClient: client.nameClient }}
 								>
-									<Input type="text"  />
+									<Input type="text" />
 								</Form.Item>
 							</Col>
-							<Col
-								xs={{ span: 24 }}
-								sm={{ span: 24 }}
-								md={{ span: 12 }}
-							>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Teléfono"
 									style={{
@@ -232,14 +217,12 @@ export default function EditClient() {
 									rules={[
 										{
 											required: true,
-											message:
-												'Ingresa un numero de teléfono',
+											message: 'Ingresa un numero de teléfono',
 										},
 										{
 											pattern: regexpTlp,
-											message:
-												'Ingresa un numero de telefono valido'
-										}
+											message: 'Ingresa un numero de telefono valido',
+										},
 									]}
 									labelCol={{
 										md: { span: 10 },
@@ -256,11 +239,7 @@ export default function EditClient() {
 							</Col>
 						</Row>
 						<Row>
-							<Col
-								xs={{ span: 24 }}
-								sm={{ span: 24 }}
-								md={{ span: 12 }}
-							>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									labelCol={{
 										md: { span: 10 },
@@ -277,8 +256,7 @@ export default function EditClient() {
 									rules={[
 										{
 											required: true,
-											message:
-												'Ingresa la dirección del cliente',
+											message: 'Ingresa la dirección del cliente',
 										},
 									]}
 									name="address"
@@ -286,11 +264,7 @@ export default function EditClient() {
 									<Input type="text" />
 								</Form.Item>
 							</Col>
-							<Col
-								xs={{ span: 24 }}
-								sm={{ span: 24 }}
-								md={{ span: 12 }}
-							>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Rif"
 									labelCol={{
@@ -307,18 +281,19 @@ export default function EditClient() {
 									rules={[
 										{
 											required: true,
-											message:
-												'Ingresa el rif del cliente',
+											message: 'Ingresa el rif del cliente',
 										},
 										{
 											pattern: regexpRif,
-											message: 
-												'Ingresa un rif valido'
-										}
+											message: 'Ingresa un rif valido',
+										},
 									]}
 									name="rif"
 								>
-									<Input type="text" placeholder='Formate aceptado: j-12345678-1' />
+									<Input
+										type="text"
+										placeholder="Formate aceptado: j-12345678-1"
+									/>
 								</Form.Item>
 							</Col>
 						</Row>
@@ -336,10 +311,7 @@ export default function EditClient() {
 									label="Observación"
 									name="comments"
 								>
-									<Input.TextArea
-										type="text"
-										rows={4}
-									></Input.TextArea>
+									<Input.TextArea type="text" rows={4}></Input.TextArea>
 								</Form.Item>
 							</Col>
 						</Row>
@@ -351,7 +323,7 @@ export default function EditClient() {
 								md={{ span: 7, offset: 5 }}
 							>
 								<Form.Item>
-									<Button type='warning' block onClick={onReset} >
+									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
@@ -363,11 +335,7 @@ export default function EditClient() {
 								md={{ span: 7, offset: 5 }}
 							>
 								<Form.Item>
-									<Button
-										htmlType="submit"
-										type="success"
-										block
-									>
+									<Button htmlType="submit" type="success" block>
 										Actualizar
 									</Button>
 								</Form.Item>

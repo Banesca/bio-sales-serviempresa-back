@@ -25,9 +25,7 @@ export default function ProductList({
 			dataIndex: 'priceSale',
 			key: 2,
 			render: (text, record) => (
-				<p>
-					${record.isPromo == '1' ? record.marketPrice : text}
-				</p>
+				<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
 			),
 		},
 		{
@@ -35,10 +33,7 @@ export default function ProductList({
 			key: 3,
 			render: (text, record) => (
 				<Space>
-					<Button
-						type="success"
-						onClick={() => handleAddProduct(record)}
-					>
+					<Button type="success" onClick={() => handleAddProduct(record)}>
 						Agregar
 					</Button>
 				</Space>
@@ -68,7 +63,6 @@ export default function ProductList({
 		};
 	};
 
-	// Add Product
 	const handleAddProductToOrder = async (body) => {
 		setLoading(true);
 		try {
@@ -109,10 +103,10 @@ export default function ProductList({
 	// End Add Product
 
 	const updateProductQuantity = async (idOrderB, weight) => {
-		const res = await requestHandler.post(
-			'/api/v2/order/product/setweight',
-			{ idOrderB, weight }
-		);
+		const res = await requestHandler.post('/api/v2/order/product/setweight', {
+			idOrderB,
+			weight,
+		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -130,29 +124,22 @@ export default function ProductList({
 		}
 	};
 
-	useEffect(() => {
-	}, [products]);
+	useEffect(() => {}, [products]);
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
 		<ConfigProvider renderEmpty={customizeRenderEmpty}>
 			<Table dataSource={products} columns={AddColumns} loading={loading} />
 		</ConfigProvider>
-
 	);
 }

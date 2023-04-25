@@ -22,10 +22,6 @@ export default function Users() {
 	const { users, deleteUser, getUsers, getUserById } = useUser();
 	const { requestHandler } = useRequest();
 	const [businessByUser, setBusinessByUser] = useState([]);
-
-	// const [loading, setLoading] = useState(true);
-
-	// const [users, setUsers] = useState([]);
 	const [query, setQuery] = useState({
 		fullname: '',
 		mail: '',
@@ -47,7 +43,7 @@ export default function Users() {
 		setLoading(true);
 		if (Object.keys(generalContext).length) {
 			getUsers();
-			for(let x in users) {
+			for (let x in users) {
 				// iterar sobre usuarios para obtener su empresa asignada
 				getUserBusiness(users[x].idUser);
 			}
@@ -70,15 +66,12 @@ export default function Users() {
 			);
 		}
 		if (query.idProfileFk) {
-			usersList = usersList.filter(
-				(u) => u.idProfileFk === query.idProfileFk
-			);
+			usersList = usersList.filter((u) => u.idProfileFk === query.idProfileFk);
 		}
 		addKeys(usersList);
 		return usersList;
 	}, [query, users]);
 
-	// Delete product modal
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [currentUser, setCurrentUser] = useState();
 
@@ -101,7 +94,7 @@ export default function Users() {
 	const handleDelete = async (idUser, name) => {
 		try {
 			await deleteUser(idUser);
-			(idUser)
+			idUser;
 			message.success(`El usuario ${name} ha sido eliminado`);
 		} catch (error) {
 			message.error('Error al eliminar usuario');
@@ -115,7 +108,6 @@ export default function Users() {
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
 
 	return (
 		<>
@@ -129,11 +121,8 @@ export default function Users() {
 				>
 					<Title title="Usuarios" goBack={false}>
 						{log == PROFILES.MASTER && (
-							<Link href='users/add'>
-								<Button
-									style={{marginRight: '-2.3rem'}}
-									type="success"
-								>
+							<Link href="users/add">
+								<Button style={{ marginRight: '-2.3rem' }} type="success">
 									Agregar
 								</Button>
 							</Link>
@@ -142,7 +131,7 @@ export default function Users() {
 					<UserFilters setQuery={setQuery} />
 					<UsersTable
 						users={usersList}
-						handleCloseModal={handleCloseModal }
+						handleCloseModal={handleCloseModal}
 						handleOpenModal={handleOpenModal}
 						isModalOpen={isModalOpen}
 						currentUser={currentUser}

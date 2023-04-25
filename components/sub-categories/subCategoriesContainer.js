@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Table, Col, Row, Space, ConfigProvider, Empty, Form } from 'antd';
+import {
+	Button,
+	Table,
+	Col,
+	Row,
+	Space,
+	ConfigProvider,
+	Empty,
+	Form,
+} from 'antd';
 import { addKeys } from '../../util/setKeys';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import SubCategoryFilters from './filters';
@@ -12,14 +21,11 @@ import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES } from '../shared/profiles';
 
 export default function SubCategoriesContainer() {
-
 	const [log, setLog] = useState();
-	
-	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
-	}, []);
-	
 
+	useEffect(() => {
+		setLog(localStorage.getItem('userProfile'));
+	}, []);
 
 	const columns = [
 		{
@@ -49,7 +55,6 @@ export default function SubCategoriesContainer() {
 						<DeleteOutlined />
 					</Button>
 				</Space>
-
 			),
 		},
 	];
@@ -57,29 +62,18 @@ export default function SubCategoriesContainer() {
 	const { subCategories } = useCategoryContext();
 	const { userProfile } = useAuthContext();
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-	// const [loading, setLoading] = useState(false);
 	const { setLoading } = useLoadingContext();
-
-	// list and filter
 	const [query, setQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState();
-
-	// delete brand
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [currentBrands, setCurrentBrand] = useState();
-
-	// create
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-	// Filters
 	const subCategoryList = useMemo(() => {
 		let list = subCategories;
 		if (query) {
 			list = subCategories.filter((b) =>
-				b.nameSubFamily
-					.toLowerCase()
-					.includes(query.toLocaleLowerCase())
+				b.nameSubFamily.toLowerCase().includes(query.toLocaleLowerCase())
 			);
 		}
 		if (selectedCategory) {
@@ -92,10 +86,7 @@ export default function SubCategoriesContainer() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [query, subCategories, selectedCategory]);
 
-	// End Filters
-
 	const [createFormTwo] = Form.useForm();
-
 
 	const handleOpenCreateModal = () => {
 		setIsCreateModalOpen(true);
@@ -112,31 +103,22 @@ export default function SubCategoriesContainer() {
 		setTimeout(() => {
 			createFormTwo.resetFields();
 		}, 100);
-	}
-
-
-	// Modificaciones de Santi para actualizar el modal
+	};
 
 	const close = () => {
 		setIsEditModalOpen(false);
 		createFormTwo.resetFields();
-	}
-
+	};
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -173,7 +155,11 @@ export default function SubCategoriesContainer() {
 			</Row> */}
 			<Title title="Sub Categorías" goBack={false}>
 				{log != PROFILES.BILLER && (
-					<Button type="success" style={{marginRight: '-2.3rem'}} onClick={handleOpenCreateModal}>
+					<Button
+						type="success"
+						style={{ marginRight: '-2.3rem' }}
+						onClick={handleOpenCreateModal}
+					>
 						Agregar
 					</Button>
 				)}

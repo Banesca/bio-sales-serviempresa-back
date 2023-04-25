@@ -36,7 +36,6 @@ export default function Login() {
 	const regexpTlp =
 		/^(?=.\d)(?=.[\u0021-\u002b\u003c-\u0040])(?=.[A-Z])(?=.[a-z])\S{8,16}$/g;
 
-	// display message
 	const [messageApi, contextHolder] = message.useMessage();
 	const handleLoginError = (error) => {
 		messageApi.error(error);
@@ -47,8 +46,6 @@ export default function Login() {
 	};
 
 	const [loading, setLoading] = useState(false);
-
-	// business Context
 	const businessContext = useBusinessProvider();
 
 	const handleLoginRequest = async (data) => {

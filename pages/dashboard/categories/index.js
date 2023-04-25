@@ -12,7 +12,6 @@ import LinesContainer from '../../../components/lines/linesContainer';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 
 const CategoriesPage = () => {
-	// const [loading, setLoading] = useState(true);
 	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
@@ -52,12 +51,9 @@ const CategoriesPage = () => {
 			Object.keys(generalContext).length > 0 &&
 			Object.keys(selectedBusiness).length > 0
 		) {
-			// getCategoriesRequest(selectedBusiness.idSucursal);
-			// getSubCategoriesRequest(selectedBusiness.idSucursal);
 			handleGetCategories(selectedBusiness.idSucursal);
 			handleGetSubCategories(selectedBusiness.idSucursal);
 			handleGetLines(selectedBusiness.idSucursal);
-			//handleGetLines(selectedBusiness.idSucursal);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
@@ -80,15 +76,6 @@ const CategoriesPage = () => {
 		},
 	];
 
-	// if (loading) {
-	// 	return (
-	// 		<>
-	// 			<DashboardLayout></DashboardLayout>
-	// 			<Loading isLoading={true} />
-	// 		</>
-	// 	);
-	// }
-
 	return (
 		<>
 			<DashboardLayout>
@@ -99,7 +86,11 @@ const CategoriesPage = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Tabs items={tabItems} style={{fontWeight: 'bold'}} defaultActiveKey="1" />
+					<Tabs
+						items={tabItems}
+						style={{ fontWeight: 'bold' }}
+						defaultActiveKey="1"
+					/>
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />

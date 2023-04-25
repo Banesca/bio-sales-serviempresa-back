@@ -7,7 +7,17 @@ import {
 	ExclamationCircleFilled,
 	UploadOutlined,
 } from '@ant-design/icons';
-import { Upload, Button, Table, message, Row, Col, Modal, ConfigProvider, Empty } from 'antd';
+import {
+	Upload,
+	Button,
+	Table,
+	message,
+	Row,
+	Col,
+	Modal,
+	ConfigProvider,
+	Empty,
+} from 'antd';
 import * as XLSX from 'xlsx';
 
 import DashboardLayout from '../../../components/shared/layout';
@@ -74,22 +84,14 @@ const ImportProducts = () => {
 			dataIndex: 'pricePurchase',
 			key: 3,
 			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
+				record.isPromo == '1' ? <p>$ {record.marketPrice}</p> : <p>$ {text}</p>,
 		},
 		{
 			title: 'Precio venta',
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text, record) =>
-				record.isPromo == '1' ? (
-					<p>$ {record.marketPrice}</p>
-				) : (
-					<p>$ {text}</p>
-				),
+				record.isPromo == '1' ? <p>$ {record.marketPrice}</p> : <p>$ {text}</p>,
 		},
 		{
 			title: 'Almacen',
@@ -140,28 +142,16 @@ const ImportProducts = () => {
 		handleSeeModal();
 	};
 
-	// Title
-
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
-
-	// Product to delete
 	const [currentProduct, setCurrentProduct] = useState();
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-	//Notification
 	const [notificationOpen, setNotificationOpen] = useState(false);
-
-	// control files
 	const [fileList, setFileList] = useState([]);
 	const [selectedFile, setSelectedFile] = useState(null);
-
-	// Table's Data
 	const [data, setData] = useState([]);
-
 	const [loading, setLoading] = useState(false);
-
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
 
@@ -170,33 +160,9 @@ const ImportProducts = () => {
 
 	const [api, contextHolder] = notification.useNotification();
 
-	/* const categoryListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/family/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
-		}
-		const value = response.value.getValue().response;
-		setCategories(value);
-	};
-
-	const brandListRequest = async (business = 1) => {
-		const response = await requestHandler.get(
-			`/api/v2/subfamily/list/${business}`
-		);
-		if (response.isLeft()) {
-			return;
-		}
-		const value = response.value.getValue().response;
-		setBrands(value);
-	}; */
-
 	useEffect(() => {
 		if (selectedBusiness && generalContext) {
 			setLoading(true);
-			/* categoryListRequest(selectedBusiness.idSucursal); */
-			/* brandListRequest(selectedBusiness.idSucursal); */
 			setLoading(false);
 		}
 	}, [selectedBusiness, generalContext]);
@@ -204,7 +170,7 @@ const ImportProducts = () => {
 	const getFileExtension = (filename) => {
 		return filename.split('.').pop();
 	};
-	
+
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
 		for (const row of rows) {
@@ -221,7 +187,7 @@ const ImportProducts = () => {
 				idInventaryB: 0,
 				idProductFk: 1,
 				priceSale: row.PRECIO_TIENDA,
-				idSucursalFk: 0, /* idSucursalFk: selectedBusiness?.idSucursal */
+				idSucursalFk: 0,
 				idInventaryHFK: selectedBusiness?.idInventory,
 				idTypeProductFk: 1,
 				isPromo: 0,
@@ -264,9 +230,6 @@ const ImportProducts = () => {
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
 			const uploadData = await convertExcelDataToAPI(data);
-			// if (rejectedBrands.length > 0 || rejectedCategories.length > 0) {
-			// 	setNotificationOpen(true);
-			// }
 			addKeys(uploadData);
 			setData(uploadData);
 		};
@@ -309,15 +272,12 @@ const ImportProducts = () => {
 	const body = {
 		idUserAddFk: '0',
 		idProductionCenter: '1',
-		isProduction: '2'
-	}
+		isProduction: '2',
+	};
 
 	const handleSendData = async () => {
-		(data);
+		data;
 		setLoading(true);
-		/* const res = await requestHandler.post('/api/v2/production/product/add/masive', {
-			body,
-		}); */
 		const restt = await requestHandler.post('/api/v2/production/product/add', {
 			data,
 		});
@@ -341,19 +301,14 @@ const ImportProducts = () => {
 	}, [rejectedBrands, rejectedCategories]);
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -367,7 +322,7 @@ const ImportProducts = () => {
 					}}
 				>
 					<Title title="Importar" path="/dashboard/stock" goBack={1} />
-					
+
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
 							<Button
@@ -376,7 +331,7 @@ const ImportProducts = () => {
 								type="primary"
 								style={{ marginRight: '1rem' }}
 							>
-                Cargar
+								Cargar
 							</Button>
 						</Col>
 						<Col>
@@ -388,18 +343,17 @@ const ImportProducts = () => {
 								type="file"
 							>
 								<Button icon={<UploadOutlined />} block>
-                  Archivo
+									Archivo
 								</Button>
 							</Upload>
 						</Col>
 					</Row>
 					<ConfigProvider renderEmpty={customizeRenderEmpty}>
 						<Table
-							style={{overflow: 'scroll'}}
-							scroll={{x: '100vw'}}
+							style={{ overflow: 'scroll' }}
+							scroll={{ x: '100vw' }}
 							columns={columns}
 							dataSource={data}
-
 						/>
 					</ConfigProvider>
 				</div>
@@ -422,18 +376,18 @@ const ImportProducts = () => {
 							key="confirmar"
 							type="primary"
 						>
-              Confirmar
+							Confirmar
 						</Button>,
 					]}
 				>
 					<p>
-            Algunos productos no han sido cargados, ya que, hay categorías y/o
-            marcas que no están registradas, créalas para cargar todos los
-            productos.
+						Algunos productos no han sido cargados, ya que, hay categorías y/o
+						marcas que no están registradas, créalas para cargar todos los
+						productos.
 					</p>
 					{rejectedCategories && (
 						<p>
-              Crea las siguientes categorías{' '}
+							Crea las siguientes categorías{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedCategories.join(', ')}
 							</strong>
@@ -441,7 +395,7 @@ const ImportProducts = () => {
 					)}
 					{rejectedBrands && (
 						<p>
-              Crea las siguientes marcas{' '}
+							Crea las siguientes marcas{' '}
 							<strong style={{ color: 'red' }}>
 								{rejectedBrands.join(', ')}
 							</strong>

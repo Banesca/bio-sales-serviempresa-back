@@ -1,4 +1,9 @@
-import { DeleteOutlined, EditOutlined, EyeTwoTone, UploadOutlined } from '@ant-design/icons';
+import {
+	DeleteOutlined,
+	EditOutlined,
+	EyeTwoTone,
+	UploadOutlined,
+} from '@ant-design/icons';
 import {
 	Col,
 	Collapse,
@@ -53,38 +58,38 @@ export default function ClientsPage() {
 			sortDirections: ['ascend'],
 			sorter: (a, b) => a.statusName.length - b.statusName.length,
 			render: (text, index) => (
-				<Space size="middle" style={{ width: '150px', margin: '0 auto', marginLeft: '-15px'}}>
+				<Space
+					size="middle"
+					style={{ width: '150px', margin: '0 auto', marginLeft: '-15px' }}
+				>
 					<Button
 						type="primary"
 						onClick={() => router.push(`clients/${index.idClient}`)}
 					>
 						<EyeTwoTone />
 					</Button>
-					{text == 'Eliminado' 
-					 ? 
-					 <>
-					 	<Button
-								onClick={() => handleActivateModal(index)}
-							>
+					{text == 'Eliminado' ? (
+						<>
+							<Button onClick={() => handleActivateModal(index)}>
 								<UploadOutlined />
 							</Button>
-					 </>
-						:<>
+						</>
+					) : (
+						<>
 							<Button
 								onClick={() => router.push(`clients/update/${index.idClient}`)}
 							>
 								<EditOutlined />
 							</Button>
-					 <Button
+							<Button
 								type="primary"
 								danger
 								onClick={() => handleOpenDeleteModal(index)}
 							>
 								<DeleteOutlined />
 							</Button>
-						</> 
-
-					}
+						</>
+					)}
 				</Space>
 			),
 		},
@@ -95,21 +100,21 @@ export default function ClientsPage() {
 	const { clients, listClients, deleteClient } = useClients();
 	const [activateModal, setActivateModal] = useState(false);
 
-	const { requestHandler } = useRequest();	
+	const { requestHandler } = useRequest();
 
 	const handleActivateModal = (value) => {
 		setActivateModal(true);
 		setCurrentClient(value);
-	}
-		
+	};
+
 	const handleCloseActivateModal = () => {
 		setActivateModal(false);
-	}
-	
+	};
+
 	const changeStateCliente = () => {
 		updateClient();
 		setActivateModal(false);
-	}
+	};
 
 	const updateClient = async () => {
 		setLoading(false);
@@ -122,7 +127,7 @@ export default function ClientsPage() {
 				numberDocument: currentClient?.numberDocument,
 				address: currentClient?.address,
 				idStatusFK: 1,
-				idClient: currentClient?.idClient
+				idClient: currentClient?.idClient,
 			});
 			message.success('Estado de cliente actualizado');
 		} catch (error) {
@@ -131,7 +136,6 @@ export default function ClientsPage() {
 			setLoading(false);
 		}
 	};
-
 
 	const handleOpenDeleteModal = (client) => {
 		setCurrentClient(client);
@@ -152,32 +156,23 @@ export default function ClientsPage() {
 	const handleDelete = async (name, id) => {
 		try {
 			await deleteClient(id);
-			(id);
+			id;
 			message.success(`El usuario ${name} ha sido eliminado`);
 		} catch (error) {
 			message.error('Error al eliminar cliente');
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
 	};
 
-
-
-
 	const router = useRouter();
-
 	const [loading, setLoading] = useState(true);
-	// Modal
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	// clients
-	// const [clients, setClients] = useState([]);
-
 	const [query, setQuery] = useState({
 		nameClient: '',
 		phone: '',
 		address: '',
-		numberDocument: ''
+		numberDocument: '',
 	});
 
 	const handleSeeModal = () => {
@@ -215,7 +210,7 @@ export default function ClientsPage() {
 			fullNameClient: '',
 			phoneClient: '',
 			address: '',
-			numberDocument: ''
+			numberDocument: '',
 		});
 		form.resetFields();
 	};
@@ -242,19 +237,14 @@ export default function ClientsPage() {
 	};
 
 	const customizeRenderEmpty = () => (
-		<Empty image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+		<Empty
+			image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
 			style={{
 				textAlign: 'center',
-				marginBottom: '30px'
+				marginBottom: '30px',
 			}}
-			description={
-				<span>
-					Sin datos
-				</span>
-			}
-		>
-			
-		</Empty>
+			description={<span>Sin datos</span>}
+		></Empty>
 	);
 
 	return (
@@ -268,7 +258,9 @@ export default function ClientsPage() {
 			>
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="success" style={{marginRight: '-2.3rem'}}>Agregar</Button>
+						<Button type="success" style={{ marginRight: '-2.3rem' }}>
+							Agregar
+						</Button>
 					</Link>
 				</Title>
 				<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
@@ -282,28 +274,19 @@ export default function ClientsPage() {
 							>
 								<Row>
 									<Col span={12}>
-										<Form.Item
-											name="fullNameClient"
-											label="Razon social"
-										>
+										<Form.Item name="fullNameClient" label="Razon social">
 											<Input type="text" />
 										</Form.Item>
 									</Col>
 									<Col span={12}>
-										<Form.Item
-											name="phoneClient"
-											label="Teléfono"
-										>
+										<Form.Item name="phoneClient" label="Teléfono">
 											<Input type="text" />
 										</Form.Item>
 									</Col>
 								</Row>
 								<Row>
 									<Col span={12}>
-										<Form.Item
-											name="address"
-											label="Dirección"
-										>
+										<Form.Item name="address" label="Dirección">
 											<Input type="text" />
 										</Form.Item>
 									</Col>
@@ -321,7 +304,7 @@ export default function ClientsPage() {
 												offset: 8,
 											}}
 										>
-											<Button type='warning' onClick={onReset} block>
+											<Button type="warning" onClick={onReset} block>
 												Limpiar
 											</Button>
 										</Form.Item>
@@ -333,11 +316,7 @@ export default function ClientsPage() {
 												offset: 8,
 											}}
 										>
-											<Button
-												htmlType="submit"
-												type="success"
-												block
-											>
+											<Button htmlType="submit" type="success" block>
 												Buscar
 											</Button>
 										</Form.Item>
@@ -367,11 +346,8 @@ export default function ClientsPage() {
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => handleCloseModal(false)}
-					>
-							Cancelar
+					<Button key="cancel" onClick={() => handleCloseModal(false)}>
+						Cancelar
 					</Button>,
 					<Button
 						key="delete"
@@ -379,36 +355,33 @@ export default function ClientsPage() {
 						type="primary"
 						onClick={() => handleCloseModal(true)}
 					>
-							Eliminar
+						Eliminar
 					</Button>,
 				]}
 			>
 				<p>
 					Estas seguro de que deseas eliminar a {`${currentClient?.nameClient}`}
 				</p>
-			</Modal>	
+			</Modal>
 			<Modal
-				title='Actualizar estado'
+				title="Actualizar estado"
 				open={activateModal}
 				onCancel={() => handleCloseActivateModal()}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => handleCloseActivateModal()}
-					>
-							Cancelar
+					<Button key="cancel" onClick={() => handleCloseActivateModal()}>
+						Cancelar
 					</Button>,
 					<Button
 						key="delete"
 						type="primary"
 						onClick={() => changeStateCliente()}
 					>
-							Actualizar
+						Actualizar
 					</Button>,
 				]}
 			>
 				<p>¿Deseas cambiar el estado del cliente a activo?</p>
-			</Modal>					
+			</Modal>
 			<Loading isLoading={loading} />
 		</DashboardLayout>
 	);

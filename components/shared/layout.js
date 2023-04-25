@@ -129,7 +129,6 @@ export default function DashboardLayout({ children }) {
 
 	useEffect(() => {
 		setCurrentBusiness(localStorage.getItem('bs'));
-		/* setCurrentBusiness(business?.map(b => b.nombre)); */
 		getUserBusiness();
 	}, [children]);
 
@@ -137,7 +136,6 @@ export default function DashboardLayout({ children }) {
 		if (e.key === actualKey) {
 			return;
 		}
-		// logout
 		if (e.key === '/login') {
 			localStorage.clear();
 		}
@@ -158,7 +156,6 @@ export default function DashboardLayout({ children }) {
 		}
 		const value = res.value._value.data;
 		localStorage.setItem('bus', value[0]?.nombre);
-		/* setBusiness(value[0]?.nombre); */
 	};
 
 	return (
@@ -171,10 +168,7 @@ export default function DashboardLayout({ children }) {
 					<div className="relative h-12 w-44">
 						<MainLogo />
 					</div>
-					<p className="text-3xl">
-						{/* {business == '' ? '' : business} */}
-						{business}
-					</p>
+					<p className="text-3xl">{business}</p>
 					<p></p>
 				</Header>
 				<Layout style={{ minHeight: 'fit-content' }} hasSider>

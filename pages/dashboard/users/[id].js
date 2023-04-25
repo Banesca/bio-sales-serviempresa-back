@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, List, Table, Modal, Form, Select, message, Card } from 'antd';
-import { AimOutlined, ArrowLeftOutlined, DeleteOutlined, SendOutlined } from '@ant-design/icons';
+import {
+	AimOutlined,
+	ArrowLeftOutlined,
+	DeleteOutlined,
+	SendOutlined,
+} from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -21,8 +26,6 @@ const UserDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
-	const { userProfile } = useAuthContext();
-
 	const handleReturn = () => {
 		router.push('/dashboard/users');
 		setLoading(true);
@@ -35,26 +38,17 @@ const UserDetail = () => {
 		getSellerClients,
 		assignClientToSeller,
 		removeClientToSeller,
-		addItemToUserRoute,
 	} = useUser();
 
 	const { clients, listClients } = useClients();
-
 	const [user, setUser] = useState();
 	const [profile, setProfile] = useState();
-
-	// assign clients
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
 	const [clientsToAssign, setClientsToAssign] = useState([]);
-
 	const [clientToRemove, setClientToRemove] = useState(null);
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
-
-	// Assign Business
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false);
-
-	// business
 	const [businessByUser, setBusinessByUser] = useState([]);
 	const [businessToAdd, setBusinessToAdd] = useState();
 	const [businessToRemove, setBusinessToRemove] = useState();
@@ -102,10 +96,8 @@ const UserDetail = () => {
 				return message.error('Usuario no encontrado');
 			}
 			setUser(user);
-			setProfile(
-				PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]
-			);
-			(user)
+			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
+			user;
 			if (user.idProfileFk === 3) {
 				await getSellerClientsRequest(user.idUser);
 			}
@@ -118,7 +110,6 @@ const UserDetail = () => {
 
 	const { business } = useBusinessProvider();
 	const [disabled, setDisabled] = useState();
-	
 
 	useEffect(() => {
 		if (Object.keys(generalContext).length) {
@@ -210,9 +201,7 @@ const UserDetail = () => {
 			}
 			if (count > 0)
 				message.success(
-					`${count} ${
-						count > 1 ? 'Clientes agregados' : 'Cliente agregado'
-					}`
+					`${count} ${count > 1 ? 'Clientes agregados' : 'Cliente agregado'}`
 				);
 			await getSellerClients(id);
 			setClientsToAssign([]);
@@ -226,23 +215,22 @@ const UserDetail = () => {
 	const getLocation = async (id) => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
+			const res = await requestHandler.get(`/api/v2/user/locations/${id}`);
 			let lat = res.value._value.data[0].latitud;
 			let long = res.value._value.data[0].longitud;
-			window.open(`https://www.google.com/maps/place/${lat}+${long}`, '_blank')
+			window.open(`https://www.google.com/maps/place/${lat}+${long}`, '_blank');
 		} catch {
 			setLoading(false);
 			message.error('Ha ocurrido un error');
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
 	};
-	
-	
+
 	const getLoc = async (id) => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.get(`/api/v2/user/locations/${id}`)
+			const res = await requestHandler.get(`/api/v2/user/locations/${id}`);
 			let lat = res.value._value.data[0].latitud;
 			let long = res.value._value.data[0].longitud;
 			res.value._value.data == '' ? setDisabled(true) : setDisabled(false);
@@ -250,7 +238,7 @@ const UserDetail = () => {
 			setLoading(false);
 			setDisabled(true);
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
 	};
 
@@ -274,11 +262,10 @@ const UserDetail = () => {
 	};
 
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
+		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
 
 	return (
 		<>
@@ -293,79 +280,74 @@ const UserDetail = () => {
 					}}
 				>
 					<Title title="Información General" path="/dashboard/users" goBack={1}>
-						<>
-							
-							
-						</>
+						<></>
 					</Title>
-					<List className='form'
+					<List
+						className="form"
 						style={{
 							width: '100%',
 							borderRadius: '.5rem',
 							marginBottom: '1rem',
 						}}
 					>
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{ padding: '10px 25px' }}>
 							<p>Nombre</p>
 							<p>{user?.fullname}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{ padding: '10px 25px' }}>
 							<p>Email</p>
 							<p>{user?.mail}</p>
 						</List.Item>
-						<List.Item style={{padding: '10px 25px'}}>
+						<List.Item style={{ padding: '10px 25px' }}>
 							<p>Perfil</p>
 							<p>{profile?.name}</p>
 						</List.Item>
 						{profile?.id == PROFILES.SELLER && (
-							<List.Item style={{padding: '10px 25px'}}>
+							<List.Item style={{ padding: '10px 25px' }}>
 								<p>Ultima ubicación</p>
-								<Button type='primary' disabled={disabled} onClick={() => getLocation(id)} >{React.createElement(AimOutlined/* SendOutlined */)}</Button>
+								<Button
+									type="primary"
+									disabled={disabled}
+									onClick={() => getLocation(id)}
+								>
+									{React.createElement(AimOutlined)}
+								</Button>
 							</List.Item>
 						)}
-						{profile?.id !== PROFILES.MASTER &&
-						(<List.Item style={{padding: '10px 25px'}}>
-							<p>Acciones</p>
-							<div>
-
-								{profile?.id != PROFILES.MASTER &&
-								log == PROFILES.MASTER ? (
+						{profile?.id !== PROFILES.MASTER && (
+							<List.Item style={{ padding: '10px 25px' }}>
+								<p>Acciones</p>
+								<div>
+									{profile?.id != PROFILES.MASTER && log == PROFILES.MASTER ? (
 										<Button
 											onClick={() => setIsModalOpen(true)}
 											type="primary"
 											style={{ marginRight: '.5rem' }}
 										>
-										Empresas
+											Empresas
 										</Button>
-									)
-									:
-									<></>
-								}
-								{/* {userProfile == PROFILES.ADMIN && localStorage } */}
-								<Button
-									onClick={() =>
-										setIsAssignClientOpen(true)
-									}
-									type="primary"
-									style={{ marginRight: '.5rem' }}
-								>
+									) : (
+										<></>
+									)}
+									<Button
+										onClick={() => setIsAssignClientOpen(true)}
+										type="primary"
+										style={{ marginRight: '.5rem' }}
+									>
 										Clientes
-								</Button>
-								{profile?.id == PROFILES.SELLER && (
-									<>
-										<Button type="primary" style={{ marginRight: '0rem' }}>
-											<Link
-												href={`/dashboard/users/routes/${id}`}
-											>
-											Rutas
-											</Link>
-										</Button>
-									</>
-								)}
-							</div>
-
-						</List.Item>)
-						}
+									</Button>
+									{profile?.id == PROFILES.SELLER && (
+										<>
+											<Button type="primary" style={{ marginRight: '0rem' }}>
+												<Link href={`/dashboard/users/routes/${id}`}>
+													Rutas
+												</Link>
+											</Button>
+										</>
+									)}
+								</div>
+							</List.Item>
+						)}
 					</List>
 					{profile?.id != PROFILES.MASTER && (
 						<>
@@ -384,7 +366,6 @@ const UserDetail = () => {
 						</>
 					)}
 				</div>
-				{/* Asignar Empresas */}
 				<Modal
 					title="Asignar Empresas"
 					open={isModalOpen}
@@ -411,10 +392,7 @@ const UserDetail = () => {
 							>
 								{business &&
 									business.map((b) => (
-										<Select.Option
-											key={b.idSucursal}
-											value={b.idSucursal}
-										>
+										<Select.Option key={b.idSucursal} value={b.idSucursal}>
 											{b.nombre}
 										</Select.Option>
 									))}
@@ -422,9 +400,6 @@ const UserDetail = () => {
 						</Form.Item>
 					</Form>
 				</Modal>
-				{/* End Asignar Empresas */}
-
-				{/* Asignar Clientes */}
 				<Modal
 					title="Asignar Clientes"
 					open={isAssignClientOpen}
@@ -470,17 +445,12 @@ const UserDetail = () => {
 						</Form.Item>
 					</Form>
 				</Modal>
-				{/* End Asignar Clientes */}
-				{/* Confirm remove business */}
 				<Modal
 					open={confirmDelete}
 					title="Remover Permisos"
 					onCancel={() => setConfirmDelete(false)}
 					footer={[
-						<Button
-							key="cancel"
-							onClick={() => setConfirmDelete(false)}
-						>
+						<Button key="cancel" onClick={() => setConfirmDelete(false)}>
 							Cancelar
 						</Button>,
 						<Button
@@ -494,21 +464,14 @@ const UserDetail = () => {
 					]}
 				>
 					<p>
-						Estas seguro de remover el acceso de la sucursal a{' '}
-						{user?.fullname}
+						Estas seguro de remover el acceso de la sucursal a {user?.fullname}
 					</p>
-				</Modal>
-				{/* End confirm remove business */}
-				{/* Confirm remove client */}
 				<Modal
 					open={confirmRemoveClient}
 					title="Remover Permisos"
 					onCancel={() => setConfirmRemoveClient(false)}
 					footer={[
-						<Button
-							key="cancel"
-							onClick={() => setConfirmRemoveClient(false)}
-						>
+						<Button key="cancel" onClick={() => setConfirmRemoveClient(false)}>
 							Cancelar
 						</Button>,
 						<Button
@@ -525,7 +488,6 @@ const UserDetail = () => {
 						{`Estas seguro de remover el acceso sobre el cliente ${clientToRemove?.nameClient} al usuario ${user?.fullname}`}
 					</p>
 				</Modal>
-				{/* End remove client */}
 			</DashboardLayout>
 			<Loading isLoading={loading} />
 		</>
