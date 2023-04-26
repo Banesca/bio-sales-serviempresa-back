@@ -5,7 +5,7 @@ import React from 'react';
 const NotificationsCards = () => {
 	return (
 		<div className="flex gap-4 flex-col">
-			<Card className="w-full">
+			<Card className="w-full shadow-md">
 				<div className="flex flex-row gap-5">
 					<div className="flex justify-center items-center">
 						<WarningTwoTone className="text-4xl" />
@@ -22,7 +22,7 @@ const NotificationsCards = () => {
 					</div>
 				</div>
 			</Card>
-			<Card className="w-full">
+			<Card className="w-full shadow-md">
 				<div className="flex flex-row gap-5">
 					<div className="flex justify-center items-center">
 						<WarningTwoTone className="text-4xl" />

@@ -33,21 +33,18 @@ const ProductFilter = ({ setQuery, clean }) => {
 	};
 
 	const [log, setLog] = useState();
-	
 
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	
-
 
 	return (
-		<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
+		<Collapse className="bg-gray-100 my-5 shadow-md">
 			<Collapse.Panel header="Filtros">
-				<Row style={{ justifyContent: 'center' }}>
+				<Row>
 					<Form
 						form={form}
-						style={{ maxWidth: '800px', width: '100%', fontWeight: 'bold' }}
+						className="max-w-[800px] w-full font-bold"
 						name="productFilters"
 						onFinish={onSubmit}
 					>
@@ -56,7 +53,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
 									label="Nombre"
-									style={{ padding: '0 .5rem' }}
+									className="p-2"
 									name="nameProduct"
 									labelCol={{
 										md: { span: 8 },
@@ -74,7 +71,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Código"
 									name="barCode"
-									style={{ padding: '0 .5rem' }}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -93,9 +90,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Precio min"
 									name="minPrice"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -112,9 +107,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Precio max"
 									name="maxPrice"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -133,9 +126,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Categoría"
 									name="nameFamily"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -151,9 +142,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{categories &&
@@ -172,9 +161,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Sub Categoría"
 									name="nameSubFamily"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -190,9 +177,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{subCategories &&
@@ -213,9 +198,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Linea"
 									name="idLineFk"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -231,17 +214,12 @@ const ProductFilter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{lines &&
 											lines.map((line, i) => (
-												<Select.Option
-													key={line.idLine}
-													value={line.idLine}
-												>
+												<Select.Option key={line.idLine} value={line.idLine}>
 													{line.name}
 												</Select.Option>
 											))}
@@ -252,9 +230,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Form.Item
 									label="Marca"
 									name="idBrandFk"
-									style={{
-										padding: '0 .5rem',
-									}}
+									className="p-2"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -270,17 +246,12 @@ const ProductFilter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{brands &&
 											brands.map((c, i) => (
-												<Select.Option
-													key={c.idBrand}
-													value={c.idBrand}
-												>
+												<Select.Option key={c.idBrand} value={c.idBrand}>
 													{c.name}
 												</Select.Option>
 											))}
@@ -295,12 +266,8 @@ const ProductFilter = ({ setQuery, clean }) => {
 								lg={{ span: 8, offset: 4 }}
 								md={{ span: 8, offset: 4 }}
 							>
-								<Form.Item
-									style={{
-										padding: '0 .5rem',
-									}}
-								>
-									<Button type='warning' block onClick={onReset}>
+								<Form.Item className="p-2">
+									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
@@ -311,16 +278,8 @@ const ProductFilter = ({ setQuery, clean }) => {
 								lg={{ span: 8, offset: 4 }}
 								md={{ span: 8, offset: 4 }}
 							>
-								<Form.Item
-									style={{
-										padding: '0 .5rem',
-									}}
-								>
-									<Button
-										htmlType="submit"
-										type="success"
-										block
-									>
+								<Form.Item className="p-2">
+									<Button htmlType="submit" type="success" block>
 										Buscar
 									</Button>
 								</Form.Item>

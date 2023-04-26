@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
 
+export const MEASURE_UNITS = {
+	Kilogramo: 3,
+	Unidad: 17,
+};
+
 const PRODUCT_INITIAL_STATE = {
 	pricePurchase: 0,
 	idUnitMeasurePurchaseFk: 17,

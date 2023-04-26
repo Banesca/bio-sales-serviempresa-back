@@ -17,12 +17,12 @@ import { useAuthContext } from '../../../context/useUserProfileProvider';
 import PROFILES from '../../../components/shared/profiles';
 
 export const orderStatusToUse = {
-	1: 'Inconcluso',
-	2: 'Facturado',
-	3: 'Recibido',
-	4: 'Procesado',
-	5: 'Retenido',
-	6: 'Anulado',
+	1: { state: 'Inconcluso', color: 'orange' },
+	2: { state: 'Facturado', color: 'green' },
+	3: { state: 'Por facturar', color: 'blue' },
+	4: { state: 'Despachado', color: 'yellow' },
+	5: { state: 'Cobrado', color: 'purple' },
+	6: { state: 'Anulado', color: 'red' },
 };
 
 export default function OrdersPage() {

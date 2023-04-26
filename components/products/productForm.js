@@ -9,8 +9,13 @@ import {
 	Form,
 	Row,
 	message,
+	Card,
 } from 'antd';
-import { ArrowLeftOutlined, LeftOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+	ArrowLeftOutlined,
+	LeftOutlined,
+	UploadOutlined,
+} from '@ant-design/icons';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { GeneralContext } from '../../pages/_app';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
@@ -18,7 +23,6 @@ import { useBrandContext } from '../../hooks/useBrandsProvider';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { MEASURE_UNITS, useProducts } from './hooks/useProducts';
 import { useRouter } from 'next/router';
-import Card from '../shared/card';
 import { useRequest } from '../../hooks/useRequest';
 
 const ProductForm = (props) => {
@@ -62,7 +66,6 @@ const ProductForm = (props) => {
 
 	const { requestHandler } = useRequest();
 	const [c, setC] = useState();
-	
 
 	const codeListRequest = async (business = 1) => {
 		let code = [];
@@ -73,14 +76,14 @@ const ProductForm = (props) => {
 			return;
 		}
 		const value = response.value.getValue().data;
-		if(props.update) {
-			for ( let i = 0; i < value?.length; i++) {
-				if(product.barCode !== value[i].barCode) {
+		if (props.update) {
+			for (let i = 0; i < value?.length; i++) {
+				if (product.barCode !== value[i].barCode) {
 					setC(code.push(value[i].barCode));
 				}
 			}
 		} else {
-			for ( let i = 0; i < value?.length; i++) {
+			for (let i = 0; i < value?.length; i++) {
 				setC(code.push(value[i].barCode));
 			}
 		}
@@ -202,7 +205,6 @@ const ProductForm = (props) => {
 		if (!props.update) {
 			return onReset();
 		}
-
 	};
 
 	const [form] = Form.useForm();
@@ -218,30 +220,21 @@ const ProductForm = (props) => {
 	};
 
 	return (
-		<div className='form' style={{
-			margin: '1rem',
-		}}>
-			<section style={{
-				textAlign: 'center',
-				fontSize: '2.5rem',
-				margin: '0px',
-				display: 'flex',
-				width: '100%',
-				backgroundColor: 'white !important'
-			}}>
-				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<LeftOutlined
-						style={{ fontSize: '1.5rem', marginRight: '50%'}}
-					/>
+		<div className="flex flex-col">
+			<section className="flex justify-between items-center my-6">
+				<Button
+					onClick={handleReturn}
+					className="p-6 rounded-full flex justify-center items-center"
+				>
+					<LeftOutlined className="text-2xl mb-1" />
 				</Button>
-				<h2 style={{fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px'}}>
+				<h2 className="text-4xl">
 					{props.update ? 'Actualizar Producto' : 'Agregar Producto'}
-
 				</h2>
+				<div></div>
 			</section>
-			<Card>
+			<Card className="shadow-xl font-bold">
 				<Form
-					style={{ width: '100%', fontWeight: 'bold' }}
 					name="addProduct"
 					initialValues={{
 						nameProduct: product.nameProduct,
@@ -265,11 +258,7 @@ const ProductForm = (props) => {
 					form={form}
 				>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								label="Nombre"
 								name="nameProduct"
@@ -303,11 +292,7 @@ const ProductForm = (props) => {
 								></Input>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -321,7 +306,7 @@ const ProductForm = (props) => {
 									},
 									({}) => ({
 										validator(_, value) {
-											if (!value || !(c?.includes(value))) {
+											if (!value || !c?.includes(value)) {
 												return Promise.resolve();
 											}
 											return Promise.reject(
@@ -353,11 +338,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -400,11 +381,7 @@ const ProductForm = (props) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -449,11 +426,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								label="Línea"
 								name="idLineFk"
@@ -486,21 +459,14 @@ const ProductForm = (props) => {
 								>
 									{lines &&
 										lines.map((line) => (
-											<Select.Option
-												key={line.idLine}
-												value={line.idLine}
-											>
+											<Select.Option key={line.idLine} value={line.idLine}>
 												{line.name}
 											</Select.Option>
 										))}
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -533,10 +499,7 @@ const ProductForm = (props) => {
 								>
 									{brands &&
 										brands.map((brand) => (
-											<Select.Option
-												key={brand.idBrand}
-												value={brand.idBrand}
-											>
+											<Select.Option key={brand.idBrand} value={brand.idBrand}>
 												{brand.name}
 											</Select.Option>
 										))}
@@ -545,11 +508,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								label="EAN13"
 								name="ean"
@@ -576,11 +535,7 @@ const ProductForm = (props) => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -609,11 +564,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -647,11 +598,7 @@ const ProductForm = (props) => {
 								></Input>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								label="CPE"
 								name="cpe"
@@ -680,11 +627,7 @@ const ProductForm = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								name="isPromo"
 								label="Promoción"
@@ -707,11 +650,7 @@ const ProductForm = (props) => {
 							</Form.Item>
 						</Col>
 						{product.isPromo == '1' && (
-							<Col
-								xs={{ span: 24 }}
-								sm={{ span: 24 }}
-								md={{ span: 12 }}
-							>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Precio"
 									style={{
@@ -721,8 +660,7 @@ const ProductForm = (props) => {
 									rules={[
 										{
 											required: product.isPromo == 1,
-											message:
-												'Ingresa un precio para promoción',
+											message: 'Ingresa un precio para promoción',
 										},
 									]}
 									labelCol={{
@@ -749,11 +687,7 @@ const ProductForm = (props) => {
 						)}
 					</Row>
 					<Row>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								style={{
 									padding: '0 .5rem',
@@ -793,11 +727,7 @@ const ProductForm = (props) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col
-							xs={{ span: 24 }}
-							sm={{ span: 24 }}
-							md={{ span: 12 }}
-						>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							{product.idUnitMeasureSaleFk == 3 && (
 								<Form.Item
 									style={{
@@ -839,9 +769,7 @@ const ProductForm = (props) => {
 									}}
 									label="Unidades/Caja"
 									name="unitByBox"
-									required={
-										product.idUnitMeasureSaleFk === 17
-									}
+									required={product.idUnitMeasureSaleFk === 17}
 									rules={[
 										{
 											required: true,
@@ -925,9 +853,7 @@ const ProductForm = (props) => {
 									accept=".png,.jpg"
 									{...uploadProps}
 								>
-									<Button icon={<UploadOutlined />}>
-										Subir imagen
-									</Button>
+									<Button icon={<UploadOutlined />}>Subir imagen</Button>
 								</Upload>
 							</Form.Item>
 						</Col>
@@ -940,7 +866,7 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 5 }}
 						>
 							<Form.Item>
-								<Button block onClick={onReset} type='warning' >
+								<Button block onClick={onReset} type="warning">
 									Limpiar
 								</Button>
 							</Form.Item>

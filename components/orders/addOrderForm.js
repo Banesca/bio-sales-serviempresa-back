@@ -10,7 +10,6 @@ import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
 const AddOrderForm = (props) => {
 	const [loading, setLoading] = useState(false);
 
-	const [order, setOrder] = useState();
 	const [clients, setClients] = useState([]);
 
 	const [isNewClient, setIsNewClient] = useState(false);

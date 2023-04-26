@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { IoBriefcaseOutline } from 'react-icons/io5';
-import { Layout, Menu } from 'antd';
+import { Button, Dropdown, Layout, Menu, Space } from 'antd';
 import {
 	ImportOutlined,
 	ProfileOutlined,
@@ -10,6 +10,7 @@ import {
 	UsergroupAddOutlined,
 	InboxOutlined,
 	NotificationOutlined,
+	DownOutlined,
 } from '@ant-design/icons';
 
 import Loading from './loading';
@@ -60,11 +61,6 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(InboxOutlined),
 		},
 		{
-			key: '/dashboard/profile',
-			label: 'Mi perfil',
-			icon: React.createElement(UserOutlined),
-		},
-		{
 			key: '/dashboard/notifications',
 			label: 'Notificaciones',
 			icon: React.createElement(NotificationOutlined),
@@ -73,6 +69,24 @@ export default function DashboardLayout({ children }) {
 			key: '/login',
 			label: 'Cerrar Sesión',
 			icon: React.createElement(ImportOutlined),
+		},
+	];
+	const items = [
+		{
+			label: (
+				<div className="flex flex-col gap-4">
+					<h1 className="font-bold">Administrador</h1>
+					<h1>Email: admin@admin.com</h1>
+					<Button
+						onClick={() => {
+							router.push('/dashboard/users/update/1');
+						}}
+					>
+						Editar perfil
+					</Button>
+				</div>
+			),
+			key: '0',
 		},
 	];
 
@@ -113,7 +127,19 @@ export default function DashboardLayout({ children }) {
 						<MainLogo />
 					</div>
 					<p className="text-3xl">{currentBusiness}</p>
-					<p></p>
+					<Dropdown
+						menu={{
+							items,
+						}}
+						trigger={['click']}
+					>
+						<Button className="bg-gray-50" onClick={(e) => e.preventDefault()}>
+							<Space>
+								Perfil
+								<DownOutlined />
+							</Space>
+						</Button>
+					</Dropdown>
 				</Header>
 				<Layout style={{ minHeight: 'fit-content' }} hasSider>
 					<Sider theme="light" breakpoint="lg" collapsedWidth="3rem">

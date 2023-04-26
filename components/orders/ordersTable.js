@@ -115,46 +115,17 @@ export default function OrdersTable({ orders }) {
 			title: 'Estado',
 			dataIndex: 'statusOrder',
 			key: 3,
-			render: (text, record) => {
-				switch (record.idStatusOrder) {
-					case 1:
-						return (
-							<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 2:
-						return (
-							<p style={{ color: '#06a800', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 3:
-						return (
-							<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 4:
-						return (
-							<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 5:
-						return (
-							<p style={{ color: '#d63031', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-					case 6:
-						return (
-							<p style={{ color: '#d63031', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
-							</p>
-						);
-				}
-			},
+			render: (text, record) => (
+				<p
+					className={`font-bold text-center text-${
+						orderStatusToUse[record.idStatusOrder].color
+					}-500 ${
+						'bg-' + orderStatusToUse[record.idStatusOrder].color + '-200'
+					} px-2 py-1 rounded-xl`}
+				>
+					{orderStatusToUse[record.idStatusOrder].state}
+				</p>
+			),
 		},
 		{
 			title: 'Acción',
@@ -193,7 +164,7 @@ export default function OrdersTable({ orders }) {
 
 	return (
 		<ConfigProvider
-			renderEmpty={orders?.length !== 0 ? CustomizeRenderEmpty : ''}
+			renderEmpty={orders?.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
 			<Table columns={columns} dataSource={orders} loading={loading} />
 		</ConfigProvider>
