@@ -43,6 +43,7 @@ function MyApp({ Component, pageProps }) {
 			const token = localStorage.getItem('accessToken');
 			!token && router.push('/login');
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [router.pathname]);
 
 	return (

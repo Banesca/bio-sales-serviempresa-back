@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import DashboardLayout from '../../../components/shared/layout';
 import { Button, List, message } from 'antd';
 import Loading from '../../../components/shared/loading';
@@ -11,17 +12,16 @@ import Title from '../../../components/shared/title';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
-import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles'
-
+import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 
 const OrderDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
 	const [log, setLog] = useState();
-	
+
 	useEffect(() => {
-	  setLog(localStorage.getItem('userProfile'));
+		setLog(localStorage.getItem('userProfile'));
 	}, []);
 
 	const { loading, setLoading } = useLoadingContext();
@@ -30,7 +30,6 @@ const OrderDetail = () => {
 
 	const generalContext = useContext(GeneralContext);
 
-	
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -41,12 +40,12 @@ const OrderDetail = () => {
 			setLoading(false);
 		}
 	};
-	
+
 	const getStatus = () => {
 		let status = currentOrder.idStatusOrder;
 		let color = '';
-		(status);
-		if(status == 1) {
+		status;
+		if (status == 1) {
 			color = '#ff6c0b';
 		} else if (status == 2) {
 			color = '#06a800';
@@ -68,7 +67,7 @@ const OrderDetail = () => {
 		try {
 			await changeStatus(status, id);
 			message.success('Pedido actualizado');
-			(status);
+			status;
 		} catch (error) {
 			message.error('Error al actualizar pedido');
 		} finally {
@@ -79,8 +78,7 @@ const OrderDetail = () => {
 	const handleOrder = () => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${id}`);
-
-	}
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -88,7 +86,6 @@ const OrderDetail = () => {
 			getOrderRequest(id);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	
 	}, [generalContext, id]);
 
 	if (loading || !currentOrder) {
@@ -98,9 +95,6 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
-
-	
-
 
 	return (
 		<DashboardLayout>
@@ -113,55 +107,69 @@ const OrderDetail = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<div style={{display: 'flex', width: '100%'}}>
-					<Title title="Información General" path="/dashboard/orders"  goBack={1} />
+				<div style={{ display: 'flex', width: '100%' }}>
+					<Title
+						title="Información General"
+						path="/dashboard/orders"
+						goBack={1}
+					/>
 				</div>
-				<List style={{ width: '96%', padding: '10px 30px', backgroundColor: 'white', marginBottom: '25px', borderRadius: '15px', boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)'}}>
-					{log == user?.isUser || userProfile == PROFILES.MASTER || userProfile == PROFILES.ADMIN ? 					
+				<List
+					style={{
+						width: '96%',
+						padding: '10px 30px',
+						backgroundColor: 'white',
+						marginBottom: '25px',
+						borderRadius: '15px',
+						boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
+					}}
+				>
+					{log == user?.isUser ||
+					userProfile == PROFILES.MASTER ||
+					userProfile == PROFILES.ADMIN ? (
 						<ChangeOrderStatus
 							status={currentOrder.idStatusOrder}
 							handleOrder={handleOrder}
 							orderId={id}
 							handleChangeStatus={handleChangeStatus}
 						/>
-						: <></>
-					}
+					) : (
+						<></>
+					)}
 
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Número de pedido:</p>
+						<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
 						<p>{currentOrder.numberOrden}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Vendedor:</p>
+						<p style={{ fontWeight: 'bold' }}>Vendedor:</p>
 						<p>{user?.fullname}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Estado:</p>
-						<p style={{color: `${getStatus()}`, fontWeight: 'bold'}}>{orderStatusToUse[currentOrder.idStatusOrder]}</p>
+						<p style={{ fontWeight: 'bold' }}>Estado:</p>
+						<p style={{ color: `${getStatus()}`, fontWeight: 'bold' }}>
+							{orderStatusToUse[currentOrder.idStatusOrder]}
+						</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Observacion (opcional):</p>
+						<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
 						<p style={{}}>{currentOrder.comments}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Cliente:</p>
+						<p style={{ fontWeight: 'bold' }}>Cliente:</p>
 						<p>{currentOrder.fullNameClient}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Contacto:</p>
+						<p style={{ fontWeight: 'bold' }}>Contacto:</p>
 						<p>{currentOrder.phoneClient}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Dirección:</p>
+						<p style={{ fontWeight: 'bold' }}>Dirección:</p>
 						<p>{currentOrder.address}</p>
 					</List.Item>
 					<List.Item>
-						<p style={{fontWeight: 'bold'}}>Fecha de creación:</p>
-						<p>
-							{new Date(
-								currentOrder.fechaEntrega
-							).toLocaleDateString()}
-						</p>
+						<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
+						<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
 					</List.Item>
 				</List>
 				<DetailOrderTable

@@ -1,24 +1,13 @@
 /* eslint-disable indent */
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
-import {
-	Input,
-	Typography,
-	Form,
-	Layout,
-	message,
-	Modal,
-	Button,
-	List,
-	Tooltip,
-} from 'antd';
+import { Input, Form, Layout, message, Modal, Button, Tooltip } from 'antd';
 import Loading from '../components/shared/loading';
 import { GeneralContext } from './_app';
 import { useRequest } from '../hooks/useRequest';
 import { useBusinessProvider } from '../hooks/useBusinessProvider';
 import { ip } from '../util/environment';
 import { PROFILES } from '../components/shared/profiles';
-import Image from 'next/image';
 import MainLogo from '../components/logos/mainLogo';
 
 const { Content } = Layout;
@@ -32,9 +21,6 @@ export default function Login() {
 	const handleDelete = () => {
 		setDeleteModalOpen(false);
 	};
-
-	const regexpTlp =
-		/^(?=.\d)(?=.[\u0021-\u002b\u003c-\u0040])(?=.[A-Z])(?=.[a-z])\S{8,16}$/g;
 
 	const [messageApi, contextHolder] = message.useMessage();
 	const handleLoginError = (error) => {

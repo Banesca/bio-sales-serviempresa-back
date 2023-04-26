@@ -70,6 +70,7 @@ export default function Users() {
 		}
 		addKeys(usersList);
 		return usersList;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [query, users]);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);

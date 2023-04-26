@@ -111,9 +111,7 @@ const UpdateOrderPage = () => {
 	}, [products]);
 
 	const calculateTotalRequest = async () => {
-		const res = await requestHandler.get(
-			`/api/v2/order/calculate/total/${id}`
-		);
+		const res = await requestHandler.get(`/api/v2/order/calculate/total/${id}`);
 		if (res.isLeft()) {
 			return;
 		}
@@ -125,6 +123,7 @@ const UpdateOrderPage = () => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
 
 	const generalContext = useContext(GeneralContext);
@@ -171,10 +170,7 @@ const UpdateOrderPage = () => {
 	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(
-				statusNames['Recibido'],
-				currentOrder.idOrderH
-			);
+			await changeStatus(statusNames['Recibido'], currentOrder.idOrderH);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
 			message.error('Error al recibir pedido');
@@ -185,10 +181,7 @@ const UpdateOrderPage = () => {
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(
-				statusNames['En proceso'],
-				currentOrder.idOrderH
-			)
+			await changeStatus(statusNames['En proceso'], currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al pausar pedido');
@@ -200,10 +193,7 @@ const UpdateOrderPage = () => {
 	const handleCancelOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(
-				statusNames.Anulado,
-				currentOrder.idOrderH
-			)
+			await changeStatus(statusNames.Anulado, currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al anular pedido');
@@ -221,17 +211,15 @@ const UpdateOrderPage = () => {
 					(item.isPromo == '1' ? item.marketPrice : item.priceSale));
 		} else {
 			subTotal =
-				item.weight *
-				(item.isPromo == '1' ? item.marketPrice : item.priceSale);
+				item.weight * (item.isPromo == '1' ? item.marketPrice : item.priceSale);
 		}
 		return subTotal;
 	};
 
 	const handleReturn = () => {
 		router.push('/dashboard/orders');
-		setLoading(true)
+		setLoading(true);
 	};
-
 
 	return (
 		<DashboardLayout>
@@ -251,10 +239,17 @@ const UpdateOrderPage = () => {
 						alignItems: 'center',
 					}}
 				>
-					<div style={{position: 'absolute'}}>
-						<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
+					<div style={{ position: 'absolute' }}>
+						<Button
+							style={{
+								marginRight: '50%',
+								height: '42px',
+								borderRadius: '20px',
+							}}
+							onClick={handleReturn}
+						>
 							<LeftOutlined
-								style={{ fontSize: '1.5rem', marginRight: '50%'}}
+								style={{ fontSize: '1.5rem', marginRight: '50%' }}
 							/>
 						</Button>
 					</div>
@@ -262,7 +257,7 @@ const UpdateOrderPage = () => {
 						style={{
 							textAlign: 'center',
 							fontSize: '2rem',
-							marginLeft: '15%'
+							marginLeft: '15%',
 						}}
 					>
 						Tomar pedido
@@ -279,7 +274,7 @@ const UpdateOrderPage = () => {
 						<Button
 							onClick={() => setIsPauseOrderModal(true)}
 							type="info"
-							style={{ marginRight: '1rem'}}
+							style={{ marginRight: '1rem' }}
 						>
 							Pausar
 						</Button>
@@ -312,7 +307,6 @@ const UpdateOrderPage = () => {
 					</Col>
 					<Col span={12}>
 						<Typography>
-
 							<ProductsInOrder
 								order={currentOrder}
 								openDeleteModal={openDeleteModal}
@@ -348,15 +342,15 @@ const UpdateOrderPage = () => {
 				</p>
 			</Modal>
 			<Modal
-				title='Enviar'
-				className='send'
+				title="Enviar"
+				className="send"
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
 				onOk={() => handleReceiveOrder()}
 				cancelText="Cancelar"
 				okText="Enviar"
-				okType='primary'
-				closable='false'
+				okType="primary"
+				closable="false"
 				footer={[
 					<Button
 						key="cancel"
@@ -380,9 +374,7 @@ const UpdateOrderPage = () => {
 						<List.Item>
 							<List.Item.Meta
 								title={item.nameProduct}
-								description={`Cantidad: ${
-									item.weight
-								} | Precio: $${
+								description={`Cantidad: ${item.weight} | Precio: $${
 									item.isPromo == 1
 										? item.marketPrice.toFixed(2)
 										: item.priceSale.toFixed(2)
@@ -411,7 +403,7 @@ const UpdateOrderPage = () => {
 				open={pauseOrderModal}
 				onCancel={() => setIsPauseOrderModal(false)}
 				onOk={handlePauseOrder}
-				closable='false'
+				closable="false"
 				footer={[
 					<Button
 						key="cancel"
@@ -420,16 +412,16 @@ const UpdateOrderPage = () => {
 					>
 						Cancelar
 					</Button>,
-					<Button
-						key="delete"
-						type="info"
-						onClick={handlePauseOrder}
-					>
+					<Button key="delete" type="info" onClick={handlePauseOrder}>
 						Pausar
 					</Button>,
 				]}
 			>
-				<p> ¿Estás seguro que deseas pausar el pedido? Podrás acceder previamente al pedido pausado desde el módulo de pedidos. <br /></p>
+				<p>
+					{' '}
+					¿Estás seguro que deseas pausar el pedido? Podrás acceder previamente
+					al pedido pausado desde el módulo de pedidos. <br />
+				</p>
 			</Modal>
 			<Modal
 				title="Eliminar"
@@ -437,10 +429,7 @@ const UpdateOrderPage = () => {
 				onCancel={() => setIsCancelOrderModal(false)}
 				onOk={handleCancelOrder}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => setIsCancelOrderModal(false)}
-					>
+					<Button key="cancel" onClick={() => setIsCancelOrderModal(false)}>
 						Cancelar
 					</Button>,
 					<Button
@@ -449,7 +438,7 @@ const UpdateOrderPage = () => {
 						type="primary"
 						onClick={handleCancelOrder}
 					>
-						Anular 
+						Anular
 					</Button>,
 				]}
 			>

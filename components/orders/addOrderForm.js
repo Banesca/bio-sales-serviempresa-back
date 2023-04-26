@@ -34,6 +34,7 @@ const AddOrderForm = (props) => {
 		if (generalContext && selectedBusiness) {
 			getClientsRequest();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
 	const [form] = Form.useForm();
@@ -52,7 +53,9 @@ const AddOrderForm = (props) => {
 	const onSubmit = async (values) => {
 		setLoading(true);
 		const data = {
-			address: isNewClient ? values.address : clients[values.selectClient]?.address,
+			address: isNewClient
+				? values.address
+				: clients[values.selectClient]?.address,
 			comments: values.comments,
 			deliveryEnLocal: false,
 			deliveryEnTienda: false,
@@ -65,7 +68,9 @@ const AddOrderForm = (props) => {
 			idTableFk: 0,
 			idUserOpenFk: Number(localStorage.getItem('userId')),
 			moso: null,
-			phoneClient: isNewClient ? values.phoneClient : clients[values.selectClient]?.phone,
+			phoneClient: isNewClient
+				? values.phoneClient
+				: clients[values.selectClient]?.phone,
 		};
 		if (isNewClient) {
 			await createClient(values);
@@ -85,26 +90,30 @@ const AddOrderForm = (props) => {
 		setLoading(true);
 	};
 
-
 	return (
 		<>
-			<section style={{
-				textAlign: 'center',
-				fontSize: '2.5rem',
-				margin: '1rem',
-				display: 'flex',
-				width: '100%',
-				backgroundColor: 'white !important'
-			}}>
-				<Button style={{marginRight: '50%', height: '42px', borderRadius: '20px'}} onClick={handleReturn}>
-					<LeftOutlined
-						style={{ fontSize: '1.5rem', marginRight: '50%'}}
-					/>
+			<section
+				style={{
+					textAlign: 'center',
+					fontSize: '2.5rem',
+					margin: '1rem',
+					display: 'flex',
+					width: '100%',
+					backgroundColor: 'white !important',
+				}}
+			>
+				<Button
+					style={{ marginRight: '50%', height: '42px', borderRadius: '20px' }}
+					onClick={handleReturn}
+				>
+					<LeftOutlined style={{ fontSize: '1.5rem', marginRight: '50%' }} />
 				</Button>
-				<h2 style={{fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px'}}>
+				<h2
+					style={{ fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px' }}
+				>
 					Agregar pedido
 				</h2>
-			</section>	
+			</section>
 			<div
 				style={{
 					maxWidth: '800px',
@@ -113,7 +122,7 @@ const AddOrderForm = (props) => {
 					backgroundColor: 'white',
 					boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
 					padding: '60px',
-					borderRadius: '20px'
+					borderRadius: '20px',
 				}}
 			>
 				<Form
@@ -129,9 +138,7 @@ const AddOrderForm = (props) => {
 							<Form.Item label="Nuevo Cliente">
 								<Switch
 									checked={isNewClient}
-									onChange={() =>
-										setIsNewClient(!isNewClient)
-									}
+									onChange={() => setIsNewClient(!isNewClient)}
 								/>
 							</Form.Item>
 						</Col>
@@ -150,10 +157,7 @@ const AddOrderForm = (props) => {
 									<Select showSearch>
 										{clients &&
 											clients.map((c, i) => (
-												<Select.Option
-													values={c}
-													key={i}
-												>
+												<Select.Option values={c} key={i}>
 													{c.nameClient}
 												</Select.Option>
 											))}
@@ -171,8 +175,7 @@ const AddOrderForm = (props) => {
 										rules={[
 											{
 												required: isNewClient,
-												message:
-													'Razón social es requerido',
+												message: 'Razón social es requerido',
 											},
 										]}
 										name="fullNameClient"
@@ -186,8 +189,7 @@ const AddOrderForm = (props) => {
 										rules={[
 											{
 												required: isNewClient,
-												message:
-													'Ingresa un numero de teléfono',
+												message: 'Ingresa un numero de teléfono',
 											},
 										]}
 										name="phoneClient"
@@ -204,8 +206,7 @@ const AddOrderForm = (props) => {
 										rules={[
 											{
 												required: isNewClient,
-												message:
-													'Ingresa la dirección del cliente',
+												message: 'Ingresa la dirección del cliente',
 											},
 										]}
 										name="address"
@@ -220,8 +221,7 @@ const AddOrderForm = (props) => {
 										rules={[
 											{
 												required: isNewClient,
-												message:
-													'Ingresa el rif del cliente',
+												message: 'Ingresa el rif del cliente',
 											},
 										]}
 										name="rif"
@@ -239,10 +239,7 @@ const AddOrderForm = (props) => {
 								label="Observación"
 								name="comments"
 							>
-								<Input.TextArea
-									type="text"
-									rows={4}
-								></Input.TextArea>
+								<Input.TextArea type="text" rows={4}></Input.TextArea>
 							</Form.Item>
 						</Col>
 					</Row>
@@ -254,7 +251,7 @@ const AddOrderForm = (props) => {
 									offset: 8,
 								}}
 							>
-								<Button type='warning' block onClick={onReset}>
+								<Button type="warning" block onClick={onReset}>
 									Limpiar
 								</Button>
 							</Form.Item>

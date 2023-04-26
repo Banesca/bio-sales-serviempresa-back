@@ -16,10 +16,7 @@ const SelectBusiness = () => {
 	const onChange = (key) => {
 		const filterBusiness = business.find((b) => b.idSucursal === key);
 		handleSetSelectedBusiness(filterBusiness);
-		localStorage.setItem(
-			'selectedBusiness',
-			JSON.stringify(filterBusiness)
-		);
+		localStorage.setItem('selectedBusiness', JSON.stringify(filterBusiness));
 		localStorage.setItem('bs', filterBusiness.nombre);
 		handleMessage(filterBusiness.nombre);
 	};
@@ -29,6 +26,7 @@ const SelectBusiness = () => {
 		if (Object.keys(selectedBusiness).length) {
 			form.setFieldValue('business', selectedBusiness.nombre);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedBusiness]);
 
 	return (
@@ -41,16 +39,10 @@ const SelectBusiness = () => {
 				<Row style={{ display: 'flex', justifyContent: 'center' }}>
 					<Form form={form}>
 						<Form.Item name="business">
-							<Select
-								onChange={onChange}
-								style={{ minWidth: '200px' }}
-							>
+							<Select onChange={onChange} style={{ minWidth: '200px' }}>
 								{business &&
 									business.map((b) => (
-										<Select.Option
-											key={b.idSucursal}
-											value={b.idSucursal}
-										>
+										<Select.Option key={b.idSucursal} value={b.idSucursal}>
 											{b.nombre}
 										</Select.Option>
 									))}

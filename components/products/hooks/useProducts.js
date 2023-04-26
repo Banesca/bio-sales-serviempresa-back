@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
 
-export const MEASURE_UNITS = {
-	Kilogramo: 3,
-	Unidad: 17,
-};
-
 const PRODUCT_INITIAL_STATE = {
 	pricePurchase: 0,
 	idUnitMeasurePurchaseFk: 17,
@@ -99,17 +94,6 @@ export function useProducts() {
 		setProductsInv(value);
 	};
 
-	const sendNotification = async (businessId) => {
-		const response = await requestHandler.get(
-			`/api/v2/utils/notification/${businessId}`
-		);
-		if (response.isLeft()) {
-			throw response.value.getErrorValue();
-		}
-		const value = response.value.getValue().data;
-		console.log(value);
-	};
-
 	const validateBarCode = async (barCode, idSucursalFk) => {
 		const res = await requestHandler.post('/api/v2/product/find/bybarcode', {
 			barCode,
@@ -201,6 +185,5 @@ export function useProducts() {
 		getProductById,
 		updateProduct,
 		deleteProduct,
-		sendNotification,
 	};
 }

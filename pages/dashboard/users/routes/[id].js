@@ -107,6 +107,7 @@ export default function Routes() {
 			handleGetClients(id);
 			setLoading(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const handleSubmit = async () => {

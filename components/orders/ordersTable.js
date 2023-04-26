@@ -47,6 +47,7 @@ export default function OrdersTable({ orders }) {
 
 	useEffect(() => {
 		getUserRequest();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const columns = [

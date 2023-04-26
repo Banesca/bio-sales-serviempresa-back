@@ -16,10 +16,8 @@ import { message } from 'antd';
 import ProductFilter from '../../../components/products/productFilter';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import Loading from '../../../components/shared/loading';
-import { useCategoryContext } from '../../../hooks/useCategoriesProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useProducts } from '../../../components/products/hooks/useProducts';
-import { useBrandContext } from '../../../hooks/useBrandsProvider';
 import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
@@ -117,13 +115,9 @@ export default function Products() {
 	const { loading, setLoading } = useLoadingContext();
 
 	const generalContext = useContext(GeneralContext);
-
-	const { getCategories, getSubCategories, getLines } = useCategoryContext();
-	const { getBrands } = useBrandContext();
-
-	const { getProducts, deleteProduct, products, sendNotification } =
-		useProducts();
+	const { getProducts, deleteProduct, products } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
+	const { selectedBusiness } = useBusinessProvider();
 
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
@@ -150,31 +144,6 @@ export default function Products() {
 		}
 	};
 
-	const categoryListRequest = async (id = 1) => {
-		setLoading(true);
-		try {
-			await getCategories(id);
-			await getSubCategories(id);
-			await getLines(id);
-			setLoading(false);
-		} catch (error) {
-			return message.error('Error al cargar las categorías');
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const brandListRequest = async (business = 1) => {
-		setLoading(true);
-		try {
-			await getBrands(business);
-		} catch (error) {
-			message.error('Error al cargar marcas');
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	const deleteProductRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -186,29 +155,13 @@ export default function Products() {
 		}
 	};
 
-	const sendNot = async () => {
-		setLoading(true);
-		try {
-			await sendNotification(selectedBusiness.idSucursal);
-		} catch (error) {
-			message.error('Error al eliminar producto');
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const { selectedBusiness } = useBusinessProvider();
-
 	useEffect(() => {
 		setLoading(true);
 		if (
 			Object.keys(generalContext).length > 0 &&
 			Object.keys(selectedBusiness).length > 0
 		) {
-			categoryListRequest(selectedBusiness.idSucursal);
-			brandListRequest(selectedBusiness.idSucursal);
 			getProductsRequest(selectedBusiness.idSucursal);
-			sendNot();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
@@ -255,7 +208,9 @@ export default function Products() {
 						)}
 					</Title>
 					<ProductFilter setQuery={setQuery} clean={clean} />
-					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+					<ConfigProvider
+						renderEmpty={filtered().length !== 0 ? CustomizeRenderEmpty : ''}
+					>
 						<Table
 							columns={columns}
 							dataSource={filtered()}
@@ -283,7 +238,7 @@ export default function Products() {
 				>
 					<p>
 						Estas seguro de que deseas eliminar
-						{` ${currentProduct?.nameProduct}`}
+						{currentProduct?.nameProduct}
 					</p>
 				</Modal>
 			</DashboardLayout>
