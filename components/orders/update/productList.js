@@ -128,7 +128,9 @@ export default function ProductList({
 	useEffect(() => {}, [products]);
 
 	return (
-		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+		<ConfigProvider
+			renderEmpty={products.length !== 0 ? CustomizeRenderEmpty : ''}
+		>
 			<Table dataSource={products} columns={AddColumns} loading={loading} />
 		</ConfigProvider>
 	);

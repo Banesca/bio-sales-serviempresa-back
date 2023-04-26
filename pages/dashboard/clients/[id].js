@@ -271,7 +271,9 @@ const ClientDetail = () => {
 				>
 					Pedidos
 				</h3>
-				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+				<ConfigProvider
+					renderEmpty={orders.length !== 0 ? CustomizeRenderEmpty : ''}
+				>
 					<Table loading={loading} columns={columns} dataSource={orders} />
 				</ConfigProvider>
 			</div>

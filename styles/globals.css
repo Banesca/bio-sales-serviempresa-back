@@ -6,3 +6,8 @@
 .ant-table {
 	box-shadow: 4px 2px 6px 1px rgb(224, 224, 224);
 }
+
+.ant-menu > li:hover {
+	color: #4798d4 !important;
+	background-color: white !important;
+}

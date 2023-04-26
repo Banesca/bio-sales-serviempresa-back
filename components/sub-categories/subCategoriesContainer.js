@@ -148,7 +148,11 @@ export default function SubCategoriesContainer() {
 				setQuery={setQuery}
 				setSelectedCategory={setSelectedCategory}
 			/>
-			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+			<ConfigProvider
+				renderEmpty={
+					subCategoryList?.length !== 0 || true ? CustomizeRenderEmpty : ''
+				}
+			>
 				<Table bordered dataSource={subCategoryList} columns={columns} />
 			</ConfigProvider>
 			<SubCategoryModals

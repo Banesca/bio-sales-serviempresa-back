@@ -314,7 +314,9 @@ export default function ClientsPage() {
 						</Row>
 					</Collapse.Panel>
 				</Collapse>
-				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+				<ConfigProvider
+					renderEmpty={clientsList.length !== 0 ? CustomizeRenderEmpty : ''}
+				>
 					<Table columns={columns} dataSource={clientsList} />
 				</ConfigProvider>
 			</div>

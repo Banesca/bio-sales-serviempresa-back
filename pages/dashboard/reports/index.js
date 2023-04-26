@@ -1,5 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
-import { Button, List, Table, Form, Select, DatePicker, Card } from 'antd';
+import {
+	Button,
+	List,
+	Table,
+	Form,
+	Select,
+	DatePicker,
+	Card,
+	ConfigProvider,
+} from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -8,6 +17,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import SelectBusiness from '../../../components/business/selectBusiness';
 import TotalSales from '../../../components/reports/totalSales/TotalSales';
 import Graphic from '../../../components/reports/totalSales/Graphic';
+import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const UserDetail = () => {
 	const columns = [
@@ -236,12 +246,16 @@ const UserDetail = () => {
 							</Form>
 						</List.Item>
 						<List.Item>
-							<Table
-								style={{ width: '100%' }}
-								columns={columns}
-								dataSource={sells}
-								loading={loading}
-							/>
+							<ConfigProvider
+								renderEmpty={sells?.length !== 0 ? CustomizeRenderEmpty : ''}
+							>
+								<Table
+									style={{ width: '100%' }}
+									columns={columns}
+									dataSource={sells}
+									loading={loading}
+								/>
+							</ConfigProvider>
 						</List.Item>
 						<List.Item>
 							<div className="flex justify-center h-full w-full">

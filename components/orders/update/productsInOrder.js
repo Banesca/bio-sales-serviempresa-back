@@ -94,7 +94,9 @@ export default function ProductsInOrder({
 	const { loading } = useLoadingContext();
 
 	return (
-		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+		<ConfigProvider
+			renderEmpty={productList.length !== 0 ? CustomizeRenderEmpty : ''}
+		>
 			<Table
 				columns={orderColumns}
 				loading={loading}

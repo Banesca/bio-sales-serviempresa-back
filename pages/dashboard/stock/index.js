@@ -214,7 +214,11 @@ export default function Products() {
 						</Button>
 					</Title>
 					<Filter setQuery={setQuery} clean={clean} />
-					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+					<ConfigProvider
+						renderEmpty={
+							filtered()?.length !== 0 || true ? CustomizeRenderEmpty : ''
+						}
+					>
 						<Table
 							columns={columns}
 							dataSource={filtered()}

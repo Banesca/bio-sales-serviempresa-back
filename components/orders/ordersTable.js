@@ -192,7 +192,9 @@ export default function OrdersTable({ orders }) {
 	];
 
 	return (
-		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+		<ConfigProvider
+			renderEmpty={orders?.length !== 0 ? CustomizeRenderEmpty : ''}
+		>
 			<Table columns={columns} dataSource={orders} loading={loading} />
 		</ConfigProvider>
 	);

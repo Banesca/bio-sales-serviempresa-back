@@ -44,7 +44,9 @@ export default function UserBusinessTable({
 	};
 
 	return (
-		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+		<ConfigProvider
+			renderEmpty={business.length !== 0 ? CustomizeRenderEmpty : ''}
+		>
 			<Table
 				columns={columns}
 				style={{ width: '100%' }}

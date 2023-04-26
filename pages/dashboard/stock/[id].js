@@ -126,6 +126,7 @@ const Product = () => {
 		if (currentProduct.idBrandFk) {
 			getBrandRequest(currentProduct.idBrandFk);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentProduct]);
 
 	if (loading) {

@@ -120,7 +120,9 @@ const UsersTable = ({
 
 	return (
 		<div>
-			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+			<ConfigProvider
+				renderEmpty={users.length !== 0 ? CustomizeRenderEmpty : ''}
+			>
 				<Table columns={columns} dataSource={users} loading={loading} />
 			</ConfigProvider>
 

@@ -121,7 +121,11 @@ export default function LinesContainer() {
 				setQuery={setQuery}
 				setSelectedSubCategory={setSelectedSubCategory}
 			/>
-			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+			<ConfigProvider
+				renderEmpty={
+					linesList?.length !== 0 || true ? CustomizeRenderEmpty : ''
+				}
+			>
 				<Table bordered dataSource={linesList} columns={columns} />
 			</ConfigProvider>
 			<LinesModals

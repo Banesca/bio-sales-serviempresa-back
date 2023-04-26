@@ -237,7 +237,11 @@ export default function CategoryContainer() {
 				)}
 			</Title>
 			<CategoryFilters setQuery={setQuery} />
-			<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+			<ConfigProvider
+				renderEmpty={
+					categoriesList.length !== 0 || true ? CustomizeRenderEmpty : ''
+				}
+			>
 				<Table bordered dataSource={categoriesList} columns={columns} />
 			</ConfigProvider>
 			<Modal

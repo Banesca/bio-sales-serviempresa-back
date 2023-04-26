@@ -198,7 +198,9 @@ export default function Routes() {
 						</Form>
 					</Collapse.Panel>
 				</Collapse>
-				<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+				<ConfigProvider
+					renderEmpty={routes.length !== 0 ? CustomizeRenderEmpty : ''}
+				>
 					<Table
 						columns={columns}
 						style={{ width: '100%' }}

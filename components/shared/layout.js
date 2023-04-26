@@ -122,7 +122,9 @@ export default function DashboardLayout({ children }) {
 							onSelect={(e) => handleNavigation(e)}
 							className="flex flex-col gap-5 h-full bg-[#012258] text-white"
 						/>
-						<h1 className="sticky -mt-8 ml-4">Version 0.1.0</h1>
+						<h1 className="sticky -mt-8 ml-4 hidden lg:block text-white">
+							Version 0.1.0
+						</h1>
 					</Sider>
 					<Layout>
 						<div className="bg-[#F7F9FB">

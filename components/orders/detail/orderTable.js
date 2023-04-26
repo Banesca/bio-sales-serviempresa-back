@@ -42,7 +42,9 @@ export default function DetailOrderTable({ products, total }) {
 	addKeys(products);
 
 	return (
-		<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+		<ConfigProvider
+			renderEmpty={products.length !== 0 ? CustomizeRenderEmpty : ''}
+		>
 			<Table
 				style={{ width: '100%' }}
 				columns={columns}

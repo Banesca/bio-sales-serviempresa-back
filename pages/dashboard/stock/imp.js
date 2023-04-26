@@ -318,7 +318,9 @@ const ImportProducts = () => {
 							</Upload>
 						</Col>
 					</Row>
-					<ConfigProvider renderEmpty={CustomizeRenderEmpty}>
+					<ConfigProvider
+						renderEmpty={data.length !== 0 ? CustomizeRenderEmpty : ''}
+					>
 						<Table columns={columns} dataSource={data} />
 					</ConfigProvider>
 				</div>
