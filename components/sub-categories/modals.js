@@ -152,12 +152,19 @@ export default function SubCategoryModals({
 				open={modals.add}
 				onOk={handleAddSubCategory}
 				footer={[
-					<Button key="cancel" danger onClick={() => handleCloseCreateModal()}>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="success" onClick={handleAddSubCategory}>
-						Agregar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => handleCloseCreateModal()}
+						>
+							Cancelar
+						</Button>
+						<Button key="delete" type="success" onClick={handleAddSubCategory}>
+							Agregar
+						</Button>
+					</div>,
 				]}
 			>
 				<Form form={createForm}>
@@ -212,17 +219,20 @@ export default function SubCategoryModals({
 				open={modals.delete}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button key="cancel" onClick={() => closeDeleteModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={() => closeDeleteModal(true)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => closeDeleteModal(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={() => closeDeleteModal(true)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -232,14 +242,21 @@ export default function SubCategoryModals({
 			<Modal
 				title="Actualizar subcategoria"
 				open={isEditModalOpen}
-				onCancel={() => close}
+				onCancel={() => close()}
 				footer={[
-					<Button key="cancel" danger onClick={() => close()}>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="success" onClick={() => handleEditLine()}>
-						Actualizar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" danger onClick={() => close()}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							type="success"
+							onClick={() => handleEditLine()}
+						>
+							Actualizar
+						</Button>
+					</div>,
 				]}
 			>
 				<Form

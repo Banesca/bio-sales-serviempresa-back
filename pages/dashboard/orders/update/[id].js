@@ -323,17 +323,20 @@ const UpdateOrderPage = () => {
 				onCancel={() => setDeleteOpen(false)}
 				onOk={handleCancelOrder}
 				footer={[
-					<Button key="cancel" onClick={() => setDeleteOpen(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={handleCancelOrder}
-					>
-						Anular
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => setDeleteOpen(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={handleCancelOrder}
+						>
+							Anular
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -352,20 +355,23 @@ const UpdateOrderPage = () => {
 				okType="primary"
 				closable="false"
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => setIsCloseOrderModal(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						type="primary"
-						onClick={() => handleReceiveOrder()}
-					>
-						Enviar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => setIsCloseOrderModal(false)}
+						>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							type="primary"
+							onClick={() => handleReceiveOrder()}
+						>
+							Enviar
+						</Button>
+					</div>,
 				]}
 			>
 				<List
@@ -405,16 +411,19 @@ const UpdateOrderPage = () => {
 				onOk={handlePauseOrder}
 				closable="false"
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => setIsPauseOrderModal(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="info" onClick={handlePauseOrder}>
-						Pausar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => setIsPauseOrderModal(false)}
+						>
+							Cancelar
+						</Button>
+						<Button key="delete" type="info" onClick={handlePauseOrder}>
+							Pausar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -429,17 +438,20 @@ const UpdateOrderPage = () => {
 				onCancel={() => setIsCancelOrderModal(false)}
 				onOk={handleCancelOrder}
 				footer={[
-					<Button key="cancel" onClick={() => setIsCancelOrderModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={handleCancelOrder}
-					>
-						Anular
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => setIsCancelOrderModal(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={handleCancelOrder}
+						>
+							Anular
+						</Button>
+					</div>,
 				]}
 			>
 				<p>¿Estas seguro de que deseas anular esta orden?</p>

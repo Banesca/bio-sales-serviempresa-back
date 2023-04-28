@@ -250,12 +250,19 @@ export default function CategoryContainer() {
 				onOk={handleCreateCategory}
 				onCancel={() => handleCloseCreateModal()}
 				footer={[
-					<Button danger key="cancel" onClick={() => handleCloseCreateModal()}>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="success" onClick={handleCreateCategory}>
-						Agregar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							danger
+							key="cancel"
+							onClick={() => handleCloseCreateModal()}
+						>
+							Cancelar
+						</Button>
+						<Button key="delete" type="success" onClick={handleCreateCategory}>
+							Agregar
+						</Button>
+					</div>,
 				]}
 			>
 				<Form form={createForm}>
@@ -284,17 +291,20 @@ export default function CategoryContainer() {
 				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button key="cancel" onClick={() => handleCloseDeleteModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={() => handleCloseDeleteModal(true)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => handleCloseDeleteModal(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={() => handleCloseDeleteModal(true)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -306,18 +316,21 @@ export default function CategoryContainer() {
 				open={isEditModalOpen}
 				onCancel={() => cancelModal()}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => {
-							cancelModal();
-						}}
-					>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="success" onClick={handleEditLine}>
-						Actualizar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => {
+								cancelModal();
+							}}
+						>
+							Cancelar
+						</Button>
+						<Button key="delete" type="success" onClick={handleEditLine}>
+							Actualizar
+						</Button>
+					</div>,
 				]}
 			>
 				<div>{lineBody?.name}</div>

@@ -212,19 +212,24 @@ export default function Routes() {
 				title="Agregar Ruta"
 				open={isModalOpen}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => {
-							setIsModalOpen(false);
-							setFormState(FORM_INITIAL_STATE);
-						}}
-					>
-						Cancelar
-					</Button>,
-					<Button key="add" type="success" onClick={handleSubmit}>
-						Agregar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => {
+								setIsModalOpen(false);
+								setFormState(FORM_INITIAL_STATE);
+							}}
+						>
+							Cancelar
+						</Button>
+						,
+						<Button key="add" type="success" onClick={handleSubmit}>
+							Agregar
+						</Button>
+						,
+					</div>,
 				]}
 			>
 				<Form

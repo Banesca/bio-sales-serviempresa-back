@@ -45,7 +45,7 @@ export default function UserClientsTable({
 
 	return (
 		<ConfigProvider
-			renderEmpty={clients.length !== 0 ? CustomizeRenderEmpty : ''}
+			renderEmpty={clients.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
 			<Table
 				style={{ width: '100%' }}

@@ -187,20 +187,25 @@ const UserDetail = () => {
 							onOk={() => handleCloseModal(true)}
 							onCancel={() => handleCloseModal(false)}
 							footer={[
-								<Button
-									key="cancel"
-									danger
-									onClick={() => handleCloseModal(false)}
-								>
-									Cancelar
-								</Button>,
-								<Button
-									type="success"
-									key="delete"
-									onClick={() => finishForm(userData)}
-								>
-									Guardar
-								</Button>,
+								// eslint-disable-next-line react/jsx-key
+								<div className="flex justify-end gap-6">
+									<Button
+										key="cancel"
+										danger
+										onClick={() => handleCloseModal(false)}
+									>
+										Cancelar
+									</Button>
+									,
+									<Button
+										type="success"
+										key="delete"
+										onClick={() => finishForm(userData)}
+									>
+										Guardar
+									</Button>
+									,
+								</div>,
 							]}
 						>
 							<List.Item style={{ marginTop: '30px', fontWeight: 'bold' }}>

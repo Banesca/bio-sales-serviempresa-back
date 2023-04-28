@@ -7,8 +7,7 @@ import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
-import Title from '../shared/title';
-import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 
 const UserForm = ({
 	user,
@@ -30,9 +29,10 @@ const UserForm = ({
 	});
 
 	const regexpTlp =
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.;])[A-Za-z\d$@$!%*?&]{8,15}/;
 	const [loading, setLoading] = useState(false);
 	const [businessByUser, setBusinessByUser] = useState(userBusiness);
+	const [click, setClick] = useState(false);
 
 	const handleChange = (e) => {
 		setUserData((prevData) => ({
@@ -50,7 +50,13 @@ const UserForm = ({
 			idProfileFk: null,
 		});
 		form.resetFields();
+		click ? setClick(false) : setClick(true);
 	};
+
+	useEffect(() => {
+		click ? onReset() : '';
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [click]);
 
 	const router = useRouter();
 

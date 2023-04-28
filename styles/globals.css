@@ -12,6 +12,7 @@ button {
 
 .ant-table {
 	box-shadow: 4px 2px 6px 1px rgb(224, 224, 224);
+	border-radius: 24px !important;
 }
 
 .ant-menu > li:hover {

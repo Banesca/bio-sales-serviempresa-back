@@ -338,13 +338,17 @@ const ImportProducts = () => {
 					title="Notificación"
 					open={notificationOpen}
 					footer={[
-						<Button
-							onClick={() => setNotificationOpen(false)}
-							key="confirmar"
-							type="primary"
-						>
-							Confirmar
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end">
+							<Button
+								onClick={() => setNotificationOpen(false)}
+								key="confirmar"
+								type="primary"
+							>
+								Confirmar
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<p>

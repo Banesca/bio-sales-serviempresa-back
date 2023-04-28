@@ -103,36 +103,6 @@ export default function SubCategoriesContainer() {
 
 	return (
 		<>
-			{/* <Row style={{ alignItems: 'center' }}>
-				<Col
-					lg={{ offset: 6, span: 12 }}
-					md={{ offset: 6, span: 12 }}
-					sm={{ offset: 6, span: 12 }}
-					xs={{ span: 12 }}
-				>
-					<Typography>
-						<h1
-							style={{
-								textAlign: 'center',
-								fontSize: '1.5rem',
-								margin: '0.5rem 0',
-							}}
-						>
-							Sub Categorías
-						</h1>
-					</Typography>
-				</Col>
-				<Col
-					lg={{ span: 6 }}
-					md={{ span: 6 }}
-					sm={{ span: 6 }}
-					xs={{ span: 12 }}
-					style={{
-						justifyContent: 'end',
-						display: 'flex',
-					}}
-				></Col>
-			</Row> */}
 			<Title title="Sub Categorías" goBack={false}>
 				{log != PROFILES.BILLER && (
 					<Button

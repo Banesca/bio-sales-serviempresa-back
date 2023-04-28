@@ -8,9 +8,9 @@ import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
 import Loading from '../../../../components/shared/loading';
 import { useRequest } from '../../../../hooks/useRequest';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
-import { GeneralContext } from '../../../_app';
+import { useState } from 'react';
 import useClients from '../../../../components/clients/hooks/useClients';
+import { useEffect } from 'react';
 
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -21,38 +21,35 @@ export default function EditClient() {
 
 	const [form] = Form.useForm();
 	const [client, setClient] = useState({});
+	const router = useRouter();
+	const { id } = router.query;
+	const { clients } = useClients();
+	const [click, setClick] = useState(false);
 
 	const onReset = () => {
 		form.resetFields();
+		setClient({
+			fullNameClient: '',
+			phoneClient: '',
+			address: '',
+			rif: '',
+			comments: '',
+		});
+		click ? setClick(false) : setClick(true);
 	};
-
-	const router = useRouter();
-	const { id } = router.query;
+	useEffect(() => {
+		click ? onReset() : '';
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [click]);
 
 	const getClientRequest = async () => {
 		setLoading(true);
-		const res = await requestHandler.get(`/api/v2/client/get/${id}`);
-		if (res.isLeft()) {
-			setLoading(false);
-		}
-		const value = res.value.getValue();
-		if (!value.data) {
-			setLoading(false);
-			return message.error('Cliente no encontrado');
-		}
-		setClient(value.data);
-		setLoading(false);
-	};
-
-	const { clients, listClients } = useClients();
-
-	const getClientsRequest = async () => {
-		setLoading(true);
 		try {
-			await listClients();
+			const res = await requestHandler.get(`/api/v2/client/get/${id}`);
+			const value = res.value.getValue();
+			setClient(value.data);
+			setLoading(false);
 		} catch (error) {
-			message.error('Ha ocurrido un error');
-		} finally {
 			setLoading(false);
 		}
 	};
@@ -94,18 +91,9 @@ export default function EditClient() {
 		};
 	};
 
-	const generalContext = useContext(GeneralContext);
-
-	useEffect(() => {
-		if (Object.keys(generalContext).length) {
-			getClientsRequest();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [generalContext]);
-
 	const handleSubmit = async (values) => {
 		setLoading(true);
-		if (createClient(values)) {
+		if (updateClient(values)) {
 			setLoading(false);
 		} else {
 			form.resetFields();
@@ -113,9 +101,9 @@ export default function EditClient() {
 		}
 	};
 
-	const createClient = async (data) => {
+	const updateClient = async (data) => {
 		setLoading(true);
-		await getClientsRequest();
+		await getClientRequest();
 		try {
 			if (!validator(data).val) {
 				const res = await requestHandler.put('/api/v2/client/update', {
@@ -128,7 +116,7 @@ export default function EditClient() {
 					observacion: data.comments,
 					idClient: client.idClient,
 				});
-				message.success('Cliente agregado');
+				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
 			} else {
 				message.error(validator(data).prob());
@@ -144,7 +132,6 @@ export default function EditClient() {
 		getClientRequest();
 		return <Loading isLoading={true} />;
 	}
-
 	return (
 		<DashboardLayout>
 			<div

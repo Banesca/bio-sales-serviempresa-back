@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 export class Result {
 	isSuccess;
 	isFailure;

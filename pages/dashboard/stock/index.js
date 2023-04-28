@@ -231,20 +231,25 @@ export default function Products() {
 					open={isEditModalOpen}
 					onCancel={() => setIsEditModalOpen(false)}
 					footer={[
-						<Button
-							key="cancel"
-							danger
-							onClick={() => setIsEditModalOpen(false)}
-						>
-							Cancelar
-						</Button>,
-						<Button
-							key="delete"
-							type="primary"
-							onClick={() => handleUpdateStock()}
-						>
-							Aceptar
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button
+								key="cancel"
+								danger
+								onClick={() => setIsEditModalOpen(false)}
+							>
+								Cancelar
+							</Button>
+							,
+							<Button
+								key="delete"
+								type="primary"
+								onClick={() => handleUpdateStock()}
+							>
+								Aceptar
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<Form form={createForm}>

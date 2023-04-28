@@ -3,7 +3,10 @@ import { Form } from 'antd';
 import { Select } from 'antd';
 import { Button, Modal } from 'antd';
 import { useCategoryContext } from '../../hooks/useCategoriesProvider';
-import { BusinessProvider, useBusinessProvider } from '../../hooks/useBusinessProvider';
+import {
+	BusinessProvider,
+	useBusinessProvider,
+} from '../../hooks/useBusinessProvider';
 import { useRequest } from '../../hooks/useRequest';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { useEffect, useState } from 'react';
@@ -19,10 +22,10 @@ export default function LinesModals({
 	lineToDelete,
 	isEditModalOpen,
 	createFormTwo,
-	closeEditModal
+	closeEditModal,
 }) {
-	
-	const { lines, subCategories, addLine, deleteLine, editLines } = useCategoryContext();
+	const { lines, subCategories, addLine, deleteLine, editLines } =
+		useCategoryContext();
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
 	const { setLoading } = useLoadingContext();
@@ -31,14 +34,14 @@ export default function LinesModals({
 
 	const [lineBody, setLineBody] = useState({
 		name: '',
-		idSubFamilyFk: ''
+		idSubFamilyFk: '',
 	});
 
 	const handleAddLine = async () => {
 		try {
 			await createForm.validateFields(['name', 'idSubFamilyFk']);
 			setLoading(true);
-			setIsCreateModalOpen(false)
+			setIsCreateModalOpen(false);
 			await addLine({
 				...lineBody,
 				idSucursalFk: selectedBusiness.idSucursal,
@@ -67,11 +70,16 @@ export default function LinesModals({
 	const handleEditLine = async () => {
 		try {
 			setLoading(true);
-			if(lineBody.name == '' || lineBody.idSubFamilyFk == '') {
-				message.error('Actualiza la línea')
-			} else {				
+			if (lineBody.name == '' || lineBody.idSubFamilyFk == '') {
+				message.error('Actualiza la línea');
+			} else {
 				setIsEditModalOpen(false);
-				await editLines( lineBody.name, lineBody.idSubFamilyFk, lineToDelete, selectedBusiness.idSucursal);
+				await editLines(
+					lineBody.name,
+					lineBody.idSubFamilyFk,
+					lineToDelete,
+					selectedBusiness.idSucursal
+				);
 				message.success('Linea actualizada');
 			}
 		} catch (error) {
@@ -80,7 +88,6 @@ export default function LinesModals({
 		} finally {
 			setLoading(false);
 		}
-		
 	};
 
 	return (
@@ -91,16 +98,19 @@ export default function LinesModals({
 				open={isCreateModalOpen}
 				onOk={handleAddLine}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => setIsCreateModalOpen(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button key="delete" type="success" onClick={handleAddLine}>
-						Agregar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => setIsCreateModalOpen(false)}
+						>
+							Cancelar
+						</Button>
+						<Button key="delete" type="success" onClick={handleAddLine}>
+							Agregar
+						</Button>
+					</div>,
 				]}
 			>
 				<Form form={createForm}>
@@ -165,20 +175,20 @@ export default function LinesModals({
 				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => setIsDeleteModalOpen(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={() => handleDeleteLine(true)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => setIsDeleteModalOpen(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={() => handleDeleteLine(true)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -190,30 +200,28 @@ export default function LinesModals({
 				open={isEditModalOpen}
 				onCancel={() => closeEditModal()}
 				footer={[
-					<Button
-						key="cancel"
-						danger
-						onClick={() => closeEditModal()}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={() => handleEditLine()}
-					>
-						Actualizar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" danger onClick={() => closeEditModal()}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							type="success"
+							onClick={() => handleEditLine()}
+						>
+							Actualizar
+						</Button>
+					</div>,
 				]}
 			>
-				<Form 
+				<Form
 					form={createFormTwo}
 					initialValues={{
 						name: lineToDelete?.name,
-						idSubFamilyFk: parseInt(lineToDelete?.idSubFamilyFk, 10)
+						idSubFamilyFk: parseInt(lineToDelete?.idSubFamilyFk, 10),
 					}}
 				>
-					
 					<Form.Item
 						label="Línea"
 						name="name"

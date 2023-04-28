@@ -29,7 +29,6 @@ const ProductForm = (props) => {
 	const router = useRouter();
 	const { setLoading } = useLoadingContext();
 	const { brands, getBrands } = useBrandContext();
-	const { getProductById, currentProduct } = useProducts();
 	const {
 		categories,
 		getCategories,
@@ -208,11 +207,33 @@ const ProductForm = (props) => {
 	};
 
 	const [form] = Form.useForm();
+	const [click, setClick] = useState(false);
 	const onReset = () => {
-		setProduct(initialState);
+		setProduct({
+			nameProduct: '',
+			barCode: '',
+			idProductFamilyFk: '',
+			idProductSubFamilyFk: '',
+			idBrandFk: '',
+			idLineFk: '',
+			ean: '',
+			healthRegister: '',
+			priceSale: '',
+			cpe: '',
+			marketPrice: '',
+			idUnitMeasureSaleFk: '',
+			unitByBox: '',
+			unitweight: '',
+			observation: '',
+		});
 		form.resetFields();
-		codeListRequest(selectedBusiness.idSucursal);
+		click ? setClick(false) : setClick(true);
 	};
+
+	useEffect(() => {
+		click ? onReset() : '';
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [click]);
 
 	const handleReturn = () => {
 		router.push('/dashboard/products');
@@ -233,7 +254,7 @@ const ProductForm = (props) => {
 				</h2>
 				<div></div>
 			</section>
-			<Card className="shadow-xl font-bold">
+			<Card className="shadow-xl font-bold rounded-2xl">
 				<Form
 					name="addProduct"
 					initialValues={{
@@ -576,6 +597,10 @@ const ProductForm = (props) => {
 										required: true,
 										message: 'Ingresa un precio',
 									},
+									{
+										pattern: /^(?!0*(\.0+)?$)\d+(\.\d{1,2})?$/,
+										message: 'Ingresa un precio valido',
+									},
 								]}
 								labelCol={{
 									md: { span: 10 },
@@ -587,6 +612,7 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Input
+									addonBefore="$"
 									value={product.priceSale}
 									type="number"
 									onChange={(e) =>
@@ -644,6 +670,7 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Switch
+									className="bg-gray-300"
 									checked={product.isPromo == 1}
 									onChange={handleSwitchChange}
 								/>

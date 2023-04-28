@@ -18,7 +18,7 @@ export default function BrandsModals({
 	lineBody,
 	setLineBody,
 	createFormTwo,
-	closeEditModal
+	closeEditModal,
 }) {
 	const { setLoading } = useLoadingContext();
 	const { addBrand, getBrands, deleteBrand, updateBrand } = useBrandContext();
@@ -27,7 +27,6 @@ export default function BrandsModals({
 	const [createForm] = Form.useForm();
 
 	const [brandName, setBrandName] = useState('');
-
 
 	const handleCloseCreateModal = async () => {
 		setIsCreateModalOpen(false);
@@ -56,25 +55,24 @@ export default function BrandsModals({
 		try {
 			setLoading(true);
 			setIsDeleteModalOpen(false);
-			await deleteBrand(
-				item.idBrand,
-				selectedBusiness.idSucursal
-			);
+			await deleteBrand(item.idBrand, selectedBusiness.idSucursal);
 			setLoading(false);
 			message.success('Marca eliminada');
 		} catch (error) {
-			setLoading(false)
+			setLoading(false);
 			message.error('Error al eliminar marca');
 		}
 	};
-
-
 
 	const handleEditLine = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await updateBrand( lineBody.name, lineBody.idBrand, selectedBusiness.idSucursal);
+			await updateBrand(
+				lineBody.name,
+				lineBody.idBrand,
+				selectedBusiness.idSucursal
+			);
 			message.success('Marca actualizada');
 		} catch (error) {
 			setLoading(false);
@@ -82,7 +80,6 @@ export default function BrandsModals({
 		} finally {
 			setLoading(false);
 		}
-		
 	};
 
 	return (
@@ -92,16 +89,17 @@ export default function BrandsModals({
 				open={isCreateModalOpen}
 				onCancel={handleCloseCreateModal}
 				footer={[
-					<Button danger key="cancel" onClick={handleCloseCreateModal}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						type="success"
-						onClick={handleCreateBrand}
-					>
-						Agregar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button danger key="cancel" onClick={handleCloseCreateModal}>
+							Cancelar
+						</Button>
+						,
+						<Button key="delete" type="success" onClick={handleCreateBrand}>
+							Agregar
+						</Button>
+						,
+					</div>,
 				]}
 			>
 				<Form form={createForm}>
@@ -130,20 +128,20 @@ export default function BrandsModals({
 				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
-					<Button
-						key="cancel"
-						onClick={() => setIsDeleteModalOpen(false)}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={() => handleDeleteBrand(selectedBrand)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => setIsDeleteModalOpen(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={() => handleDeleteBrand(selectedBrand)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -155,26 +153,25 @@ export default function BrandsModals({
 				open={isEditModalOpen}
 				onCancel={() => closeEditModal()}
 				footer={[
-					<Button
-						danger
-						key="cancel"
-						onClick={() => closeEditModal()}
-					>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						type="primary"
-						onClick={() => handleEditLine()}
-					>
-						Aceptar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button danger key="cancel" onClick={() => closeEditModal()}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							type="primary"
+							onClick={() => handleEditLine()}
+						>
+							Aceptar
+						</Button>
+					</div>,
 				]}
 			>
-				<Form 
+				<Form
 					form={createFormTwo}
 					initialValues={{
-						name: lineBody.name
+						name: lineBody.name,
 					}}
 				>
 					<Form.Item

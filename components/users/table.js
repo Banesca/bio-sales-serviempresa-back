@@ -53,14 +53,11 @@ const UsersTable = ({
 			align: 'start',
 			width: '40px',
 			key: 5,
-			defaultSortOrder: 'descend',
-			sortDirections: ['descend'],
-			sorter: (a, b) => a.idProfileFk > b.idProfileFk,
 			render: (text, _, record) => (
 				<Space size="middle" style={{}}>
 					<Button
 						type="primary"
-						className="bg-blue-600 flex justify-center items-center"
+						className="bg-blue-500 flex justify-center items-center"
 						onClick={() => {
 							router.push(`users/${_.idUser}`);
 							setLoading(true);
@@ -121,7 +118,7 @@ const UsersTable = ({
 	return (
 		<div>
 			<ConfigProvider
-				renderEmpty={users.length !== 0 ? CustomizeRenderEmpty : ''}
+				renderEmpty={users.length !== 0 || true ? CustomizeRenderEmpty : ''}
 			>
 				<Table columns={columns} dataSource={users} loading={loading} />
 			</ConfigProvider>
@@ -132,17 +129,20 @@ const UsersTable = ({
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
 				footer={[
-					<Button key="cancel" danger onClick={() => handleCloseModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						type="primary"
-						danger
-						key="delete"
-						onClick={() => handleCloseModal(true)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" danger onClick={() => handleCloseModal(false)}>
+							Cancelar
+						</Button>
+						<Button
+							type="primary"
+							danger
+							key="delete"
+							onClick={() => handleCloseModal(true)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>{`Estas seguro de eliminar al usuario ${currentUser?.fullname}`}</p>

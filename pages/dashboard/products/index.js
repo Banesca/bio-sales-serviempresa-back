@@ -224,16 +224,21 @@ export default function Products() {
 					onCancel={() => setDeleteModalOpen(false)}
 					onOk={handleDelete}
 					footer={[
-						<Button
-							key="cancel"
-							danger
-							onClick={() => setDeleteModalOpen(false)}
-						>
-							Cancelar
-						</Button>,
-						<Button key="delete" danger type="primary" onClick={handleDelete}>
-							Eliminar
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button
+								key="cancel"
+								danger
+								onClick={() => setDeleteModalOpen(false)}
+							>
+								Cancelar
+							</Button>
+							,
+							<Button key="delete" danger type="primary" onClick={handleDelete}>
+								Eliminar
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<p>

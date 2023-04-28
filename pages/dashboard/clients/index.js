@@ -53,13 +53,10 @@ export default function ClientsPage() {
 			align: 'center',
 			dataIndex: 'statusName',
 			key: 4,
-			defaultSortOrder: 'ascend',
-			sortDirections: ['ascend'],
-			sorter: (a, b) => a.statusName.length - b.statusName.length,
 			render: (text, index) => (
 				<Space
 					size="middle"
-					style={{ width: '150px', margin: '0 auto', marginLeft: '-15px' }}
+					className="w-[150px] mx-0 my-auto flex justify-center"
 				>
 					<Button
 						type="primary"
@@ -69,9 +66,12 @@ export default function ClientsPage() {
 					</Button>
 					{text == 'Eliminado' ? (
 						<>
-							<Button onClick={() => handleActivateModal(index)}>
+							{/* <Button
+								onClick={() => handleActivateModal(index)}
+								className="bg-teal-400 text-white"
+							>
 								<UploadOutlined />
-							</Button>
+							</Button> */}
 						</>
 					) : (
 						<>
@@ -315,7 +315,9 @@ export default function ClientsPage() {
 					</Collapse.Panel>
 				</Collapse>
 				<ConfigProvider
-					renderEmpty={clientsList.length !== 0 ? CustomizeRenderEmpty : ''}
+					renderEmpty={
+						clientsList.length !== 0 || true ? CustomizeRenderEmpty : ''
+					}
 				>
 					<Table columns={columns} dataSource={clientsList} />
 				</ConfigProvider>
@@ -336,17 +338,20 @@ export default function ClientsPage() {
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
 				footer={[
-					<Button key="cancel" onClick={() => handleCloseModal(false)}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						danger
-						type="primary"
-						onClick={() => handleCloseModal(true)}
-					>
-						Eliminar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => handleCloseModal(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							danger
+							type="primary"
+							onClick={() => handleCloseModal(true)}
+						>
+							Eliminar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>
@@ -358,16 +363,19 @@ export default function ClientsPage() {
 				open={activateModal}
 				onCancel={() => handleCloseActivateModal()}
 				footer={[
-					<Button key="cancel" onClick={() => handleCloseActivateModal()}>
-						Cancelar
-					</Button>,
-					<Button
-						key="delete"
-						type="primary"
-						onClick={() => changeStateCliente()}
-					>
-						Actualizar
-					</Button>,
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => handleCloseActivateModal()}>
+							Cancelar
+						</Button>
+						<Button
+							key="delete"
+							type="primary"
+							onClick={() => changeStateCliente()}
+						>
+							Actualizar
+						</Button>
+					</div>,
 				]}
 			>
 				<p>¿Deseas cambiar el estado del cliente a activo?</p>

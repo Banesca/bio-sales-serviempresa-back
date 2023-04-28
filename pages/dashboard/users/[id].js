@@ -1,12 +1,8 @@
+/* eslint-disable indent */
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, List, Table, Modal, Form, Select, message, Card } from 'antd';
-import {
-	AimOutlined,
-	ArrowLeftOutlined,
-	DeleteOutlined,
-	SendOutlined,
-} from '@ant-design/icons';
+import { Button, List, Modal, Form, Select, message, Card } from 'antd';
+import { AimOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
 import { GeneralContext } from '../../_app';
@@ -20,7 +16,6 @@ import UserClientsTable from '../../../components/users/detail/clientsTable';
 import Link from 'next/link';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import Title from '../../../components/shared/title';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
 
 const UserDetail = () => {
 	const router = useRouter();
@@ -270,85 +265,76 @@ const UserDetail = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						display: 'flex',
-						alignItems: 'center',
-						flexDirection: 'column',
-						justifyContent: 'center',
-					}}
-				>
-					<Title title="Información General" path="/dashboard/users" goBack={1}>
-						<></>
-					</Title>
-					<List
-						className="form"
-						style={{
-							width: '100%',
-							borderRadius: '.5rem',
-							marginBottom: '1rem',
-						}}
-					>
-						<List.Item style={{ padding: '10px 25px' }}>
-							<p>Nombre</p>
-							<p>{user?.fullname}</p>
-						</List.Item>
-						<List.Item style={{ padding: '10px 25px' }}>
-							<p>Email</p>
-							<p>{user?.mail}</p>
-						</List.Item>
-						<List.Item style={{ padding: '10px 25px' }}>
-							<p>Perfil</p>
-							<p>{profile?.name}</p>
-						</List.Item>
-						{profile?.id == PROFILES.SELLER && (
+				<div className="m-4 flex items-center justify-center flex-col gap-4">
+					<Title
+						title="Información General"
+						path="/dashboard/users"
+						goBack={1}
+					></Title>
+					<Card className="w-full shadow-lg">
+						<List>
 							<List.Item style={{ padding: '10px 25px' }}>
-								<p>Ultima ubicación</p>
-								<Button
-									type="primary"
-									disabled={disabled}
-									onClick={() => getLocation(id)}
-								>
-									{React.createElement(AimOutlined)}
-								</Button>
+								<p>Nombre</p>
+								<p>{user?.fullname}</p>
 							</List.Item>
-						)}
-						{profile?.id !== PROFILES.MASTER && (
 							<List.Item style={{ padding: '10px 25px' }}>
-								<p>Acciones</p>
-								<div>
-									{profile?.id != PROFILES.MASTER && log == PROFILES.MASTER ? (
-										<Button
-											onClick={() => setIsModalOpen(true)}
-											type="primary"
-											style={{ marginRight: '.5rem' }}
-										>
-											Empresas
-										</Button>
-									) : (
-										<></>
-									)}
+								<p>Email</p>
+								<p>{user?.mail}</p>
+							</List.Item>
+							<List.Item style={{ padding: '10px 25px' }}>
+								<p>Perfil</p>
+								<p>{profile?.name}</p>
+							</List.Item>
+							{profile?.id == PROFILES.SELLER && (
+								<List.Item style={{ padding: '10px 25px' }}>
+									<p>Ultima ubicación</p>
 									<Button
-										onClick={() => setIsAssignClientOpen(true)}
 										type="primary"
-										style={{ marginRight: '.5rem' }}
+										disabled={disabled}
+										onClick={() => getLocation(id)}
 									>
-										Clientes
+										{React.createElement(AimOutlined)}
 									</Button>
-									{profile?.id == PROFILES.SELLER && (
-										<>
-											<Button type="primary" style={{ marginRight: '0rem' }}>
-												<Link href={`/dashboard/users/routes/${id}`}>
-													Rutas
-												</Link>
+								</List.Item>
+							)}
+							{profile?.id !== PROFILES.MASTER && (
+								<List.Item style={{ padding: '10px 25px' }}>
+									<p>Acciones</p>
+									<div className="flex gap-5">
+										{profile?.id != PROFILES.MASTER &&
+										log == PROFILES.MASTER ? (
+											<Button
+												className="bg-blue-500"
+												onClick={() => setIsModalOpen(true)}
+												type="primary"
+											>
+												Empresas
 											</Button>
-										</>
-									)}
-								</div>
-							</List.Item>
-						)}
-					</List>
+										) : (
+											<></>
+										)}
+										<Button
+											className="bg-blue-500"
+											onClick={() => setIsAssignClientOpen(true)}
+											type="primary"
+										>
+											Clientes
+										</Button>
+										{profile?.id == PROFILES.SELLER && (
+											<>
+												<Button type="primary" className="bg-blue-500">
+													<Link href={`/dashboard/users/routes/${id}`}>
+														Rutas
+													</Link>
+												</Button>
+											</>
+										)}
+									</div>
+								</List.Item>
+							)}
+						</List>
+					</Card>
+
 					{profile?.id != PROFILES.MASTER && (
 						<>
 							<UserBusinessTable
@@ -371,16 +357,21 @@ const UserDetail = () => {
 					open={isModalOpen}
 					onCancel={() => closeModal(false)}
 					footer={[
-						<Button danger key="cancel" onClick={() => closeModal(false)}>
-							Cancelar
-						</Button>,
-						<Button
-							key="asigne"
-							type="primary"
-							onClick={() => closeModal(true)}
-						>
-							Asignar
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button danger key="cancel" onClick={() => closeModal(false)}>
+								Cancelar
+							</Button>
+							,
+							<Button
+								key="asigne"
+								type="primary"
+								onClick={() => closeModal(true)}
+							>
+								Asignar
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<Form>
@@ -405,23 +396,28 @@ const UserDetail = () => {
 					open={isAssignClientOpen}
 					onCancel={() => setIsAssignClientOpen(false)}
 					footer={[
-						<Button
-							key="cancel"
-							danger
-							onClick={() => {
-								setIsAssignClientOpen(false);
-								setClientsToAssign([]);
-							}}
-						>
-							Cancelar
-						</Button>,
-						<Button
-							key="asigne"
-							type="primary"
-							onClick={handleAssignClientsToSeller}
-						>
-							Asignar
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button
+								key="cancel"
+								danger
+								onClick={() => {
+									setIsAssignClientOpen(false);
+									setClientsToAssign([]);
+								}}
+							>
+								Cancelar
+							</Button>
+							,
+							<Button
+								key="asigne"
+								type="primary"
+								onClick={handleAssignClientsToSeller}
+							>
+								Asignar
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<Form>
@@ -450,17 +446,22 @@ const UserDetail = () => {
 					title="Remover Permisos"
 					onCancel={() => setConfirmDelete(false)}
 					footer={[
-						<Button key="cancel" onClick={() => setConfirmDelete(false)}>
-							Cancelar
-						</Button>,
-						<Button
-							key="remove"
-							type="primary"
-							danger
-							onClick={() => handleRemoveBusiness()}
-						>
-							Remover
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button key="cancel" onClick={() => setConfirmDelete(false)}>
+								Cancelar
+							</Button>
+							,
+							<Button
+								key="remove"
+								type="primary"
+								danger
+								onClick={() => handleRemoveBusiness()}
+							>
+								Remover
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<p>
@@ -472,17 +473,25 @@ const UserDetail = () => {
 					title="Remover Permisos"
 					onCancel={() => setConfirmRemoveClient(false)}
 					footer={[
-						<Button key="cancel" onClick={() => setConfirmRemoveClient(false)}>
-							Cancelar
-						</Button>,
-						<Button
-							key="remove"
-							type="primary"
-							danger
-							onClick={() => handleRemoveClient()}
-						>
-							Remover
-						</Button>,
+						// eslint-disable-next-line react/jsx-key
+						<div className="flex justify-end gap-6">
+							<Button
+								key="cancel"
+								onClick={() => setConfirmRemoveClient(false)}
+							>
+								Cancelar
+							</Button>
+							,
+							<Button
+								key="remove"
+								type="primary"
+								danger
+								onClick={() => handleRemoveClient()}
+							>
+								Remover
+							</Button>
+							,
+						</div>,
 					]}
 				>
 					<p>

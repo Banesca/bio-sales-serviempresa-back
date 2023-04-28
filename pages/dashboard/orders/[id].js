@@ -148,7 +148,7 @@ const OrderDetail = () => {
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Estado:</p>
 						<p style={{ color: `${getStatus()}`, fontWeight: 'bold' }}>
-							{orderStatusToUse[currentOrder.idStatusOrder]}
+							{orderStatusToUse[currentOrder.idStatusOrder].state}
 						</p>
 					</List.Item>
 					<List.Item>
