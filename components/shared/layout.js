@@ -11,6 +11,11 @@ import {
 	InboxOutlined,
 	NotificationOutlined,
 	DownOutlined,
+	ShopOutlined,
+	CarOutlined,
+	CreditCardOutlined,
+	ProjectOutlined,
+	FieldTimeOutlined,
 } from '@ant-design/icons';
 
 import Loading from './loading';
@@ -61,9 +66,34 @@ export default function DashboardLayout({ children }) {
 			icon: React.createElement(InboxOutlined),
 		},
 		{
+			key: '/dashboard/time',
+			label: 'Horaios',
+			icon: React.createElement(FieldTimeOutlined),
+		},
+		{
+			key: '/dashboard/store',
+			label: 'Almacen',
+			icon: React.createElement(ShopOutlined),
+		},
+		{
 			key: '/dashboard/notifications',
 			label: 'Notificaciones',
 			icon: React.createElement(NotificationOutlined),
+		},
+		{
+			key: '/dashboard/cars',
+			label: 'Camiones',
+			icon: React.createElement(CarOutlined),
+		},
+		{
+			key: '/dashboard/pay',
+			label: 'Condiciones de pago',
+			icon: React.createElement(CreditCardOutlined),
+		},
+		{
+			key: '/dashboard/merchandising',
+			label: 'Merchandising',
+			icon: React.createElement(ProjectOutlined),
 		},
 		{
 			key: '/login',

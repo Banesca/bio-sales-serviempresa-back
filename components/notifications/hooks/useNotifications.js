@@ -23,7 +23,7 @@ export function useProducts() {
 
 	const getNotification = async (businessId) => {
 		const response = await requestHandler.get(
-			`/api/v2/utils/notification/${businessId}`
+			`/api/v2/utils/notification/all/${businessId}`
 		);
 		if (response.isLeft()) {
 			throw response.value.getErrorValue();
@@ -35,6 +35,6 @@ export function useProducts() {
 
 	return {
 		sendNotification,
-		notification,
+		getNotification,
 	};
 }

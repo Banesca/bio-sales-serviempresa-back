@@ -1,8 +1,14 @@
 import { WarningTwoTone } from '@ant-design/icons';
 import { Card } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useBusinessProvider } from '../../hooks/useBusinessProvider';
+import { useNotification } from '../notifications/hooks/useNotifications';
 
 const NotificationsCards = () => {
+	const { selectedBusiness } = useBusinessProvider();
+	const { getNotification } = useNotification();
+	console.log(selectedBusiness.idSucursal);
+
 	return (
 		<div className="flex gap-4 flex-col">
 			<Card className="w-full shadow-md">

@@ -94,11 +94,9 @@ export default function BrandsModals({
 						<Button danger key="cancel" onClick={handleCloseCreateModal}>
 							Cancelar
 						</Button>
-						,
 						<Button key="delete" type="success" onClick={handleCreateBrand}>
 							Agregar
 						</Button>
-						,
 					</div>,
 				]}
 			>
@@ -162,6 +160,7 @@ export default function BrandsModals({
 							key="delete"
 							type="primary"
 							onClick={() => handleEditLine()}
+							className="bg-blue-500"
 						>
 							Aceptar
 						</Button>
