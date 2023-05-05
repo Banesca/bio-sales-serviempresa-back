@@ -95,7 +95,7 @@ export default function ProductsInOrder({
 
 	return (
 		<ConfigProvider
-			renderEmpty={productList.length !== 0 ? CustomizeRenderEmpty : ''}
+			renderEmpty={productList?.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
 			<Table
 				columns={orderColumns}

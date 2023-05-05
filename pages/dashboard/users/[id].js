@@ -362,7 +362,6 @@ const UserDetail = () => {
 							<Button danger key="cancel" onClick={() => closeModal(false)}>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="asigne"
 								type="primary"
@@ -370,8 +369,7 @@ const UserDetail = () => {
 							>
 								Asignar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<Form>
@@ -408,7 +406,6 @@ const UserDetail = () => {
 							>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="asigne"
 								type="primary"
@@ -416,8 +413,7 @@ const UserDetail = () => {
 							>
 								Asignar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<Form>
@@ -451,7 +447,6 @@ const UserDetail = () => {
 							<Button key="cancel" onClick={() => setConfirmDelete(false)}>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="remove"
 								type="primary"
@@ -460,8 +455,7 @@ const UserDetail = () => {
 							>
 								Remover
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<p>
@@ -481,7 +475,6 @@ const UserDetail = () => {
 							>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="remove"
 								type="primary"
@@ -490,8 +483,7 @@ const UserDetail = () => {
 							>
 								Remover
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<p>

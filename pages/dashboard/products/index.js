@@ -233,12 +233,10 @@ export default function Products() {
 							>
 								Cancelar
 							</Button>
-							,
 							<Button key="delete" danger type="primary" onClick={handleDelete}>
 								Eliminar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<p>

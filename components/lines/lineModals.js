@@ -110,7 +110,7 @@ export default function LinesModals({
 						<Button key="delete" type="success" onClick={handleAddLine}>
 							Agregar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form form={createForm}>
@@ -188,7 +188,7 @@ export default function LinesModals({
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -212,7 +212,7 @@ export default function LinesModals({
 						>
 							Actualizar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form

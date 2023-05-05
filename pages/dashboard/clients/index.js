@@ -351,7 +351,7 @@ export default function ClientsPage() {
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -375,7 +375,7 @@ export default function ClientsPage() {
 						>
 							Actualizar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>¿Deseas cambiar el estado del cliente a activo?</p>

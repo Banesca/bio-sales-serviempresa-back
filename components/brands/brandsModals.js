@@ -97,7 +97,7 @@ export default function BrandsModals({
 						<Button key="delete" type="success" onClick={handleCreateBrand}>
 							Agregar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form form={createForm}>
@@ -139,7 +139,7 @@ export default function BrandsModals({
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -158,13 +158,12 @@ export default function BrandsModals({
 						</Button>
 						<Button
 							key="delete"
-							type="primary"
+							type="success"
 							onClick={() => handleEditLine()}
-							className="bg-blue-500"
 						>
-							Aceptar
+							Actualizar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form

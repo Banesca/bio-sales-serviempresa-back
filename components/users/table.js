@@ -142,7 +142,7 @@ const UsersTable = ({
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>{`Estas seguro de eliminar al usuario ${currentUser?.fullname}`}</p>

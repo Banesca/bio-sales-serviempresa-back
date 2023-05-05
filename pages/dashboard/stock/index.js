@@ -240,16 +240,14 @@ export default function Products() {
 							>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="delete"
-								type="primary"
+								type="success"
 								onClick={() => handleUpdateStock()}
 							>
 								Aceptar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<Form form={createForm}>

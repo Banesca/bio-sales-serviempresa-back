@@ -240,7 +240,6 @@ export default function Products() {
 							>
 								Cancelar
 							</Button>
-							,
 							<Button
 								key="delete"
 								type="primary"
@@ -248,8 +247,7 @@ export default function Products() {
 							>
 								Aceptar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<Form form={createForm}>

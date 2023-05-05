@@ -129,7 +129,7 @@ export default function ProductList({
 
 	return (
 		<ConfigProvider
-			renderEmpty={products.length !== 0 ? CustomizeRenderEmpty : ''}
+			renderEmpty={products.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
 			<Table dataSource={products} columns={AddColumns} loading={loading} />
 		</ConfigProvider>

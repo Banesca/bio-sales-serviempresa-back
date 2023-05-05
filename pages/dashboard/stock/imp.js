@@ -347,8 +347,7 @@ const ImportProducts = () => {
 							>
 								Confirmar
 							</Button>
-							,
-						</div>,
+						</div>
 					]}
 				>
 					<p>

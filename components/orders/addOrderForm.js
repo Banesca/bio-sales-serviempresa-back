@@ -136,6 +136,7 @@ const AddOrderForm = (props) => {
 						<Col span={12}>
 							<Form.Item label="Nuevo Cliente">
 								<Switch
+									className='bg-gray-300'
 									checked={isNewClient}
 									onChange={() => setIsNewClient(!isNewClient)}
 								/>

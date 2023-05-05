@@ -197,6 +197,7 @@ const ProductForm = (props) => {
 	}, [generalContext, selectedBusiness]);
 
 	const onSubmit = async () => {
+		router.push('/dashboard/products');
 		setLoading(true);
 		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
 		await props.handleRequest(product, file);
@@ -700,6 +701,7 @@ const ProductForm = (props) => {
 									}}
 								>
 									<Input
+										addonBefore="$"
 										type="number"
 										value={product.marketPrice}
 										onChange={(e) =>

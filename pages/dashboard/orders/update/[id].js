@@ -262,26 +262,23 @@ const UpdateOrderPage = () => {
 					>
 						Tomar pedido
 					</h1>
-					<div>
+					<div className='flex gap-4'>
 						<Button
 							onClick={() => setIsCancelOrderModal(true)}
 							type="primary"
 							danger
-							style={{ marginRight: '1rem' }}
 						>
 							Anular
 						</Button>
 						<Button
 							onClick={() => setIsPauseOrderModal(true)}
 							type="info"
-							style={{ marginRight: '1rem' }}
 						>
 							Pausar
 						</Button>
 						<Button
 							onClick={() => setIsCloseOrderModal(true)}
 							type="primary"
-							style={{ marginRight: '1rem' }}
 							disabled={!currentOrder?.body}
 						>
 							Enviar
@@ -336,7 +333,7 @@ const UpdateOrderPage = () => {
 						>
 							Anular
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -371,7 +368,7 @@ const UpdateOrderPage = () => {
 						>
 							Enviar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<List
@@ -423,7 +420,7 @@ const UpdateOrderPage = () => {
 						<Button key="delete" type="info" onClick={handlePauseOrder}>
 							Pausar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -451,7 +448,7 @@ const UpdateOrderPage = () => {
 						>
 							Anular
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>¿Estas seguro de que deseas anular esta orden?</p>

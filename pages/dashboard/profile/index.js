@@ -196,7 +196,6 @@ const UserDetail = () => {
 									>
 										Cancelar
 									</Button>
-									,
 									<Button
 										type="success"
 										key="delete"
@@ -204,8 +203,7 @@ const UserDetail = () => {
 									>
 										Guardar
 									</Button>
-									,
-								</div>,
+								</div>
 							]}
 						>
 							<List.Item style={{ marginTop: '30px', fontWeight: 'bold' }}>

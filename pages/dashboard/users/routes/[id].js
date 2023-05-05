@@ -224,12 +224,10 @@ export default function Routes() {
 						>
 							Cancelar
 						</Button>
-						,
 						<Button key="add" type="success" onClick={handleSubmit}>
 							Agregar
 						</Button>
-						,
-					</div>,
+					</div>
 				]}
 			>
 				<Form

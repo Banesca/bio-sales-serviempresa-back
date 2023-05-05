@@ -164,7 +164,7 @@ export default function SubCategoryModals({
 						<Button key="delete" type="success" onClick={handleAddSubCategory}>
 							Agregar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form form={createForm}>
@@ -232,7 +232,7 @@ export default function SubCategoryModals({
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -256,7 +256,7 @@ export default function SubCategoryModals({
 						>
 							Actualizar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form

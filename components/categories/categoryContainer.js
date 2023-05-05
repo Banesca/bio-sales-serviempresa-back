@@ -262,7 +262,7 @@ export default function CategoryContainer() {
 						<Button key="delete" type="success" onClick={handleCreateCategory}>
 							Agregar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<Form form={createForm}>
@@ -304,7 +304,7 @@ export default function CategoryContainer() {
 						>
 							Eliminar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<p>
@@ -330,7 +330,7 @@ export default function CategoryContainer() {
 						<Button key="delete" type="success" onClick={handleEditLine}>
 							Actualizar
 						</Button>
-					</div>,
+					</div>
 				]}
 			>
 				<div>{lineBody?.name}</div>

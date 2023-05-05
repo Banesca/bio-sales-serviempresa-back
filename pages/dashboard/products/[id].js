@@ -73,7 +73,7 @@ const Product = () => {
 		try {
 			await getLineById(lineId);
 		} catch (error) {
-			message.error('Error al cargar linea');
+			message.error('Error al cargar línea');
 		} finally {
 			setLoading(false);
 		}
@@ -178,7 +178,7 @@ const Product = () => {
 					</List.Item>
 					{currentLine?.name && (
 						<List.Item>
-							<p style={{ fontWeight: 'bold' }}>Linea</p>
+							<p style={{ fontWeight: 'bold' }}>Línea</p>
 							<p>{currentLine?.name}</p>
 						</List.Item>
 					)}

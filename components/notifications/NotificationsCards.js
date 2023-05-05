@@ -1,13 +1,49 @@
 import { WarningTwoTone } from '@ant-design/icons';
 import { Card } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
-import { useNotification } from '../notifications/hooks/useNotifications';
+import { useRequest } from '../../hooks/useRequest';
 
 const NotificationsCards = () => {
 	const { selectedBusiness } = useBusinessProvider();
-	const { getNotification } = useNotification();
 	console.log(selectedBusiness.idSucursal);
+
+	const { requestHandler } = useRequest();
+	const [notification, setNotification] = useState();
+
+	const sendNotification = async (businessId) => {
+		const response = await requestHandler.post(
+			'/api/v2/utils/notification/add',
+			{
+				title: 'Notificacion de prueba desde el back',
+				description: 'Esto solo es una prueba',
+				idSucursalFk: businessId,
+			}
+		);
+		if (response.isLeft()) {
+			throw response.value.getErrorValue();
+		}
+		const value = response.value.getValue().data;
+		console.log(value);
+	};
+
+	const getNotification = async (businessId) => {
+		const response = await requestHandler.get(
+			`/api/v2/utils/notification/all/${businessId}`
+		);
+		if (response.isLeft()) {
+			throw response.value.getErrorValue();
+		}
+		const value = response.value.getValue().data;
+		console.log(value);
+		setNotification(value);
+	};
+
+	useEffect(() => {
+		getNotification(selectedBusiness.idSucursal);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+	
 
 	return (
 		<div className="flex gap-4 flex-col">
