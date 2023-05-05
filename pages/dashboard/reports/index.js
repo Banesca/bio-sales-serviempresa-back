@@ -208,6 +208,7 @@ const UserDetail = () => {
 							<Form
 								onFinish={onSubmit}
 								form={filterForm}
+								className='shadow-none'
 								style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}
 							>
 								<Form.Item

@@ -71,7 +71,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 													key={o[0]}
 													value={o[0]}
 												>
-													{o[1]}
+													{o[1].state}
 												</Select.Option>
 											);
 										}

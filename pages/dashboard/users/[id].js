@@ -107,14 +107,12 @@ const UserDetail = () => {
 	const [disabled, setDisabled] = useState();
 
 	useEffect(() => {
-		if (Object.keys(generalContext).length) {
 			getUserRequest(id);
 			getUserBusiness(id);
 			getClientsRequest();
-		}
-		getLoc(id);
+			getLoc(id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [generalContext]);
+	}, []);
 
 	const handleAsigne = async () => {
 		setLoading(true);
@@ -290,6 +288,7 @@ const UserDetail = () => {
 									<p>Ultima ubicación</p>
 									<Button
 										type="primary"
+										className='bg-blue-500'
 										disabled={disabled}
 										onClick={() => getLocation(id)}
 									>

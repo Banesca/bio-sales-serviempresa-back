@@ -168,13 +168,14 @@ export default function Login() {
 											wrapperCol={{ span: 14, offset: 0 }}
 											justify="center"
 										>
-											<Button
+											<a
 												type="link"
 												onClick={() => setDeleteModalOpen(true)}
 												block
+												className='shadow-none text-blue-600'
 											>
 												¿Olvidó su contraseña?
-											</Button>
+											</a>
 											<Modal
 												centered
 												title="¿Olvidó su contraseña?"
@@ -206,7 +207,7 @@ export default function Login() {
 									</Button>
 								</Form.Item>
 							</Form>
-							<h5 className="text-center">Versión 0.0.1</h5>
+							<h5 className="text-center">Versión 0.0.2</h5>
 						</div>
 					</div>
 				</Content>

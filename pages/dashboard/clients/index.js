@@ -54,18 +54,20 @@ export default function ClientsPage() {
 			dataIndex: 'statusName',
 			key: 4,
 			render: (text, index) => (
-				<Space
-					size="middle"
-					className="w-[150px] mx-0 my-auto flex justify-center"
-				>
-					<Button
-						type="primary"
-						onClick={() => router.push(`clients/${index.idClient}`)}
-					>
-						<EyeTwoTone />
-					</Button>
+				<>
 					{text == 'Eliminado' ? (
 						<>
+							<Space
+								size="middle"
+								className="w-full mx-0 my-auto flex justify-center"
+							>
+								<Button
+									type="primary"
+									onClick={() => router.push(`clients/${index.idClient}`)}
+								>
+									<EyeTwoTone />
+								</Button>
+							</Space>
 							{/* <Button
 								onClick={() => handleActivateModal(index)}
 								className="bg-teal-400 text-white"
@@ -75,21 +77,24 @@ export default function ClientsPage() {
 						</>
 					) : (
 						<>
-							<Button
-								onClick={() => router.push(`clients/update/${index.idClient}`)}
-							>
-								<EditOutlined />
-							</Button>
-							<Button
-								type="primary"
-								danger
-								onClick={() => handleOpenDeleteModal(index)}
-							>
-								<DeleteOutlined />
-							</Button>
+							<Space>
+								<Button
+									onClick={() => router.push(`clients/update/${index.idClient}`)}
+								>
+									<EditOutlined />
+								</Button>
+								<Button
+									type="primary"
+									danger
+									onClick={() => handleOpenDeleteModal(index)}
+								>
+									<DeleteOutlined />
+								</Button>
+							</Space>
+
 						</>
 					)}
-				</Space>
+				</>
 			),
 		},
 	];

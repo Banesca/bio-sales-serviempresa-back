@@ -112,9 +112,10 @@ export default function OrdersTable({ orders }) {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Estado',
+			title: 'Estado',			
 			dataIndex: 'statusOrder',
 			key: 3,
+			align: 'center',
 			render: (text, record) => (
 				<p
 					className={`font-bold text-center text-${

@@ -199,7 +199,7 @@ export default function Routes() {
 					</Collapse.Panel>
 				</Collapse>
 				<ConfigProvider
-					renderEmpty={routes.length !== 0 ? CustomizeRenderEmpty : ''}
+					renderEmpty={routes.length !== 0 || true ? CustomizeRenderEmpty : ''}
 				>
 					<Table
 						columns={columns}
@@ -211,6 +211,7 @@ export default function Routes() {
 			<Modal
 				title="Agregar Ruta"
 				open={isModalOpen}
+				onCancel={() => {setIsModalOpen(false)}}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-6">
