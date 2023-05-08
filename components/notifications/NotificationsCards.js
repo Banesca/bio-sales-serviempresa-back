@@ -5,7 +5,7 @@ import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { useRequest } from '../../hooks/useRequest';
 
 const NotificationsCards = () => {
-	const { selectedBusiness } = useBusinessProvider();
+	/* 	const { selectedBusiness } = useBusinessProvider();
 	console.log(selectedBusiness.idSucursal);
 
 	const { requestHandler } = useRequest();
@@ -42,8 +42,7 @@ const NotificationsCards = () => {
 	useEffect(() => {
 		getNotification(selectedBusiness.idSucursal);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-	
+	}, []) */
 
 	return (
 		<div className="flex gap-4 flex-col">

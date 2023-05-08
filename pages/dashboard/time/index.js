@@ -2,7 +2,7 @@ import React from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 
-const index = () => {
+const Time = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
@@ -12,4 +12,4 @@ const index = () => {
 	);
 };
 
-export default index;
+export default Time;
