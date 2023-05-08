@@ -192,13 +192,7 @@ export default function Products() {
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
+				<div className="m-4 p-4">
 					<Title goBack={false} title={'Almacenes'}>
 						{/* <div>
 							<Button onClick={exportToExcel} block>
@@ -247,7 +241,7 @@ export default function Products() {
 							>
 								Aceptar
 							</Button>
-						</div>
+						</div>,
 					]}
 				>
 					<Form form={createForm}>

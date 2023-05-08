@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Button, Col, Row, message } from 'antd';
+import { Button, message } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import UsersTable from '../../../components/users/table';
 import { useRequest } from '../../../hooks/useRequest';
@@ -9,7 +9,6 @@ import Loading from '../../../components/shared/loading';
 import UserFilters from '../../../components/users/filters';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
-import { Typography } from 'antd';
 import { useUser } from '../../../components/users/hooks/useUser';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
@@ -113,13 +112,7 @@ export default function Users() {
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
+				<div className="m-4 p-4">
 					<Title title="Usuarios" goBack={false}>
 						{log == PROFILES.MASTER && (
 							<Link href="users/add">

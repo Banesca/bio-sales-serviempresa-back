@@ -119,12 +119,26 @@ const UpdateOrderPage = () => {
 		setTotal(value.message[0].TOTAL);
 	};
 
+	const createPayCondition = async (date, note) => {
+		/* const res = await requestHandler.post('/api/v2/paymentcondition/add', {
+			date,
+			note
+		}); */
+		const res = await requestHandler.get('/api/v2/paymentcondition/list');
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value.getValue();
+	};
+
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
+			createPayCondition(currentOrder.fechaEntrega, 'note');
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
+
 
 	const generalContext = useContext(GeneralContext);
 	const { requestHandler } = useRequest();

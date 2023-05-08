@@ -43,7 +43,7 @@ export default function DetailOrderTable({ products, total }) {
 
 	return (
 		<ConfigProvider
-			renderEmpty={products.length !== 0 ? CustomizeRenderEmpty : ''}
+			renderEmpty={products?.length !== 0 ? CustomizeRenderEmpty : ''}
 		>
 			<Table
 				style={{ width: '100%' }}

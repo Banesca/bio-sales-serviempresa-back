@@ -79,7 +79,9 @@ export default function ClientsPage() {
 						<>
 							<Space>
 								<Button
-									onClick={() => router.push(`clients/update/${index.idClient}`)}
+									onClick={() =>
+										router.push(`clients/update/${index.idClient}`)
+									}
 								>
 									<EditOutlined />
 								</Button>
@@ -91,7 +93,6 @@ export default function ClientsPage() {
 									<DeleteOutlined />
 								</Button>
 							</Space>
-
 						</>
 					)}
 				</>
@@ -242,13 +243,7 @@ export default function ClientsPage() {
 
 	return (
 		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-				}}
-			>
+			<div className="m-4 p-4">
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
 						<Button type="success" style={{ marginRight: '-2.3rem' }}>
@@ -356,7 +351,7 @@ export default function ClientsPage() {
 						>
 							Eliminar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<p>
@@ -380,7 +375,7 @@ export default function ClientsPage() {
 						>
 							Actualizar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<p>¿Deseas cambiar el estado del cliente a activo?</p>

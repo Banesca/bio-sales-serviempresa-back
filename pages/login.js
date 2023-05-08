@@ -9,12 +9,12 @@ import { useBusinessProvider } from '../hooks/useBusinessProvider';
 import { ip } from '../util/environment';
 import { PROFILES } from '../components/shared/profiles';
 import MainLogo from '../components/logos/mainLogo';
+import { MailOutlined, SafetyOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 
 export default function Login() {
 	const router = useRouter();
-
 	const { requestHandler } = useRequest();
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -125,13 +125,16 @@ export default function Login() {
 						<MainLogo />
 					</div>
 					<div className="overflow-hidden rounded-xl bg-[#0091ff] flex flex-col items-center gap-2 p-1 min-w-[450px] shadow-2xl">
-						<div className="bg-white rounded-lg w-full py-4 flex justify-center items-center">
-							<h1 className="text-center text-4xl">INGRESAR</h1>
+						<div className="rounded-lg text-white w-full py-4 flex justify-center items-center">
+							<h1 className="text-center text-4xl">INICIAR SESIÓN</h1>
 						</div>
 						<div className="bg-[#012258] w-full px-16 py-5 text-white rounded-lg">
 							<Form name="login" autoComplete="off" onFinish={onSubmit}>
 								<div className="">
-									<h1 className="text-white">CORREO:</h1>
+									<h1 className="text-white py-2 flex gap-1">
+										<MailOutlined className="text-xl" />
+										Correo
+									</h1>
 									<Tooltip title="Ingrese su correo de usuario">
 										<Form.Item
 											name="mail"
@@ -151,7 +154,10 @@ export default function Login() {
 									</Tooltip>
 								</div>
 								<div>
-									<h1 className="text-white">CONTRASENA:</h1>
+									<h1 className="text-white py-2 flex gap-1">
+										<SafetyOutlined className="text-xl" />
+										Contraseña
+									</h1>
 									<Tooltip title="Ingresa tu contrasena">
 										<Form.Item
 											name="pin"
@@ -164,33 +170,34 @@ export default function Login() {
 										>
 											<Input.Password />
 										</Form.Item>
-										<Form.Item
-											wrapperCol={{ span: 14, offset: 0 }}
-											justify="center"
-										>
-											<a
-												type="link"
-												onClick={() => setDeleteModalOpen(true)}
-												block
-												className='shadow-none text-blue-600'
-											>
-												¿Olvidó su contraseña?
-											</a>
-											<Modal
-												centered
-												title="¿Olvidó su contraseña?"
-												style={{ textAlign: 'center' }}
-												open={deleteModalOpen}
-												onCancel={() => setDeleteModalOpen(false)}
-												footer={null}
-											>
-												<p style={{ marginTop: '20px' }}>
-													Para recuperar su acceso comuniquese con un
-													administrador
-												</p>
-											</Modal>
-										</Form.Item>
 									</Tooltip>
+									<Form.Item
+										className="my-8"
+										wrapperCol={{ span: 14, offset: 0 }}
+										justify="center"
+									>
+										<a
+											type="link"
+											onClick={() => setDeleteModalOpen(true)}
+											block
+											className="shadow-none text-blue-600 text-center"
+										>
+											¿Olvidó su contraseña?
+										</a>
+										<Modal
+											centered
+											title="¿Olvidó su contraseña?"
+											style={{ textAlign: 'center' }}
+											open={deleteModalOpen}
+											onCancel={() => setDeleteModalOpen(false)}
+											footer={null}
+										>
+											<p style={{ marginTop: '20px' }}>
+												Para recuperar su acceso comuniquese con un
+												administrador
+											</p>
+										</Modal>
+									</Form.Item>
 								</div>
 
 								<Form.Item

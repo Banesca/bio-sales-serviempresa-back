@@ -79,13 +79,7 @@ const CategoriesPage = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
+				<div className="m-4 p-4">
 					<Tabs
 						items={tabItems}
 						style={{ fontWeight: 'bold' }}

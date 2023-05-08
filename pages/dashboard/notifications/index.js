@@ -1,13 +1,16 @@
 import React from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import NotificationsCards from '../../../components/notifications/NotificationsCards';
+import Title from '../../../components/shared/title';
 
 const index = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<h1 className="text-5xl text-center p-8">NOTIFICACIONES</h1>
-				<NotificationsCards />
+				<div className="p-4 m-4">
+					<Title title={'Notificaciones'} goBack={false}></Title>
+					<NotificationsCards />
+				</div>
 			</DashboardLayout>
 		</>
 	);

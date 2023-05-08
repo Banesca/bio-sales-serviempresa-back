@@ -85,13 +85,7 @@ export default function OrdersPage() {
 
 	return (
 		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-				}}
-			>
+			<div className="m-4 p-4">
 				<Title title={'Pedidos'}>
 					<Link href="orders/add">
 						<Button type="success" style={{ marginRight: '-2.3rem' }}>

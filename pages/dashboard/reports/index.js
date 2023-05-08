@@ -6,7 +6,6 @@ import {
 	Form,
 	Select,
 	DatePicker,
-	Card,
 	ConfigProvider,
 } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
@@ -18,6 +17,7 @@ import SelectBusiness from '../../../components/business/selectBusiness';
 import TotalSales from '../../../components/reports/totalSales/TotalSales';
 import Graphic from '../../../components/reports/totalSales/Graphic';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
+import Title from '../../../components/shared/title';
 
 const UserDetail = () => {
 	const columns = [
@@ -167,8 +167,8 @@ const UserDetail = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<div className="gap-3 flex flex-col items-center justify-center">
-					<h1 className="text-5xl text-center p-5">REPORTES</h1>
+				<div className="gap-3 flex flex-col items-center justify-center p-4 m-4">
+					<Title title={'Reportes'}></Title>
 					<div className="flex justify-between w-[95%]">
 						<TotalSales />
 						<Graphic />
@@ -208,7 +208,7 @@ const UserDetail = () => {
 							<Form
 								onFinish={onSubmit}
 								form={filterForm}
-								className='shadow-none'
+								className="shadow-none"
 								style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}
 							>
 								<Form.Item
@@ -248,7 +248,9 @@ const UserDetail = () => {
 						</List.Item>
 						<List.Item>
 							<ConfigProvider
-								renderEmpty={sells?.length !== 0 ? CustomizeRenderEmpty : ''}
+								renderEmpty={
+									sells?.length !== 0 || true ? CustomizeRenderEmpty : ''
+								}
 							>
 								<Table
 									style={{ width: '100%' }}

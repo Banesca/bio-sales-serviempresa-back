@@ -127,13 +127,7 @@ const BrandsPage = () => {
 	return (
 		<>
 			<DashboardLayout>
-				<div
-					style={{
-						margin: '1rem',
-						display: 'flex',
-						flexDirection: 'column',
-					}}
-				>
+				<div className="m-4 p-4">
 					<Title title="Marcas">
 						{log != PROFILES.BILLER && (
 							<Button
