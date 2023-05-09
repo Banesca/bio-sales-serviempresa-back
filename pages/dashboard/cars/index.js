@@ -175,30 +175,59 @@ const Cars = () => {
 					</div>
 				</div>
 			</div>
-			<Modal open={openModal} onCancel={() => setOpenModal(false)}>
-				<h1>Crea una condicion de pago</h1>
-				<Form>
-					<Form.Item label="Condicion">
-						<Input></Input>
-					</Form.Item>
-					<Form.Item label="Cliente">
-						<Input></Input>
-					</Form.Item>
-				</Form>
+			<Modal
+				open={openModal}
+				onCancel={() => setOpenModal(false)}
+				footer={
+					<div className="flex justify-end">
+						<Button danger>Cancelar</Button>
+						<Button type="primary" className="bg-blue-500">
+							Guardar
+						</Button>
+					</div>
+				}
+			>
+				<div className="flex flex-col gap-5">
+					<h1>Agrega un chofer</h1>
+					<Form>
+						<Form.Item label="Nombre">
+							<Input></Input>
+						</Form.Item>
+						<Form.Item label="CI">
+							<Input></Input>
+						</Form.Item>
+						<Form.Item label="Licencia">
+							<Input></Input>
+						</Form.Item>
+					</Form>
+				</div>
 			</Modal>
-			<Modal open={openModal2} onCancel={() => setOpenModal2(false)}>
-				<h1>Crea una condicion de pago</h1>
-				<Form>
-					<Form.Item label="Placa">
-						<Input></Input>
-					</Form.Item>
-					<Form.Item label="Modelo">
-						<Input></Input>
-					</Form.Item>
-					<Form.Item label="Despachador">
-						<Input></Input>
-					</Form.Item>
-				</Form>
+			<Modal
+				open={openModal2}
+				onCancel={() => setOpenModal2(false)}
+				footer={
+					<div className="flex justify-end">
+						<Button danger>Cancelar</Button>
+						<Button type="primary" className="bg-blue-500">
+							Guardar
+						</Button>
+					</div>
+				}
+			>
+				<div className="flex flex-col gap-5">
+					<h1>Agrega un camión</h1>
+					<Form>
+						<Form.Item label="Placa">
+							<Input></Input>
+						</Form.Item>
+						<Form.Item label="Modelo">
+							<Input></Input>
+						</Form.Item>
+						<Form.Item label="Despachador">
+							<Input></Input>
+						</Form.Item>
+					</Form>
+				</div>
 			</Modal>
 		</DashboardLayout>
 	);

@@ -8,23 +8,20 @@ const Loading = ({ isLoading }) => {
 	return (
 		<div
 			style={{
-				zIndex: 1000,
+				zIndex: 100,
 				backgroundColor: 'white',
-				opacity: 0.4,
-				position: 'absolute',
+				opacity: 0.5,
+				position: 'fixed',
+				top: 0,
 				display: 'flex',
 				width: '100%',
 				height: '100vh',
-				top: 0,
-				left: 0,
-				bottom: 0,
-				right: 0,
 				alignItems: 'center',
 				justifyContent: 'center',
 				overflow: 'scroll',
 			}}
 		>
-			<LoadingOutlined style={{ fontSize: '4rem', color: '#0984e3' }} />
+			<LoadingOutlined style={{ fontSize: '6rem', color: '#0984e3' }} />
 		</div>
 	);
 };

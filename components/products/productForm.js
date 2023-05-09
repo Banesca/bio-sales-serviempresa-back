@@ -255,7 +255,7 @@ const ProductForm = (props) => {
 				</h2>
 				<div></div>
 			</section>
-			<Card className="shadow-xl font-bold rounded-2xl">
+			<Card className="shadow-xl rounded-2xl">
 				<Form
 					name="addProduct"
 					initialValues={{

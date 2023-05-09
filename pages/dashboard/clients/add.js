@@ -1,19 +1,16 @@
-import { Button, Col, Row } from 'antd';
+import { Button, Card, Col, Row } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
 import Title from '../../../components/shared/title';
-import Card from '../../../components/shared/card';
 import { message } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import Loading from '../../../components/shared/loading';
 import { useRequest } from '../../../hooks/useRequest';
 import { useRouter } from 'next/router';
 import useClients from '../../../components/clients/hooks/useClients';
-import { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import create from '@ant-design/icons/lib/components/IconFont';
+import { useContext, useEffect } from 'react';
 import { GeneralContext } from '../../_app';
-import { validateConfig } from 'next/dist/server/config-shared';
 
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -125,29 +122,14 @@ export default function AddClient() {
 	};
 	return (
 		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-				}}
-			>
+			<div className="m-4 flex flex-col">
 				<Title
 					goBack={1}
 					path={'/dashboard/clients'}
 					title="Agregar Cliente"
 				></Title>
-				<div
-					style={{
-						maxWidth: '900px',
-						margin: '1rem 2rem',
-						backgroundColor: 'white',
-						boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
-						padding: '60px',
-						borderRadius: '20px',
-					}}
-				>
-					<Form style={{ width: '100%' }} form={form} onFinish={handleSubmit}>
+				<Card className="max-w-[900px] mx-8 my-4 p-16 rounded-xl shadow-xl">
+					<Form className="w-full" form={form} onFinish={handleSubmit}>
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
@@ -264,6 +246,65 @@ export default function AddClient() {
 							</Col>
 						</Row>
 						<Row>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
+									label="Metodo de pago"
+									style={{
+										padding: '0 .5rem',
+									}}
+									rules={[
+										{
+											required: true,
+											message: 'Ingresa la dirección del cliente',
+										},
+									]}
+									name="address"
+								>
+									<Input type="text" />
+								</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item
+									label="Condición de pago"
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
+									style={{
+										padding: '0 .5rem',
+									}}
+									rules={[
+										{
+											required: true,
+											message: 'Ingresa el rif del cliente',
+										},
+										{
+											pattern: regexpRif,
+											message: 'Ingresa un rif valido',
+										},
+									]}
+									name="rif"
+								>
+									<Input
+										type="text"
+										placeholder="Formate aceptado: j-12345678-1"
+									/>
+								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
 							<Col span={24}>
 								<Form.Item
 									labelCol={{
@@ -308,7 +349,7 @@ export default function AddClient() {
 							</Col>
 						</Row>
 					</Form>
-				</div>
+				</Card>
 			</div>
 			<Loading isLoading={loading} />
 		</DashboardLayout>
