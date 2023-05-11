@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { Col, Row, message, Typography, Button } from 'antd';
+import { Col, Row, message, Typography, Button, Form, Select } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import { useRequest } from '../../../../hooks/useRequest';
@@ -139,7 +139,6 @@ const UpdateOrderPage = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
 
-
 	const generalContext = useContext(GeneralContext);
 	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
@@ -253,7 +252,7 @@ const UpdateOrderPage = () => {
 						alignItems: 'center',
 					}}
 				>
-					<div style={{ position: 'absolute' }}>
+					<div>
 						<Button
 							style={{
 								marginRight: '50%',
@@ -267,16 +266,10 @@ const UpdateOrderPage = () => {
 							/>
 						</Button>
 					</div>
-					<h1
-						style={{
-							textAlign: 'center',
-							fontSize: '2rem',
-							marginLeft: '15%',
-						}}
-					>
+					<h1 className="text-center font-semibold text-4xl w-[350px]">
 						Tomar pedido
 					</h1>
-					<div className='flex gap-4'>
+					<div className="flex gap-4">
 						<Button
 							onClick={() => setIsCancelOrderModal(true)}
 							type="primary"
@@ -284,23 +277,21 @@ const UpdateOrderPage = () => {
 						>
 							Anular
 						</Button>
-						<Button
-							onClick={() => setIsPauseOrderModal(true)}
-							type="info"
-						>
+						<Button onClick={() => setIsPauseOrderModal(true)} type="info">
 							Pausar
 						</Button>
 						<Button
 							onClick={() => setIsCloseOrderModal(true)}
 							type="primary"
+							className="bg-blue-500"
 							disabled={!currentOrder?.body}
 						>
 							Enviar
 						</Button>
 					</div>
 				</div>
-				<Row style={{ height: '100vh', width: '100%' }}>
-					<Col span={12} style={{ paddingRight: '.5rem' }}>
+				<Row className="h-screen w-full">
+					<Col span={24}>
 						<ProductFilter
 							brands={brands}
 							setQuery={setQuery}
@@ -309,21 +300,25 @@ const UpdateOrderPage = () => {
 							lines={lines}
 							clean={clean}
 						/>
-						<ProductList
-							products={filtered()}
-							orderId={id}
-							orderProducts={currentOrder?.body}
-							getOrderRequest={getOrderRequest}
-						/>
-					</Col>
-					<Col span={12}>
-						<Typography>
-							<ProductsInOrder
-								order={currentOrder}
-								openDeleteModal={openDeleteModal}
-								setProductsQuantity={setProductsQuantity}
-								confirmProductQuantity={confirmProductQuantity}
-							/>
+
+						<Typography className="flex justify-between">
+							<div className="w-[48%]">
+								<ProductList
+									products={filtered()}
+									orderId={id}
+									orderProducts={currentOrder?.body}
+									getOrderRequest={getOrderRequest}
+								/>
+							</div>
+
+							<div className="w-[48%]">
+								<ProductsInOrder
+									order={currentOrder}
+									openDeleteModal={openDeleteModal}
+									setProductsQuantity={setProductsQuantity}
+									confirmProductQuantity={confirmProductQuantity}
+								/>
+							</div>
 						</Typography>
 					</Col>
 				</Row>
@@ -347,7 +342,7 @@ const UpdateOrderPage = () => {
 						>
 							Anular
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<p>
@@ -378,11 +373,12 @@ const UpdateOrderPage = () => {
 						<Button
 							key="delete"
 							type="primary"
+							className="bg-blue-500"
 							onClick={() => handleReceiveOrder()}
 						>
 							Enviar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<List
@@ -413,6 +409,18 @@ const UpdateOrderPage = () => {
 							<strong>${total}</strong>
 						</p>
 					</List.Item>
+					<List.Item>
+						<p>
+							<strong>Metodo de pago</strong>
+						</p>
+						<p>
+							<Form>
+								<Form.Item className="w-32 my-auto">
+									<Select />
+								</Form.Item>
+							</Form>
+						</p>
+					</List.Item>
 				</List>
 			</Modal>
 			<Modal
@@ -434,7 +442,7 @@ const UpdateOrderPage = () => {
 						<Button key="delete" type="info" onClick={handlePauseOrder}>
 							Pausar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<p>
@@ -462,7 +470,7 @@ const UpdateOrderPage = () => {
 						>
 							Anular
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<p>¿Estas seguro de que deseas anular esta orden?</p>

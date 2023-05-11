@@ -79,6 +79,12 @@ export default function ClientsPage() {
 						<>
 							<Space>
 								<Button
+									type="primary"
+									onClick={() => router.push(`clients/${index.idClient}`)}
+								>
+									<EyeTwoTone />
+								</Button>
+								<Button
 									onClick={() =>
 										router.push(`clients/update/${index.idClient}`)
 									}
@@ -229,6 +235,9 @@ export default function ClientsPage() {
 				);
 			}
 		}
+		const actives = list.filter((c) => c.statusName == 'Activo');
+		const removed = list.filter((c) => c.statusName !== 'Activo');
+		list = actives.concat(removed);
 		return list;
 	}, [query, clients]);
 

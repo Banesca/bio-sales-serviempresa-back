@@ -10,7 +10,7 @@ const SelectBusiness = () => {
 	const [messageApi, contextHolder] = message.useMessage();
 
 	const handleMessage = (name) => {
-		messageApi.info(`Ambiente de empresarial ${name} seleccionado`);
+		messageApi.info(`Almacen ${name} seleccionado`);
 	};
 
 	const onChange = (key) => {
@@ -33,9 +33,7 @@ const SelectBusiness = () => {
 		<Row>
 			{contextHolder}
 			<Col span={24}>
-				<h3 style={{ textAlign: 'center', margin: '0' }}>
-					Ambiente Empresarial
-				</h3>
+				<h3 style={{ textAlign: 'center', margin: '0' }}>Almacen:</h3>
 				<Row style={{ display: 'flex', justifyContent: 'center' }}>
 					<Form form={form}>
 						<Form.Item name="business">

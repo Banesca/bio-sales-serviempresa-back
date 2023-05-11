@@ -45,6 +45,7 @@ export default function ProductsInOrder({
 							/>
 							<Button
 								type="primary"
+								className="bg-blue-500"
 								onClick={() => handleUpdateProduct(record)}
 							>
 								Ok
@@ -95,7 +96,9 @@ export default function ProductsInOrder({
 
 	return (
 		<ConfigProvider
-			renderEmpty={productList?.length !== 0 || true ? CustomizeRenderEmpty : ''}
+			renderEmpty={
+				productList?.length !== 0 || true ? CustomizeRenderEmpty : ''
+			}
 		>
 			<Table
 				columns={orderColumns}

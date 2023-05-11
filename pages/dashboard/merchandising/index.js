@@ -70,6 +70,24 @@ const Merchandising = () => {
 	];
 	const columns2 = [
 		{
+			title: 'Nro. de reporte',
+			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Nombre',
+			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'cliente',
+			dataIndex: 'nameProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
 			title: 'Fecha del reporte',
 			dataIndex: 'nameProduct',
 			key: 1,
@@ -172,7 +190,7 @@ const Merchandising = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Reporte del merchandising'}></Title>
+				<Title title={'Reporte merchandising'}></Title>
 				<div className="flex flex-col gap-5">
 					<ConfigProvider
 						renderEmpty={
