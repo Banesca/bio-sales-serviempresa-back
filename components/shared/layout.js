@@ -81,83 +81,6 @@ export default function DashboardLayout({ children }) {
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
 	};
-	const sidebarLinks = [
-		/* {
-			key: '/dashboard/products',
-			label: 'Productos',
-			icon: React.createElement(ShoppingOutlined),
-		}, */
-		/* {
-			key: '/dashboard/categories',
-			label: 'Categorías',
-			icon: React.createElement(ProfileOutlined),
-		}, */
-		/* {
-			key: '/dashboard/brands',
-			label: 'Marcas',
-			icon: React.createElement(ProfileOutlined),
-		}, */
-		/* {
-			key: '/dashboard/users',
-			label: 'Usuarios',
-			icon: React.createElement(UserOutlined),
-		}, */
-		/* {
-			key: '/dashboard/clients',
-			label: 'Clientes',
-			icon: React.createElement(UsergroupAddOutlined),
-		}, */
-		/* {
-			key: '/dashboard/orders',
-			label: 'Pedidos',
-			icon: React.createElement(IoBriefcaseOutline),
-		}, */
-		/* {
-			key: '/dashboard/reports',
-			label: 'Reportes',
-			icon: React.createElement(ProfileOutlined),
-		}, */
-		/* {
-			key: '/dashboard/stock',
-			label: 'Inventario',
-			icon: React.createElement(InboxOutlined),
-		}, */
-		/* {
-			key: '/dashboard/time',
-			label: 'Horaios',
-			icon: React.createElement(FieldTimeOutlined),
-		}, */
-		/* {
-			key: '/dashboard/store',
-			label: 'Almacen',
-			icon: React.createElement(ShopOutlined),
-		}, */
-		/* {
-			key: '/dashboard/notifications',
-			label: 'Notificaciones',
-			icon: React.createElement(NotificationOutlined),
-		}, */
-		/* {
-			key: '/dashboard/cars',
-			label: 'Camiones',
-			icon: React.createElement(CarOutlined),
-		}, */
-		/* {
-			key: '/dashboard/pay',
-			label: 'Condiciones de pago',
-			icon: React.createElement(CreditCardOutlined),
-		}, */
-		/* {
-			key: '/dashboard/merchandising',
-			label: 'Merchandising',
-			icon: React.createElement(ProjectOutlined),
-		}, */
-		{
-			key: '/login',
-			label: 'Cerrar Sesión',
-			icon: React.createElement(ImportOutlined),
-		},
-	];
 	const items = [
 		{
 			label: (
@@ -192,10 +115,10 @@ export default function DashboardLayout({ children }) {
 	}, [children]);
 
 	const handleNavigation = (e) => {
-		if (routes[e.key] == actualKey) {
+		if (routes[parseInt(e.key - 1)] == actualKey) {
 			return;
 		}
-		if (routes[e.key] == '/login') {
+		if (routes[parseInt(e.key - 1)] == '/login') {
 			localStorage.clear();
 		}
 		localStorage.setItem('key', routes[e.key]);
@@ -229,11 +152,9 @@ export default function DashboardLayout({ children }) {
 					</Dropdown>
 				</Header>
 				<Layout style={{ minHeight: 'fit-content' }} hasSider>
-					<Sider theme="light" breakpoint="lg" collapsedWidth="3rem">
+					<Sider theme="dark" breakpoint="lg" collapsedWidth="3rem">
 						<div className="w-full">
 							<Menu
-								defaultSelectedKeys={['1']}
-								defaultOpenKeys={['sub1']}
 								mode="inline"
 								theme="dark"
 								inlineCollapsed={collapsed}

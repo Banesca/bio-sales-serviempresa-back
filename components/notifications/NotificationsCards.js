@@ -5,8 +5,8 @@ import React from 'react';
 const NotificationsCards = ({ notification }) => {
 	return (
 		<div className="flex gap-4 flex-col">
-			{notification.length > 0 &&
-				notification.map((not, index) => {
+			{notification?.length > 0 &&
+				notification?.map((not, index) => {
 					return (
 						<Card className="w-full shadow-md" key={index}>
 							<div className="flex flex-row gap-5">
