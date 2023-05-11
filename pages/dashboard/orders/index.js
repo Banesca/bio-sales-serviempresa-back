@@ -1,7 +1,6 @@
-import { Col, Row, Button, Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
-import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import Loading from '../../../components/shared/loading';
@@ -11,30 +10,23 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { message } from 'antd';
 import OrdersTable from '../../../components/orders/ordersTable';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import { Typography } from 'antd';
 import Title from '../../../components/shared/title';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
-import PROFILES from '../../../components/shared/profiles';
 
 export const orderStatusToUse = {
-	1: { state: 'Inconcluso', color: 'orange' },
-	2: { state: 'Facturado', color: 'green' },
-	3: { state: 'Por facturar', color: 'blue' },
+	1: { state: 'Por facturar', color: 'orange' },
+	2: { state: 'Cobrado', color: 'green' },
+	3: { state: 'Facturado', color: 'blue' },
 	4: { state: 'Despachado', color: 'yellow' },
-	5: { state: 'Cobrado', color: 'purple' },
-	6: { state: 'Anulado', color: 'red' },
+	5: { state: 'Anulado', color: 'purple' },
+	6: { state: 'Eliminado', color: 'red' },
 };
 
 export default function OrdersPage() {
 	const { orders, getOrders } = useOrders();
 	const generalContext = useContext(GeneralContext);
 	const { loading, setLoading } = useLoadingContext();
-	const { requestHandler } = useRequest();
 	const { selectedBusiness } = useBusinessProvider();
-	const { userProfile } = useAuthContext();
-
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
 	const [query, setQuery] = useState({
 		idStatusOrder: 0,
 		startDate: null,

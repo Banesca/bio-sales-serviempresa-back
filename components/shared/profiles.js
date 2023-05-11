@@ -1,8 +1,8 @@
 export const PROFILE_LIST = [
 	{ name: 'Maestro', id: 1 },
 	{ name: 'Administrador', id: 2 },
-	{ name: 'Vendedor', id: 3 },
-	{ name: 'Despachador', id: 4 },
+	{ name: 'Despachador', id: 3 },
+	{ name: 'Vendedor', id: 4 },
 	{ name: 'Merchandising', id: 5 },
 ];
 
