@@ -378,7 +378,7 @@ const ImportProducts = () => {
 								type="primary"
 								style={{ marginRight: '1rem' }}
 							>
-								Cargar
+								Agregar
 							</Button>
 						</Col>
 						<Col>
@@ -396,13 +396,9 @@ const ImportProducts = () => {
 						</Col>
 					</Row>
 					<ConfigProvider
-						renderEmpty={data.length !== 0 ? CustomizeRenderEmpty : ''}
+						renderEmpty={data.length !== 0 || true ? CustomizeRenderEmpty : ''}
 					>
-						<Table
-							columns={columns}
-							dataSource={data}
-							style={{ overflowX: 'scroll' }}
-						/>
+						<Table columns={columns} dataSource={data} />
 					</ConfigProvider>
 				</div>
 				<Modal
@@ -443,7 +439,7 @@ const ImportProducts = () => {
 							>
 								Confirmar
 							</Button>
-						</div>
+						</div>,
 					]}
 				>
 					<p>

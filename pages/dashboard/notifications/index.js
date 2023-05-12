@@ -20,18 +20,24 @@ const Notifications = () => {
 	const { loading, setLoading } = useLoadingContext();
 
 	const sendNotification = async (businessId, notification) => {
-		const response = await requestHandler.post(
-			'/api/v2/utils/notification/add',
-			{
-				title: notification.title,
-				descripcion: notification.body,
-				idsucursal: businessId,
+		try {
+			setLoading(true);
+			const response = await requestHandler.post(
+				'/api/v2/utils/notification/add',
+				{
+					title: notification.title,
+					descripcion: notification.body,
+					idsucursal: businessId,
+				}
+			);
+			if (response.isLeft()) {
+				throw response.value.getErrorValue();
 			}
-		);
-		if (response.isLeft()) {
-			throw response.value.getErrorValue();
+			getNotification();
+		} catch (error) {
+			console.error(error);
 		}
-		getNotification();
+		setLoading(false);
 	};
 
 	const onFinish = (values) => {

@@ -14,3 +14,20 @@
 	box-shadow: 4px 2px 6px 1px rgb(224, 224, 224);
 	border-radius: 24px !important;
 }
+
+.ant-menu-sub {
+	background-color: white !important;
+	color: #012258;
+}
+
+.ant-menu-item-active {
+	color: #0052d6 !important;
+}
+
+[scope='colgroup'] {
+	background-color: #012258 !important;
+}
+
+.ant-layout-sider-children {
+	background-color: #012258;
+}

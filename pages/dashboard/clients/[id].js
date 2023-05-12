@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button, ConfigProvider, List, Table } from 'antd';
+import { Button, Card, ConfigProvider, List, Table } from 'antd';
 import { EditOutlined, LeftOutlined } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import Loading from '../../../components/shared/loading';
@@ -189,93 +189,60 @@ const ClientDetail = () => {
 
 	return (
 		<DashboardLayout>
-			<div
-				style={{
-					margin: '1rem',
-					display: 'flex',
-					flexDirection: 'column',
-					display: 'flex',
-				}}
-			>
-				<h1
-					style={{
-						textAlign: 'center',
-						fontSize: '2.5rem',
-						margin: '0px',
-						display: 'flex',
-						width: '100%',
-					}}
-				>
-					<Button
-						style={{ marginRight: '50%', height: '42px', borderRadius: '20px' }}
-						onClick={handleReturn}
-					>
+			<div className="flex gap-5 m-4 flex-col">
+				<div className="flex w-full justify-between">
+					<Button className="h-11 rounded-3xl" onClick={handleReturn}>
 						<LeftOutlined style={{ fontSize: '1.5rem', marginRight: '50%' }} />
 					</Button>
-					<div style={{ marginLeft: '-140px' }}>{client?.nameClient}</div>
-				</h1>
-				<h2
-					style={{
-						textAlign: 'center',
-						marginTop: '5px',
-					}}
-				>
-					Información General
-				</h2>
-				<div
-					style={{
-						width: '100%',
-						marginTop: '10px',
-						display: 'flex',
-						flexDirection: 'column',
-						backgroundColor: 'white',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				></div>
-				<List
-					style={{
-						backgroundColor: 'white',
-						borderRadius: '15px',
-						boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
-					}}
-				>
-					<List.Item style={{ padding: '10px 25px' }}>
-						<p style={{ fontWeight: 'bold' }}>Rif</p>
-						<p>{client?.numberDocument}</p>
-					</List.Item>
-					<List.Item style={{ padding: '10px 25px' }}>
-						<p style={{ fontWeight: 'bold' }}>Teléfono</p>
-						<p>{client?.phone}</p>
-					</List.Item>
-					<List.Item style={{ padding: '10px 25px' }}>
-						<p style={{ fontWeight: 'bold' }}>Estado</p>
-						<p
-							style={{
-								color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'}`,
-							}}
-						>
-							{client?.statusName}
-						</p>
-					</List.Item>
-					<List.Item style={{ padding: '10px 25px' }}>
-						<p style={{ fontWeight: 'bold' }}>Dirección</p>
-						<p>{client?.address}</p>
-					</List.Item>
-				</List>
-				<h3
-					style={{
-						textAlign: 'center',
-						fontSize: '1.5rem',
-					}}
-				>
-					Pedidos
-				</h3>
-				<ConfigProvider
-					renderEmpty={orders.length !== 0 ? CustomizeRenderEmpty : ''}
-				>
-					<Table loading={loading} columns={columns} dataSource={orders} />
-				</ConfigProvider>
+					<div
+						className="uppercase text-center font-medium text-4xl
+					"
+					>
+						{client?.nameClient}
+					</div>
+					<div className="w-10"></div>
+				</div>
+				<Card className="rounded-2xl shadow-md">
+					<h2 className="text-2xl text-center font-semibold">
+						Información General
+					</h2>
+					<List>
+						<List.Item style={{ padding: '10px 25px' }}>
+							<p style={{ fontWeight: 'bold' }}>Rif</p>
+							<p>{client?.numberDocument}</p>
+						</List.Item>
+						<List.Item style={{ padding: '10px 25px' }}>
+							<p style={{ fontWeight: 'bold' }}>Teléfono</p>
+							<p>{client?.phone}</p>
+						</List.Item>
+						<List.Item style={{ padding: '10px 25px' }}>
+							<p style={{ fontWeight: 'bold' }}>Estado</p>
+							<p
+								style={{
+									color: `${
+										client?.statusName == 'Eliminado' ? 'red' : 'black'
+									}`,
+								}}
+							>
+								{client?.statusName}
+							</p>
+						</List.Item>
+						<List.Item style={{ padding: '10px 25px' }}>
+							<p style={{ fontWeight: 'bold' }}>Dirección</p>
+							<p>{client?.address}</p>
+						</List.Item>
+					</List>
+				</Card>
+				<div className="flex flex-col gap-5">
+					<h3 className="text-4xl text-center">Pedidos</h3>
+					<ConfigProvider
+						renderEmpty={
+							orders.length !== 0 || true ? CustomizeRenderEmpty : ''
+						}
+					>
+						<Table loading={loading} columns={columns} dataSource={orders} />
+					</ConfigProvider>
+				</div>
 			</div>
 			<Loading isLoading={loading} />
 		</DashboardLayout>

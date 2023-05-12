@@ -131,7 +131,12 @@ export default function ProductList({
 		<ConfigProvider
 			renderEmpty={products.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
-			<Table dataSource={products} columns={AddColumns} loading={loading} />
+			<Table
+				dataSource={products}
+				columns={AddColumns}
+				loading={loading}
+				pagination={{ pageSize: 8 }}
+			/>
 		</ConfigProvider>
 	);
 }

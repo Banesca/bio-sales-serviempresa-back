@@ -1,6 +1,15 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { Col, Row, message, Typography, Button, Form, Select } from 'antd';
+import {
+	Col,
+	Row,
+	message,
+	Typography,
+	Button,
+	Form,
+	Select,
+	Card,
+} from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
 import { useRequest } from '../../../../hooks/useRequest';
@@ -280,14 +289,6 @@ const UpdateOrderPage = () => {
 						<Button onClick={() => setIsPauseOrderModal(true)} type="info">
 							Pausar
 						</Button>
-						<Button
-							onClick={() => setIsCloseOrderModal(true)}
-							type="primary"
-							className="bg-blue-500"
-							disabled={!currentOrder?.body}
-						>
-							Enviar
-						</Button>
 					</div>
 				</div>
 				<Row className="h-screen w-full">
@@ -302,7 +303,7 @@ const UpdateOrderPage = () => {
 						/>
 
 						<Typography className="flex justify-between">
-							<div className="w-[48%]">
+							<div className="w-[43%]">
 								<ProductList
 									products={filtered()}
 									orderId={id}
@@ -311,13 +312,50 @@ const UpdateOrderPage = () => {
 								/>
 							</div>
 
-							<div className="w-[48%]">
+							<div className="w-[56%] flex flex-col gap-5">
 								<ProductsInOrder
 									order={currentOrder}
 									openDeleteModal={openDeleteModal}
 									setProductsQuantity={setProductsQuantity}
 									confirmProductQuantity={confirmProductQuantity}
 								/>
+								<Card className="rounded-2xl shadow-lg">
+									<List dataSource={currentOrder?.body}>
+										<List.Item>
+											<p>
+												<strong>TOTAL</strong>
+											</p>
+											<p>
+												<strong>${total}</strong>
+											</p>
+										</List.Item>
+										<List.Item>
+											<p>
+												<strong>Metodo de pago</strong>
+											</p>
+											<p>
+												<Form>
+													<Form.Item className="w-32 my-auto">
+														<Select />
+													</Form.Item>
+												</Form>
+											</p>
+										</List.Item>
+										<List.Item>
+											<div></div>
+											<div className="flex justify-end">
+												<Button
+													onClick={() => setIsCloseOrderModal(true)}
+													type="primary"
+													className="bg-blue-500"
+													disabled={!currentOrder?.body}
+												>
+													Enviar
+												</Button>
+											</div>
+										</List.Item>
+									</List>
+								</Card>
 							</div>
 						</Typography>
 					</Col>

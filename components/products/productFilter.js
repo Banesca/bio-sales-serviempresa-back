@@ -41,252 +41,250 @@ const ProductFilter = ({ setQuery, clean }) => {
 	return (
 		<Collapse className="bg-gray-100 my-5 shadow-md">
 			<Collapse.Panel header="Filtros">
-				<Row>
-					<Form
-						form={form}
-						className="max-w-[800px] w-full font-bold"
-						name="productFilters"
-						onFinish={onSubmit}
-					>
-						{log == PROFILES.MASTER && <SelectBusiness />}
-						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Nombre"
-									className="p-2"
-									name="nameProduct"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Input allowClear />
-								</Form.Item>
-							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Código"
-									name="barCode"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Input allowClear />
-								</Form.Item>
-							</Col>
-						</Row>
-						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Precio min"
-									name="minPrice"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Input type="number" allowClear />
-								</Form.Item>
-							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Precio max"
-									name="maxPrice"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Input type="number" allowClear />
-								</Form.Item>
-							</Col>
-						</Row>
-						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Categoría"
-									name="nameFamily"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Select
-										showSearch
-										allowClear
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(input.toLocaleLowerCase());
-										}}
-									>
-										{categories &&
-											categories.map((c, i) => (
-												<Select.Option
-													key={c.idProductFamily}
-													value={c.idProductFamily}
-												>
-													{c.name}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Sub Categoría"
-									name="nameSubFamily"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Select
-										allowClear
-										showSearch
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(input.toLocaleLowerCase());
-										}}
-									>
-										{subCategories &&
-											subCategories.map((b, i) => (
-												<Select.Option
-													key={b.idProductSubFamily}
-													value={b.idProductSubFamily}
-												>
-													{b.nameSubFamily}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Col>
-						</Row>
-						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Linea"
-									name="idLineFk"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Select
-										showSearch
-										allowClear
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(input.toLocaleLowerCase());
-										}}
-									>
-										{lines &&
-											lines.map((line, i) => (
-												<Select.Option key={line.idLine} value={line.idLine}>
-													{line.name}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-								<Form.Item
-									label="Marca"
-									name="idBrandFk"
-									className="p-2"
-									labelCol={{
-										md: { span: 8 },
-										sm: { span: 10 },
-									}}
-									wrapperCol={{
-										md: { span: 16 },
-										sm: { span: 14 },
-									}}
-								>
-									<Select
-										showSearch
-										allowClear
-										filterOption={(input, option) => {
-											return (option?.children ?? '')
-												.toLocaleLowerCase()
-												.includes(input.toLocaleLowerCase());
-										}}
-									>
-										{brands &&
-											brands.map((c, i) => (
-												<Select.Option key={c.idBrand} value={c.idBrand}>
-													{c.name}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Col>
-						</Row>
-						<Row>
-							<Col
-								sm={{ span: 12, offset: 0 }}
-								xs={{ span: 12, offset: 0 }}
-								lg={{ span: 8, offset: 4 }}
-								md={{ span: 8, offset: 4 }}
+				<Form
+					form={form}
+					className="max-w-[800px] w-full font-bold mx-auto"
+					name="productFilters"
+					onFinish={onSubmit}
+				>
+					{log == PROFILES.MASTER && <SelectBusiness />}
+					<Row>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Nombre"
+								className="p-2"
+								name="nameProduct"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
 							>
-								<Form.Item className="p-2">
-									<Button type="warning" block onClick={onReset}>
-										Limpiar
-									</Button>
-								</Form.Item>
-							</Col>
-							<Col
-								sm={{ span: 12, offset: 0 }}
-								xs={{ span: 12, offset: 0 }}
-								lg={{ span: 8, offset: 4 }}
-								md={{ span: 8, offset: 4 }}
+								<Input allowClear />
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Código"
+								name="barCode"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
 							>
-								<Form.Item className="p-2">
-									<Button htmlType="submit" type="success" block>
-										Buscar
-									</Button>
-								</Form.Item>
-							</Col>
-						</Row>
-					</Form>
-				</Row>
+								<Input allowClear />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Precio min"
+								name="minPrice"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Input type="number" allowClear />
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Precio max"
+								name="maxPrice"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Input type="number" allowClear />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Categoría"
+								name="nameFamily"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Select
+									showSearch
+									allowClear
+									filterOption={(input, option) => {
+										return (option?.children ?? '')
+											.toLocaleLowerCase()
+											.includes(input.toLocaleLowerCase());
+									}}
+								>
+									{categories &&
+										categories.map((c, i) => (
+											<Select.Option
+												key={c.idProductFamily}
+												value={c.idProductFamily}
+											>
+												{c.name}
+											</Select.Option>
+										))}
+								</Select>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Sub Categoría"
+								name="nameSubFamily"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Select
+									allowClear
+									showSearch
+									filterOption={(input, option) => {
+										return (option?.children ?? '')
+											.toLocaleLowerCase()
+											.includes(input.toLocaleLowerCase());
+									}}
+								>
+									{subCategories &&
+										subCategories.map((b, i) => (
+											<Select.Option
+												key={b.idProductSubFamily}
+												value={b.idProductSubFamily}
+											>
+												{b.nameSubFamily}
+											</Select.Option>
+										))}
+								</Select>
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Linea"
+								name="idLineFk"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Select
+									showSearch
+									allowClear
+									filterOption={(input, option) => {
+										return (option?.children ?? '')
+											.toLocaleLowerCase()
+											.includes(input.toLocaleLowerCase());
+									}}
+								>
+									{lines &&
+										lines.map((line, i) => (
+											<Select.Option key={line.idLine} value={line.idLine}>
+												{line.name}
+											</Select.Option>
+										))}
+								</Select>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Marca"
+								name="idBrandFk"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Select
+									showSearch
+									allowClear
+									filterOption={(input, option) => {
+										return (option?.children ?? '')
+											.toLocaleLowerCase()
+											.includes(input.toLocaleLowerCase());
+									}}
+								>
+									{brands &&
+										brands.map((c, i) => (
+											<Select.Option key={c.idBrand} value={c.idBrand}>
+												{c.name}
+											</Select.Option>
+										))}
+								</Select>
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8, offset: 4 }}
+							md={{ span: 8, offset: 4 }}
+						>
+							<Form.Item className="p-2">
+								<Button type="warning" block onClick={onReset}>
+									Limpiar
+								</Button>
+							</Form.Item>
+						</Col>
+						<Col
+							sm={{ span: 12, offset: 0 }}
+							xs={{ span: 12, offset: 0 }}
+							lg={{ span: 8, offset: 4 }}
+							md={{ span: 8, offset: 4 }}
+						>
+							<Form.Item className="p-2">
+								<Button htmlType="submit" type="success" block>
+									Buscar
+								</Button>
+							</Form.Item>
+						</Col>
+					</Row>
+				</Form>
 			</Collapse.Panel>
 		</Collapse>
 	);

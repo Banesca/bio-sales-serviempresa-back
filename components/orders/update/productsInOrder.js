@@ -15,28 +15,25 @@ export default function ProductsInOrder({
 }) {
 	const orderColumns = [
 		{
-			title: `Pedido Nro. ${order?.numberOrden}`,
+			title: (
+				<div className="text-white">Pedido Nro. ${order?.numberOrden}</div>
+			),
 			children: [
 				{
 					title: 'Nombre',
 					dataIndex: 'nameProduct',
+					width: '120px',
 					key: 1,
 					render: (text) => <p>{text}</p>,
 				},
-				{
-					title: 'Precio',
-					dataIndex: 'priceSale',
-					key: 2,
-					render: (text, record) => (
-						<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
-					),
-				},
+
 				{
 					title: 'Cantidad',
 					dataIndex: 'weight',
+					align: 'center',
 					key: 3,
 					render: (number, record, index) => (
-						<Space>
+						<Space className="flex flex-wrap justify-center">
 							<Input
 								type="number"
 								style={{ width: '60px' }}
@@ -55,6 +52,7 @@ export default function ProductsInOrder({
 				},
 				{
 					title: 'Acciones',
+					width: '100px',
 					key: 3,
 					render: (record) => (
 						<Space>
@@ -66,6 +64,15 @@ export default function ProductsInOrder({
 								<DeleteOutlined />
 							</Button>
 						</Space>
+					),
+				},
+				{
+					title: 'Precios',
+					dataIndex: 'priceSale',
+					width: '100px',
+					key: 2,
+					render: (text, record) => (
+						<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
 					),
 				},
 			],
@@ -105,6 +112,12 @@ export default function ProductsInOrder({
 				loading={loading}
 				dataSource={productList}
 				className="ordens"
+				pagination={{
+					pageSize: 6,
+				}}
+				scroll={{
+					y: 290,
+				}}
 			/>
 		</ConfigProvider>
 	);

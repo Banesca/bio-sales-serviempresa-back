@@ -11,14 +11,11 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { addKeys } from '../../../util/setKeys';
 import { useUser } from '../../../components/users/hooks/useUser';
 import { PROFILES } from '../../../components/shared/profiles';
-import { useAuthContext } from '../../../context/useUserProfileProvider';
 import Title from '../../../components/shared/title';
 
 export default function Users() {
-	const { userProfile } = useAuthContext();
-
 	const { loading, setLoading } = useLoadingContext();
-	const { users, deleteUser, getUsers, getUserById } = useUser();
+	const { users, deleteUser, getUsers } = useUser();
 	const { requestHandler } = useRequest();
 	const [businessByUser, setBusinessByUser] = useState([]);
 	const [query, setQuery] = useState({
@@ -42,11 +39,11 @@ export default function Users() {
 		setLoading(true);
 		if (Object.keys(generalContext).length) {
 			getUsers();
+			setLoading(false);
 			for (let x in users) {
 				// iterar sobre usuarios para obtener su empresa asignada
 				getUserBusiness(users[x].idUser);
 			}
-			setLoading(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Dropdown, Layout, Menu, Space } from 'antd';
 import {
-	ImportOutlined,
 	UserOutlined,
 	UsergroupAddOutlined,
 	DownOutlined,
@@ -19,6 +18,7 @@ import {
 	ClockCircleOutlined,
 	BellOutlined,
 	LogoutOutlined,
+	TrademarkOutlined,
 } from '@ant-design/icons';
 
 import Loading from './loading';
@@ -55,24 +55,23 @@ const routes = [
 ];
 
 const itemsMenu = [
-	getItem('Productos Gral.', 'sub1', <ShopOutlined />, [
-		getItem('Productos', '1', <TagsOutlined />),
+	getItem('Productos', 'sub1', <ShopOutlined />, [
+		getItem('Lista', '1', <TagsOutlined />),
 		getItem('Categorías', '2', <ClusterOutlined />),
+		getItem('Marcas', '3', <TrademarkOutlined />),
 		getItem('Inventario', '4', <StockOutlined />),
 		getItem('Almacenes', '5', <ShopOutlined />),
 	]),
-	getItem('Perfiles', 'sub2', <UsergroupAddOutlined />, [
+	getItem('Usuarios', 'sub2', <UsergroupAddOutlined />, [
 		getItem('Usuario', '6', <UserOutlined />),
 		getItem('Clientes', '7', <TeamOutlined />),
-		getItem('Condiciones de pago', '8', <DollarOutlined />),
-		getItem('Merchandising', '9', <GiftOutlined />),
 	]),
-	getItem('Sucursal', 'sub3', <ShopOutlined />, [
-		getItem('Pedidos', '10', <ShoppingCartOutlined />),
-		getItem('Reportes general', '11', <PieChartOutlined />),
-		getItem('Horarios', '12', <ClockCircleOutlined />),
-		getItem('Camiones', '13', <CarOutlined />),
-	]),
+	getItem('Pedidos', '10', <ShoppingCartOutlined />),
+	getItem('Reportes', '11', <PieChartOutlined />),
+	getItem('Horarios', '12', <ClockCircleOutlined />),
+	getItem('Condiciones de pago', '8', <DollarOutlined />),
+	getItem('Camiones', '13', <CarOutlined />),
+	getItem('Merchandising', '9', <GiftOutlined />),
 	getItem('Notificaciones', '14', <BellOutlined />),
 	getItem('Cerrar sesión', '15', <LogoutOutlined />),
 ];
@@ -128,7 +127,7 @@ export default function DashboardLayout({ children }) {
 
 	return (
 		<>
-			<Layout style={{ height: '100vh', width: '100%' }}>
+			<Layout className="h-full w-full">
 				<Header
 					className="flex justify-between items-center bg-white font-bold"
 					theme="light"
@@ -151,21 +150,21 @@ export default function DashboardLayout({ children }) {
 						</Button>
 					</Dropdown>
 				</Header>
-				<Layout style={{ minHeight: 'fit-content' }} hasSider>
+				<Layout className="h-full min-h-screen" hasSider>
 					<Sider theme="dark" breakpoint="lg" collapsedWidth="3rem">
-						<div className="w-full">
+						<div className="w-full h-full">
 							<Menu
 								mode="inline"
 								theme="dark"
 								inlineCollapsed={collapsed}
 								items={itemsMenu}
 								onClick={handleNavigation}
-								className="min-h-screen"
+								className="h-full bg-[#012258] text-white"
 							/>
 						</div>
 					</Sider>
-					<Layout>
-						<div className="bg-[#F7F9FB]">
+					<Layout className="h-full min-h-screen">
+						<div className="bg-[#F7F9FB] min-h-screen">
 							<Content className="w-11/12 mx-auto">{children}</Content>
 						</div>
 					</Layout>

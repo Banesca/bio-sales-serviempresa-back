@@ -190,7 +190,7 @@ const Merchandising = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Reporte merchandising'}></Title>
+				<Title title={'Reporte Merchandiser'}></Title>
 				<div className="flex flex-col gap-5">
 					<ConfigProvider
 						renderEmpty={
