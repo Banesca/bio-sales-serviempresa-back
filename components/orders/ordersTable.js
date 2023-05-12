@@ -112,16 +112,40 @@ export default function OrdersTable({ orders }) {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Estado',			
+			title: 'Estado',
 			dataIndex: 'statusOrder',
 			key: 3,
 			align: 'center',
 			render: (text, record) => (
 				<p
-					className={`font-bold text-center text-${
-						orderStatusToUse[record.idStatusOrder].color
-					}-500 ${
-						'bg-' + orderStatusToUse[record.idStatusOrder].color + '-200'
+					className={`font-bold text-center  ${
+						orderStatusToUse[record.idStatusOrder].state == 'Por facturar'
+							? 'text-orange-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Cobrado'
+							? 'text-green-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Facturado'
+							? 'text-blue-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
+							? 'text-yellow-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
+							? 'text-purple-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
+							? 'text-red-500'
+							: ''
+					} ${
+						orderStatusToUse[record.idStatusOrder].state == 'Por facturar'
+							? 'bg-orange-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Cobrado'
+							? 'bg-green-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Facturado'
+							? 'bg-blue-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
+							? 'bg-yellow-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
+							? 'bg-purple-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
+							? 'bg-red-200'
+							: ''
 					} px-2 py-1 rounded-xl`}
 				>
 					{orderStatusToUse[record.idStatusOrder].state}
@@ -139,7 +163,11 @@ export default function OrdersTable({ orders }) {
 				>
 					{userProfile == PROFILES.MASTER ? (
 						order.idStatusOrder == 2 || order.idStatusOrder == 6 ? (
-							<Button type="primary" onClick={() => handleSeeDetail(order)}>
+							<Button
+								type="primary"
+								className="bg-blue-500"
+								onClick={() => handleSeeDetail(order)}
+							>
 								<EyeTwoTone />
 							</Button>
 						) : (

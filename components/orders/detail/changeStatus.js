@@ -1,28 +1,23 @@
 import { Modal } from 'antd';
 import { Button, Space } from 'antd';
 import { List } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { orderStatusToUse } from '../../../pages/dashboard/orders';
-import PROFILES from '../../../components/shared/profiles'
-import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import { useOrders } from '../hooks/useOrders';
-import { message } from 'antd';
-import { useRouter } from 'next/router';
 
 export const statusNames = {
-	'En proceso': 1,
-	Facturado: 2,
-	'Recibido': 3,
-	Procesado: 4,
-	Retenido: 5,
-	Anulado: 6
+	'Por facturar': 1,
+	Completado: 2,
+	Facturado: 3,
+	Despachado: 4,
+	Anulado: 5,
+	Eliminado: 6,
 };
 
 export default function ChangeOrderStatus({
 	status,
 	orderId,
 	handleChangeStatus,
-	handleOrder
+	handleOrder,
 }) {
 	const initialModalState = {
 		visible: false,
@@ -37,48 +32,48 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames['En proceso']],
-				status: statusNames['En proceso'],
+				action: orderStatusToUse[statusNames['Por facturar']].state,
+				status: statusNames['Por facturar'],
 			}));
 		},
 		2: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Facturado],
-				status: statusNames.Facturado,
+				action: orderStatusToUse[statusNames.Completado].state,
+				status: statusNames.Completado,
 			}));
 		},
 		3: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames['Recibido']],
-				status: statusNames['Recibido'],
+				action: orderStatusToUse[statusNames.Facturado].state,
+				status: statusNames.Facturado,
 			}));
 		},
 		4: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Procesado],
-				status: statusNames.Procesado,
+				action: orderStatusToUse[statusNames.Despachado].state,
+				status: statusNames.Despachado,
 			}));
 		},
 		5: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Retenido],
-				status: statusNames.Retenido,
+				action: orderStatusToUse[statusNames.Anulado].state,
+				status: statusNames.Anulado,
 			}));
 		},
 		6: () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Anulado],
-				status: statusNames.Anulado,
+				action: orderStatusToUse[statusNames.Eliminado].state,
+				status: statusNames.Eliminado,
 			}));
 		},
 	};
@@ -91,8 +86,7 @@ export default function ChangeOrderStatus({
 		setModal(initialModalState);
 	};
 
-	const perfil = async () => {
-	}
+	const perfil = async () => {};
 	perfil();
 
 	return (
@@ -100,26 +94,17 @@ export default function ChangeOrderStatus({
 			{status != 2 && (
 				<List style={{ width: '100%' }}>
 					<List.Item>
-						<h3>Actualizar Estado</h3>
+						<h3 className="font-bold">Actualizar Estado</h3>
 						<Space>
 							{status == 1 && (
 								<>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Anulado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
 										Anular pedido
 									</Button>
-									<Button
-										onClick={() =>
-											handleOrder()
-										}
-										type="info"
-									>
+									<Button onClick={() => handleOrder()} type="info">
 										Concluir pedido
 									</Button>
 								</>
@@ -127,32 +112,20 @@ export default function ChangeOrderStatus({
 							{status == 3 && (
 								<>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Anulado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
 										Anular pedido
 									</Button>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Retenido
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Retenido)}
 										type="primary"
 										danger
 									>
 										Retener
 									</Button>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Procesado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Procesado)}
 										type="warning"
 									>
 										Procesar
@@ -162,21 +135,13 @@ export default function ChangeOrderStatus({
 							{status == 4 && (
 								<>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Anulado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
 										Anular pedido
 									</Button>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Facturado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Facturado)}
 										type="success"
 									>
 										Facturar
@@ -186,28 +151,20 @@ export default function ChangeOrderStatus({
 							{status == 5 && (
 								<>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames.Anulado
-											)
-										}
+										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
 										Anular pedido
 									</Button>
 									<Button
-										onClick={() =>
-											handleOpenModal(
-												statusNames['Procesado']
-											)
-										}
+										onClick={() => handleOpenModal(statusNames['Procesado'])}
 										type="warning"
 									>
 										Procesar
 									</Button>
 								</>
 							)}
-							{status == 6 && (<></>)}
+							{status == 6 && <></>}
 						</Space>
 					</List.Item>
 				</List>
@@ -219,7 +176,7 @@ export default function ChangeOrderStatus({
 				cancelText="Cancelar"
 				onCancel={handleCloseModal}
 				onOk={() => handleChangeStatus(modal.status)}
-				okType='primary'
+				okType="primary"
 			>
 				<p>{`Deseas marcar este pedido como '${modal.action}' ?`}</p>
 			</Modal>

@@ -192,7 +192,7 @@ const UpdateOrderPage = () => {
 	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(statusNames['Recibido'], currentOrder.idOrderH);
+			await changeStatus(statusNames.Facturado, currentOrder.idOrderH);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
 			message.error('Error al recibir pedido');
@@ -203,7 +203,7 @@ const UpdateOrderPage = () => {
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(statusNames['En proceso'], currentOrder.idOrderH);
+			await changeStatus(statusNames['Por facturar'], currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al pausar pedido');

@@ -3,23 +3,21 @@ import { useRouter } from 'next/router';
 import { Button, Dropdown, Layout, Menu, Space } from 'antd';
 import {
 	UserOutlined,
-	UsergroupAddOutlined,
 	DownOutlined,
-	ShopOutlined,
-	CarOutlined,
-	PieChartOutlined,
-	TagsOutlined,
 	ClusterOutlined,
 	StockOutlined,
 	TeamOutlined,
-	DollarOutlined,
-	GiftOutlined,
-	ShoppingCartOutlined,
-	ClockCircleOutlined,
-	BellOutlined,
 	LogoutOutlined,
-	TrademarkOutlined,
+	ShopFilled,
+	TagsFilled,
+	PieChartFilled,
+	ClockCircleFilled,
+	GiftFilled,
+	BellFilled,
+	TrademarkCircleFilled,
+	DollarCircleFilled,
 } from '@ant-design/icons';
+import { FaShoppingCart, FaTruck, FaUsers } from 'react-icons/fa';
 
 import Loading from './loading';
 import MainLogo from '../logos/mainLogo';
@@ -55,24 +53,24 @@ const routes = [
 ];
 
 const itemsMenu = [
-	getItem('Productos', 'sub1', <ShopOutlined />, [
-		getItem('Lista', '1', <TagsOutlined />),
+	getItem('Productos', 'sub1', <ShopFilled />, [
+		getItem('Lista', '1', <TagsFilled />),
 		getItem('Categorías', '2', <ClusterOutlined />),
-		getItem('Marcas', '3', <TrademarkOutlined />),
+		getItem('Marcas', '3', <TrademarkCircleFilled />),
 		getItem('Inventario', '4', <StockOutlined />),
-		getItem('Almacenes', '5', <ShopOutlined />),
+		getItem('Almacenes', '5', <ShopFilled />),
 	]),
-	getItem('Usuarios', 'sub2', <UsergroupAddOutlined />, [
-		getItem('Usuario', '6', <UserOutlined />),
+	getItem('Usuarios', 'sub2', <FaUsers />, [
+		getItem('Usuarios', '6', <UserOutlined />),
 		getItem('Clientes', '7', <TeamOutlined />),
 	]),
-	getItem('Pedidos', '10', <ShoppingCartOutlined />),
-	getItem('Reportes', '11', <PieChartOutlined />),
-	getItem('Horarios', '12', <ClockCircleOutlined />),
-	getItem('Condiciones de pago', '8', <DollarOutlined />),
-	getItem('Camiones', '13', <CarOutlined />),
-	getItem('Merchandising', '9', <GiftOutlined />),
-	getItem('Notificaciones', '14', <BellOutlined />),
+	getItem('Pedidos', '10', <FaShoppingCart />),
+	getItem('Reportes', '11', <PieChartFilled />),
+	getItem('Horarios', '12', <ClockCircleFilled />),
+	getItem('Condiciones de pago', '8', <DollarCircleFilled />),
+	getItem('Camiones', '13', <FaTruck />),
+	getItem('Merchandising', '9', <GiftFilled />),
+	getItem('Notificaciones', '14', <BellFilled />),
 	getItem('Cerrar sesión', '15', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
