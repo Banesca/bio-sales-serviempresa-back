@@ -6,7 +6,7 @@ import { orderStatusToUse } from '../../../pages/dashboard/orders';
 
 export const statusNames = {
 	'Por facturar': 1,
-	Completado: 2,
+	Cobrado: 2,
 	Facturado: 3,
 	Despachado: 4,
 	Anulado: 5,
@@ -40,8 +40,8 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Completado].state,
-				status: statusNames.Completado,
+				action: orderStatusToUse[statusNames.Cobrado].state,
+				status: statusNames.Cobrado,
 			}));
 		},
 		3: () => {
@@ -104,8 +104,15 @@ export default function ChangeOrderStatus({
 									>
 										Anular pedido
 									</Button>
-									<Button onClick={() => handleOrder()} type="info">
-										Concluir pedido
+									{/* <Button onClick={() => handleOrder()} type="info">
+										Facturar
+									</Button> */}
+									<Button
+										onClick={() => handleOpenModal(statusNames.Facturado)}
+										type="primary"
+										className="bg-blue-500"
+									>
+										Facturar
 									</Button>
 								</>
 							)}
@@ -117,18 +124,18 @@ export default function ChangeOrderStatus({
 									>
 										Anular pedido
 									</Button>
-									<Button
+									{/* <Button
 										onClick={() => handleOpenModal(statusNames.Retenido)}
 										type="primary"
 										danger
 									>
 										Retener
-									</Button>
+									</Button> */}
 									<Button
-										onClick={() => handleOpenModal(statusNames.Procesado)}
+										onClick={() => handleOpenModal(statusNames.Despachado)}
 										type="warning"
 									>
-										Procesar
+										Despachar
 									</Button>
 								</>
 							)}
@@ -141,10 +148,10 @@ export default function ChangeOrderStatus({
 										Anular pedido
 									</Button>
 									<Button
-										onClick={() => handleOpenModal(statusNames.Facturado)}
+										onClick={() => handleOpenModal(statusNames.Cobrado)}
 										type="success"
 									>
-										Facturar
+										Cobrar
 									</Button>
 								</>
 							)}

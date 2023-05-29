@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }) {
 				`${ipBackOffice}/customer/byname/${business}`
 			);
 			setGeneralData(response.data.restaurante);
+			console.log(response.data.restaurante);
 		} catch (error) {
 			error;
 		}
