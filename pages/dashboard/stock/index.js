@@ -52,22 +52,10 @@ export default function Products() {
 			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
 		},
 		{
-			title: 'Precio Compra',
-			dataIndex: 'pricePurchase',
-			key: 3,
-			render: (text) => <p>${text}</p>,
-		},
-		{
 			title: 'Precio venta',
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text) => <p>${text}</p>,
-		},
-		{
-			title: 'Stock mínimo',
-			dataIndex: 'minStock',
-			key: 1,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Valor total',
@@ -79,6 +67,12 @@ export default function Products() {
 		{
 			title: 'Stock',
 			dataIndex: 'stock',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Marca',
+			dataIndex: 'branch',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},

@@ -60,22 +60,10 @@ const ImportProducts = () => {
 			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
 		},
 		{
-			title: 'Precio Compra',
-			dataIndex: 'pricePurchase',
-			key: 3,
-			render: (text) => <p>${text}</p>,
-		},
-		{
 			title: 'Precio venta',
 			dataIndex: 'priceSale',
 			key: 3,
 			render: (text) => <p>${text}</p>,
-		},
-		{
-			title: 'Stock mínimo',
-			dataIndex: 'minStock',
-			key: 1,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Valor total',
@@ -173,26 +161,20 @@ const ImportProducts = () => {
 				idUserAddFk: 1,
 				idProduction: 1,
 				idProductionCenter: 1,
-				pricePurchase: row?.PRECIO_TIENDA,
-				nameFamily: row?.Categoria || 'No especificada',
-				nameSubFamily: row?.Marca || 'No especificada',
-				nameProduct: row?.Nombre,
-				barCode: String(row?.Codigo_de_barra_global),
+				priceSale: row?.PRECIO_TIENDA,
+				nameFamily: row?.Categoría || 'No especificada',
+				nameSubFamily: row?.SubCategoría || 'No especificada',
+				nameProduct: row?.nombre,
+				barCode: row?.Codigo_de_barra_global,
 				quantity: row?.Cantidad,
 				efectivo: row?.REFERENCIA,
 				wareHouse: row?.Almacen,
 				idInventaryB: 1,
 				key: '',
-				stock: row?.Stock,
-				totalPrice: row?.Total,
-				idProductFk: row?.Id_de_producto,
-				isTypeProduct: 1,
-				idProduct: row?.Id_de_producto,
-				key: row?.Id_de_producto,
-				priceSale: row?.PRECIO_TIENDA,
+				stock: row?.Cantidad,
+				idProduct: row?.Id,
 				idSucursalFk: selectedBusiness?.idSucursal,
 				apply_inventory: true,
-				nameKitchen: '1',
 				idStatusFk: 1,
 				idUnidadMedida: row?.Unidad_de_medida,
 				idRestaurantFk: 1,
@@ -347,7 +329,7 @@ const ImportProducts = () => {
 							>
 								Confirmar
 							</Button>
-						</div>
+						</div>,
 					]}
 				>
 					<p>

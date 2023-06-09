@@ -171,19 +171,19 @@ const ImportProducts = () => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				pricePurchase: row.PRECIO_TIENDA,
-				nameFamily: row.Categoria,
-				nameSubFamily: String(row.Marca),
-				nameProduct: row.Nombre,
-				barCode: String(row.Codigo_de_barra_global),
-				quantity: row.Cantidad,
+				pricePurchase: row.PriceSale,
+				nameFamily: row.nombre,
+				nameSubFamily: String(row.nameSubFamily),
+				nameProduct: row.nameProduct,
+				barCode: String(row.idProduct),
+				quantity: row.quantity,
 				efectivo: row.REFERENCIA,
-				wareHouse: row.Almacen,
-				nameSubFamily: row.subcategoria,
+				wareHouse: row.wareHouse,
+				nameSubFamily: row.nameSubFamily,
 				idInventaryB: 0,
-				idProductFk: 1,
-				priceSale: row.PRECIO_TIENDA,
-				idSucursalFk: 0,
+				idProductFk: row.idProduct,
+				priceSale: row.PriceSale,
+				idSucursalFk: selectedBusiness?.idInventory,
 				idInventaryHFK: selectedBusiness?.idInventory,
 				idTypeProductFk: 1,
 				isPromo: 0,
@@ -367,7 +367,7 @@ const ImportProducts = () => {
 							>
 								Confirmar
 							</Button>
-						</div>
+						</div>,
 					]}
 				>
 					<p>
