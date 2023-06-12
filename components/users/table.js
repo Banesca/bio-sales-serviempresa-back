@@ -124,7 +124,7 @@ const UsersTable = ({
 			</ConfigProvider>
 
 			<Modal
-				title={'Detail'}
+				title='Confirmación'
 				open={isModalOpen}
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
@@ -145,7 +145,7 @@ const UsersTable = ({
 					</div>
 				]}
 			>
-				<p>{`Estas seguro de eliminar al usuario ${currentUser?.fullname}`}</p>
+				<p>¿{`Estás seguro de eliminar al usuario ${currentUser?.fullname}`}?</p>
 			</Modal>
 		</div>
 	);

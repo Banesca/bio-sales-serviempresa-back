@@ -11,4 +11,5 @@ export const PROFILES = {
 	ADMIN: 2,
 	SELLER: 3,
 	BILLER: 4,
+	MERCHANDISER: 5
 };

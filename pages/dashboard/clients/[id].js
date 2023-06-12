@@ -15,6 +15,30 @@ import { CustomizeRenderEmpty } from '../../../components/common/customizeRender
 const ClientDetail = () => {
 	const columns = [
 		{
+			title: 'Pédido N#',
+			dataIndex: 'number_order',
+			key: 0,
+			sorter: (a, b) => {
+				let aYear = a.created_at.substring(0, 4);
+				let bYear = b.created_at.substring(0, 4);
+
+				let aMonth = a.created_at.substring(5, 7);
+				let bMonth = b.created_at.substring(5, 7);
+
+				let aDay = a.created_at.substring(5, 7);
+				let bDay = b.created_at.substring(8, 10);
+
+				let aDate = new Date(aYear, aMonth, aDay);
+				let bDate = new Date(bYear, bMonth, bDay);
+
+				return aDate.getTime() - bDate.getTime();
+			},
+			showSorterTooltip: false,
+			render: (text) => (
+				<p>{text.slice(0, 10).split('-').reverse().join('-')}</p>
+			),
+		},
+		{
 			title: 'Fecha de creación',
 			dataIndex: 'created_at',
 			key: 0,
@@ -204,11 +228,10 @@ const ClientDetail = () => {
 				</div>
 				<Card className="rounded-2xl shadow-md">
 					<h2 className="text-2xl text-center font-semibold">
-						Información General
 					</h2>
 					<List>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p style={{ fontWeight: 'bold' }}>Rif</p>
+							<p style={{ fontWeight: 'bold' }}>R.I.F N#</p>
 							<p>{client?.numberDocument}</p>
 						</List.Item>
 						<List.Item style={{ padding: '10px 25px' }}>
@@ -234,7 +257,7 @@ const ClientDetail = () => {
 					</List>
 				</Card>
 				<div className="flex flex-col gap-5">
-					<h3 className="text-4xl text-center">Pedidos</h3>
+					<h3 className="text-4xl text-center">Pédidos</h3>
 					<ConfigProvider
 						renderEmpty={
 							orders.length !== 0 || true ? CustomizeRenderEmpty : ''

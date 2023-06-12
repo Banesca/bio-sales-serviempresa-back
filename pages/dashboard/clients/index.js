@@ -2,6 +2,7 @@ import {
 	DeleteOutlined,
 	EditOutlined,
 	EyeTwoTone,
+	UserAddOutlined,
 	UploadOutlined,
 } from '@ant-design/icons';
 import {
@@ -26,6 +27,7 @@ import { message } from 'antd';
 import Title from '../../../components/shared/title';
 import Link from 'next/link';
 import { useRequest } from '../../../hooks/useRequest';
+import { BsPlusCircleFill } from 'react-icons/fa';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 export default function ClientsPage() {
@@ -45,6 +47,12 @@ export default function ClientsPage() {
 		{
 			title: 'Teléfono',
 			dataIndex: 'phone',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Estado',
+			dataIndex: 'statusName',
 			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
@@ -255,8 +263,8 @@ export default function ClientsPage() {
 			<div className="m-4 p-4">
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="success" style={{ marginRight: '-2.3rem' }}>
-							Agregar
+						<Button type="success" style={{ marginRight: '-2.3rem' }} >
+						<UserAddOutlined /> Crear
 						</Button>
 					</Link>
 				</Title>
@@ -342,7 +350,7 @@ export default function ClientsPage() {
 				<p>Some contents...</p>
 			</Modal>
 			<Modal
-				title="Eliminar"
+				title="Confirmación"
 				open={deleteModalOpen}
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
@@ -364,7 +372,7 @@ export default function ClientsPage() {
 				]}
 			>
 				<p>
-					Estas seguro de que deseas eliminar a {`${currentClient?.nameClient}`}
+				¿Estás seguro de que deseas eliminar a {`${currentClient?.nameClient}`}?
 				</p>
 			</Modal>
 			<Modal

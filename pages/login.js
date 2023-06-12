@@ -217,7 +217,7 @@ export default function Login() {
 									</Button>
 								</Form.Item>
 							</Form>
-							<h5 className="text-center">Versión 0.0.2</h5>
+							<h5 className="text-center">Versión 1.0.0</h5>
 						</div>
 					</div>
 				</Content>

@@ -12,6 +12,9 @@ import { addKeys } from '../../../util/setKeys';
 import { useUser } from '../../../components/users/hooks/useUser';
 import { PROFILES } from '../../../components/shared/profiles';
 import Title from '../../../components/shared/title';
+import {
+	UserAddOutlined
+} from '@ant-design/icons';
 
 export default function Users() {
 	const { loading, setLoading } = useLoadingContext();
@@ -114,7 +117,7 @@ export default function Users() {
 						{log == PROFILES.MASTER && (
 							<Link href="users/add">
 								<Button style={{ marginRight: '-2.3rem' }} type="success">
-									Agregar
+								<UserAddOutlined /> Crear
 								</Button>
 							</Link>
 						)}

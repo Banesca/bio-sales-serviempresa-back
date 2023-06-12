@@ -148,7 +148,6 @@ const UserForm = ({
 					width: '70%',
 					maxWidth: '750px',
 					margin: '.5rem auto',
-					backgroundColor: 'white',
 					padding: '60px',
 					borderRadius: '20px',
 					boxShadow: '6px 6px 10px rgba(180, 180, 180, 0.479)',
@@ -207,10 +206,6 @@ const UserForm = ({
 						name="pin"
 						rules={[
 							{
-								required: true,
-								message: 'Ingresa una contraseña',
-							},
-							{
 								min: 8,
 								message: 'Escribe una contraseña de minimo 8 caracteres',
 							},
@@ -233,10 +228,6 @@ const UserForm = ({
 						name="Repit"
 						dependencies={['pin']}
 						rules={[
-							{
-								required: true,
-								message: 'Repite la contraseña',
-							},
 							({ getFieldValue }) => ({
 								validator(_, value) {
 									if (!value || getFieldValue('pin') === value) {
@@ -297,7 +288,8 @@ const UserForm = ({
 										!update &&
 										(userData.idProfileFk == PROFILES.SELLER ||
 											userData.idProfileFk == PROFILES.BILLER ||
-											userData.idProfileFk == PROFILES.ADMIN),
+											userData.idProfileFk == PROFILES.ADMIN ||
+											userData.idProfileFk == PROFILES.MERCHANDISER),
 									message: 'Elige una empresa',
 								},
 							]}

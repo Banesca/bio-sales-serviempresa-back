@@ -67,7 +67,7 @@ export default function AddClient() {
 					})
 				);
 				if (calc.includes(1) || (calc.includes(2) && calc.includes(3))) {
-					return 'El número de teléfono y el Rif ya están en uso';
+					return 'El número de teléfono y el RIF ya están en uso';
 				} else if (calc.includes(2)) {
 					return 'El número de telefono ya esta en uso';
 				} else if (calc.includes(3)) {
@@ -169,7 +169,7 @@ export default function AddClient() {
 										},
 										{
 											pattern: regexpTlp,
-											message: 'Ingresa un numero de telefono valido',
+											message: 'Ingresa un numero de teléfono valido',
 										},
 									]}
 									labelCol={{
@@ -214,7 +214,7 @@ export default function AddClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="Rif"
+									label="RIF N#"
 									labelCol={{
 										md: { span: 10 },
 										sm: { span: 6 },
@@ -229,18 +229,17 @@ export default function AddClient() {
 									rules={[
 										{
 											required: true,
-											message: 'Ingresa el rif del cliente',
+											message: 'Ingresa el RIF N# del cliente',
 										},
 										{
 											pattern: regexpRif,
-											message: 'Ingresa un rif valido',
+											message: 'Ingresa un RIF N# valido',
 										},
 									]}
-									name="rif"
-								>
+									name="rif">
 									<Input
 										type="text"
-										placeholder="Formate aceptado: j-12345678-1"
+										placeholder="Formato aceptado: J-12345678-10"
 									/>
 								</Form.Item>
 							</Col>
@@ -263,10 +262,10 @@ export default function AddClient() {
 									rules={[
 										{
 											required: true,
-											message: 'Ingresa la dirección del cliente',
+											message: 'Ingresa el metodo de pago del cliente',
 										},
 									]}
-									name="address"
+									name="payMent"
 								>
 									<Input type="text" />
 								</Form.Item>
@@ -288,18 +287,13 @@ export default function AddClient() {
 									rules={[
 										{
 											required: true,
-											message: 'Ingresa el rif del cliente',
-										},
-										{
-											pattern: regexpRif,
-											message: 'Ingresa un rif valido',
-										},
+											message: 'Ingresa la condición de pago del cliente',
+										}
 									]}
-									name="rif"
-								>
+									name="conditionPay">
 									<Input
 										type="text"
-										placeholder="Formate aceptado: j-12345678-1"
+										placeholder="Condición de pago"
 									/>
 								</Form.Item>
 							</Col>

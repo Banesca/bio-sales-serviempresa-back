@@ -60,10 +60,8 @@ const itemsMenu = [
 		getItem('Inventario', '4', <StockOutlined />),
 		getItem('Almacenes', '5', <ShopFilled />),
 	]),
-	getItem('Usuarios', 'sub2', <FaUsers />, [
-		getItem('Usuarios', '6', <UserOutlined />),
-		getItem('Clientes', '7', <TeamOutlined />),
-	]),
+	getItem('Usuarios', '6', <UserOutlined />),
+	getItem('Clientes', '7', <TeamOutlined />),
 	getItem('Pedidos', '10', <FaShoppingCart />),
 	getItem('Reportes', '11', <PieChartFilled />),
 	getItem('Horarios', '12', <ClockCircleFilled />),
