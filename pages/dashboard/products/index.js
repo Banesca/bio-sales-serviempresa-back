@@ -210,7 +210,7 @@ export default function Products() {
 					<ProductFilter setQuery={setQuery} clean={clean} />
 					<ConfigProvider
 						renderEmpty={
-							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
+							filtered()?.length !== 0 || true ? CustomizeRenderEmpty : ''
 						}
 					>
 						<Table
