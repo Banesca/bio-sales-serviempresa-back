@@ -71,7 +71,7 @@ export default function Login() {
 		const value = res.value.getValue().data[0];
 		localStorage.setItem('accessToken', value.token);
 		console.log(value.idProfileFk);
-		if (value.idProfileFk !== 1) {
+		if (value.idProfileFk !== 1 ) {
 			const businessByUser = await getUserBusiness(value.idUser);
 			if (businessByUser.length < 1 || value.idProfileFk !== 1) {
 				handleLoginError('Acceso denegado');

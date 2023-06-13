@@ -1,19 +1,41 @@
 import { Button, Card, List } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
 
-const TotalSales = () => {
-	const [report, setReport] = useState();
-	const { requestHandler } = useRequest();
 
+const TotalSales = () => {
+	const [report, setReport] = useState("");
+	const { requestHandler } = useRequest();
+	
+
+	useEffect(() => {
+		getReports();
+	},[]);
+
+	
+	useEffect(() => {
+	},[report]);
+
+
+	
 	const getReports = async () => {
-		const res = await requestHandler.post('/api/v2/report/totals');
-		if (res.isLeft()) {
-			throw res.value.getErrorValue();
-		}
-		const value = res.value._value.response[0];
-		setReport(value);
+		const res = await requestHandler.post('/api/v2/report/totals/');
+		if (!res.isLeft()) {
+			const value = res.value.getValue().response[0];
+			return setReport(value);
+		} 
 	};
+	
+
+	function validateValue(value){
+		if(value == null){
+			return 0
+		} else {
+			return value
+		}
+    }
+
+
 	return (
 		<Card className="w-[50%] shadow-lg">
 			<h1 className="text-3xl text-center my-6">Ventas totales</h1>
@@ -25,8 +47,6 @@ const TotalSales = () => {
 						fontSize: '18px',
 					}}
 				>
-					<p style={{ fontWeight: 'bold' }}>Acciones</p>
-					<Button type="default">Exportar</Button>
 				</List.Item>
 				<List.Item
 					style={{
@@ -36,7 +56,7 @@ const TotalSales = () => {
 					}}
 				>
 					<p style={{ fontWeight: 'bold' }}>Promedio de ticket:</p>
-					<p>{`$${report?.promedioTicket}`}</p>
+					<p>{`$ ${validateValue(report?.promedioTicket)}`}</p>
 				</List.Item>
 				<List.Item
 					style={{
@@ -46,7 +66,7 @@ const TotalSales = () => {
 					}}
 				>
 					<p style={{ fontWeight: 'bold' }}>Promedio hoy:</p>
-					<p>{`$${report?.promedioHoy}`}</p>
+					<p>{`$ ${validateValue(report?.promedioHoy)}`}</p>
 				</List.Item>
 				<List.Item
 					style={{
@@ -55,8 +75,8 @@ const TotalSales = () => {
 						fontSize: '18px',
 					}}
 				>
-					<p style={{ fontWeight: 'bold' }}>Total de tickets:</p>
-					<p>{`${report?.totalTicket}`}</p>
+					<p style={{ fontWeight: 'bold' }}>Total de pédidos:</p>
+					<p>{`${validateValue(report?.totalTicket)}`}</p>
 				</List.Item>
 				<List.Item
 					style={{
@@ -66,7 +86,7 @@ const TotalSales = () => {
 					}}
 				>
 					<p style={{ fontWeight: 'bold' }}>Venta de ayer:</p>
-					<p>{`$${report?.ventaAyer}`}</p>
+					<p>{`$ ${validateValue(report?.ventaAyer)}`}</p>
 				</List.Item>
 				<List.Item
 					style={{
@@ -76,7 +96,7 @@ const TotalSales = () => {
 					}}
 				>
 					<p style={{ fontWeight: 'bold' }}>Venta de hoy:</p>
-					<p>{`$${report?.ventaHoy}`}</p>
+					<p>{`$ ${validateValue(report?.ventaHoy)}`}</p>
 				</List.Item>
 				<List.Item
 					style={{
@@ -86,7 +106,7 @@ const TotalSales = () => {
 					}}
 				>
 					<p style={{ fontWeight: 'bold' }}>Pedidos anulados:</p>
-					<p>{`${report?.totalAnulados}`}</p>
+					<p>{`${validateValue(report?.totalAnulados)}`}</p>
 				</List.Item>
 			</List>
 		</Card>

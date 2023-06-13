@@ -1,4 +1,4 @@
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined,CheckOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Input, Table } from 'antd';
 import { Space } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
@@ -16,7 +16,7 @@ export default function ProductsInOrder({
 	const orderColumns = [
 		{
 			title: (
-				<div className="text-white">Pedido Nro. ${order?.numberOrden}</div>
+				<div className="text-white" style={{FontSize:"15px"}}>Pédido Nro.  {order?.numberOrden}</div>
 			),
 			children: [
 				{
@@ -45,9 +45,18 @@ export default function ProductsInOrder({
 								className="bg-blue-500"
 								onClick={() => handleUpdateProduct(record)}
 							>
-								Ok
+								<CheckOutlined />
 							</Button>
 						</Space>
+					),
+				},
+				{
+					title: 'Precio',
+					dataIndex: 'priceSale',
+					width: '100px',
+					key: 2,
+					render: (text, record) => (
+						<p>$ {record.isPromo == '1' ? record.marketPrice : text}</p>
 					),
 				},
 				{
@@ -65,16 +74,7 @@ export default function ProductsInOrder({
 							</Button>
 						</Space>
 					),
-				},
-				{
-					title: 'Precios',
-					dataIndex: 'priceSale',
-					width: '100px',
-					key: 2,
-					render: (text, record) => (
-						<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
-					),
-				},
+				}
 			],
 		},
 	];

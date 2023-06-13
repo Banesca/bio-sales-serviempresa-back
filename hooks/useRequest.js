@@ -52,6 +52,25 @@ export function useRequest() {
 				return left(Result.fail(error));
 			}
 		},
+		post2: async (route, data) => {
+			try {
+				const response = await axios.post(
+					`${ip}:${generalContext.api_port}${route}`,
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem(
+								'accessToken'
+							)}`,
+						},
+					}
+				);
+
+				return right(Result.ok(response.data));
+			} catch (error) {
+				(error);
+				return left(Result.fail(error));
+			}
+		},
 		put: async (route, data) => {
 			try {
 				const response = await axios.put(

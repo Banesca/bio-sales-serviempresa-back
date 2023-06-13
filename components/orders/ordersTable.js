@@ -21,6 +21,13 @@ export default function OrdersTable({ orders }) {
 		router.push(`/dashboard/orders/${order.idOrderH}`);
 	};
 
+
+	const handleSeeUpdate = (order, record) => {
+		setLoading(true);
+		router.push(`/dashboard/orders/update/${order.idOrderH}`);
+	};
+
+	
 	const [users, setUsers] = useState({});
 	const { getUserById } = useUser();
 
@@ -51,6 +58,10 @@ export default function OrdersTable({ orders }) {
 	}, []);
 
 	const columns = [
+		{
+			title:"Orden N#",
+			dataIndex:"numberOrden"
+		},
 		{
 			title: 'Fecha de creación',
 			dataIndex: 'created_at',
@@ -162,7 +173,7 @@ export default function OrdersTable({ orders }) {
 					style={{ display: 'flex', justifyContent: 'center' }}
 				>
 					{userProfile == PROFILES.MASTER ? (
-						order.idStatusOrder == 2 || order.idStatusOrder == 6 ? (
+						order.idStatusOrder == 2 || order.idStatusOrder == 6 || order.idStatusOrder == 4 ? (
 							<Button
 								type="primary"
 								className="bg-blue-500"
@@ -171,18 +182,18 @@ export default function OrdersTable({ orders }) {
 								<EyeTwoTone />
 							</Button>
 						) : (
-							<Button onClick={() => handleSeeDetail(order, record)}>
+							<Button onClick={() => handleSeeUpdate(order, record)}>
 								<EditOutlined />
 							</Button>
 						)
 					) : users.fullname !== text ||
 					  order.idStatusOrder == 2 ||
-					  order.idStatusOrder == 6 ? (
+					  order.idStatusOrder == 6  || order.idStatusOrder == 4 ? (
 						<Button type="primary" onClick={() => handleSeeDetail(order)}>
 							<EyeTwoTone />
 						</Button>
 					) : (
-						<Button onClick={() => handleSeeDetail(order, record)}>
+						<Button onClick={() => handleSeeUpdate(order, record)}>
 							<EditOutlined />
 						</Button>
 					)}

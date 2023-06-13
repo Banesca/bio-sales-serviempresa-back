@@ -25,7 +25,9 @@ const AddOrderForm = (props) => {
 			setLoading(false);
 			return;
 		}
-		setClients(res.value.getValue().response);
+		let clientsList = res.value.getValue().response;
+		clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
+		setClients(clientsList);
 		setLoading(false);
 	};
 
@@ -110,7 +112,7 @@ const AddOrderForm = (props) => {
 				<h2
 					style={{ fontSize: '2rem', marginTop: '-5px', marginLeft: '-180px' }}
 				>
-					Agregar pedido
+					Agregar cliente
 				</h2>
 			</section>
 			<div

@@ -3,6 +3,14 @@ import { Button, Space } from 'antd';
 import { List } from 'antd';
 import { useState } from 'react';
 import { orderStatusToUse } from '../../../pages/dashboard/orders';
+import {
+	AppstoreAddOutlined,
+	CloseCircleOutlined,
+	AuditOutlined,
+	CarryOutOutlined,
+	CreditCardOutlined,
+	PrinterOutlined
+} from '@ant-design/icons';
 
 export const statusNames = {
 	'Por facturar': 1,
@@ -92,8 +100,7 @@ export default function ChangeOrderStatus({
 	return (
 		<>
 			{status != 2 && (
-				<List style={{ width: '100%' }}>
-					<List.Item>
+					<List.Item  style={{ width: '100%' }}>
 						<h3 className="font-bold">Actualizar Estado</h3>
 						<Space>
 							{status == 1 && (
@@ -102,7 +109,7 @@ export default function ChangeOrderStatus({
 										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
-										Anular pedido
+										<CloseCircleOutlined/> Anular pedido
 									</Button>
 									{/* <Button onClick={() => handleOrder()} type="info">
 										Facturar
@@ -112,7 +119,7 @@ export default function ChangeOrderStatus({
 										type="primary"
 										className="bg-blue-500"
 									>
-										Facturar
+										<PrinterOutlined /> Facturar
 									</Button>
 								</>
 							)}
@@ -122,7 +129,7 @@ export default function ChangeOrderStatus({
 										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
-										Anular pedido
+										<CloseCircleOutlined/>  Anular pedido
 									</Button>
 									{/* <Button
 										onClick={() => handleOpenModal(statusNames.Retenido)}
@@ -135,7 +142,7 @@ export default function ChangeOrderStatus({
 										onClick={() => handleOpenModal(statusNames.Despachado)}
 										type="warning"
 									>
-										Despachar
+										<CarryOutOutlined /> Despachar
 									</Button>
 								</>
 							)}
@@ -145,13 +152,13 @@ export default function ChangeOrderStatus({
 										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
-										Anular pedido
+										<CloseCircleOutlined/>  Anular pedido
 									</Button>
 									<Button
 										onClick={() => handleOpenModal(statusNames.Cobrado)}
 										type="success"
 									>
-										Cobrar
+										<CreditCardOutlined/> Cobrar
 									</Button>
 								</>
 							)}
@@ -161,31 +168,39 @@ export default function ChangeOrderStatus({
 										onClick={() => handleOpenModal(statusNames.Anulado)}
 										danger
 									>
-										Anular pedido
+										<CloseCircleOutlined/>  Anular pedido
 									</Button>
 									<Button
 										onClick={() => handleOpenModal(statusNames['Procesado'])}
 										type="warning"
 									>
-										Procesar
+									<AuditOutlined />	Procesar
 									</Button>
 								</>
 							)}
 							{status == 6 && <></>}
 						</Space>
 					</List.Item>
-				</List>
 			)}
 			<Modal
 				open={modal.visible}
-				title="Actualizar estado"
-				okText="Aceptar"
-				cancelText="Cancelar"
+				title="Confirmación"
 				onCancel={handleCloseModal}
-				onOk={() => handleChangeStatus(modal.status)}
-				okType="primary"
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button danger key="cancel" onClick={handleCloseModal}>
+							Cancelar
+						</Button>
+						<Button key="submit" primary onClick={() => handleChangeStatus(modal.status)}>
+							Aceptar
+						</Button>
+					</div>
+				]}
+			
+			
 			>
-				<p>{`Deseas marcar este pedido como '${modal.action}' ?`}</p>
+				<p>{`¿Seguro de marcar este pédido como '${modal.action}'?`}</p>
 			</Modal>
 		</>
 	);

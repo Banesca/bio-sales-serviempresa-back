@@ -27,7 +27,7 @@ import { useProducts } from '../../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
-import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, LeftOutlined,PauseOutlined,CloseOutlined } from '@ant-design/icons';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -276,7 +276,7 @@ const UpdateOrderPage = () => {
 						</Button>
 					</div>
 					<h1 className="text-center font-semibold text-4xl w-[350px]">
-						Tomar pedido
+						 Agregar productos 
 					</h1>
 					<div className="flex gap-4">
 						<Button
@@ -284,10 +284,10 @@ const UpdateOrderPage = () => {
 							type="primary"
 							danger
 						>
-							Anular
+							<CloseOutlined/> Anular
 						</Button>
 						<Button onClick={() => setIsPauseOrderModal(true)} type="info">
-							Pausar
+						<PauseOutlined />	Pausar
 						</Button>
 					</div>
 				</div>
@@ -362,7 +362,7 @@ const UpdateOrderPage = () => {
 				</Row>
 			</div>
 			<Modal
-				title="Anular"
+				title="Confirmación"
 				open={deleteOpen}
 				onCancel={() => setDeleteOpen(false)}
 				onOk={handleCancelOrder}
@@ -384,12 +384,12 @@ const UpdateOrderPage = () => {
 				]}
 			>
 				<p>
-					Estas seguro de que deseas eliminar
+				¿Está seguro de que deseas anular?
 					{` ${currentProduct?.nameProduct}`}
 				</p>
 			</Modal>
 			<Modal
-				title="Enviar"
+				title="Confirmación"
 				className="send"
 				open={closeOrderModal}
 				onCancel={() => setIsCloseOrderModal(false)}
@@ -425,7 +425,7 @@ const UpdateOrderPage = () => {
 						<List.Item>
 							<List.Item.Meta
 								title={item.nameProduct}
-								description={`Cantidad: ${item.weight} | Precio: $${
+								description={`Cantidad: ${item.weight} | Precio: $ ${
 									item.isPromo == 1
 										? item.marketPrice.toFixed(2)
 										: item.priceSale.toFixed(2)
@@ -462,7 +462,7 @@ const UpdateOrderPage = () => {
 				</List>
 			</Modal>
 			<Modal
-				title="Pausar pedido"
+				title="Confirmación"
 				open={pauseOrderModal}
 				onCancel={() => setIsPauseOrderModal(false)}
 				onOk={handlePauseOrder}
@@ -485,12 +485,12 @@ const UpdateOrderPage = () => {
 			>
 				<p>
 					{' '}
-					¿Estás seguro que deseas pausar el pedido? Podrás acceder previamente
+					¿Estás seguro que deseas pausar el pedido?<br/> Podrás acceder previamente
 					al pedido pausado desde el módulo de pedidos. <br />
 				</p>
 			</Modal>
 			<Modal
-				title="Eliminar"
+				title="Confirmación"
 				open={cancelOrderModal}
 				onCancel={() => setIsCancelOrderModal(false)}
 				onOk={handleCancelOrder}
@@ -511,7 +511,7 @@ const UpdateOrderPage = () => {
 					</div>,
 				]}
 			>
-				<p>¿Estas seguro de que deseas anular esta orden?</p>
+				<p>¿Está seguro de que deseas anular esta orden?</p>
 			</Modal>
 		</DashboardLayout>
 	);

@@ -11,6 +11,9 @@ import { message } from 'antd';
 import OrdersTable from '../../../components/orders/ordersTable';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import Title from '../../../components/shared/title';
+import {
+	AppstoreAddOutlined
+} from '@ant-design/icons';
 
 export const orderStatusToUse = {
 	1: { state: 'Por facturar', color: 'orange' },
@@ -81,7 +84,7 @@ export default function OrdersPage() {
 				<Title title={'Pedidos'}>
 					<Link href="orders/add">
 						<Button type="success" style={{ marginRight: '-2.3rem' }}>
-							Agregar
+							<AppstoreAddOutlined/> Crear
 						</Button>
 					</Link>
 				</Title>

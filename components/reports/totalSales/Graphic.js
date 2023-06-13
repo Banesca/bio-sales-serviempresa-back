@@ -27,7 +27,6 @@ const Graphic = ({ borderColor, backgroundColor }) => {
 	};
 	return (
 		<Card className="w-[45%] shadow-md">
-			<h1>hola</h1>
 			<Bar data={data} options={options} />
 		</Card>
 	);

@@ -202,52 +202,6 @@ const UserForm = ({
 						/>
 					</Form.Item>
 					<Form.Item
-						label="Contraseña"
-						name="pin"
-						rules={[
-							{
-								min: 8,
-								message: 'Escribe una contraseña de minimo 8 caracteres',
-							},
-							{
-								pattern: regexpTlp,
-								message:
-									'Las contraseña debe tener: de 8 a 16 caracteres, 1 mayuscula, 1 minuscula y 1 caracter especial',
-							},
-						]}
-					>
-						<Input.Password
-							type="password"
-							name="pin"
-							value={userData.pin}
-							onChange={handleChange}
-						/>
-					</Form.Item>
-					<Form.Item
-						label="Repetir contraseña"
-						name="Repit"
-						dependencies={['pin']}
-						rules={[
-							({ getFieldValue }) => ({
-								validator(_, value) {
-									if (!value || getFieldValue('pin') === value) {
-										return Promise.resolve();
-									}
-									return Promise.reject(
-										new Error('Las dos contraseñas no son iguales')
-									);
-								},
-							}),
-						]}
-					>
-						<Input.Password
-							type="password"
-							name="Repit"
-							value={pin}
-							onChange={handleChange}
-						/>
-					</Form.Item>
-					<Form.Item
 						label="Perfil"
 						name="idProfileFk"
 						rules={[
@@ -313,6 +267,53 @@ const UserForm = ({
 							</Select>
 						</Form.Item>
 					)}
+					<Form.Item
+						label="Contraseña"
+						name="pin"
+						rules={[
+							{
+								min: 8,
+								message: 'Escribe una contraseña de minimo 8 caracteres',
+							},
+							{
+								pattern: regexpTlp,
+								message:
+									'Las contraseña debe tener: de 8 a 16 caracteres, 1 mayuscula, 1 minuscula y 1 caracter especial',
+							},
+						]}
+					>
+						<Input.Password
+							type="password"
+							name="pin"
+							value={userData.pin}
+							onChange={handleChange}
+						/>
+					</Form.Item>
+					<Form.Item
+						label="Repetir contraseña"
+						name="Repit"
+						dependencies={['pin']}
+						rules={[
+							({ getFieldValue }) => ({
+								validator(_, value) {
+									if (!value || getFieldValue('pin') === value) {
+										return Promise.resolve();
+									}
+									return Promise.reject(
+										new Error('Las dos contraseñas no son iguales')
+									);
+								},
+							}),
+						]}
+					>
+						<Input.Password
+							type="password"
+							name="Repit"
+							value={pin}
+							onChange={handleChange}
+						/>
+					</Form.Item>
+				
 					<Row>
 						<Col span={12}>
 							<Form.Item

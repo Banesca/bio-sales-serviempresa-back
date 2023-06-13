@@ -109,7 +109,7 @@ const OrderDetail = () => {
 			>
 				<div style={{ display: 'flex', width: '100%' }}>
 					<Title
-						title="Información General"
+						title="Detalle de pédido"
 						path="/dashboard/orders"
 						goBack={1}
 					/>
@@ -124,20 +124,18 @@ const OrderDetail = () => {
 						boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
 					}}
 				>
-					<List.Item>
-						{log == user?.isUser ||
+					{log == user?.isUser ||
 						userProfile == PROFILES.MASTER ||
 						userProfile == PROFILES.ADMIN ? (
-							<ChangeOrderStatus
-								status={currentOrder.idStatusOrder}
-								handleOrder={handleOrder}
-								orderId={id}
-								handleChangeStatus={handleChangeStatus}
-							/>
-						) : (
-							<></>
-						)}
-					</List.Item>
+						<ChangeOrderStatus
+							status={currentOrder.idStatusOrder}
+							handleOrder={handleOrder}
+							orderId={id}
+							handleChangeStatus={handleChangeStatus}
+						/>
+					) : (
+						<></>
+					)}
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
 						<p>{currentOrder.numberOrden}</p>
@@ -152,10 +150,7 @@ const OrderDetail = () => {
 							{orderStatusToUse[currentOrder.idStatusOrder].state}
 						</p>
 					</List.Item>
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
-						<p style={{}}>{currentOrder.comments}</p>
-					</List.Item>
+
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Cliente:</p>
 						<p>{currentOrder.fullNameClient}</p>
@@ -171,6 +166,10 @@ const OrderDetail = () => {
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
 						<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
+					</List.Item>
+					<List.Item>
+						<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
+						<p style={{}}>{currentOrder.comments}</p>
 					</List.Item>
 				</List>
 				<DetailOrderTable

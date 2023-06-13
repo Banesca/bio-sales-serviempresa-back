@@ -5,7 +5,10 @@ import {
 	CloseCircleOutlined,
 	DeleteOutlined,
 	EditOutlined,
+	ExportOutlined,
+	ImportOutlined,
 	EyeTwoTone,
+	AppstoreAddOutlined
 } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
@@ -186,7 +189,7 @@ export default function Products() {
 					<Title goBack={false} title={'Productos'}>
 						<div>
 							<Button onClick={exportToExcel} block>
-								Exportar
+							<ExportOutlined />	Exportar
 							</Button>
 						</div>
 						<Button
@@ -194,7 +197,7 @@ export default function Products() {
 							style={{ marginRight: '1.3rem', marginLeft: '1.3rem' }}
 							onClick={() => router.push('/dashboard/products/import')}
 						>
-							Importar
+							<ImportOutlined />  Importar
 						</Button>
 						{userProfile != PROFILES.BILLER && (
 							<Button
@@ -203,7 +206,7 @@ export default function Products() {
 								disabled={userProfile == PROFILES.BILLER}
 								onClick={() => router.push('/dashboard/products/add')}
 							>
-								Agregar
+								<AppstoreAddOutlined /> Crear
 							</Button>
 						)}
 					</Title>

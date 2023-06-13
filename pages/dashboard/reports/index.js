@@ -143,13 +143,14 @@ const UserDetail = () => {
 	useEffect(() => {
 		const id = localStorage.getItem('userId');
 		if (Object.keys(generalContext).length) {
-			getReports();
+		//	getReports();
 			getReportsBySuc();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const handleSelect = (value) => {
+		console.log(value)
 		if (value.value == 'Detallado de productos vendidos') {
 			setProductsSelling(true);
 		} else {
@@ -170,7 +171,7 @@ const UserDetail = () => {
 				<div className="gap-3 flex flex-col items-center justify-center p-4 m-4">
 					<Title title={'Reportes'}></Title>
 					<div className="flex justify-between w-[95%]">
-						<TotalSales />
+						<TotalSales  />
 						<Graphic />
 					</div>
 
@@ -183,19 +184,6 @@ const UserDetail = () => {
 							boxShadow: '4px 3px 8px 2px #9c9c9c5d',
 						}}
 					>
-						<h1
-							style={{
-								display: 'flex',
-								flexDirection: 'column',
-								justifyContent: 'center',
-								alignItems: 'center',
-								textAlign: 'center',
-								fontSize: '1.6rem',
-								margin: '10px',
-							}}
-						>
-							Reportes generales de:
-						</h1>
 						<List.Item
 							style={{
 								display: 'flex',
@@ -211,6 +199,18 @@ const UserDetail = () => {
 								className="shadow-none"
 								style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}
 							>
+							<h1
+									style={{
+										display: 'flex',
+										flexDirection: 'column',
+										justifyContent: 'center',
+										alignItems: 'center',
+										textAlign: 'center',
+										marginTop: '10px',
+									}}
+								>
+									Reportes de:
+								</h1>
 								<Form.Item
 									name="selectValue"
 									rules={[
@@ -241,8 +241,8 @@ const UserDetail = () => {
 									/>
 								</Form.Item>
 
-								<Button type="success" htmlType="submit">
-									Generar reporte
+								<Button type="success" htmlType="submit" onClick={handleSelect}>
+									Generar 
 								</Button>
 							</Form>
 						</List.Item>

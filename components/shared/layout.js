@@ -54,7 +54,7 @@ const routes = [
 
 const itemsMenu = [
 	getItem('Productos', 'sub1', <ShopFilled />, [
-		getItem('Lista', '1', <TagsFilled />),
+		getItem('Listados', '1', <TagsFilled />),
 		getItem('Categorías', '2', <ClusterOutlined />),
 		getItem('Marcas', '3', <TrademarkCircleFilled />),
 		getItem('Inventario', '4', <StockOutlined />),

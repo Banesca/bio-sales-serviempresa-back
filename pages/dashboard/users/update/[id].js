@@ -15,7 +15,7 @@ const UpdateUser = () => {
 	const [user, setUser] = useState({});
 	const [businessByUser, setBusinessByUser] = useState([]);
 	const [pin, setPin] = useState();
-	
+
 
 	const router = useRouter();
 	const { id } = router.query;
@@ -48,13 +48,16 @@ const UpdateUser = () => {
 		setBusinessByUser(value.map((b) => b.idSucursal));
 		let lg = value.map((b) => b?.pin);
 		// setPin(lg.length == 2 ? lg[0] : lg);
-		setPin(value[0]?.pin);
+		if (lg != "") {
+			setPin(value[0]?.pin);
+		}
 	};
 
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
-		(data);
+		if (data.pin != "") {
 		await upPass(id, data)
+		}
 	};
 
 	const generalContext = useContext(GeneralContext);

@@ -11,7 +11,6 @@ export function useUser() {
 	const [users, setUsers] = useState([]);
 	const [sellerClients, setSellerClients] = useState([]);
 	const [routes, setRoutes] = useState([]);
-
 	const { requestHandler } = useRequest();
 
 	const getUsers = async () => {
@@ -129,12 +128,13 @@ export function useUser() {
 			idProfileFk: data.idProfileFk,
 			idUser: id,
 		});
-		const rest = await requestHandler.put('/api/v2/user/edit/pass', {
-			pin: data.pin,
-			idUser: id
-		});
-		('actualizado')
-		if (res.isLeft() && rest.isLeft()) {
+		/*if (data.pin != "") {
+			const rest = await requestHandler.put('/api/v2/user/edit/pass', {
+				pin: data.pin,
+				idUser: id
+			});
+		}*/
+		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 	};

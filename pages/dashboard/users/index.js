@@ -117,7 +117,7 @@ export default function Users() {
 						{log == PROFILES.MASTER && (
 							<Link href="users/add">
 								<Button style={{ marginRight: '-2.3rem' }} type="success">
-								<UserAddOutlined /> Crear
+									<UserAddOutlined />Crear
 								</Button>
 							</Link>
 						)}

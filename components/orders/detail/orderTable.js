@@ -58,7 +58,7 @@ export default function DetailOrderTable({ products, total }) {
 							textAlign: 'center',
 						}}
 					>
-						Pedidos
+						Productos
 					</Typography>
 				)}
 				footer={() => (
@@ -87,7 +87,7 @@ export default function DetailOrderTable({ products, total }) {
 						</Col>
 					</Row>
 				)}
-			/>
+			></Table>
 		</ConfigProvider>
 	);
 }
