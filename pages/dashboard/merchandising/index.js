@@ -1,18 +1,26 @@
+import { Button, Card, Col, ConfigProvider, Form, Modal, Row, Select, Space, Table, Meta } from 'antd';
 import React, { useEffect, useState } from 'react';
-import DashboardLayout from '../../../components/shared/layout';
-import Title from '../../../components/shared/title';
-import { Card, ConfigProvider, Row, Space, Table, Col, Form, Select } from 'antd';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
-import Image from 'next/image';
+import DashboardLayout from '../../../components/shared/layout';
+import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
+import { ip } from "/util/environment.js";
+
 
 const Merchandising = () => {
 	const { requestHandler } = useRequest();
 	const [users, setUsers] = useState([]);
+	const [userSelected, setUserSelected] = useState([]);
+	const [open, setOpen] = useState(false);
 	const [message, setMessage] = useState('');
-	const [reportVisit, setReportVisit] = useState('');
+	const [clients, setClients] = useState('');
+	const [reportVisit, setReportVisit] = useState([]);
+	const [suggestedProductsList, setSuggestedProductsList] = useState('');
+	const [reportVisitDetail, setReportVisitDetail] = useState([]);
 	const { filtered } = useProductFilter();
+	const [modalText, setModalText] = useState();
+
 	const columns = [
 		{
 			title: 'Producto',
@@ -45,7 +53,7 @@ const Merchandising = () => {
 					size="small"
 					style={{ justifyContent: 'center', display: 'flex' }}
 				>
-					{/* <Button
+					{ /*<Button
 						type="primary"
 						onClick={() => {
 							setLoading(true);
@@ -54,6 +62,7 @@ const Merchandising = () => {
 					>
 						<EyeTwoTone />
 					</Button>
+					
 					<Button
 						onClick={() => {
 							setLoading(true);
@@ -78,7 +87,13 @@ const Merchandising = () => {
 			title: 'Nro. de reporte',
 			dataIndex: 'idReportVisit',
 			key: 1,
-			render: (text) => <p># - {text}</p>,
+			render: (text) => <p>N# {text}</p>,
+		},
+		{
+			title: 'Tipo de reporte',
+			dataIndex: 'type',
+			key: 1,
+			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Cliente',
@@ -98,68 +113,63 @@ const Merchandising = () => {
 			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
+		{
+			title: 'Evidencia',
+			dataIndex: 'idReportVisit',
+			key: '6',
+			render: (index, record) => (
+				<Button type="primary" onClick={() => showModal(record)}>
+					Edit
+				</Button>
+			),
+		}
 	];
 	const columns3 = [
 		{
-			title: 'Producto',
-			dataIndex: 'nameProduct',
+			title: 'Código',
+			dataIndex: 'barCode',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Codigo',
+			title: 'Producto',
 			dataIndex: 'nameProduct',
-			key: 1,
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Precio',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Fecha',
+			dataIndex: 'created_at',
+			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Estado',
-			dataIndex: 'nameProduct',
-			key: 1,
+			dataIndex: 'statusName',
+			key: 5,
 			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			align: 'center',
-			key: 6,
-			render: (product, index) => (
-				<Space
-					size="small"
-					style={{ justifyContent: 'center', display: 'flex' }}
-				>
-					{/* <Button
-						type="primary"
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/${product.idProduct}`);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button> */}
-				</Space>
-			),
-		},
+		}
 	];
+
+
+	const showModal = (reporte) => {
+		setOpen(true);
+		setReportVisitDetail(reporte)
+	}
 
 	useEffect(() => {
 		getUsers();
-
+		getClients();
 	}, []);
+
+	useEffect(() => {
+	}, [clients, users]);
 
 
 
@@ -173,19 +183,43 @@ const Merchandising = () => {
 		}
 	};
 
-	const listReportVisist = async () => {
-	
-	}
-
 
 	const handleOnChange = async value => {
-		const res = await requestHandler.get(`/api/v2/reportvisit/list/${value}/5`);
+		let id = value
+		const res = await requestHandler.get(`/api/v2/reportvisit/list/${value}/10`);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response
 			setReportVisit(value);
-		}		
+			let merchandise = users.filter((b) => b.idUser == id);
+			setUserSelected(merchandise[0])
+			
+		}
 	}
+
+
+	const getSuggestedProducts = async idClient => {
+		const response = await requestHandler.get(`/api/v2/productclient/list/${idClient}`);
+		if (!response.isLeft()) {
+			setSuggestedProductsList(response.value.getValue().response);
+
+		}	
+	};
+
+	const handleCancel = () => {
+		setOpen(false);
+	};
+
+
+	const getClients = async () => {
+		const res = await requestHandler.get('/api/v2/client/list');
+		if (!res.isLeft()) {
+			let clientsList = res.value.getValue().response;
+			///	clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
+			setClients(clientsList);
+		}
+	}
+
 
 	return (
 		<DashboardLayout>
@@ -220,69 +254,71 @@ const Merchandising = () => {
 							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
 						}
 					>
-						<Table columns={columns2}  dataSource={reportVisit}/>
+						<Table columns={columns2} dataSource={reportVisit} />
 					</ConfigProvider>
 					<h1 className="text-center text-4xl font-semibold">
 						Reporte
 					</h1>
-					<Card className="shadow-lg rounded-xl gap-5">
-						<h2 className="text-center text-3xl my-2">Evidencia fotográfica</h2>
-						<div className="flex gap-5 justify-center items-center">
-							<div className="flex flex-col gap-2">
-								<h2>Antes:</h2>
-								<div className="h-80 w-96 relative mb-5">
-									<Image
-										alt="Sin datos"
-										src={''}
-										fill
-										className="object-cover bg-gray-200"
-									/>
-								</div>
-								<div>
-									<h1>Descripción:</h1>
-								</div>
-							</div>
-							<div className="flex flex-col gap-2">
-								<h2>Después:</h2>
-								<div className="h-80 w-96 relative mb-5">
-									<Image
-										alt="Sin datos"
-										src={''}
-										fill
-										className="object-cover bg-gray-200"
-									/>
-								</div>
-								<div>
-									<h1>Descripción:</h1>
-								</div>
-							</div>
-						</div>
-					</Card>
-					<div className="w-full h-full">
-						<h1 className="text-3xl text-center my-4">
-							Estados de los productos
-						</h1>
-						<ConfigProvider
-							renderEmpty={
-								filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
-							}
-						>
-							<Table columns={columns3} />
-						</ConfigProvider>
-					</div>
 					<div className="w-full">
 						<h1 className="text-3xl text-center my-4">Productos sugeridos</h1>
+						<Row>
+							<Col span={12}>
+								<Form.Item
+									label="Cliente"
+									rules={[
+										{
+											required: true,
+											message: 'Elige un cliente',
+										},
+									]}
+									name="selectClient"
+								>
+									<Select onSelect={(value, event) => getSuggestedProducts(value, event)}>
+										{clients &&
+											clients.map((c, i) => (
+												<Select.Option value={c.idClient} key={c.idClient}>
+													{c.nameClient}
+												</Select.Option>
+											))}
+									</Select>
+								</Form.Item>
+							</Col>
+						</Row>
 						<ConfigProvider
 							renderEmpty={
 								filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
 							}
 						>
-							<Table columns={columns} />
+							<Table columns={columns3} dataSource={suggestedProductsList} />
 						</ConfigProvider>
 					</div>
 				</div>
 			</div>
-		</DashboardLayout>
+			<Modal
+				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / DE: ${userSelected.fullname}`}
+				open={open}
+				onCancel={handleCancel} 
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-1">
+						<Button danger key="cancel" onClick={handleCancel}>
+							Cancelar
+						</Button>
+					</div>
+				]}
+			>
+				<Card>
+					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
+						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image}`} />
+					</Card.Grid>
+					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
+						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image}`} />
+					</Card.Grid>
+				</Card>
+			</Modal>
+
+		</DashboardLayout >
+
 	);
 };
 
