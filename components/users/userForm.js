@@ -174,6 +174,7 @@ const UserForm = ({
 						rules={[{ required: true, message: 'Ingresa un nombre y apellido' }]}
 					>
 						<Input
+							autoComplete="none"
 							type="text"
 							name="fullname"
 							value={userData.fullname}
@@ -182,6 +183,7 @@ const UserForm = ({
 					</Form.Item>
 					<Form.Item
 						label="Correo"
+						autoComplete="none"
 						name="mail"
 						rules={[
 							{
@@ -269,6 +271,7 @@ const UserForm = ({
 					)}
 					<Form.Item
 						label="Contraseña"
+						autoComplete="none"
 						name="pin"
 						rules={[
 							{
@@ -292,6 +295,7 @@ const UserForm = ({
 					<Form.Item
 						label="Repetir contraseña"
 						name="Repit"
+						autoComplete="none"
 						dependencies={['pin']}
 						rules={[
 							({ getFieldValue }) => ({
@@ -313,7 +317,7 @@ const UserForm = ({
 							onChange={handleChange}
 						/>
 					</Form.Item>
-				
+
 					<Row>
 						<Col span={12}>
 							<Form.Item
