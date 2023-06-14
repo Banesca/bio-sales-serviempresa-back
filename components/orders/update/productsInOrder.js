@@ -36,7 +36,7 @@ export default function ProductsInOrder({
 						<Space className="flex flex-wrap justify-center">
 							<Input
 								type="number"
-								style={{ width: '60px' }}
+								style={{ width: '90px' }}
 								value={order?.body[index].weight}
 								onChange={(e) => setProductsQuantity(e.target.value, index)}
 							/>

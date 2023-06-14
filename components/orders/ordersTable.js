@@ -59,7 +59,7 @@ export default function OrdersTable({ orders }) {
 
 	const columns = [
 		{
-			title:"Orden N#",
+			title:"Pedido Nro.",
 			dataIndex:"numberOrden"
 		},
 		{
@@ -77,7 +77,7 @@ export default function OrdersTable({ orders }) {
 				let bYear = b.created_at.substring(0, 4);
 
 				let aDate = new Date(aDay, aMonth, aYear);
-				let bDate = new Date(aDay, aMonth, aYear);
+				let bDate = new Date(bDay, bMonth, bYear);
 
 				return aDate - bDate;
 			},

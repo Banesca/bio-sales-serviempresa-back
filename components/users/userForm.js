@@ -125,7 +125,6 @@ const UserForm = ({
 				style={{
 					textAlign: 'center',
 					fontSize: '2.5rem',
-					margin: '.9rem',
 					display: 'flex',
 					width: '100%',
 					backgroundColor: 'white !important',
@@ -145,8 +144,8 @@ const UserForm = ({
 			</section>
 			<div
 				style={{
-					width: '70%',
-					maxWidth: '750px',
+					width: '100%',
+					maxWidth: '100%',
 					margin: '.5rem auto',
 					padding: '60px',
 					borderRadius: '20px',

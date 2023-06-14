@@ -279,15 +279,6 @@ const UserDetail = () => {
 						goBack={1}
 					></Title>
 					<Card className="w-full shadow-lg">
-
-						<UserForm
-							business={business}
-							submitFunction={updateUserRequest}
-							update={true}
-							user={user}
-							userBusiness={businessByUser}
-							pin={pin}
-						/>
 						<List>
 							<List.Item style={{ padding: '10px 25px' }}>
 								<p>Nombre</p>
