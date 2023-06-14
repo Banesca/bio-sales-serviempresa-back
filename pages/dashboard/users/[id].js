@@ -16,6 +16,7 @@ import UserClientsTable from '../../../components/users/detail/clientsTable';
 import Link from 'next/link';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import Title from '../../../components/shared/title';
+import UserForm from '/components/users/userForm';
 
 const UserDetail = () => {
 	const router = useRouter();
@@ -47,6 +48,7 @@ const UserDetail = () => {
 	const [businessByUser, setBusinessByUser] = useState([]);
 	const [businessToAdd, setBusinessToAdd] = useState();
 	const [businessToRemove, setBusinessToRemove] = useState();
+	const [pin, setPin] = useState();
 
 	const generalContext = useContext(GeneralContext);
 
@@ -107,10 +109,10 @@ const UserDetail = () => {
 	const [disabled, setDisabled] = useState();
 
 	useEffect(() => {
-			getUserRequest(id);
-			getUserBusiness(id);
-			getClientsRequest();
-			getLoc(id);
+		getUserRequest(id);
+		getUserBusiness(id);
+		getClientsRequest();
+		getLoc(id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -260,16 +262,32 @@ const UserDetail = () => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
 
+	
+	const updateUserRequest = async (data) => {
+		await updateUser(data, id);
+		if (data.pin != "") {
+		await upPass(id, data)
+		}
+	};
 	return (
 		<>
 			<DashboardLayout>
 				<div className="m-4 flex items-center justify-center flex-col gap-4">
 					<Title
-						title="Información General"
+						title="Detalle de usuario"
 						path="/dashboard/users"
 						goBack={1}
 					></Title>
 					<Card className="w-full shadow-lg">
+
+						<UserForm
+							business={business}
+							submitFunction={updateUserRequest}
+							update={true}
+							user={user}
+							userBusiness={businessByUser}
+							pin={pin}
+						/>
 						<List>
 							<List.Item style={{ padding: '10px 25px' }}>
 								<p>Nombre</p>
@@ -301,7 +319,7 @@ const UserDetail = () => {
 									<p>Acciones</p>
 									<div className="flex gap-5">
 										{profile?.id != PROFILES.MASTER &&
-										log == PROFILES.MASTER ? (
+											log == PROFILES.MASTER ? (
 											<Button
 												className="bg-blue-500"
 												onClick={() => setIsModalOpen(true)}

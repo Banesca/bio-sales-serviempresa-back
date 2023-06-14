@@ -267,6 +267,7 @@ const ImportProducts = () => {
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
 			setData(uploadData);
+			console.log(data)
 		};
 	};
 

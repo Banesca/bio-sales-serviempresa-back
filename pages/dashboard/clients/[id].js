@@ -16,7 +16,7 @@ const ClientDetail = () => {
 	const columns = [
 		{
 			title: 'Pédido N#',
-			dataIndex: 'number_order',
+			dataIndex: 'numberOrden',
 			key: 0,
 			sorter: (a, b) => {
 				let aYear = a.created_at.substring(0, 4);
@@ -41,7 +41,7 @@ const ClientDetail = () => {
 		{
 			title: 'Fecha de creación',
 			dataIndex: 'created_at',
-			key: 0,
+			key: 1,
 			sorter: (a, b) => {
 				let aYear = a.created_at.substring(0, 4);
 				let bYear = b.created_at.substring(0, 4);
@@ -65,7 +65,7 @@ const ClientDetail = () => {
 		{
 			title: 'Ultima actualización',
 			dataIndex: 'updated_at',
-			key: 0,
+			key: 2,
 			sorter: (a, b) => {
 				let aYear = a.updated_at.substring(0, 4);
 				let bYear = b.updated_at.substring(0, 4);
@@ -95,31 +95,31 @@ const ClientDetail = () => {
 					case 1:
 						return (
 							<p style={{ color: '#ff6c0b', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
+								{orderStatusToUse[record.idStatusOrder].state}
 							</p>
 						);
 					case 2:
 						return (
 							<p style={{ color: '#06a800', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
+								{orderStatusToUse[record.idStatusOrder].state}
 							</p>
 						);
 					case 3:
 						return (
 							<p style={{ color: '#0984e3', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
+								{orderStatusToUse[record.idStatusOrder].state}
 							</p>
 						);
 					case 4:
 						return (
 							<p style={{ color: '#ffd034', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
+								{orderStatusToUse[record.idStatusOrder].state}
 							</p>
 						);
 					case 5:
 						return (
 							<p style={{ color: '#d63031', fontWeight: 'bold' }}>
-								{orderStatusToUse[record.idStatusOrder]}
+								{orderStatusToUse[record.idStatusOrder].state}
 							</p>
 						);
 				}
@@ -128,7 +128,7 @@ const ClientDetail = () => {
 		{
 			title: 'Acciones',
 			align: 'center',
-			key: 5,
+			key: 4,
 			render: (order) => (
 				<Space
 					size="middle"
@@ -257,7 +257,7 @@ const ClientDetail = () => {
 					</List>
 				</Card>
 				<div className="flex flex-col gap-5">
-					<h3 className="text-4xl text-center">Pédidos</h3>
+					<h3 className="text-4xl text-center">Pedidos</h3>
 					<ConfigProvider
 						renderEmpty={
 							orders.length !== 0 || true ? CustomizeRenderEmpty : ''
