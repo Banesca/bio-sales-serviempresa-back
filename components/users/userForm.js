@@ -169,9 +169,9 @@ const UserForm = ({
 					form={form}
 				>
 					<Form.Item
-						label="Nombre"
+						label="Nombre y apellido"
 						name="fullname"
-						rules={[{ required: true, message: 'Ingresa un nombre' }]}
+						rules={[{ required: true, message: 'Ingresa un nombre y apellido' }]}
 					>
 						<Input
 							type="text"

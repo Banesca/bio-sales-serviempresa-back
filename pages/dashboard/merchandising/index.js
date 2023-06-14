@@ -171,10 +171,6 @@ const Merchandising = () => {
 		getClients();
 	}, []);
 
-	useEffect(() => {
-	}, [clients, users]);
-
-
 
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
@@ -196,7 +192,7 @@ const Merchandising = () => {
 			setReportVisit(value);
 			let merchandise = users.filter((b) => b.idUser == id);
 			setUserSelected(merchandise[0])
-			
+
 		}
 	}
 
@@ -206,7 +202,7 @@ const Merchandising = () => {
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 
-		}	
+		}
 	};
 
 	const handleCancel = () => {
@@ -218,7 +214,7 @@ const Merchandising = () => {
 		const res = await requestHandler.get('/api/v2/client/list');
 		if (!res.isLeft()) {
 			let clientsList = res.value.getValue().response;
-			///	clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
+		    clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
 			setClients(clientsList);
 		}
 	}
@@ -300,7 +296,7 @@ const Merchandising = () => {
 			<Modal
 				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / Usuario: ${userSelected.fullname}`}
 				open={open}
-				onCancel={handleCancel} 
+				onCancel={handleCancel}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
