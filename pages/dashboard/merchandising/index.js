@@ -6,6 +6,9 @@ import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
 import { ip } from "/util/environment.js";
+import {
+	FileImageOutlined
+} from '@ant-design/icons';
 
 
 const Merchandising = () => {
@@ -118,8 +121,8 @@ const Merchandising = () => {
 			dataIndex: 'idReportVisit',
 			key: '6',
 			render: (index, record) => (
-				<Button type="primary" onClick={() => showModal(record)}>
-					Edit
+				<Button onClick={() => showModal(record)}>
+					<FileImageOutlined />
 				</Button>
 			),
 		}
@@ -295,7 +298,7 @@ const Merchandising = () => {
 				</div>
 			</div>
 			<Modal
-				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / DE: ${userSelected.fullname}`}
+				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / Usuario: ${userSelected.fullname}`}
 				open={open}
 				onCancel={handleCancel} 
 				footer={[
