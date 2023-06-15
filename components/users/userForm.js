@@ -147,7 +147,7 @@ const UserForm = ({
 					width: '100%',
 					maxWidth: '100%',
 					margin: '.5rem auto',
-					padding: '60px',
+					padding: '30px',
 					borderRadius: '20px',
 					boxShadow: '6px 6px 10px rgba(180, 180, 180, 0.479)',
 				}}
@@ -173,7 +173,7 @@ const UserForm = ({
 						rules={[{ required: true, message: 'Ingresa un nombre y apellido' }]}
 					>
 						<Input
-							autoComplete="none"
+
 							type="text"
 							name="fullname"
 							value={userData.fullname}
@@ -182,7 +182,6 @@ const UserForm = ({
 					</Form.Item>
 					<Form.Item
 						label="Correo"
-						autoComplete="none"
 						name="mail"
 						rules={[
 							{
@@ -270,7 +269,6 @@ const UserForm = ({
 					)}
 					<Form.Item
 						label="Contraseña"
-						autoComplete="none"
 						name="pin"
 						rules={[
 							{
@@ -294,7 +292,6 @@ const UserForm = ({
 					<Form.Item
 						label="Repetir contraseña"
 						name="Repit"
-						autoComplete="none"
 						dependencies={['pin']}
 						rules={[
 							({ getFieldValue }) => ({

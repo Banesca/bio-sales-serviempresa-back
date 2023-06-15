@@ -430,7 +430,7 @@ const UserDetail = () => {
 								allowClear
 								mode="multiple"
 								value={clientsToAssign}
-								onChange={(v) => setClientsToAssign(v)}
+								onChange={() => setClientsToAssign()}
 							>
 								{clients &&
 									clients.map((client) => (
@@ -495,7 +495,7 @@ const UserDetail = () => {
 					]}
 				>
 					<p>
-						{`Estas seguro de remover el acceso sobre el cliente ${clientToRemove?.nameClient} al usuario ${user?.fullname}`}
+					¿{`Está seguro de remover el acceso sobre el cliente ${clientToRemove?.nameClient} al usuario ${user?.fullname}`}?
 					</p>
 				</Modal>
 			</DashboardLayout>
