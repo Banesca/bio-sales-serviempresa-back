@@ -153,8 +153,8 @@ const Merchandising = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Estado',
-			dataIndex: 'statusName',
+			title: 'Usuario',
+			dataIndex: 'fullname',
 			key: 5,
 			render: (text) => <p>{text}</p>,
 		}
@@ -311,7 +311,7 @@ const Merchandising = () => {
 						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image}`} />
 					</Card.Grid>
 					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image}`} />
+						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image2}`} />
 					</Card.Grid>
 				</Card>
 			</Modal>
