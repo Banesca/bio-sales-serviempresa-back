@@ -267,7 +267,7 @@ const UpdateUser = () => {
 										onClick={() => setIsModalOpen(true)}
 										type="primary"
 									>
-										Empresas
+										Sucursal
 									</Button>
 								) : (
 									<></>
@@ -319,7 +319,7 @@ const UpdateUser = () => {
 			</Card>
 
 			<Modal
-				title="Asignar Empresas"
+				title="Asignar sucursal"
 				open={isModalOpen}
 				onCancel={() => closeModal2(false)}
 				footer={[

@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { PlusOutlined, AppstoreAddOutlined } from '@ant-design/icons';
-import { Select, Button, Form, Input, Modal, Table } from 'antd';
-import PayForm from '../../../components/pay/payForm';
+import { Select, Button, Form, Input, Modal, Tables } from 'antd';
+import PayForm from '/components/pay/PayForm';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
@@ -35,6 +35,7 @@ const PayConditions = () => {
 			const value = response.value._value.response;
 			setPayConditionsList(value);
 		}
+		
 	};
 
 
@@ -51,15 +52,18 @@ const PayConditions = () => {
 
 	const getPayConditionsAdd = async () => {
 		const data = {
-			name: message
+			note: message
 		}
 		const response = await requestHandler.post(
-			'/api/v2/paymentcondition', data
+			'/api/v2/paymentcondition/add', data
 		);
 		if (!response.isLeft()) {
 			const value = response.value._value.response;
 			setPayConditionsList(value);
 		}
+		setOpenModal(false);
+		getPayConditions()
+		setMessage("")
 	};
 
 

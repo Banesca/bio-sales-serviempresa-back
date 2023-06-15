@@ -9,55 +9,13 @@ const PayForm = ({listConditions}) => {
 
 	const columns = [
 		{
-			title: 'Id',
-			dataIndex: 'idPaymenConditions',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Condicion de pago',
+			title: 'Condición de pago',
 			width: '160px',
 			dataIndex: 'note',
 			responsive: ['md'],
 			key: 2,
 			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			align: 'center',
-			key: 6,
-			render: (product, index) => (
-				<Space
-					size="small"
-					style={{ justifyContent: 'center', display: 'flex' }}
-				>
-					{/* <Button
-						type="primary"
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/${product.idProduct}`);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button> */}
-				</Space>
-			),
-		},
+		}
 	];
 
 	return (

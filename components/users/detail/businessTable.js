@@ -16,7 +16,7 @@ export default function UserBusinessTable({
 
 	const columns = [
 		{
-			title: 'Empresas',
+			title: 'Sucursales',
 			dataIndex: 'nombre',
 			key: '1',
 			render: (text) => <p>{text}</p>,
