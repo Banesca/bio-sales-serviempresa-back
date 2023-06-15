@@ -128,23 +128,13 @@ export default function AddClient() {
 					path={'/dashboard/clients'}
 					title="Agregar Cliente"
 				></Title>
-				<Card className="max-w-[900px] mx-8 my-4 p-16 rounded-xl shadow-xl">
-					<Form className="w-full" form={form} onFinish={handleSubmit}>
+				<Card className="mx-8 my-4 p-16 rounded-xl shadow-xl">
+					<Form className="w-full" form={form} onFinish={handleSubmit} layout="vertical" autoComplete="off">
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Razón Social"
-									style={{
-										padding: '0 .5rem',
-									}}
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
+									style={{marginRight:6}}
 									rules={[
 										{
 											required: true,
@@ -159,9 +149,7 @@ export default function AddClient() {
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Teléfono"
-									style={{
-										padding: '0 .5rem',
-									}}
+									style={{marginLeft:6}}
 									rules={[
 										{
 											required: true,
@@ -172,35 +160,19 @@ export default function AddClient() {
 											message: 'Ingresa un numero de teléfono valido',
 										},
 									]}
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
+									
 									name="phoneClient"
+
 								>
-									<Input type="tel" />
+									<Input type="tel" placeholder="Ej: 0414-1234567" />
 								</Form.Item>
 							</Col>
 						</Row>
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
 									label="Dirección"
-									style={{
-										padding: '0 .5rem',
-									}}
+									style={{marginRight:6}}
 									rules={[
 										{
 											required: true,
@@ -214,86 +186,22 @@ export default function AddClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="RIF N#"
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
-									style={{
-										padding: '0 .5rem',
-									}}
+									label="RIF"
+									style={{marginLeft:6}}
 									rules={[
 										{
 											required: true,
-											message: 'Ingresa el RIF N# del cliente',
+											message: 'Ingresa el RIF del cliente',
 										},
 										{
 											pattern: regexpRif,
-											message: 'Ingresa un RIF N# valido',
+											message: 'Ingresa un RIF valido',
 										},
 									]}
 									name="rif">
 									<Input
 										type="text"
-										placeholder="Formato aceptado: J-12345678-10"
-									/>
-								</Form.Item>
-							</Col>
-						</Row>
-						<Row>
-							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-								<Form.Item
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
-									label="Metodo de pago"
-									style={{
-										padding: '0 .5rem',
-									}}
-									rules={[
-										{
-											required: true,
-											message: 'Ingresa el metodo de pago del cliente',
-										},
-									]}
-									name="payMent"
-								>
-									<Input type="text" />
-								</Form.Item>
-							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-								<Form.Item
-									label="Condición de pago"
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
-									style={{
-										padding: '0 .5rem',
-									}}
-									rules={[
-										{
-											required: true,
-											message: 'Ingresa la condición de pago del cliente',
-										}
-									]}
-									name="conditionPay">
-									<Input
-										type="text"
-										placeholder="Condición de pago"
+										placeholder="Ej: J-12345678-10"
 									/>
 								</Form.Item>
 							</Col>
@@ -301,14 +209,15 @@ export default function AddClient() {
 						<Row>
 							<Col span={24}>
 								<Form.Item
-									labelCol={{
-										md: { span: 5 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 19 },
-										sm: { span: 18 },
-									}}
+									label="Condiciones comerciales "
+									name="conditionPay">
+									<Input.TextArea type="text" rows={4} placeholder="Condiciones comerciales"></Input.TextArea>
+								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={24}>
+								<Form.Item
 									label="Observación"
 									name="comments"
 								>
@@ -318,24 +227,19 @@ export default function AddClient() {
 						</Row>
 						<Row>
 							<Col
-								sm={{ span: 10, offset: 0 }}
-								xs={{ span: 10, offset: 0 }}
-								lg={{ span: 7, offset: 5 }}
-								md={{ span: 7, offset: 5 }}
+								span={12}
 							>
-								<Form.Item>
+								<Form.Item 
+									style={{marginRight:50}}>
 									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
 							</Col>
 							<Col
-								sm={{ span: 10, offset: 4 }}
-								xs={{ span: 10, offset: 4 }}
-								lg={{ span: 7, offset: 5 }}
-								md={{ span: 7, offset: 5 }}
-							>
-								<Form.Item>
+								span={12}>
+								<Form.Item 
+									style={{marginLeft:50}}>
 									<Button htmlType="submit" type="success" block>
 										Agregar
 									</Button>

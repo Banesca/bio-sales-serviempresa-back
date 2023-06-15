@@ -148,7 +148,7 @@ export default function EditClient() {
 				></Title>
 				<div
 					style={{
-						maxWidth: '900px',
+						maxWidth: '100%',
 						margin: '1rem 2rem',
 						backgroundColor: 'white',
 						boxShadow: '4px 4px 8px rgba(180, 180, 180, 0.479)',
@@ -167,22 +167,13 @@ export default function EditClient() {
 							rif: client?.numberDocument,
 							comments: client?.observacion,
 						}}
+						layout="vertical" autoComplete="off"
 					>
-						<Row>
+							<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Razón Social"
-									style={{
-										padding: '0 .5rem',
-									}}
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
+									style={{marginRight:6}}
 									rules={[
 										{
 											required: true,
@@ -190,7 +181,6 @@ export default function EditClient() {
 										},
 									]}
 									name="fullNameClient"
-									value={{ fullNameClient: client.nameClient }}
 								>
 									<Input type="text" />
 								</Form.Item>
@@ -198,9 +188,7 @@ export default function EditClient() {
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
 									label="Teléfono"
-									style={{
-										padding: '0 .5rem',
-									}}
+									style={{marginLeft:6}}
 									rules={[
 										{
 											required: true,
@@ -208,38 +196,22 @@ export default function EditClient() {
 										},
 										{
 											pattern: regexpTlp,
-											message: 'Ingresa un numero de telefono valido',
+											message: 'Ingresa un numero de teléfono valido',
 										},
 									]}
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
+									
 									name="phoneClient"
+
 								>
-									<Input type="tel" />
+									<Input type="tel" placeholder="Ej: 0414-1234567" />
 								</Form.Item>
 							</Col>
 						</Row>
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
 									label="Dirección"
-									style={{
-										padding: '0 .5rem',
-									}}
+									style={{marginRight:6}}
 									rules={[
 										{
 											required: true,
@@ -253,33 +225,22 @@ export default function EditClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="Rif"
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
-									style={{
-										padding: '0 .5rem',
-									}}
+									label="RIF"
+									style={{marginLeft:6}}
 									rules={[
 										{
 											required: true,
-											message: 'Ingresa el rif del cliente',
+											message: 'Ingresa el RIF del cliente',
 										},
 										{
 											pattern: regexpRif,
-											message: 'Ingresa un rif valido',
+											message: 'Ingresa un RIF valido',
 										},
 									]}
-									name="rif"
-								>
+									name="rif">
 									<Input
 										type="text"
-										placeholder="Formate aceptado: j-12345678-1"
+										placeholder="Ej: J-12345678-10"
 									/>
 								</Form.Item>
 							</Col>
@@ -287,14 +248,15 @@ export default function EditClient() {
 						<Row>
 							<Col span={24}>
 								<Form.Item
-									labelCol={{
-										md: { span: 5 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 19 },
-										sm: { span: 18 },
-									}}
+									label="Condiciones comerciales "
+									name="conditionPay">
+									<Input.TextArea type="text" rows={4} placeholder="Condiciones comerciales"></Input.TextArea>
+								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={24}>
+								<Form.Item
 									label="Observación"
 									name="comments"
 								>
@@ -304,24 +266,19 @@ export default function EditClient() {
 						</Row>
 						<Row>
 							<Col
-								sm={{ span: 10, offset: 0 }}
-								xs={{ span: 10, offset: 0 }}
-								lg={{ span: 7, offset: 5 }}
-								md={{ span: 7, offset: 5 }}
+								span={12}
 							>
-								<Form.Item>
+								<Form.Item 
+									style={{marginRight:50}}>
 									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
 							</Col>
 							<Col
-								sm={{ span: 10, offset: 4 }}
-								xs={{ span: 10, offset: 4 }}
-								lg={{ span: 7, offset: 5 }}
-								md={{ span: 7, offset: 5 }}
-							>
-								<Form.Item>
+								span={12}>
+								<Form.Item 
+									style={{marginLeft:50}}>
 									<Button htmlType="submit" type="success" block>
 										Actualizar
 									</Button>

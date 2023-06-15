@@ -15,7 +15,7 @@ import { CustomizeRenderEmpty } from '../../../components/common/customizeRender
 const ClientDetail = () => {
 	const columns = [
 		{
-			title: 'Pédido N#',
+			title: 'Pedido N#',
 			dataIndex: 'numberOrden',
 			key: 0,
 			sorter: (a, b) => {
@@ -133,10 +133,11 @@ const ClientDetail = () => {
 				<Space
 					size="middle"
 					display={{ display: 'flex', justifyContent: 'center' }}
-				>
+				> {order.idStatusOrder == 1 ? (
 					<Button onClick={() => handleSeeDetail(order)}>
 						<EditOutlined />
 					</Button>
+				) : (<></>)}
 				</Space>
 			),
 		},
@@ -231,29 +232,33 @@ const ClientDetail = () => {
 					</h2>
 					<List>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p style={{ fontWeight: 'bold' }}>R.I.F N#</p>
+							<p style={{ fontWeight: 'bold' }}>RIF:</p>
 							<p>{client?.numberDocument}</p>
 						</List.Item>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p style={{ fontWeight: 'bold' }}>Teléfono</p>
+							<p style={{ fontWeight: 'bold' }}>Número de Teléfono:</p>
 							<p>{client?.phone}</p>
 						</List.Item>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p style={{ fontWeight: 'bold' }}>Estado</p>
+							<p style={{ fontWeight: 'bold' }}>Estado:</p>
 							<p
 								style={{
-									color: `${
-										client?.statusName == 'Eliminado' ? 'red' : 'black'
-									}`,
+									color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'
+										}`,
 								}}
 							>
 								{client?.statusName}
 							</p>
 						</List.Item>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p style={{ fontWeight: 'bold' }}>Dirección</p>
+							<p style={{ fontWeight: 'bold' }}>Dirección:</p>
 							<p>{client?.address}</p>
 						</List.Item>
+						<List.Item style={{ padding: '10px 25px' }}>
+							<div style={{ fontWeight: 'bold' }}>Observación:<div style={{fontWeight:'400',textAlign: 'justify'}}>{client?.observacion}</div></div>
+						</List.Item>
+
+
 					</List>
 				</Card>
 				<div className="flex flex-col gap-5">
@@ -268,7 +273,7 @@ const ClientDetail = () => {
 				</div>
 			</div>
 			<Loading isLoading={loading} />
-		</DashboardLayout>
+		</DashboardLayout >
 	);
 };
 
