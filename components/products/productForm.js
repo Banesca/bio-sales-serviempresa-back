@@ -47,8 +47,6 @@ const ProductForm = (props) => {
 		barCode: props.product.barCode || '',
 		idProductFamilyFk: props.product.idProductFamilyFk || '',
 		idProductSubFamilyFk: props.product.idProductSubFamilyFk || '',
-		idLineFk: props.product.idLineFk || null,
-		idBrandFk: props.product.idBrandFk || null,
 		ean: props.product.ean || '',
 		healthRegister: props.product.healthRegister || '',
 		priceSale: props.product.priceSale || 0,
@@ -263,8 +261,6 @@ const ProductForm = (props) => {
 						barCode: product.barCode,
 						idProductFamilyFk: product.idProductFamilyFk,
 						idProductSubFamilyFk: product.idProductSubFamilyFk,
-						idBrandFk: product.idBrandFk,
-						idLineFk: product.idLineFk,
 						ean: product.ean,
 						healthRegister: product.healthRegister,
 						priceSale: product.priceSale,
@@ -441,88 +437,6 @@ const ProductForm = (props) => {
 												value={b.idProductSubFamily}
 											>
 												{b.nameSubFamily}
-											</Select.Option>
-										))}
-								</Select>
-							</Form.Item>
-						</Col>
-					</Row>
-					<Row>
-						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-							<Form.Item
-								label="Línea"
-								name="idLineFk"
-								rules={[
-									{
-										required: true,
-										message: 'Elige una línea',
-									},
-								]}
-								style={{
-									padding: '0 .5rem',
-								}}
-								labelCol={{
-									md: { span: 10 },
-									sm: { span: 6 },
-								}}
-								wrapperCol={{
-									md: { span: 14 },
-									sm: { span: 18 },
-								}}
-							>
-								<Select
-									value={product.idLineFk}
-									onChange={(v) =>
-										setProduct({
-											...product,
-											idLineFk: v,
-										})
-									}
-								>
-									{lines &&
-										lines.map((line) => (
-											<Select.Option key={line.idLine} value={line.idLine}>
-												{line.name}
-											</Select.Option>
-										))}
-								</Select>
-							</Form.Item>
-						</Col>
-						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-							<Form.Item
-								style={{
-									padding: '0 .5rem',
-								}}
-								label="Marca"
-								name="idBrandFk"
-								rules={[
-									{
-										required: true,
-										message: 'Elige una marca',
-									},
-								]}
-								labelCol={{
-									md: { span: 10 },
-									sm: { span: 6 },
-								}}
-								wrapperCol={{
-									md: { span: 14 },
-									sm: { span: 18 },
-								}}
-							>
-								<Select
-									value={product.idBrandFk}
-									onChange={(v) =>
-										setProduct({
-											...product,
-											idBrandFk: v,
-										})
-									}
-								>
-									{brands &&
-										brands.map((brand) => (
-											<Select.Option key={brand.idBrand} value={brand.idBrand}>
-												{brand.name}
 											</Select.Option>
 										))}
 								</Select>
