@@ -351,7 +351,7 @@ const UpdateUser = () => {
 				</Form>
 			</Modal>
 			<Modal
-				title="Asignar Clientes"
+				title="Asignar clientes"
 				open={isAssignClientOpen}
 				onCancel={() => setIsAssignClientOpen(false)}
 				footer={[

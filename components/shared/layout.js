@@ -56,7 +56,6 @@ const itemsMenu = [
 	getItem('Productos', 'sub1', <ShopFilled />, [
 		getItem('Listados', '1', <TagsFilled />),
 		getItem('Categorías', '2', <ClusterOutlined />),
-		getItem('Marcas', '3', <TrademarkCircleFilled />),
 		getItem('Inventario', '4', <StockOutlined />),
 		getItem('Almacenes', '5', <ShopFilled />),
 	]),

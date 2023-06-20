@@ -695,6 +695,7 @@ const ProductForm = (props) => {
 									}}
 								>
 									<Input
+								     	type="number"
 										value={product.unitweight}
 										onChange={(e) =>
 											setProduct({

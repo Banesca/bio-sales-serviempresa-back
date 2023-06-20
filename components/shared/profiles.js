@@ -3,7 +3,7 @@ export const PROFILE_LIST = [
 	{ name: 'Administrador', id: 2 },
 	{ name: 'Despachador', id: 3 },
 	{ name: 'Vendedor', id: 4 },
-	{ name: 'Merchandising', id: 5 },
+	{ name: 'Merchandise', id: 5 },
 ];
 
 export const PROFILES = {

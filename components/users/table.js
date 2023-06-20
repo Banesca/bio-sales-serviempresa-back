@@ -55,6 +55,14 @@ const UsersTable = ({
 			key: 5,
 			render: (text, _, record) => (
 				<Space size="middle" style={{}}>
+					   <Button
+							className="flex justify-center items-center"
+							onClick={() => {
+								router.push(`/dashboard/users/${_.idUser}`);
+							}}
+						>
+							<EyeTwoTone />
+						</Button>
 					{log == PROFILES.MASTER ? (
 						<Button
 							className="flex justify-center items-center"
