@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext} from 'react';
 import DashboardLayout from '../../../../components/shared/layout';
 import UserForm from '../../../../components/users/userForm';
 import Loading from '../../../../components/shared/loading';
@@ -34,13 +34,14 @@ const UpdateUser = () => {
 	const [clientToRemove, setClientToRemove] = useState(null);
 	const { sellerClients } = useUser();
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
-
 	const router = useRouter();
 	const { id } = router.query;
-
 	const { requestHandler } = useRequest();
-
 	const { getUserById, updateUser, upPass } = useUser();
+	const generalContext = useContext(GeneralContext);
+	const { business } = useBusinessProvider();
+
+	
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
@@ -51,7 +52,6 @@ const UpdateUser = () => {
 			}
 			setUser(user);
 			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
-			console.log(user)
 		} catch (error) {
 			message.error('Ha ocurrido un error');
 		} finally {
@@ -80,19 +80,16 @@ const UpdateUser = () => {
 			await upPass(id, data)
 		}
 	};
-
-	const generalContext = useContext(GeneralContext);
-	const { business } = useBusinessProvider();
+ 
 
 	useEffect(() => {
-		setLoading(true);
-		if (Object.keys(generalContext).length > 0 && id) {
-			getUserRequest(id);
-			getUserBusiness(id);
+		const id = window.location.href.split('/')
+        setLoading(true);
+			getUserRequest(Number(id[6]));
+			getUserBusiness(Number(id[6]));
 			getClientsRequest();
-			getLoc(id);
+			getLoc(Number(id[6]));
 			setLog(localStorage.getItem('userProfile'));
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
 
@@ -243,19 +240,17 @@ const UpdateUser = () => {
 
 			<Card className="w-full shadow-lg">
 				<List>
-					{profile?.id == PROFILES.SELLER && (
-						<List.Item style={{ padding: '10px 25px' }}>
-							<p>Ultima ubicación</p>
-							<Button
-								type="primary"
-								className='bg-blue-500'
-								disabled={disabled}
-								onClick={() => getLocation(id)}
-							>
-								<AimOutlined />
-							</Button>
-						</List.Item>
-					)}
+					<List.Item style={{ padding: '10px 25px' }}>
+						<p>Ultima ubicación</p>
+						<Button
+							type="primary"
+							className='bg-blue-500'
+							disabled={disabled}
+							onClick={() => getLocation(id)}
+						>
+							<AimOutlined />
+						</Button>
+					</List.Item>
 					{profile?.id !== PROFILES.MASTER && (
 						<List.Item style={{ padding: '10px 25px' }}>
 							<p>Asignar</p>

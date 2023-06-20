@@ -139,7 +139,7 @@ export default function OrdersTable({ orders }) {
 							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
 							? 'text-yellow-500'
 							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
-							? 'text-purple-500'
+							? 'text-red-500'
 							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
 							? 'text-red-500'
 							: ''
@@ -153,7 +153,7 @@ export default function OrdersTable({ orders }) {
 							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
 							? 'bg-yellow-200'
 							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
-							? 'bg-purple-200'
+							? 'bg-red-200'
 							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
 							? 'bg-red-200'
 							: ''
@@ -173,7 +173,7 @@ export default function OrdersTable({ orders }) {
 					style={{ display: 'flex', justifyContent: 'center' }}
 				>
 					{userProfile == PROFILES.MASTER ? (
-						order.idStatusOrder == 2 || order.idStatusOrder == 6 || order.idStatusOrder == 4 ? (
+						order.idStatusOrder == 2 || order.idStatusOrder == 3 || order.idStatusOrder == 6 || order.idStatusOrder == 4 ? (
 							<Button
 								type="primary"
 								className="bg-blue-500"
@@ -187,8 +187,8 @@ export default function OrdersTable({ orders }) {
 							</Button>
 						)
 					) : users.fullname !== text ||
-					  order.idStatusOrder == 2 ||
-					  order.idStatusOrder == 6  || order.idStatusOrder == 4 ? (
+					  order.idStatusOrder == 2 ||  order.idStatusOrder == 6 ||
+					  order.idStatusOrder == 3  || order.idStatusOrder == 4 ? (
 						<Button type="primary" onClick={() => handleSeeDetail(order)}>
 							<EyeTwoTone />
 						</Button>

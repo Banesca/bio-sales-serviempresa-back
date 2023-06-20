@@ -68,12 +68,7 @@ const CategoriesPage = () => {
 			key: '2',
 			label: 'Subcategorías',
 			children: <SubCategoriesContainer />,
-		},
-		{
-			key: '3',
-			label: 'Líneas',
-			children: <LinesContainer />,
-		},
+		}
 	];
 
 	return (

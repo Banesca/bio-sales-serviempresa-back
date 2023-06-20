@@ -10,6 +10,11 @@ import Title from '../shared/title';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES } from '../shared/profiles';
 import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
+import {
+	AppstoreAddOutlined
+} from '@ant-design/icons';
+
+
 
 export default function SubCategoriesContainer() {
 	const [log, setLog] = useState();
@@ -110,7 +115,7 @@ export default function SubCategoriesContainer() {
 						style={{ marginRight: '-2.3rem' }}
 						onClick={handleOpenCreateModal}
 					>
-						Agregar
+						<AppstoreAddOutlined/> Crear
 					</Button>
 				)}
 			</Title>

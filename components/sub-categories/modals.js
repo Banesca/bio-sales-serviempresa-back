@@ -128,7 +128,7 @@ export default function SubCategoryModals({
 			setLoading(true);
 			setIsEditModalOpen(false);
 			await editSubCategories(
-				lineBody.idSubFamilyFk,
+				lineBody.createCategory,
 				lineBody.name,
 				currentBrands.idStatus,
 				currentBrands.idProductSubFamily,
@@ -215,7 +215,7 @@ export default function SubCategoryModals({
 				</Form>
 			</Modal>
 			<Modal
-				title="Eliminar"
+				title="Confirmación"
 				open={modals.delete}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
@@ -236,7 +236,7 @@ export default function SubCategoryModals({
 				]}
 			>
 				<p>
-					{`Estas seguro de que deseas eliminar la sub categoría ${currentBrands?.nameSubFamily}`}
+					{`¿Está seguro de que deseas eliminar la sub categoría ${currentBrands?.nameSubFamily}?`}
 				</p>
 			</Modal>
 			<Modal

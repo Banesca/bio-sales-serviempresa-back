@@ -99,6 +99,7 @@ const Product = () => {
 		} finally {
 			setLoading(false);
 		}
+
 	};
 
 	useEffect(() => {
@@ -290,14 +291,13 @@ const Product = () => {
 							justifyContent: 'center',
 						}}
 					>
-						{Object.keys(currentProduct)?.length && (
-							<Image
-								src={`${ip}:${generalContext?.api_port}/product/${currentProduct?.urlImagenProduct}`}
-								height={300}
-								width={300}
-								alt="Producto"
-							/>
-						)}
+						<img
+							style={{
+								maxWidth: "300px",
+								height: "auto",
+							}}
+							src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
+						/>
 					</List.Item>
 				</List>
 			</div>

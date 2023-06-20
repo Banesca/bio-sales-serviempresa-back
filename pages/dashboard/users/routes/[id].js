@@ -180,7 +180,7 @@ export default function Routes() {
 					justifyContent: 'center',
 				}}
 			>
-				<Title title="Rutas" path={`/dashboard/users/${id}`} goBack={true}>
+				<Title title="Rutas" path={`/dashboard/users/update/${id}`} goBack={true}>
 					<Button type="success" onClick={() => setIsModalOpen(true)}>
 						Agregar
 					</Button>

@@ -20,8 +20,8 @@ export const orderStatusToUse = {
 	2: { state: 'Cobrado', color: 'green' },
 	3: { state: 'Facturado', color: 'blue' },
 	4: { state: 'Despachado', color: 'yellow' },
-	5: { state: 'Anulado', color: 'purple' },
-	6: { state: 'Incompleto', color: 'red' },
+	5: { state: 'Anulado', color: 'red' },
+	6: { state: 'Anulado', color: 'red' },
 };
 
 export default function OrdersPage() {

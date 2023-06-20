@@ -149,7 +149,7 @@ export function CategoriesProvider({ children }) {
 		const res = await requestHandler.put('/api/v2/subfamily/update/lite', {
 			idProductFamilyFk: idProductFamily,
 			nameSubFamily: nameSubFamily,
-			idStatusFk: idStatus,
+			idStatusFk: 1,
 			idProductSubFamily: idProductSubFamily,
 		});
 		if (res.isLeft()) {

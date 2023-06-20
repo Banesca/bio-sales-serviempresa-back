@@ -25,15 +25,22 @@ import Title from '../../../components/shared/title';
 import { PROFILES } from '../../../components/shared/profiles';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import * as XLSX from 'xlsx';
+import { ip } from '../../../util/environment';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 export default function Products() {
 	const router = useRouter();
 	const columns = [
 		{
+			title: 'Imagen',
+			dataIndex: 'urlImagenProduct',
+			key: 1,
+			render: (text) => <img src={`${ip}:${generalContext?.api_port}/product/${text}`} style={{with:'50px',height:'50px'}}></img>,
+		},
+		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
-			key: 1,
+			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -41,7 +48,7 @@ export default function Products() {
 			width: '160px',
 			dataIndex: 'barCode',
 			responsive: ['md'],
-			key: 2,
+			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -49,7 +56,7 @@ export default function Products() {
 			width: '160px',
 			dataIndex: 'priceSale',
 			responsive: ['sm'],
-			key: 3,
+			key: 4,
 			render: (text, record) => (
 				<p>${record.isPromo == '1' ? record.marketPrice : text}</p>
 			),

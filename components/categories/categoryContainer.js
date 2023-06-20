@@ -14,6 +14,10 @@ import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { PROFILES } from '../shared/profiles';
 import Title from '../shared/title';
 import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
+import {
+	AppstoreAddOutlined
+} from '@ant-design/icons';
+
 
 function useForceUpdate() {
 	let [value, setState] = useState(true);
@@ -230,7 +234,7 @@ export default function CategoryContainer() {
 						style={{ marginRight: '-2.3rem' }}
 						onClick={handleOpenCreateModal}
 					>
-						Agregar
+						<AppstoreAddOutlined/> Crear
 					</Button>
 				) : (
 					''
@@ -287,7 +291,7 @@ export default function CategoryContainer() {
 				</Form>
 			</Modal>
 			<Modal
-				title="Eliminar"
+				title="Confirmación"
 				open={isDeleteModalOpen}
 				onCancel={() => setIsDeleteModalOpen(false)}
 				footer={[
@@ -308,11 +312,11 @@ export default function CategoryContainer() {
 				]}
 			>
 				<p>
-					{`Estas seguro de que deseas eliminar la categoría ${currentCategory?.name}`}
+					{`¿Está seguro de que deseas eliminar la categoría ${currentCategory?.name}?`}
 				</p>
 			</Modal>
 			<Modal
-				title="Actualizar categoría"
+				title="Confirmación"
 				open={isEditModalOpen}
 				onCancel={() => cancelModal()}
 				footer={[
