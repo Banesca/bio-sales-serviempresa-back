@@ -8,7 +8,7 @@ import {
 	ExportOutlined,
 	ImportOutlined,
 	EyeTwoTone,
-	AppstoreAddOutlined
+	AppstoreAddOutlined,
 } from '@ant-design/icons';
 import DashboardLayout from '../../../components/shared/layout';
 import { useRouter } from 'next/router';
@@ -27,6 +27,7 @@ import { useAuthContext } from '../../../context/useUserProfileProvider';
 import * as XLSX from 'xlsx';
 import { ip } from '../../../util/environment';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
+import Image from 'next/image';
 
 export default function Products() {
 	const router = useRouter();
@@ -35,7 +36,15 @@ export default function Products() {
 			title: 'Imagen',
 			dataIndex: 'urlImagenProduct',
 			key: 1,
-			render: (text) => <img src={`${ip}:${generalContext?.api_port}/product/${text}`} style={{with:'50px',height:'50px'}}></img>,
+			render: (text) => (
+				<Image
+					width={100}
+					height={100}
+					src={`${ip}:${generalContext?.api_port}/product/${text}`}
+					style={{ with: '50px', height: '50px' }}
+					alt='image'
+				/>
+			),
 		},
 		{
 			title: 'Nombre',
@@ -196,7 +205,7 @@ export default function Products() {
 					<Title goBack={false} title={'Productos'}>
 						<div>
 							<Button onClick={exportToExcel} block>
-							<ExportOutlined />	Exportar
+								<ExportOutlined /> Exportar
 							</Button>
 						</div>
 						<Button
@@ -204,7 +213,7 @@ export default function Products() {
 							style={{ marginRight: '1.3rem', marginLeft: '1.3rem' }}
 							onClick={() => router.push('/dashboard/products/import')}
 						>
-							<ImportOutlined />  Importar
+							<ImportOutlined /> Importar
 						</Button>
 						{userProfile != PROFILES.BILLER && (
 							<Button

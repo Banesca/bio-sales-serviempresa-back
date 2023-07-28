@@ -16,6 +16,8 @@ import {
 	BellFilled,
 	TrademarkCircleFilled,
 	DollarCircleFilled,
+	SettingOutlined,
+	DollarOutlined,
 } from '@ant-design/icons';
 import { FaShoppingCart, FaTruck, FaUsers } from 'react-icons/fa';
 
@@ -49,6 +51,7 @@ const routes = [
 	'/dashboard/time',
 	'/dashboard/cars',
 	'/dashboard/notifications',
+	'/dashboard/tdc',
 	'/login',
 ];
 
@@ -68,7 +71,10 @@ const itemsMenu = [
 	getItem('Camiones', '13', <FaTruck />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '14', <BellFilled />),
-	getItem('Cerrar sesión', '15', <LogoutOutlined />),
+	getItem('Configuración', 'sub2', <SettingOutlined />, [
+		getItem('Tasa de cambio', '15', <DollarOutlined />)
+	]),
+	getItem('Cerrar sesión', '16', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
 	const [collapsed, setCollapsed] = useState(false);

@@ -265,7 +265,7 @@ const UserDetail = () => {
 	
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
-		if (data.pin != "") {
+		if (data.pin !== '') {
 		await upPass(id, data)
 		}
 	};

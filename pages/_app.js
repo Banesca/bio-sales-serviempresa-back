@@ -21,18 +21,17 @@ function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
 	
-	async function setBusiness(business = 'serviempresa') {
-		try {
-			const response = await axios.get(
-				`${ipBackOffice}/customer/byname/${business}`
-			);
-			setGeneralData(response.data.restaurante);
-			console.log(response.data.restaurante);
-		} catch (error) {
-			error;
-		}
-	}
-/*
+	// async function setBusiness(business = 'serviempresa') {
+	// 	try {
+	// 		const response = await axios.get(
+	// 			`${ipBackOffice}/customer/byname/${business}`
+	// 		);
+	// 		setGeneralData(response.data.restaurante);
+	// 		console.log(response.data.restaurante);
+	// 	} catch (error) {
+	// 		error;
+	// 	}
+	// }
 	async function setBusiness(business = 'demo') {
 		try {
 			const response = await axios.get(
@@ -44,7 +43,7 @@ function MyApp({ Component, pageProps }) {
 			error;
 		}
 	}
-*/
+	
 	useEffect(() => {
 		setBusiness();
 		setLoading(false);

@@ -68,7 +68,7 @@ const UpdateUser = () => {
 		setBusinessByUser(value);
 		let lg = value.map((b) => b?.pin);
 		// setPin(lg.length == 2 ? lg[0] : lg);
-		if (lg != "") {
+		if (lg !== '') {
 			setPin(value[0]?.pin);
 		}
 	};
@@ -76,20 +76,20 @@ const UpdateUser = () => {
 
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
-		if (data.pin != "") {
+		if (data.pin !== '') {
 			await upPass(id, data)
 		}
 	};
  
 
 	useEffect(() => {
-		const id = window.location.href.split('/')
-        setLoading(true);
-			getUserRequest(Number(id[6]));
-			getUserBusiness(Number(id[6]));
-			getClientsRequest();
-			getLoc(Number(id[6]));
-			setLog(localStorage.getItem('userProfile'));
+		const id = window.location.href.split('/');
+		setLoading(true);
+		getUserRequest(Number(id[6]));
+		getUserBusiness(Number(id[6]));
+		getClientsRequest();
+		getLoc(Number(id[6]));
+		setLog(localStorage.getItem('userProfile'));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
 
@@ -235,7 +235,6 @@ const UpdateUser = () => {
 					userBusiness={businessByUser}
 					pin={pin}
 				/>
-
 			)}
 
 			<Card className="w-full shadow-lg">
@@ -244,7 +243,7 @@ const UpdateUser = () => {
 						<p>Ultima ubicación</p>
 						<Button
 							type="primary"
-							className='bg-blue-500'
+							className="bg-blue-500"
 							disabled={disabled}
 							onClick={() => getLocation(id)}
 						>
@@ -255,8 +254,7 @@ const UpdateUser = () => {
 						<List.Item style={{ padding: '10px 25px' }}>
 							<p>Asignar</p>
 							<div className="flex gap-5">
-								{profile?.id != PROFILES.MASTER &&
-									log == PROFILES.MASTER ? (
+								{profile?.id != PROFILES.MASTER && log == PROFILES.MASTER ? (
 									<Button
 										className="bg-blue-500"
 										onClick={() => setIsModalOpen(true)}
@@ -277,9 +275,7 @@ const UpdateUser = () => {
 								{profile?.id == PROFILES.SELLER && (
 									<>
 										<Button type="primary" className="bg-blue-500">
-											<Link href={`/dashboard/users/routes/${id}`}>
-												Rutas
-											</Link>
+											<Link href={`/dashboard/users/routes/${id}`}>Rutas</Link>
 										</Button>
 									</>
 								)}
@@ -292,7 +288,8 @@ const UpdateUser = () => {
 							<UserBusinessTable
 								business={businessByUser}
 								setConfirmDelete={setConfirmDelete}
-								setBusinessToRemove={setBusinessToRemove} />
+								setBusinessToRemove={setBusinessToRemove}
+							/>
 						</List.Item>
 					) : (
 						<></>
@@ -309,7 +306,6 @@ const UpdateUser = () => {
 					) : (
 						<></>
 					)}
-
 				</List>
 			</Card>
 
@@ -330,7 +326,7 @@ const UpdateUser = () => {
 						>
 							Asignar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<Form>
@@ -374,7 +370,7 @@ const UpdateUser = () => {
 						>
 							Asignar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<Form>
@@ -387,10 +383,7 @@ const UpdateUser = () => {
 						>
 							{clients &&
 								clients.map((client) => (
-									<Select.Option
-										key={client.idClient}
-										value={client.idClient}
-									>
+									<Select.Option key={client.idClient} value={client.idClient}>
 										{client.nameClient}
 									</Select.Option>
 								))}
@@ -416,12 +409,10 @@ const UpdateUser = () => {
 						>
 							Eliminar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
-				<p>
-					¿Está seguro de eliminar?
-				</p>
+				<p>¿Está seguro de eliminar?</p>
 			</Modal>
 		</DashboardLayout>
 	);

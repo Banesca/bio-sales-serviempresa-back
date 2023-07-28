@@ -9,10 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@ant-design/icons": "^4.8.0",
     "admin-lte": "^3.1.0",
-    "antd": "^5.2.3",
+    "antd": "^5.7.3",
     "axios": "^1.2.2",
     "chart.js": "^4.2.1",
     "convert-csv-to-json": "^1.5.0",

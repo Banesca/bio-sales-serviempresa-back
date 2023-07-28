@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
 import { addKeys } from '../../../util/setKeys';
+import { message } from 'antd';
 
 const formatToday = () => {
 	const today = new Date();
@@ -105,8 +106,13 @@ export function useUser() {
 		await getUserRouteByDate(userId);
 	};
 
+	
 	const addUser = async (data) => {
-		const res = await requestHandler.post('/api/v2/user/add/sales', data);
+		let newData = {...data};
+		delete newData.file;
+		
+		const res = await requestHandler.post('/api/v2/user/add/sales', newData);
+		console.log({res})
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
@@ -122,22 +128,34 @@ export function useUser() {
 	};
 
 	const updateUser = async (data, id) => {
+
 		const res = await requestHandler.put('/api/v2/user/edit/lite', {
 			fullname: data.fullname,
 			mail: data.mail,
 			idProfileFk: data.idProfileFk,
 			idUser: id,
 		});
-		/*if (data.pin != "") {
-			const rest = await requestHandler.put('/api/v2/user/edit/pass', {
-				pin: data.pin,
-				idUser: id
-			});
-		}*/
+
+		if(data.file) saveImage(data, id);
+
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 	};
+
+
+	const saveImage = async (data, id) => {
+		let formData = new FormData();
+		formData.append('image', data.file.originFileObj);
+		formData.append('idUser', id);
+		const res = await requestHandler.post('/api/v2/user/addimage', formData);
+		if(!res) {
+			message.error('No fue posible cargar la imagen.');
+			return;
+		}
+		message.success('Imagen cargada con éxito.'); 
+	}
+
 
 	const deleteUser = async (userId) => {
 		const res = await requestHandler.put(

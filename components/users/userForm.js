@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button, Col, Row, Form, Input, Select } from 'antd';
+import { Button, Col, Row, Form, Input, Select, Upload } from 'antd';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import Loading from '../shared/loading';
@@ -79,17 +79,18 @@ const UserForm = ({
 		}
 	};
 
-	const onSubmit = async () => {
+
+	const onSubmit = async (e) => {
 		try {
 			setLoading(true);
-			await submitFunction(userData);
-			if (
-				!update &&
+			const info  = await submitFunction({...e, file: e.file ? e.file.file : null});
+			console.log(info)
+			if (!update &&
 				(userData.idProfileFk == PROFILES.SELLER ||
 					userData.idProfileFk == PROFILES.ADMIN ||
 					userData.idProfileFk == PROFILES.BILLER)
 			) {
-				const user = await handleFindUser(userData.mail);
+				const user = await handleFindUser(e.mail);
 				if (!user) {
 					return message.error('Error al asignar permisos');
 				}
@@ -102,8 +103,8 @@ const UserForm = ({
 		} catch (error) {
 			message.error(
 				update
-					? `${error.response.data.status}`
-					: `${error.response.data.status}`
+					? `${error.response?.data?.message}`
+					: `${error.response?.data?.status}`
 			);
 		} finally {
 			setLoading(false);
@@ -170,10 +171,11 @@ const UserForm = ({
 					<Form.Item
 						label="Nombre y apellido"
 						name="fullname"
-						rules={[{ required: true, message: 'Ingresa un nombre y apellido' }]}
+						rules={[
+							{ required: true, message: 'Ingresa un nombre y apellido' },
+						]}
 					>
 						<Input
-
 							type="text"
 							name="fullname"
 							value={userData.fullname}
@@ -232,6 +234,15 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
+					{update && <Form.Item label="Imágen" name="file">
+						<Upload
+							maxCount={1}
+							accept='image/png, image/jpeg'
+							multiple={false}
+						>
+							<Button> Cargar imágen</Button>
+						</Upload>
+					</Form.Item> }
 					{!update && userData.idProfileFk && (
 						<Form.Item
 							label="Empresas"

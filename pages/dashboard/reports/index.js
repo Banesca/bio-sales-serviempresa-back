@@ -143,14 +143,14 @@ const UserDetail = () => {
 	useEffect(() => {
 		const id = localStorage.getItem('userId');
 		if (Object.keys(generalContext).length) {
-		//	getReports();
+			//	getReports();
 			getReportsBySuc();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const handleSelect = (value) => {
-		console.log(value)
+		console.log(value);
 		if (value.value == 'Detallado de productos vendidos') {
 			setProductsSelling(true);
 		} else {
@@ -171,7 +171,7 @@ const UserDetail = () => {
 				<div className="gap-3 flex flex-col items-center justify-center p-4 m-4">
 					<Title title={'Reportes'}></Title>
 					<div className="flex justify-between w-[95%]">
-						<TotalSales  />
+						<TotalSales />
 						<Graphic />
 					</div>
 
@@ -199,7 +199,7 @@ const UserDetail = () => {
 								className="shadow-none"
 								style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}
 							>
-							<h1
+								<h1
 									style={{
 										display: 'flex',
 										flexDirection: 'column',
@@ -242,7 +242,7 @@ const UserDetail = () => {
 								</Form.Item>
 
 								<Button type="success" htmlType="submit" onClick={handleSelect}>
-									Generar 
+									Generar
 								</Button>
 							</Form>
 						</List.Item>

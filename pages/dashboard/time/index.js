@@ -90,16 +90,16 @@ const Time = () => {
 	const getReports = async () => {
 		const res = await requestHandler.get('/api/v2/mapas/list/reservation/1');
 		if (!res.isLeft()) {
-		const value = res.value._value.response;
-		setDays(value);
+			const value = res.value._value.response;
+			setDays(value);
 		}
 	};
 
-	 useEffect(() => {
+	useEffect(() => {
 		getReports();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[]);
- 
+	}, []);
+
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
