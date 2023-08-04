@@ -7,8 +7,8 @@ export const urlSeniat = 'http://localhost';
 
 
 /****************************SERVIDOR DEMO***********************************/
-//export const ipBackOffice = 'http://tumenudelivery.com:9009'
-//export const ip = 'http://api.menusoftware.info'; // 'http://72.167.55.26'  
+// export const ipBackOffice = 'http://tumenudelivery.com:9009'
+// export const ip = 'http://api.menusoftware.info'; // 'http://72.167.55.26'  
 
 /******************************************************************************/
 

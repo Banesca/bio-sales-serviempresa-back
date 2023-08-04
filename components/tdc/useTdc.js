@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRequest } from '../../hooks/useRequest';
 import axios from 'axios';
 import { ip } from '../../util/environment';
 import { Form, message } from 'antd';
+import { GeneralContext } from '../../pages/_app';
 
 export const useTdc = () => {
 	const { requestHandler } = useRequest();
@@ -10,6 +11,7 @@ export const useTdc = () => {
 	const [tdc, setTdc] = useState({});
 	const [form] = Form.useForm();
 	const [loading, setLoading] = useState(false);
+	const {generalContext} = useContext(GeneralContext)
 	const token2 =
 		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFVzZXIiOiI1NWE1NDAwOGFkMWJhNTg5YWEyMTBkMjYyOWMxZGY0MSIsImlhdCI6MTU5MDk0NTY4NH0.V-9GPQoET85cHM3YGSOLNYEKOw_ajQ7xn8bA6h_Xv60';
 
@@ -32,6 +34,7 @@ export const useTdc = () => {
 				form.setFieldValue('param', tdc.param);
 			}
 		} catch (error) {
+			console.log({error})
 			message.error('No fue posible cargar la tasa de cambio');
 		}
 	};

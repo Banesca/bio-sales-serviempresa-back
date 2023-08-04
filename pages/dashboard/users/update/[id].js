@@ -83,14 +83,14 @@ const UpdateUser = () => {
 	};
  
 
-	useEffect(()=>{
-		if(id) {
-			getUserRequest(id)
-			getUserBusiness(id)
-			getLoc(id)
+	useEffect(() => {
+		if (id) {
+			getUserRequest(id);
+			getUserBusiness(id);
+			getLoc(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
-	},[generalContext, id])
+	}, [generalContext, id]);
 
 
 	const getClientsRequest = async () => {
