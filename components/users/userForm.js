@@ -234,7 +234,7 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
-					{update && <Form.Item label="Imágen" name="file">
+					{update && <Form.Item label="Foto de perfil" name="file">
 						<Upload
 							maxCount={1}
 							accept='image/png, image/jpeg'
