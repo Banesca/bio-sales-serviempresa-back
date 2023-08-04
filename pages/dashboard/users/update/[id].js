@@ -51,6 +51,7 @@ const UpdateUser = () => {
 				message.error('Usuario no encontrado');
 			}
 			setUser(user);
+			console.log({user})
 			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
@@ -82,16 +83,15 @@ const UpdateUser = () => {
 	};
  
 
-	useEffect(() => {
-		const id = window.location.href.split('/');
-		setLoading(true);
-		getUserRequest(Number(id[6]));
-		getUserBusiness(Number(id[6]));
-		getClientsRequest();
-		getLoc(Number(id[6]));
-		setLog(localStorage.getItem('userProfile'));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [generalContext, id]);
+	useEffect(()=>{
+		if(id) {
+			getUserRequest(id)
+			getUserBusiness(id)
+			getLoc(id)
+			setLog(localStorage.getItem('userProfile'));
+		}
+	},[generalContext, id])
+
 
 	const getClientsRequest = async () => {
 		setLoading(true);
@@ -221,6 +221,10 @@ const UpdateUser = () => {
 			setLoading(false);
 		}
 	};
+
+	
+
+
 
 	return (
 		<DashboardLayout>

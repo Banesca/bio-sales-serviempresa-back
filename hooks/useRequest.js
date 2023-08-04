@@ -11,11 +11,13 @@ export function useRequest() {
 	const requestHandler = {
 		get: async (route, params) => {
 			try {
+				const api_port = localStorage.getItem('apiPort') ? localStorage.getItem('apiPort') : generalContext.api_port;
+
 				const httpsAgent = new https.Agent({
 					rejectUnauthorized: false,
 				});
 				const response = await axios.get(
-					`${ip}:${generalContext.api_port}${route}`,
+					`${ip}:${api_port}${route}`,
 					{
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem(
