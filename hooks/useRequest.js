@@ -16,8 +16,7 @@ export function useRequest() {
 				const httpsAgent = new https.Agent({
 					rejectUnauthorized: false,
 				});
-				const response = await axios.get(
-					`${ip}:${api_port}${route}`,
+				const response = await axios.get(`${ip}:${api_port}${route}`,
 					{
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem(

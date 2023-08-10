@@ -21,31 +21,32 @@ function MyApp({ Component, pageProps }) {
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
 	
-	async function setBusiness(business = 'serviempresa') {
-		try {
-			const response = await axios.get(
-				`${ipBackOffice}/customer/byname/${business}`
-			);
-			setGeneralData(response.data.restaurante);
-			localStorage.setItem('apiPort', response.data?.restaurante?.api_port);
-
-		} catch (error) {
-			error;
-		}
-	}
-	// async function setBusiness(business = 'demo') {
+	// async function setBusiness(business = 'serviempresa') {
 	// 	try {
 	// 		const response = await axios.get(
 	// 			`${ipBackOffice}/customer/byname/${business}`
 	// 		);
-
 	// 		setGeneralData(response.data.restaurante);
-	// 		localStorage.setItem('apiPort', response.data?.restaurante?.api_port)
-	// 		console.log(response.data.restaurante);
+	// 		localStorage.setItem('apiPort', response.data?.restaurante?.api_port);
+
 	// 	} catch (error) {
 	// 		error;
 	// 	}
 	// }
+
+	async function setBusiness(business = 'demo') {
+		try {
+			const response = await axios.get(
+				`${ipBackOffice}/customer/byname/${business}`
+			);
+
+			setGeneralData(response.data.restaurante);
+			localStorage.setItem('apiPort', response.data?.restaurante?.api_port)
+			console.log(response.data.restaurante);
+		} catch (error) {
+			error;
+		}
+	}
 	
 	useEffect(() => {
 		setBusiness();

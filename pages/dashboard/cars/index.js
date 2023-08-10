@@ -1,144 +1,60 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import {
 	Button,
-	Card,
+	Col,
 	ConfigProvider,
 	Form,
 	Input,
 	Modal,
-	Space,
+	Row,
+	Select,
 	Table,
 } from 'antd';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import { PlusOutlined } from '@ant-design/icons';
+import useCars from '../../../components/cars/useCars';
 
 const Cars = () => {
 	const { filtered } = useProductFilter();
-	const [openModal, setOpenModal] = useState(false);
-	const [openModal2, setOpenModal2] = useState(false);
-	const columns = [
-		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'CI',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Licencia',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			align: 'center',
-			key: 6,
-			render: (product, index) => (
-				<Space
-					size="small"
-					style={{ justifyContent: 'center', display: 'flex' }}
-				>
-					{/* <Button
-						type="primary"
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/${product.idProduct}`);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button> */}
-				</Space>
-			),
-		},
-	];
+	
+	const {
+		columns,
+		columns2,
+		formDrive,
+		formTruck,
 
-	const columns2 = [
-		{
-			title: 'Placa',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Modelo',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Despachador',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			align: 'center',
-			key: 6,
-			render: (product, index) => (
-				<Space
-					size="small"
-					style={{ justifyContent: 'center', display: 'flex' }}
-				>
-					{/* <Button
-						type="primary"
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/${product.idProduct}`);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button> */}
-				</Space>
-			),
-		},
+		openModal,
+		openModal2,
+
+		setOpenModal,
+		setOpenModal2,
+
+		saveDrivers,
+		saveTrucks,
+
+		loading,
+
+		drivers,
+		trucks, 
+		closeModals,
+
+		onEdit,
+	} = useCars();
+
+	const FooterModal = () => {
+		return <Row justify={'end'} style={{gap: 10, marginTop: 20}}>
+			<Button danger onClick={closeModals}>Cancelar</Button>
+			<Button type="primary" htmlType='submit' className="bg-blue-500" loading={loading}>
+				Guardar
+			</Button>
+		</Row>
+	}
+
+	const rules = [
+		{required: true, message: 'El campo es requerido'}
 	];
 
 	return (
@@ -151,13 +67,11 @@ const Cars = () => {
 					</Button>
 				</Title>
 				<div className="flex flex-col gap-10">
-					<ConfigProvider
-						renderEmpty={
-							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
-						}
-					>
-						<Table columns={columns} />
+					<ConfigProvider renderEmpty={filtered().length !== 0 || true ? CustomizeRenderEmpty : ''} >
+						<Table columns={columns} dataSource={drivers} rowKey={(record) => record.idUserDriver} />
 					</ConfigProvider>
+
+
 					<div>
 						<Title>
 							<Button className="bg-white" onClick={() => setOpenModal2(true)}>
@@ -165,67 +79,88 @@ const Cars = () => {
 								Agregar un camión
 							</Button>
 						</Title>
-						<ConfigProvider
-							renderEmpty={
-								filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
-							}
-						>
-							<Table columns={columns2} />
+						<ConfigProvider renderEmpty={ filtered().length !== 0 || true ? CustomizeRenderEmpty : ''}>
+							<Table columns={columns2} dataSource={trucks} rowKey={(record) => record.idDriver} />
 						</ConfigProvider>
 					</div>
 				</div>
 			</div>
-			<Modal
-				open={openModal}
-				onCancel={() => setOpenModal(false)}
-				footer={
-					<div className="flex justify-end">
-						<Button danger>Cancelar</Button>
-						<Button type="primary" className="bg-blue-500">
-							Guardar
-						</Button>
-					</div>
-				}
-			>
+
+
+			{/* crear / editar - conductor */}
+			<Modal open={openModal} onCancel={closeModals} footer={false}>
 				<div className="flex flex-col gap-5">
-					<h1>Agrega un chofer</h1>
-					<Form>
-						<Form.Item label="Nombre">
-							<Input></Input>
-						</Form.Item>
-						<Form.Item label="CI">
-							<Input></Input>
-						</Form.Item>
-						<Form.Item label="Licencia">
-							<Input></Input>
-						</Form.Item>
+					<h1>{!onEdit ? 'Agrega un chofer' : 'Editar chofer'}</h1>
+					<Form layout='vertical' form={formDrive} onFinish={saveDrivers}>
+						<Row gutter={24}>
+							<Col span={12}>
+								<Form.Item label="Nombre Completo" name="fullname" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="CI" name="cedula" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Licencia" name="carnet" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Dirección" name="direccion" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+
+							{onEdit && <Form.Item name="idUserDriver" hidden> <Input /></Form.Item> }
+						</Row>
+						
+						<FooterModal close={() => setOpenModal(false)} />
 					</Form>
 				</div>
 			</Modal>
-			<Modal
-				open={openModal2}
-				onCancel={() => setOpenModal2(false)}
-				footer={
-					<div className="flex justify-end">
-						<Button danger>Cancelar</Button>
-						<Button type="primary" className="bg-blue-500">
-							Guardar
-						</Button>
-					</div>
-				}
-			>
+
+			{/* crear / editar - camion */}
+			<Modal open={openModal2} onCancel={closeModals} footer={false}>
 				<div className="flex flex-col gap-5">
-					<h1>Agrega un camión</h1>
-					<Form>
-						<Form.Item label="Placa">
-							<Input></Input>
-						</Form.Item>
-						<Form.Item label="Modelo">
-							<Input></Input>
-						</Form.Item>
-						<Form.Item label="Despachador">
-							<Input></Input>
-						</Form.Item>
+					<h1>{!onEdit ? 'Agrega un camión' : 'Editar camión'}</h1>
+					<Form layout='vertical' form={formTruck} onFinish={saveTrucks}>
+						<Row gutter={24}>
+							<Col span={24}>
+								<Form.Item label="Chofer" name="idUserFk" {...{rules}}>
+									<Select placeholder="Seleccionar chofer">
+										{drivers.map(({idUserDriver, fullname}) => 
+											<Select.Option key={idUserDriver} value={idUserDriver}>{fullname}</Select.Option>
+										)}
+									</Select>
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Marca" name="brand" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Modelo" name="model" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Placa" name="plate" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							<Col span={12}>
+								<Form.Item label="Email" name="mail" {...{rules}}>
+									<Input />
+								</Form.Item>
+							</Col>
+							{onEdit && <Form.Item name="idDriver" hidden> <Input /></Form.Item> }
+
+						</Row>
+						<FooterModal close={() => setOpenModal2(false)} />
 					</Form>
 				</div>
 			</Modal>
