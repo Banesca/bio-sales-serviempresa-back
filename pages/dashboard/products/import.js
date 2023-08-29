@@ -33,14 +33,12 @@ const ImportProducts = () => {
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
 			key: 1,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Código',
 			dataIndex: 'barCode',
 			responsive: ['sm'],
 			key: 2,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Precio',
@@ -53,21 +51,18 @@ const ImportProducts = () => {
 			dataIndex: 'nameFamily',
 			responsive: ['lg'],
 			key: 4,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Sub Categoría',
 			dataIndex: 'nameSubFamily',
 			responsive: ['xl'],
 			key: 5,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Marca',
 			dataIndex: 'nameBrand',
 			responsive: ['lg'],
 			key: 6,
-			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Promoción',
@@ -270,6 +265,7 @@ const ImportProducts = () => {
 			console.log(data)
 		};
 	};
+
 
 	const handleChange = (info) => {
 		let newFileList = [...info.fileList];

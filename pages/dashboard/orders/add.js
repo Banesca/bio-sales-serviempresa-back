@@ -21,6 +21,7 @@ export const AddOrder = () => {
 	return (
 		<DashboardLayout>
 			<AddOrderForm handleRequest={addOrderRequest} />
+			
 		</DashboardLayout>
 	);
 };

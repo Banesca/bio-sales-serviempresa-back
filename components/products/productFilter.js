@@ -87,42 +87,6 @@ const ProductFilter = ({ setQuery, clean }) => {
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
-								label="Precio min"
-								name="minPrice"
-								className="p-2"
-								labelCol={{
-									md: { span: 8 },
-									sm: { span: 10 },
-								}}
-								wrapperCol={{
-									md: { span: 16 },
-									sm: { span: 14 },
-								}}
-							>
-								<Input type="number" allowClear />
-							</Form.Item>
-						</Col>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Precio max"
-								name="maxPrice"
-								className="p-2"
-								labelCol={{
-									md: { span: 8 },
-									sm: { span: 10 },
-								}}
-								wrapperCol={{
-									md: { span: 16 },
-									sm: { span: 14 },
-								}}
-							>
-								<Input type="number" allowClear />
-							</Form.Item>
-						</Col>
-					</Row>
-					<Row>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
 								label="Categoría"
 								name="nameFamily"
 								className="p-2"

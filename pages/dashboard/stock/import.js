@@ -104,7 +104,7 @@ const ImportProducts = () => {
 				</Button>
 			),
 		},
-	];
+	];Nombre
 
 	const confirmDelete = (product) => {
 		Modal.confirm({
