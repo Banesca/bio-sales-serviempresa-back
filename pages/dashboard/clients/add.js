@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row } from 'antd';
+import { Button, Card, Col, Row, Select } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -20,6 +20,15 @@ export default function AddClient() {
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 
 	const [form] = Form.useForm();
+
+	const IGTF = [
+		{label:'Si', value:'true'},
+		{label:'No', value:'false'},
+	]
+
+	const handleSelectChange = (event) => {
+		console.log( event );
+	}
 
 	const onReset = () => {
 		form.resetFields();
@@ -239,8 +248,10 @@ export default function AddClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="IGTF">
-									<Input type="boolean" />
-									
+									<Select
+									options = {IGTF}
+									onChange = { handleSelectChange }
+									/>
 								</Form.Item>
 							</Col>
 						</Row>

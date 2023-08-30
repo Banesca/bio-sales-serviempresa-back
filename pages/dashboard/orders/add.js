@@ -3,7 +3,7 @@ import { useRequest } from '../../../hooks/useRequest';
 import { message } from 'antd';
 import AddOrderForm from '../../../components/orders/addOrderForm';
 import { useRouter } from 'next/router';
-
+import PayForm from '../../../components/pay/PayForm';
 export const AddOrder = () => {
 	const { requestHandler } = useRequest();
 	const router = useRouter();
@@ -21,7 +21,7 @@ export const AddOrder = () => {
 	return (
 		<DashboardLayout>
 			<AddOrderForm handleRequest={addOrderRequest} />
-			
+			<PayForm/>
 		</DashboardLayout>
 	);
 };

@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
+	ConsoleSqlOutlined,
 	DeleteOutlined,
 	ExclamationCircleFilled,
 	UploadOutlined,
@@ -250,7 +251,7 @@ const ImportProducts = () => {
 		return filter.length > 0;
 	};
 
-	const handleConvertFileToJson = (files) => {
+	/* const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });
 		let reader = new FileReader();
 		reader.readAsArrayBuffer(file);
@@ -262,11 +263,28 @@ const ImportProducts = () => {
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
 			setData(uploadData);
-			console.log(data)
+			console.log(uploadData);
+			console.log(data);
+		};
+	}; */
+
+	const handleConvertFileToJson = (files) => {
+		const file = new Blob(files, { type: files[0].type });
+		let reader = new FileReader();
+		reader.readAsBinaryString(file);
+		reader.onload = async (e) => {
+			const workbox = XLSX.read(e.target.result, { type: 'binary' });
+			const worksheetName = workbox.SheetNames[0];
+			const workSheet = workbox.Sheets[worksheetName];
+			let data = XLSX.utils.sheet_to_json(workSheet);
+			const uploadData = await convertExcelDataToAPI(data);
+			addKeys(uploadData);
+			setData(uploadData);
+			addKeys(data)
+			setData(data);
 		};
 	};
-
-
+	
 	const handleChange = (info) => {
 		let newFileList = [...info.fileList];
 		newFileList = newFileList.slice(-1);
@@ -392,6 +410,7 @@ const ImportProducts = () => {
 							</Upload>
 						</Col>
 					</Row>
+
 					<ConfigProvider
 						renderEmpty={data.length !== 0 || true ? CustomizeRenderEmpty : ''}
 					>
