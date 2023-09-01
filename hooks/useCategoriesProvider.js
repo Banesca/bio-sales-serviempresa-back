@@ -221,6 +221,17 @@ export function CategoriesProvider({ children }) {
 		}
 		await getLines(businessId);
 	};
+
+	const getTypesPayment = async (type, maxAttempts = 3) => {
+		const res = await requestHandler.get('/api/v2/utils/typepayment');
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		if (maxAttempts > 0) {
+			await getTypesPayment(type, maxAttempts - 1);
+		}
+	}; 
+
 	return (
 		<CategoryContext.Provider
 			value={{
@@ -245,6 +256,7 @@ export function CategoriesProvider({ children }) {
 				getLineById,
 				addLine,
 				deleteLine,
+			    getTypesPayment, 
 			}}
 		>
 			{children}

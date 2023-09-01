@@ -6,6 +6,8 @@ import Loading from '../shared/loading';
 import { useRequest } from '../../hooks/useRequest';
 import { useRouter } from 'next/router';
 import { ArrowLeftOutlined, LeftOutlined } from '@ant-design/icons';
+import DashboardLayout from '../shared/layout';
+import PayForm from '../pay/PayForm';
 
 const AddOrderForm = (props) => {
 	const [loading, setLoading] = useState(false);
@@ -115,6 +117,7 @@ const AddOrderForm = (props) => {
 					Agregar cliente
 				</h2>
 			</section>
+
 			<div
 				style={{
 					maxWidth: '800px',
@@ -138,7 +141,7 @@ const AddOrderForm = (props) => {
 						<Col span={12}>
 							<Form.Item label="Nuevo Cliente">
 								<Switch
-									className='bg-gray-300'
+									className="bg-gray-300"
 									checked={isNewClient}
 									onChange={() => setIsNewClient(!isNewClient)}
 								/>
@@ -245,6 +248,9 @@ const AddOrderForm = (props) => {
 							</Form.Item>
 						</Col>
 					</Row>
+
+			
+
 					<Row>
 						<Col span={12}>
 							<Form.Item

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext } from 'react';
 import DashboardLayout from '../../../../components/shared/layout';
 import UserForm from '../../../../components/users/userForm';
 import Loading from '../../../../components/shared/loading';
@@ -8,15 +8,27 @@ import { GeneralContext } from '../../../_app';
 import { useBusinessProvider } from '../../../../hooks/useBusinessProvider';
 import { useUser } from '../../../../components/users/hooks/useUser';
 import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
-import { Button, List, Modal, Form, Select, message, Card, Row, Col } from 'antd';
+import {
+	Button,
+	List,
+	Modal,
+	Form,
+	Select,
+	message,
+	Card,
+	Row,
+	Col,
+} from 'antd';
 import { PROFILES, PROFILE_LIST } from '../../../../components/shared/profiles';
 import useClients from '../../../../components/clients/hooks/useClients';
 import UserBusinessTable from '../../../../components/users/detail/businessTable';
 import UserClientsTable from '../../../../components/users/detail/clientsTable';
-import { AimOutlined } from '@ant-design/icons';
+import { AimOutlined, HighlightOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-const UpdateUser = () => {
+import { idClient } from '../../../../util/environment';
+import { string } from 'prop-types';
 
+const UpdateUser = () => {
 	const [clientsToAssign, setClientsToAssign] = useState([]);
 	const { loading, setLoading } = useLoadingContext();
 	const [user, setUser] = useState({});
@@ -33,6 +45,7 @@ const UpdateUser = () => {
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
 	const [clientToRemove, setClientToRemove] = useState(null);
 	const { sellerClients } = useUser();
+	const [ sellerClientsAdd , setsellerClientsAdd] = useState();
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
 	const router = useRouter();
 	const { id } = router.query;
@@ -40,8 +53,6 @@ const UpdateUser = () => {
 	const { getUserById, updateUser, upPass } = useUser();
 	const generalContext = useContext(GeneralContext);
 	const { business } = useBusinessProvider();
-
-	
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
@@ -51,7 +62,7 @@ const UpdateUser = () => {
 				message.error('Usuario no encontrado');
 			}
 			setUser(user);
-			console.log({user})
+			console.log({ user });
 			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
@@ -74,17 +85,30 @@ const UpdateUser = () => {
 		}
 	};
 
+	const getSellerClients = async (userId) => {
+		const res = await requestHandler.get(`/api/v2/user/client/${userId}`);
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value.getValue().data;
+		setsellerClientsAdd(value);
+		let lg = value.map((b) => b?.pin);
+		// setPin(lg.length == 2 ? lg[0] : lg);
+		if (lg !== '') {
+			setPin(value[0]?.pin);
+		}
+	};
 
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
 		if (data.pin !== '') {
-			await upPass(id, data)
+			await upPass(id, data);
 		}
 	};
- 
 
 	useEffect(() => {
 		if (id) {
+			getClientsRequest();
 			getUserRequest(id);
 			getUserBusiness(id);
 			getLoc(id);
@@ -92,11 +116,11 @@ const UpdateUser = () => {
 		}
 	}, [generalContext, id]);
 
-
 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
 			await listClients();
+			console.log(clients);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
 		} finally {
@@ -134,7 +158,6 @@ const UpdateUser = () => {
 		}
 	};
 
-
 	const closeModal2 = async (bool) => {
 		const alreadyExist = businessByUser.filter(
 			(b) => b.idSucursalFk === businessToAdd
@@ -152,8 +175,6 @@ const UpdateUser = () => {
 		await handleAsigne();
 		setIsModalOpen(false);
 	};
-
-
 
 	const handleAsigne = async () => {
 		setLoading(true);
@@ -174,6 +195,30 @@ const UpdateUser = () => {
 		message.success('Empresa asignada');
 	};
 
+	const assignClientToSeller = async () => {
+		setLoading(true);
+		if(clientsToAssign.length > 0 && profile?.id != PROFILES.SELLER){
+			setLoading(false);
+			return message.info('Este usuario ya tiene un cliente asignado');
+		}
+		
+		const res = await requestHandler.post('/api/v2/user/assign/client', {
+			idUserFk: user.idUser,
+			idClientFk: clientsToAssign,
+			fecha: string
+		});
+
+		if (res.isLeft()) {
+			setLoading(false);
+			message.error('Ha ocurrido un error');
+			throw res.value.getErrorValue();
+		}
+
+		await getSellerClients(id);
+		setLoading(false);
+		message.success('Cliente asignada');
+		console.log(res.value.getValue().response);
+	};
 
 	const handleRemoveBusiness = async () => {
 		setLoading(true);
@@ -190,41 +235,25 @@ const UpdateUser = () => {
 		message.success('Acceso removido');
 	};
 
-
 	const handleAssignClientsToSeller = async () => {
-		setLoading(true);
-		setIsAssignClientOpen(false);
-		try {
-			let count = 0;
-			for (const client of clientsToAssign) {
-				if (clientAlreadyAssigned(client)) {
-					message.info(
-						'Este usuario ya cuenta con acceso sobre el cliente seleccionado'
-					);
-					continue;
-				}
-				await assignClientToSeller({
-					idClientFk: client,
-					idUserFk: Number(id),
-				});
-				count += 1;
-			}
-			if (count > 0)
-				message.success(
-					`${count} ${count > 1 ? 'Clientes agregados' : 'Cliente agregado'}`
-				);
-			await getSellerClients(id);
-			setClientsToAssign([]);
-		} catch (error) {
-			message.error('Error al asignar clientes');
-		} finally {
+		console.log(clientsToAssign)
+		const alreadyExist = clients.filter(
+			(c) => c.idClientFk === clientsToAssign
+		);
+		if (alreadyExist.length > 0){
 			setLoading(false);
+			setIsModalOpen(false);
+			return message.info('El usuario ya tiene cliente');
 		}
+		/* if(!bool){
+			setLoading(false);
+			setIsModalOpen(false);
+			return;
+		} */
+		await assignClientToSeller();
+		setIsModalOpen(false);
+		
 	};
-
-	
-
-
 
 	return (
 		<DashboardLayout>
@@ -302,7 +331,7 @@ const UpdateUser = () => {
 					{sellerClients.length !== 0 ? (
 						<List.Item>
 							<UserClientsTable
-								clients={sellerClients}
+								clients={sellerClientsAdd}
 								setConfirmDelete={setConfirmRemoveClient}
 								setClientToRemove={setClientToRemove}
 							/>
@@ -337,7 +366,6 @@ const UpdateUser = () => {
 					<Form.Item label="Empresas">
 						<Select
 							allowClear
-							value={businessToAdd}
 							onChange={(v) => setBusinessToAdd(v)}
 						>
 							{business &&
@@ -381,7 +409,6 @@ const UpdateUser = () => {
 					<Form.Item label="Clientes">
 						<Select
 							allowClear
-							mode="multiple"
 							value={clientsToAssign}
 							onChange={(v) => setClientsToAssign(v)}
 						>

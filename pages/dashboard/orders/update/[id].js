@@ -27,7 +27,12 @@ import { useProducts } from '../../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
-import { ArrowLeftOutlined, LeftOutlined,PauseOutlined,CloseOutlined } from '@ant-design/icons';
+import {
+	ArrowLeftOutlined,
+	LeftOutlined,
+	PauseOutlined,
+	CloseOutlined,
+} from '@ant-design/icons';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -88,6 +93,21 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
+
+	const TypesPaymentRequest = async () => {
+		setLoading(true);
+		try {
+			await getCategories();
+			await getSubCategories();
+			await getLines();
+			const typesPayment = await getTypesPayment();
+		} catch (error) {
+			message.error('Error al cargar los metodos de pago');
+		} finally {
+			setLoading(false);
+		}
+		
+	}; 
 
 	const getBrandsRequest = async (id) => {
 		setLoading(true);
@@ -276,7 +296,7 @@ const UpdateOrderPage = () => {
 						</Button>
 					</div>
 					<h1 className="text-center font-semibold text-4xl w-[350px]">
-						 Agregar productos 
+						Agregar productos
 					</h1>
 					<div className="flex gap-4">
 						<Button
@@ -284,10 +304,10 @@ const UpdateOrderPage = () => {
 							type="primary"
 							danger
 						>
-							<CloseOutlined/> Anular
+							<CloseOutlined /> Anular
 						</Button>
 						<Button onClick={() => setIsPauseOrderModal(true)} type="info">
-						<PauseOutlined />	Pausar
+							<PauseOutlined /> Pausar
 						</Button>
 					</div>
 				</div>
@@ -384,7 +404,7 @@ const UpdateOrderPage = () => {
 				]}
 			>
 				<p>
-				¿Está seguro de que deseas anular?
+					¿Está seguro de que deseas anular?
 					{` ${currentProduct?.nameProduct}`}
 				</p>
 			</Modal>
@@ -485,8 +505,9 @@ const UpdateOrderPage = () => {
 			>
 				<p>
 					{' '}
-					¿Estás seguro que deseas pausar el pedido?<br/> Podrás acceder previamente
-					al pedido pausado desde el módulo de pedidos. <br />
+					¿Estás seguro que deseas pausar el pedido?
+					<br /> Podrás acceder previamente al pedido pausado desde el módulo de
+					pedidos. <br />
 				</p>
 			</Modal>
 			<Modal

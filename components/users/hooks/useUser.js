@@ -38,6 +38,7 @@ export function useUser() {
 			return res.value.getErrorValue();
 		}
 		setSellerClients(res.value.getValue().data);
+		console.log(res.value.getValue().data);
 	};
 	const upPass = async (id, data) => {
 		const res = await requestHandler.put('/api/v2/user/edit/pass', {
