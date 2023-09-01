@@ -45,7 +45,7 @@ const UpdateUser = () => {
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
 	const [clientToRemove, setClientToRemove] = useState(null);
 	const { sellerClients } = useUser();
-	const [ sellerClientsAdd , setsellerClientsAdd] = useState();
+	const [ sellerClientsAdd , setsellerClientsAdd] = useState([]);
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
 	const router = useRouter();
 	const { id } = router.query;
@@ -92,11 +92,8 @@ const UpdateUser = () => {
 		}
 		const value = res.value.getValue().data;
 		setsellerClientsAdd(value);
-		let lg = value.map((b) => b?.pin);
-		// setPin(lg.length == 2 ? lg[0] : lg);
-		if (lg !== '') {
-			setPin(value[0]?.pin);
-		}
+		console.log(sellerClientsAdd)
+		
 	};
 
 	const updateUserRequest = async (data) => {
@@ -111,6 +108,7 @@ const UpdateUser = () => {
 			getClientsRequest();
 			getUserRequest(id);
 			getUserBusiness(id);
+			getSellerClients(id)
 			getLoc(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
@@ -120,7 +118,6 @@ const UpdateUser = () => {
 		setLoading(true);
 		try {
 			await listClients();
-			console.log(clients);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
 		} finally {
@@ -328,7 +325,7 @@ const UpdateUser = () => {
 						<></>
 					)}
 
-					{sellerClients.length !== 0 ? (
+					{sellerClientsAdd.length !== 0 ? (
 						<List.Item>
 							<UserClientsTable
 								clients={sellerClientsAdd}
