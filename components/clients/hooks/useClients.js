@@ -21,6 +21,7 @@ export default function useClients() {
 		);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
+			console.log(res.value.getValue().response);
 		}
 		await listClients();
 	};

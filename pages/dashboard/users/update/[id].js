@@ -37,6 +37,7 @@ const UpdateUser = () => {
 	const [profile, setProfile] = useState();
 	const [log, setLog] = useState();
 	const { clients, listClients } = useClients();
+	const { clientsToRemove, deleteClient } = useClients();
 	const [disabled, setDisabled] = useState();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [businessToAdd, setBusinessToAdd] = useState();
@@ -45,7 +46,7 @@ const UpdateUser = () => {
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
 	const [clientToRemove, setClientToRemove] = useState(null);
 	const { sellerClients } = useUser();
-	const [ sellerClientsAdd , setsellerClientsAdd] = useState([]);
+	const [sellerClientsAdd, setsellerClientsAdd] = useState([]);
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
 	const router = useRouter();
 	const { id } = router.query;
@@ -92,8 +93,7 @@ const UpdateUser = () => {
 		}
 		const value = res.value.getValue().data;
 		setsellerClientsAdd(value);
-		console.log(sellerClientsAdd)
-		
+		console.log(sellerClientsAdd);
 	};
 
 	const updateUserRequest = async (data) => {
@@ -108,7 +108,7 @@ const UpdateUser = () => {
 			getClientsRequest();
 			getUserRequest(id);
 			getUserBusiness(id);
-			getSellerClients(id)
+			getSellerClients(id);
 			getLoc(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
@@ -194,15 +194,15 @@ const UpdateUser = () => {
 
 	const assignClientToSeller = async () => {
 		setLoading(true);
-		if(clientsToAssign.length > 0 && profile?.id != PROFILES.SELLER){
+		if (clientsToAssign.length > 0 && profile?.id != PROFILES.SELLER) {
 			setLoading(false);
 			return message.info('Este usuario ya tiene un cliente asignado');
 		}
-		
+
 		const res = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
 			idClientFk: clientsToAssign,
-			fecha: string
+			fecha: string,
 		});
 
 		if (res.isLeft()) {
@@ -210,11 +210,9 @@ const UpdateUser = () => {
 			message.error('Ha ocurrido un error');
 			throw res.value.getErrorValue();
 		}
-
 		await getSellerClients(id);
 		setLoading(false);
-		message.success('Cliente asignada');
-		console.log(res.value.getValue().response);
+		message.success('Cliente asignado');
 	};
 
 	const handleRemoveBusiness = async () => {
@@ -232,24 +230,36 @@ const UpdateUser = () => {
 		message.success('Acceso removido');
 	};
 
-	const handleAssignClientsToSeller = async () => {
-		console.log(clientsToAssign)
+	const handleRemoveClients = async () => {
+		setLoading(false);
+		const res = await requestHandler.delete(
+			`/api/v2/client/delete/${idClient}`
+		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		await listClients();
+		if (res.isLeft()) {
+			setLoading(false);
+			message.error('Ha ocurrido un error');
+		}
+		await getUserBusiness(id);
+		setLoading(false);
+		setConfirmRemoveClient(false);
+		message.success('Cliente removido');
+	};
+
+	const handleAssignClientsToSeller = async (bool) => {
 		const alreadyExist = clients.filter(
 			(c) => c.idClientFk === clientsToAssign
 		);
-		if (alreadyExist.length > 0){
+		if (alreadyExist.length > 0) {
 			setLoading(false);
 			setIsModalOpen(false);
 			return message.info('El usuario ya tiene cliente');
 		}
-		/* if(!bool){
-			setLoading(false);
-			setIsModalOpen(false);
-			return;
-		} */
 		await assignClientToSeller();
-		setIsModalOpen(false);
-		
+		setIsAssignClientOpen(false);
 	};
 
 	return (
@@ -361,10 +371,7 @@ const UpdateUser = () => {
 			>
 				<Form>
 					<Form.Item label="Empresas">
-						<Select
-							allowClear
-							onChange={(v) => setBusinessToAdd(v)}
-						>
+						<Select allowClear onChange={(v) => setBusinessToAdd(v)}>
 							{business &&
 								business.map((b) => (
 									<Select.Option key={b.idSucursal} value={b.idSucursal}>
@@ -395,7 +402,7 @@ const UpdateUser = () => {
 						<Button
 							key="asigne"
 							type="primary"
-							onClick={handleAssignClientsToSeller}
+							onClick={() => handleAssignClientsToSeller(false)}
 						>
 							Asignar
 						</Button>
@@ -434,6 +441,29 @@ const UpdateUser = () => {
 							type="primary"
 							danger
 							onClick={() => handleRemoveBusiness()}
+						>
+							Eliminar
+						</Button>
+					</div>,
+				]}
+			>
+				<p>¿Está seguro de eliminar?</p>
+			</Modal>
+			<Modal
+				open={confirmRemoveClient}
+				title="Confirmación2"
+				onCancel={() => setConfirmRemoveClient(false)}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button key="cancel" onClick={() => setConfirmRemoveClient(false)}>
+							Cancelar
+						</Button>
+						<Button
+							key="remove"
+							type="primary"
+							danger
+							onClick={() => handleRemoveClients()}
 						>
 							Eliminar
 						</Button>
