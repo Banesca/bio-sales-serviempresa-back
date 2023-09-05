@@ -59,6 +59,8 @@ const ProductForm = (props) => {
 		observation: props.product.observation || '',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
+		efectivo:props.product.efectivo || '',
+		maxproduct:props.product.maxproduct || '',
 	};
 
 	const { requestHandler } = useRequest();
@@ -224,6 +226,8 @@ const ProductForm = (props) => {
 			unitByBox: '',
 			unitweight: '',
 			observation: '',
+			efectivo:'',
+			maxproduct:'',
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
@@ -270,6 +274,8 @@ const ProductForm = (props) => {
 						unitByBox: product.unitByBox,
 						unitweight: product.unitweight,
 						observation: product.observation,
+						efectivo: product.efectivo,
+						maxproduct: product.maxproduct,
 					}}
 					onFinish={onSubmit}
 					autoComplete="off"
@@ -462,6 +468,60 @@ const ProductForm = (props) => {
 							>
 								<Input
 									value={product.ean}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											ean: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+							<Form.Item
+								label="Codigo interno"
+								name="efectivo"
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Input
+									value={product.efectivo}
+									onChange={(e) =>
+										setProduct({
+											...product,
+											ean: e.target.value,
+										})
+									}
+								/>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+							<Form.Item
+								label="Peso neto"
+								name="maxpruduc"
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Input
+									value={product.maxproduct}
 									onChange={(e) =>
 										setProduct({
 											...product,

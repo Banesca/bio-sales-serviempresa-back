@@ -22,13 +22,13 @@ export default function AddClient() {
 	const [form] = Form.useForm();
 
 	const IGTF = [
-		{label:'Si', value:'true'},
-		{label:'No', value:'false'},
-	]
+		{ label: 'Si', value: 'true' },
+		{ label: 'No', value: 'false' },
+	];
 
 	const handleSelectChange = (event) => {
-		console.log( event );
-	}
+		console.log(event);
+	};
 
 	const onReset = () => {
 		form.resetFields();
@@ -117,6 +117,11 @@ export default function AddClient() {
 					address: data.address,
 					idStatusFK: 1,
 					observacion: data.comments,
+					description: data.description,
+					dispatchaddress: data.dispatchaddress,
+					isigtf: data.isigtf,
+					idPaymenConditionsFk: data.idPaymenConditionsFk,
+					limitcredit: data.limitcredit,
 				});
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
@@ -209,7 +214,7 @@ export default function AddClient() {
 									]}
 									name="address"
 								>
-									<Input type="text" />
+									<Input type="dispatchaddress" />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
@@ -222,7 +227,7 @@ export default function AddClient() {
 											message: 'Ingresa el limite de credito',
 										},
 									]}
-									name="address"
+									name="limitcredit"
 								>
 									<Input type="text" />
 								</Form.Item>
@@ -247,11 +252,34 @@ export default function AddClient() {
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="IGTF">
-									<Select
-									options = {IGTF}
-									onChange = { handleSelectChange }
-									/>
+								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="isigtf">
+									<Select options={IGTF} onChange={handleSelectChange} />
+								</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item
+									label="Condiciones de pago"
+									style={{ marginLeft: 6 }}
+									rules={[
+										{
+											required: true,
+											message: 'Ingresa condiciones de pago',
+										},
+									]}
+									name="idPaymenConditionsFk"
+								>
+									<Input type="text"/>
+								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={24}>
+								<Form.Item label="Descripcion " name="description">
+									<Input.TextArea
+										type="text"
+										rows={4}
+										placeholder="Descripcion"
+									></Input.TextArea>
 								</Form.Item>
 							</Col>
 						</Row>

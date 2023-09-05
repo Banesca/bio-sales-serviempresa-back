@@ -10,6 +10,7 @@ import { useUser } from '../../../../components/users/hooks/useUser';
 import { useLoadingContext } from '../../../../hooks/useLoadingProvider';
 import {
 	Button,
+	Input,
 	List,
 	Modal,
 	Form,
@@ -425,6 +426,15 @@ const UpdateUser = () => {
 						</Select>
 					</Form.Item>
 				</Form>
+				<Form.Item
+					label="Fecha"
+				>
+					<Input
+						type="text"
+						name="fecha"
+					>
+					</Input>
+				</Form.Item>
 			</Modal>
 			<Modal
 				open={confirmDelete}
