@@ -363,6 +363,7 @@ const UpdateUser = () => {
 							Cancelar
 						</Button>
 						<Button
+							className="bg-blue-500"
 							key="asigne"
 							type="primary"
 							onClick={() => closeModal2(true)}
@@ -403,6 +404,7 @@ const UpdateUser = () => {
 							Cancelar
 						</Button>
 						<Button
+							className="bg-blue-500"
 							key="asigne"
 							type="primary"
 							onClick={() => handleAssignClientsToSeller(false)}
