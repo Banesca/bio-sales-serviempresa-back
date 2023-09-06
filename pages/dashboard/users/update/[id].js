@@ -45,7 +45,7 @@ const UpdateUser = () => {
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [businessToRemove, setBusinessToRemove] = useState();
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
-	const [clientToRemove, setClientToRemove] = useState(null);
+	const [clientToRemove, setClientToRemove] = useState();
 	const { sellerClients } = useUser();
 	const [sellerClientsAdd, setsellerClientsAdd] = useState([]);
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
@@ -232,21 +232,23 @@ const UpdateUser = () => {
 	};
 
 	const handleRemoveClients = async () => {
-		setLoading(false);
-		const res = await requestHandler.delete(
-			`/api/v2/client/delete/${idClient}`
+		console.log(clientToRemove.idClient);
+
+		const res = await requestHandler.put(
+			`/api/v2/user/assign/client/update/client/${user.idUser}`,
+			{
+				idUserFk: user.idUser,
+				idClientFk: clientToRemove.idClient,
+			}
 		);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
+			console.log(res.value.getValue().response);
 		}
-		await listClients();
-		if (res.isLeft()) {
-			setLoading(false);
-			message.error('Ha ocurrido un error');
-		}
-		await getUserBusiness(id);
+		await getSellerClients(id);
 		setLoading(false);
 		setConfirmRemoveClient(false);
+		console.log(res);
 		message.success('Cliente removido');
 	};
 
@@ -426,14 +428,8 @@ const UpdateUser = () => {
 						</Select>
 					</Form.Item>
 				</Form>
-				<Form.Item
-					label="Fecha"
-				>
-					<Input
-						type="text"
-						name="fecha"
-					>
-					</Input>
+				<Form.Item label="Fecha">
+					<Input type="text" name="fecha"></Input>
 				</Form.Item>
 			</Modal>
 			<Modal

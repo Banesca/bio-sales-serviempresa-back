@@ -212,9 +212,9 @@ export default function AddClient() {
 											message: 'Ingresa la dirección del cliente',
 										},
 									]}
-									name="address"
+									name="dispatchaddress"
 								>
-									<Input type="dispatchaddress" />
+									<Input type="text" />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>

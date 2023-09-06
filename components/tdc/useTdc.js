@@ -18,48 +18,38 @@ export const useTdc = () => {
 
 	const getTdc = async () => {
 		try {
-			const api_port = (await localStorage.getItem('apiPort'))
-				? localStorage.getItem('apiPort')
-				: generalContext.api_port; 
-			const { data } = await axios.get(`${ip}:${api_port}/api/v2/param`, {
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					Authorization: 'Bearer ' + token2,
-				},
-			});
-
-			let tdc = data.response[52];
-			console.log(tdc);
+			const res = await requestHandler.get(`/api/v2/param`);
+			if (res.isLeft()) {
+				return;
+			}
+			const tdc = res.value.getValue().response[52];
 			setActualTdc(tdc.param);
 			setTdc(tdc);
 			form.setFieldValue('param', tdc.param);
-
-			console.log(tdc);
 		} catch (error) {
 			console.log({ error });
 			message.error('No fue posible cargar la tasa de cambio');
 		}
+
+		console.log(tdc);
+		return tdc;
 	};
 
-	const updateTdc = async (e) => {
+	const updateTdc = async (result) => {
 		try {
 			setLoading(true);
-			const api_port = localStorage.getItem('apiPort')
-				? localStorage.getItem('apiPort')
-				: generalContext.api_port;
+			console.log(result);
+			console.log(tdc);
+			const body = {
+				param: result.param,
+				idParam: tdc.idParam,
+			};
 
-			const { data } = await axios.put(
-				`${ip}:${api_port}/api/v2/param/update`,
-				{ ...e, idParam: tdc.idParam },
-				{
-					headers: {
-						'Access-Control-Allow-Origin': '*',
-						Authorization: 'Bearer ' + token2,
-					},
-				}
-			);
+			const data = await requestHandler.put(`/api/v2/param/update`, body);
+			console.log(data);
 
-			if (data.success) getTdc();
+			getTdc();
+
 			setLoading(false);
 		} catch (error) {
 			message.error('No fue posible guardar la tasa de cambio');
