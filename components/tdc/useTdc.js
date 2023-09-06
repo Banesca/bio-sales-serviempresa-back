@@ -30,26 +30,18 @@ export const useTdc = () => {
 			console.log({ error });
 			message.error('No fue posible cargar la tasa de cambio');
 		}
-
-		console.log(tdc);
 		return tdc;
 	};
 
 	const updateTdc = async (result) => {
 		try {
 			setLoading(true);
-			console.log(result);
-			console.log(tdc);
 			const body = {
 				param: result.param,
 				idParam: tdc.idParam,
 			};
-
 			const data = await requestHandler.put(`/api/v2/param/update`, body);
-			console.log(data);
-
 			getTdc();
-
 			setLoading(false);
 		} catch (error) {
 			message.error('No fue posible guardar la tasa de cambio');
