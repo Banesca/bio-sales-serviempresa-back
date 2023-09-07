@@ -47,7 +47,6 @@ const ProductFilter = ({ setQuery, clean }) => {
 					name="productFilters"
 					onFinish={onSubmit}
 				>
-					{log == PROFILES.MASTER && <SelectBusiness />}
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item

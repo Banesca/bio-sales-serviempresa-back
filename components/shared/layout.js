@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Dropdown, Layout, Menu, Space } from 'antd';
+import { Button, Dropdown, Layout, Menu, Space, } from 'antd';
+import SelectBusiness from '../business/selectBusiness';
 import {
 	UserOutlined,
 	DownOutlined,
@@ -68,12 +69,11 @@ const itemsMenu = [
 	getItem('Reportes', '11', <PieChartFilled />),
 	getItem('Horarios', '12', <ClockCircleFilled />),
 	getItem('Condiciones de pago', '8', <DollarCircleFilled />),
+	getItem('Tasa de cambio', '15', <DollarOutlined />),
 	getItem('Camiones', '13', <FaTruck />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '14', <BellFilled />),
-	getItem('Configuración', 'sub2', <SettingOutlined />, [
-		getItem('Tasa de cambio', '15', <DollarOutlined />)
-	]),
+	getItem('Configuración', 'sub2', <SettingOutlined />),
 	getItem('Cerrar sesión', '16', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
@@ -136,7 +136,8 @@ export default function DashboardLayout({ children }) {
 					<div className="relative h-12 w-44">
 						<MainLogo />
 					</div>
-					<p className="text-3xl">{currentBusiness}</p>
+					
+					<SelectBusiness />
 					<Dropdown
 						menu={{
 							items,

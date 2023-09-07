@@ -8,7 +8,7 @@ import { useRequest } from '../../hooks/useRequest';
 import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { LeftOutlined } from '@ant-design/icons';
-
+import Image from 'next/image';
 const UserForm = ({
 	user,
 	update,
@@ -79,13 +79,16 @@ const UserForm = ({
 		}
 	};
 
-
 	const onSubmit = async (e) => {
 		try {
 			setLoading(true);
-			const info  = await submitFunction({...e, file: e.file ? e.file.file : null});
-			console.log(info)
-			if (!update &&
+			const info = await submitFunction({
+				...e,
+				file: e.file ? e.file.file : null,
+			});
+			console.log(info);
+			if (
+				!update &&
 				(userData.idProfileFk == PROFILES.SELLER ||
 					userData.idProfileFk == PROFILES.ADMIN ||
 					userData.idProfileFk == PROFILES.BILLER)
@@ -234,15 +237,24 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
-					{update && <Form.Item label="Foto de perfil" name="file">
-						<Upload
-							maxCount={1}
-							accept='image/png, image/jpeg'
-							multiple={false}
-						>
-							<Button> Cargar imágen</Button>
-						</Upload>
-					</Form.Item> }
+					{update && (
+						<Form.Item label="Foto de perfil" name="file">
+							<Upload
+								maxCount={1}
+								accept="image/png, image/jpeg"
+								multiple={false}
+							>
+								<Button> Cargar imágen</Button>
+							</Upload>
+							<Image
+								width={100}
+								height={100}
+								/* src={`${ip}:${generalContext?.api_port}/product/${text}`}  */
+								style={{ with: '50px', height: '50px' }}
+								alt="image"
+							/>
+						</Form.Item>
+					)}
 					{!update && userData.idProfileFk && (
 						<Form.Item
 							label="Empresas"

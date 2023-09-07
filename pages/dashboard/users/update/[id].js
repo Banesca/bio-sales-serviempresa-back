@@ -199,7 +199,7 @@ const UpdateUser = () => {
 			setLoading(false);
 			return message.info('Este usuario ya tiene un cliente asignado');
 		}
-
+		console.log(clientsToAssign);
 		const res = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
 			idClientFk: clientsToAssign,
@@ -232,23 +232,14 @@ const UpdateUser = () => {
 	};
 
 	const handleRemoveClients = async () => {
-		console.log(clientToRemove.idClient);
-
-		const res = await requestHandler.put(
-			`/api/v2/user/assign/client/update/client/${user.idUser}`,
-			{
-				idUserFk: user.idUser,
-				idClientFk: clientToRemove.idClient,
-			}
-		);
+		const res = await requestHandler.delete(`/api/v2/user/delete/client/${clientToRemove.idSellersClient}`);
 		if (res.isLeft()) {
-			throw res.value.getErrorValue();
-			console.log(res.value.getValue().response);
+			setLoading(false);
+			message.error('Ha ocurrido un error');
 		}
 		await getSellerClients(id);
 		setLoading(false);
 		setConfirmRemoveClient(false);
-		console.log(res);
 		message.success('Cliente removido');
 	};
 
@@ -271,7 +262,7 @@ const UpdateUser = () => {
 				<Loading isLoading={loading} />
 			) : (
 				<UserForm
-					business={business}
+					business={business}getUserRequest
 					submitFunction={updateUserRequest}
 					update={true}
 					user={user}
