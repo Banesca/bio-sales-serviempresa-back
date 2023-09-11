@@ -232,7 +232,9 @@ const UpdateUser = () => {
 	};
 
 	const handleRemoveClients = async () => {
-		const res = await requestHandler.delete(`/api/v2/user/delete/client/${clientToRemove.idSellersClient}`);
+		const res = await requestHandler.delete(
+			`/api/v2/user/delete/client/${clientToRemove.idSellersClient}`
+		);
 		if (res.isLeft()) {
 			setLoading(false);
 			message.error('Ha ocurrido un error');
@@ -262,7 +264,8 @@ const UpdateUser = () => {
 				<Loading isLoading={loading} />
 			) : (
 				<UserForm
-					business={business}getUserRequest
+					business={business}
+					getUserRequest
 					submitFunction={updateUserRequest}
 					update={true}
 					user={user}
@@ -284,28 +287,11 @@ const UpdateUser = () => {
 							<AimOutlined />
 						</Button>
 					</List.Item>
+					
 					{profile?.id !== PROFILES.MASTER && (
 						<List.Item style={{ padding: '10px 25px' }}>
-							<p>Asignar</p>
+							
 							<div className="flex gap-5">
-								{profile?.id != PROFILES.MASTER && log == PROFILES.MASTER ? (
-									<Button
-										className="bg-blue-500"
-										onClick={() => setIsModalOpen(true)}
-										type="primary"
-									>
-										Sucursal
-									</Button>
-								) : (
-									<></>
-								)}
-								<Button
-									className="bg-blue-500"
-									onClick={() => setIsAssignClientOpen(true)}
-									type="primary"
-								>
-									Clientes
-								</Button>
 								{profile?.id == PROFILES.SELLER && (
 									<>
 										<Button type="primary" className="bg-blue-500">
@@ -317,31 +303,31 @@ const UpdateUser = () => {
 						</List.Item>
 					)}
 
-					{businessByUser.length !== 0 ? (
-						<List.Item>
-							<UserBusinessTable
-								business={businessByUser}
-								setConfirmDelete={setConfirmDelete}
-								setBusinessToRemove={setBusinessToRemove}
-							/>
-						</List.Item>
-					) : (
-						<></>
-					)}
-
-					{sellerClientsAdd.length !== 0 ? (
-						<List.Item>
-							<UserClientsTable
-								clients={sellerClientsAdd}
-								setConfirmDelete={setConfirmRemoveClient}
-								setClientToRemove={setClientToRemove}
-							/>
-						</List.Item>
-					) : (
-						<></>
-					)}
+					<List.Item>
+						<UserBusinessTable
+							business={businessByUser}
+							setConfirmDelete={setConfirmDelete}
+							setBusinessToRemove={setBusinessToRemove}
+							setIsModalOpen={setIsModalOpen}
+						/>
+					</List.Item>
 				</List>
 			</Card>
+			{profile?.id  != PROFILES.SELLER && (
+				<Card className="w-full shadow-lg">
+				<List>
+					<List.Item>
+						<UserClientsTable
+							clients={sellerClientsAdd}
+							setConfirmDelete={setConfirmRemoveClient}
+							setClientToRemove={setClientToRemove}
+							setIsAssignClientOpen={setIsAssignClientOpen}
+							handleAssignClientsToSeller={handleAssignClientsToSeller}
+						/>
+					</List.Item>
+				</List>
+			</Card>
+			)}
 
 			<Modal
 				title="Asignar sucursal"
@@ -377,6 +363,7 @@ const UpdateUser = () => {
 					</Form.Item>
 				</Form>
 			</Modal>
+
 			<Modal
 				title="Asignar clientes"
 				open={isAssignClientOpen}
@@ -425,6 +412,7 @@ const UpdateUser = () => {
 					<Input type="text" name="fecha"></Input>
 				</Form.Item>
 			</Modal>
+
 			<Modal
 				open={confirmDelete}
 				title="Confirmación"
@@ -448,6 +436,7 @@ const UpdateUser = () => {
 			>
 				<p>¿Está seguro de eliminar?</p>
 			</Modal>
+
 			<Modal
 				open={confirmRemoveClient}
 				title="Confirmación2"

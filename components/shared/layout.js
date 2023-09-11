@@ -73,7 +73,6 @@ const itemsMenu = [
 	getItem('Camiones', '13', <FaTruck />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '14', <BellFilled />),
-	getItem('Configuración', 'sub2', <SettingOutlined />),
 	getItem('Cerrar sesión', '16', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {

@@ -7,6 +7,7 @@ export default function UserBusinessTable({
 	business,
 	setConfirmDelete,
 	setBusinessToRemove,
+	setIsModalOpen,
 }) {
 	const [log, setLog] = useState();
 
@@ -22,8 +23,23 @@ export default function UserBusinessTable({
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Acciones',
+			title: (
+				<Button
+					className="bg-blue-500"
+					disabled={log == 1 ? false : true}
+					onClick={() => openAssignBusiness()}
+					type="success"
+					block
+				>
+					Sucursales
+				</Button>
+			),
 			key: '2',
+			width: 300,
+		},
+		{
+			title: 'Acciones',
+			key: '3',
 			width: 20,
 			render: (item) => (
 				<Button
@@ -42,16 +58,11 @@ export default function UserBusinessTable({
 		setBusinessToRemove(item);
 		setConfirmDelete(true);
 	};
+	const openAssignBusiness = () => {
+		setIsModalOpen(true);
+	};
 
 	return (
-		<ConfigProvider
-			renderEmpty={business.length !== 0 || true ? CustomizeRenderEmpty : ''}
-		>
-			<Table
-				columns={columns}
-				style={{ width: '100%' }}
-				dataSource={business}
-			/>
-		</ConfigProvider>
+		<Table columns={columns} style={{ width: '100%' }} dataSource={business} />
 	);
 }

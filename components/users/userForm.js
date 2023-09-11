@@ -9,6 +9,7 @@ import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { LeftOutlined } from '@ant-design/icons';
 import Image from 'next/image';
+
 const UserForm = ({
 	user,
 	update,
@@ -121,6 +122,65 @@ const UserForm = ({
 	const handleReturn = () => {
 		router.push('/dashboard/users');
 		setLoading(true);
+	};
+
+	const fileProgress = (fileInput) => {
+		const img = new Image();
+		img.src = window.URL.createObjectURL(fileInput);
+		img.onload = () => {
+			setIsValidImgSize({ width: img.width, height: img.height });
+			if (img.width <= 600 && img.height <= 600) {
+				setIsValidImgSize(true);
+				return true;
+			} else {
+				setIsValidImgSize(false);
+				message.error('La resolución debe ser menor a 600x600');
+				return false;
+			}
+		};
+	};
+	const uploadProps = {
+		beforeUpload: (file) => {
+			fileProgress(file);
+			const isJpgOrPng =
+				file.type === 'image/jpeg' ||
+				file.type === 'image/png' ||
+				file.type === 'image/jpeg';
+			if (!isJpgOrPng) {
+				message.error('Solo puedes subir imágenes JPG/PNG!');
+			}
+			const isLt2M = file.size / 1024 / 1024 < 2;
+			if (!isLt2M) {
+				message.error('El tamaño máximo es 2MB!');
+			}
+			let isValid = isJpgOrPng && isLt2M;
+			if (isValid) {
+				setFile(file);
+			}
+			return isValid;
+		},
+		onChange: (info) => {
+			let newFileList = [...info.fileList];
+			newFileList = newFileList.slice(-1);
+
+			if (newFileList.length === 0) {
+				setFileList(newFileList[0]);
+				return message.success('Archivo eliminado');
+			}
+
+			setFileList(newFileList);
+			if (newFileList[0].status == 'done') {
+				if (!isValidImgSize) {
+					setFileList([]);
+					return;
+				}
+				setLoading(true);
+				message.success(`${newFileList[0].name} ha sido cargado`);
+			} else if (newFileList[0].status == 'error') {
+				message.error('Ha ocurrido un error');
+			}
+			setLoading(false);
+		},
 	};
 
 	return (
@@ -237,24 +297,24 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
-					{update && (
-						<Form.Item label="Foto de perfil" name="file">
-							<Upload
-								maxCount={1}
-								accept="image/png, image/jpeg"
-								multiple={false}
-							>
-								<Button> Cargar imágen</Button>
-							</Upload>
-							<Image
-								width={100}
-								height={100}
-								/* src={`${ip}:${generalContext?.api_port}/product/${text}`}  */
-								style={{ with: '50px', height: '50px' }}
-								alt="image"
-							/>
-						</Form.Item>
-					)}
+
+					<Form.Item label="Foto de perfil" name="file">
+						<Upload
+							maxCount={1}
+							accept="image/png, image/jpeg"
+							multiple={false}
+						>
+							<Button> Cargar imágen</Button>
+						</Upload>
+						<Image
+							width={100}
+							height={100}
+							/* src={`${ip}:${generalContext?.api_port}/user/${text}`} */
+							style={{ with: '50px', height: '50px' }}
+							alt="image"
+						/>
+					</Form.Item>
+
 					{!update && userData.idProfileFk && (
 						<Form.Item
 							label="Empresas"

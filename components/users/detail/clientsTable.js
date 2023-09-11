@@ -7,6 +7,8 @@ export default function UserClientsTable({
 	clients,
 	setClientToRemove,
 	setConfirmDelete,
+	handleAssignClientsToSeller,
+	setIsAssignClientOpen,
 }) {
 	const [log, setLog] = useState();
 
@@ -19,11 +21,27 @@ export default function UserClientsTable({
 			title: 'Clientes',
 			dataIndex: 'nameClient',
 			key: '1',
+
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Acciones',
+			title: (
+				<Button
+					className="bg-blue-500"
+					disabled={log == 1 ? false : true}
+					onClick={() => openAssignClient()}
+					type="success"
+					block
+				>
+					Clientes
+				</Button>
+			),
 			key: '2',
+			width: 300,
+		},
+		{
+			title: 'Acciones',
+			key: '3',
 			width: 20,
 			render: (item) => (
 				<Button
@@ -39,19 +57,20 @@ export default function UserClientsTable({
 	];
 
 	const openConfirmDelete = (item) => {
+		console.log(item);
 		setClientToRemove(item);
 		setConfirmDelete(true);
 	};
 
+	const openAssignClient = () => {
+		setIsAssignClientOpen(true);
+	};
+
 	return (
-		<ConfigProvider
-			renderEmpty={clients.length !== 0 || true ? CustomizeRenderEmpty : ''}
-		>
-			<Table
-				style={{ width: '100%' }}
-				columns={clientColumns}
-				dataSource={clients}
-			/>
-		</ConfigProvider>
+		<Table
+			style={{ width: '100%' }}
+			columns={clientColumns}
+			dataSource={clients}
+		/>
 	);
 }
