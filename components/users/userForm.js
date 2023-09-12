@@ -29,6 +29,8 @@ const UserForm = ({
 		idProfileFk: user.idProfileFk || null,
 	});
 
+	const [fileList, setFileList] = useState([]);
+
 	const regexpTlp =
 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.;])[A-Za-z\d$@$!%*?&]{8,15}/;
 	const [loading, setLoading] = useState(false);
@@ -139,6 +141,7 @@ const UserForm = ({
 			}
 		};
 	};
+
 	const uploadProps = {
 		beforeUpload: (file) => {
 			fileProgress(file);
@@ -303,13 +306,14 @@ const UserForm = ({
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
+							/* {...uploadProps} */
 						>
 							<Button> Cargar imágen</Button>
 						</Upload>
 						<Image
 							width={100}
 							height={100}
-							/* src={`${ip}:${generalContext?.api_port}/user/${text}`} */
+							src="https://api.menusoftware.info:8002/user/D_NQ_NP_966020-MLV52933916831_122022-V.jpg"
 							style={{ with: '50px', height: '50px' }}
 							alt="image"
 						/>

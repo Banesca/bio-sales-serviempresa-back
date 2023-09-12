@@ -28,6 +28,8 @@ import { AimOutlined, HighlightOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { idClient } from '../../../../util/environment';
 import { string } from 'prop-types';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const UpdateUser = () => {
 	const [clientsToAssign, setClientsToAssign] = useState([]);
@@ -55,6 +57,7 @@ const UpdateUser = () => {
 	const { getUserById, updateUser, upPass } = useUser();
 	const generalContext = useContext(GeneralContext);
 	const { business } = useBusinessProvider();
+	const [startDate, setStartDate] = useState(new Date());
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
@@ -81,7 +84,7 @@ const UpdateUser = () => {
 		const value = res.value.getValue().data;
 		setBusinessByUser(value);
 		let lg = value.map((b) => b?.pin);
-		// setPin(lg.length == 2 ? lg[0] : lg);
+		setPin(lg.length == 2 ? lg[0] : lg);
 		if (lg !== '') {
 			setPin(value[0]?.pin);
 		}
@@ -195,15 +198,23 @@ const UpdateUser = () => {
 
 	const assignClientToSeller = async () => {
 		setLoading(true);
+
+		let day = startDate.getDate();
+		let month = startDate.getMonth() + 1;
+		let year = startDate.getFullYear();
+		var fecha2 = day + '-' + month + '-' + year;
+		console.log(fecha2.toString());
+
 		if (clientsToAssign.length > 0 && profile?.id != PROFILES.SELLER) {
 			setLoading(false);
 			return message.info('Este usuario ya tiene un cliente asignado');
 		}
 		console.log(clientsToAssign);
+
 		const res = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
 			idClientFk: clientsToAssign,
-			fecha: string,
+			fecha: fecha2,
 		});
 
 		if (res.isLeft()) {
@@ -287,10 +298,9 @@ const UpdateUser = () => {
 							<AimOutlined />
 						</Button>
 					</List.Item>
-					
+
 					{profile?.id !== PROFILES.MASTER && (
 						<List.Item style={{ padding: '10px 25px' }}>
-							
 							<div className="flex gap-5">
 								{profile?.id == PROFILES.SELLER && (
 									<>
@@ -313,20 +323,20 @@ const UpdateUser = () => {
 					</List.Item>
 				</List>
 			</Card>
-			{profile?.id  != PROFILES.SELLER && (
+			{profile?.id != PROFILES.SELLER && (
 				<Card className="w-full shadow-lg">
-				<List>
-					<List.Item>
-						<UserClientsTable
-							clients={sellerClientsAdd}
-							setConfirmDelete={setConfirmRemoveClient}
-							setClientToRemove={setClientToRemove}
-							setIsAssignClientOpen={setIsAssignClientOpen}
-							handleAssignClientsToSeller={handleAssignClientsToSeller}
-						/>
-					</List.Item>
-				</List>
-			</Card>
+					<List>
+						<List.Item>
+							<UserClientsTable
+								clients={sellerClientsAdd}
+								setConfirmDelete={setConfirmRemoveClient}
+								setClientToRemove={setClientToRemove}
+								setIsAssignClientOpen={setIsAssignClientOpen}
+								handleAssignClientsToSeller={handleAssignClientsToSeller}
+							/>
+						</List.Item>
+					</List>
+				</Card>
 			)}
 
 			<Modal
@@ -407,10 +417,15 @@ const UpdateUser = () => {
 								))}
 						</Select>
 					</Form.Item>
+					<Form.Item label="Fecha de visita">
+						<DatePicker
+							selected={startDate}
+							dateFormat="dd/MM/yyyy"
+							onChange={(date) => setStartDate(date)}
+							inline
+						/>
+					</Form.Item>
 				</Form>
-				<Form.Item label="Fecha">
-					<Input type="text" name="fecha"></Input>
-				</Form.Item>
 			</Modal>
 
 			<Modal

@@ -25,6 +25,13 @@ export default function UserClientsTable({
 			render: (text) => <p>{text}</p>,
 		},
 		{
+			title: 'Fecha de visita',
+			dataIndex: 'fecha',
+			key: '2',
+
+			render: (text) => <p>{text}</p>,
+		},
+		{
 			title: (
 				<Button
 					className="bg-blue-500"
@@ -33,15 +40,15 @@ export default function UserClientsTable({
 					type="success"
 					block
 				>
-					Clientes
+					Asignar cliente
 				</Button>
 			),
-			key: '2',
+			key: '3',
 			width: 300,
 		},
 		{
 			title: 'Acciones',
-			key: '3',
+			key: '4',
 			width: 20,
 			render: (item) => (
 				<Button

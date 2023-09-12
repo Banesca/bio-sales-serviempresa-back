@@ -860,7 +860,7 @@ const ProductForm = (props) => {
 									<Button icon={<UploadOutlined />}>Subir imagen</Button>
 								</Upload>
 							</Form.Item>
-						</Col>
+						</Col>uploadProps
 					</Row>
 					<Row>
 						<Col

@@ -31,7 +31,7 @@ export default function UserBusinessTable({
 					type="success"
 					block
 				>
-					Sucursales
+					Asignar sucursal 
 				</Button>
 			),
 			key: '2',

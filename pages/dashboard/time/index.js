@@ -4,6 +4,7 @@ import Title from '../../../components/shared/title';
 import { Button, ConfigProvider, Space, Table } from 'antd';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
+
 import {
 	DeleteOutlined,
 	EditOutlined,
