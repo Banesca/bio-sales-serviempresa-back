@@ -1,15 +1,24 @@
-import { Button, Card, Col, ConfigProvider, Form, Modal, Row, Select, Space, Table, Meta } from 'antd';
+import {
+	Button,
+	Card,
+	Col,
+	ConfigProvider,
+	Form,
+	Modal,
+	Row,
+	Select,
+	Space,
+	Table,
+	Meta,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
-import { ip } from "/util/environment.js";
-import {
-	FileImageOutlined
-} from '@ant-design/icons';
-
+import { ip } from '/util/environment.js';
+import { FileImageOutlined } from '@ant-design/icons';
 
 const Merchandising = () => {
 	const { requestHandler } = useRequest();
@@ -56,7 +65,7 @@ const Merchandising = () => {
 					size="small"
 					style={{ justifyContent: 'center', display: 'flex' }}
 				>
-					{ /*<Button
+					{/*<Button
 						type="primary"
 						onClick={() => {
 							setLoading(true);
@@ -125,7 +134,7 @@ const Merchandising = () => {
 					<FileImageOutlined />
 				</Button>
 			),
-		}
+		},
 	];
 	const columns3 = [
 		{
@@ -157,51 +166,48 @@ const Merchandising = () => {
 			dataIndex: 'fullname',
 			key: 5,
 			render: (text) => <p>{text}</p>,
-		}
+		},
 	];
-
 
 	const showModal = (reporte) => {
 		setOpen(true);
-		setReportVisitDetail(reporte)
-	}
+		setReportVisitDetail(reporte);
+	};
 
 	useEffect(() => {
 		getUsers();
 		getClients();
 	}, []);
 
-
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
-			value = value.data.filter((b) => b.idProfileFk == 5
-			);
+			value = value.data.filter((b) => b.idProfileFk == 5);
 			setUsers(value);
 		}
 	};
 
-
-	const handleOnChange = async value => {
-		let id = value
-		const res = await requestHandler.get(`/api/v2/reportvisit/list/${value}/10`);
+	const handleOnChange = async (value) => {
+		let id = value;
+		const res = await requestHandler.get(
+			`/api/v2/reportvisit/list/${value}/10`
+		);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
-			value = value.response
+			value = value.response;
 			setReportVisit(value);
 			let merchandise = users.filter((b) => b.idUser == id);
-			setUserSelected(merchandise[0])
-
+			setUserSelected(merchandise[0]);
 		}
-	}
+	};
 
-
-	const getSuggestedProducts = async idClient => {
-		const response = await requestHandler.get(`/api/v2/productclient/list/${idClient}`);
+	const getSuggestedProducts = async (idClient) => {
+		const response = await requestHandler.get(
+			`/api/v2/productclient/list/${idClient}`
+		);
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
-
 		}
 	};
 
@@ -209,21 +215,19 @@ const Merchandising = () => {
 		setOpen(false);
 	};
 
-
 	const getClients = async () => {
 		const res = await requestHandler.get('/api/v2/client/list');
 		if (!res.isLeft()) {
 			let clientsList = res.value.getValue().response;
-		    clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
+			clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
 			setClients(clientsList);
 		}
-	}
-
+	};
 
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Reporte de merchandise'}></Title>
+				<Title title={'Reporte de visita merchandise'}></Title>
 				<Row>
 					<Col span={12}>
 						<Form.Item
@@ -256,10 +260,9 @@ const Merchandising = () => {
 						<Table columns={columns2} dataSource={reportVisit} />
 					</ConfigProvider>
 					<h1 className="text-center text-4xl font-semibold">
-						Reporte
+						Productos sugeridos por merchandise
 					</h1>
 					<div className="w-full">
-						<h1 className="text-3xl text-center my-4">Productos sugeridos</h1>
 						<Row>
 							<Col span={12}>
 								<Form.Item
@@ -272,7 +275,11 @@ const Merchandising = () => {
 									]}
 									name="selectClient"
 								>
-									<Select onSelect={(value, event) => getSuggestedProducts(value, event)}>
+									<Select
+										onSelect={(value, event) =>
+											getSuggestedProducts(value, event)
+										}
+									>
 										{clients &&
 											clients.map((c, i) => (
 												<Select.Option value={c.idClient} key={c.idClient}>
@@ -303,21 +310,25 @@ const Merchandising = () => {
 						<Button danger key="cancel" onClick={handleCancel}>
 							Cancelar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
 				<Card>
 					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image}`} />
+						<img
+							alt="example"
+							src={`${ip}:8078/visit/${reportVisitDetail.image}`}
+						/>
 					</Card.Grid>
 					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-						<img alt="example" src={`${ip}:8078/visit/${reportVisitDetail.image2}`} />
+						<img
+							alt="example"
+							src={`${ip}:8078/visit/${reportVisitDetail.image2}`}
+						/>
 					</Card.Grid>
 				</Card>
 			</Modal>
-
-		</DashboardLayout >
-
+		</DashboardLayout>
 	);
 };
 

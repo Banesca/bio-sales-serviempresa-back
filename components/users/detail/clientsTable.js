@@ -1,4 +1,4 @@
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
@@ -9,6 +9,8 @@ export default function UserClientsTable({
 	setConfirmDelete,
 	handleAssignClientsToSeller,
 	setIsAssignClientOpen,
+	setEditClientOpen,
+	setEditClient
 }) {
 	const [log, setLog] = useState();
 
@@ -47,8 +49,23 @@ export default function UserClientsTable({
 			width: 300,
 		},
 		{
-			title: 'Acciones',
+			title: 'Editar',
 			key: '4',
+			width: 20,
+			render: (item) => (
+				<Button
+					type="primary"
+					className="bg-blue-500"
+					disabled={log == 1 ? false : true}
+					onClick={() => openEditClient(item)}
+				>
+					<EditOutlined />
+				</Button>
+			),
+		},
+		{
+			title: 'Acciones',
+			key: '5',
 			width: 20,
 			render: (item) => (
 				<Button
@@ -71,6 +88,10 @@ export default function UserClientsTable({
 
 	const openAssignClient = () => {
 		setIsAssignClientOpen(true);
+	};
+	const openEditClient = (item) => {
+		setEditClient(item)
+		setEditClientOpen(true);
 	};
 
 	return (

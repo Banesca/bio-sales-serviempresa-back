@@ -55,14 +55,14 @@ const UsersTable = ({
 			key: 5,
 			render: (text, _, record) => (
 				<Space size="middle" style={{}}>
-					   <Button
-							className="flex justify-center items-center"
-							onClick={() => {
-								router.push(`/dashboard/users/${_.idUser}`);
-							}}
-						>
-							<EyeTwoTone />
-						</Button>
+					<Button
+						className="flex justify-center items-center"
+						onClick={() => {
+							router.push(`/dashboard/users/${_.idUser}`);
+						}}
+					>
+						<EyeTwoTone />
+					</Button>
 					{log == PROFILES.MASTER ? (
 						<Button
 							className="flex justify-center items-center"
@@ -122,7 +122,7 @@ const UsersTable = ({
 			</ConfigProvider>
 
 			<Modal
-				title='Confirmación'
+				title="Confirmación"
 				open={isModalOpen}
 				onOk={() => handleCloseModal(true)}
 				onCancel={() => handleCloseModal(false)}
@@ -140,10 +140,12 @@ const UsersTable = ({
 						>
 							Eliminar
 						</Button>
-					</div>
+					</div>,
 				]}
 			>
-				<p>¿{`Estás seguro de eliminar al usuario ${currentUser?.fullname}`}?</p>
+				<p>
+					¿{`Estás seguro de eliminar al usuario ${currentUser?.fullname}`}?
+				</p>
 			</Modal>
 		</div>
 	);

@@ -303,10 +303,13 @@ const UserForm = ({
 
 					<Form.Item label="Foto de perfil" name="file">
 						<Upload
+							name="avatar"
+							listType="picture-card"
+							className="avatar-uploader"
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
-							/* {...uploadProps} */
+							
 						>
 							<Button> Cargar imágen</Button>
 						</Upload>

@@ -27,7 +27,7 @@ import UserClientsTable from '../../../../components/users/detail/clientsTable';
 import { AimOutlined, HighlightOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { idClient } from '../../../../util/environment';
-import { string } from 'prop-types';
+import { any, string } from 'prop-types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -48,9 +48,11 @@ const UpdateUser = () => {
 	const [businessToRemove, setBusinessToRemove] = useState();
 	const [confirmRemoveClient, setConfirmRemoveClient] = useState(false);
 	const [clientToRemove, setClientToRemove] = useState();
+	const [edit, setEditClient] = useState([]);
 	const { sellerClients } = useUser();
 	const [sellerClientsAdd, setsellerClientsAdd] = useState([]);
 	const [isAssignClientOpen, setIsAssignClientOpen] = useState(false);
+	const [isEditClientOpen, setEditClientOpen] = useState(false);
 	const router = useRouter();
 	const { id } = router.query;
 	const { requestHandler } = useRequest();
@@ -269,6 +271,37 @@ const UpdateUser = () => {
 		setIsAssignClientOpen(false);
 	};
 
+	const editClient = async () => {
+
+
+		let day = startDate.getDate();
+		let month = startDate.getMonth() + 1;
+		let year = startDate.getFullYear();
+		var fecha2 = day + '-' + month + '-' + year;
+
+		
+		const res = await requestHandler.delete(
+			`/api/v2/user/delete/client/${edit.idSellersClient}`
+		);
+
+		const res2 = await requestHandler.post('/api/v2/user/assign/client', {
+			idUserFk: user.idUser,
+			idClientFk: edit.nameClient,
+			fecha: fecha2,
+		});
+
+		if (res.isLeft()) {
+			setLoading(false);
+			message.error('Ha ocurrido un error');
+			throw res.value.getErrorValue();
+		}
+		await getSellerClients(id);
+		setLoading(false);
+		message.success('Cliente Actualizado');
+	};
+
+
+
 	return (
 		<DashboardLayout>
 			{loading ? (
@@ -333,6 +366,8 @@ const UpdateUser = () => {
 								setClientToRemove={setClientToRemove}
 								setIsAssignClientOpen={setIsAssignClientOpen}
 								handleAssignClientsToSeller={handleAssignClientsToSeller}
+								setEditClientOpen={setEditClientOpen}
+								setEditClient={setEditClient}
 							/>
 						</List.Item>
 					</List>
@@ -429,6 +464,60 @@ const UpdateUser = () => {
 			</Modal>
 
 			<Modal
+				title="Editar clientes"
+				open={isEditClientOpen}
+				onCancel={() => setEditClientOpen(false)}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-6">
+						<Button
+							key="cancel"
+							danger
+							onClick={() => {
+								setEditClientOpen(false);
+								setClientsToAssign([]);
+							}}
+						>
+							Cancelar
+						</Button>
+						<Button
+							className="bg-blue-500"
+							key="asigne"
+							type="primary"
+							onClick={() => editClient(false)}
+						>
+							Editar
+						</Button>
+					</div>,
+				]}
+			>
+				<Form>
+					<Form.Item label="Clientes">
+						<Select
+							disabled="true"
+							value={edit.nameClient}  
+							onChange={(v) => setClientsToAssign(v)}
+						>
+							{clients &&
+								clients.map((client) => (
+									<Select.Option key={client.idClient} value={client.idClient}>
+										{client.nameClient}
+									</Select.Option>
+								))}
+						</Select>
+					</Form.Item>
+					<Form.Item label="Fecha de visita">
+						<DatePicker
+							selected={startDate}
+							dateFormat="dd/MM/yyyy"
+							onChange={(date) => setStartDate(date)}
+							inline
+						/>
+					</Form.Item>
+				</Form>
+			</Modal>
+
+			<Modal
 				open={confirmDelete}
 				title="Confirmación"
 				onCancel={() => setConfirmDelete(false)}
@@ -454,7 +543,7 @@ const UpdateUser = () => {
 
 			<Modal
 				open={confirmRemoveClient}
-				title="Confirmación2"
+				title="Confirmación"
 				onCancel={() => setConfirmRemoveClient(false)}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
