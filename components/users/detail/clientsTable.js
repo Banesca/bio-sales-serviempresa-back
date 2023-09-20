@@ -7,7 +7,6 @@ export default function UserClientsTable({
 	clients,
 	setClientToRemove,
 	setConfirmDelete,
-	handleAssignClientsToSeller,
 	setIsAssignClientOpen,
 	setEditClientOpen,
 	setEditClient

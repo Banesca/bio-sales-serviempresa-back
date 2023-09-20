@@ -62,6 +62,8 @@ const UpdateOrderPage = () => {
 	} = useCategoryContext();
 	const { brands, getBrands } = useBrandContext();
 	const { loading, setLoading } = useLoadingContext();
+	const [Payment, setPayment] = useState();
+	const [PaymentAdd, setPaymentToAdd] = useState([]);
 
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [currentProduct, setCurrentProduct] = useState();
@@ -94,20 +96,14 @@ const UpdateOrderPage = () => {
 		}
 	};
 
-	const TypesPaymentRequest = async () => {
-		setLoading(true);
-		try {
-			await getCategories();
-			await getSubCategories();
-			await getLines();
-			const typesPayment = await getTypesPayment();
-		} catch (error) {
-			message.error('Error al cargar los metodos de pago');
-		} finally {
-			setLoading(false);
+	const getPayments = async () => {
+		const res = await requestHandler.get('/api/v2/utils/typepayment');
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
 		}
-		
-	}; 
+		setPayment(res.value.getValue().response);
+		console.log(Payment);
+	};
 
 	const getBrandsRequest = async (id) => {
 		setLoading(true);
@@ -135,6 +131,7 @@ const UpdateOrderPage = () => {
 		if (products) {
 			addKeys(products);
 			setProduct(products);
+			getPayments();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [products]);
@@ -148,22 +145,9 @@ const UpdateOrderPage = () => {
 		setTotal(value.message[0].TOTAL);
 	};
 
-	const createPayCondition = async (date, note) => {
-		/* const res = await requestHandler.post('/api/v2/paymentcondition/add', {
-			date,
-			note
-		}); */
-		const res = await requestHandler.get('/api/v2/paymentcondition/list');
-		if (res.isLeft()) {
-			return;
-		}
-		const value = res.value.getValue();
-	};
-
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
-			createPayCondition(currentOrder.fechaEntrega, 'note');
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
@@ -339,7 +323,7 @@ const UpdateOrderPage = () => {
 									setProductsQuantity={setProductsQuantity}
 									confirmProductQuantity={confirmProductQuantity}
 								/>
-								<Card className="rounded-2xl shadow-lg">
+								<Card className="rounded-2x1 shadow-lg">
 									<List dataSource={currentOrder?.body}>
 										<List.Item>
 											<p>
@@ -353,13 +337,24 @@ const UpdateOrderPage = () => {
 											<p>
 												<strong>Metodo de pago</strong>
 											</p>
-											<p>
-												<Form>
-													<Form.Item className="w-32 my-auto">
-														<Select />
-													</Form.Item>
-												</Form>
-											</p>
+
+											<Select
+												mode="multiple"
+												placeholder="Ingrese metodos de pago"
+												style={{ width: '50%' }}
+												value={PaymentAdd}
+												onChange={(v) => setPaymentToAdd(v)}
+											>
+												{Payment &&
+													Payment.map((Payment) => (
+														<Select.Option
+															key={Payment.idPymentMethod}
+															value={Payment.idPymentMethod}
+														>
+															{Payment.pymentMethod}
+														</Select.Option>
+													))}
+											</Select>
 										</List.Item>
 										<List.Item>
 											<div></div>
@@ -474,7 +469,23 @@ const UpdateOrderPage = () => {
 						<p>
 							<Form>
 								<Form.Item className="w-32 my-auto">
-									<Select />
+									<Select
+										mode="multiple"
+										placeholder="Ingrese metodos de pago"
+										style={{ width: '100%' }}
+										value={PaymentAdd}
+										onChange={(v) => setPaymentToAdd(v)}
+									>
+										{Payment &&
+											Payment.map((Payment) => (
+												<Select.Option
+													key={Payment.idPymentMethod}
+													value={Payment.idPymentMethod}
+												>
+													{Payment.pymentMethod}
+												</Select.Option>
+											))}
+									</Select>
 								</Form.Item>
 							</Form>
 						</p>

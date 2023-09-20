@@ -280,11 +280,11 @@ const ImportProducts = () => {
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
 			setData(uploadData);
-			addKeys(data)
+			addKeys(data);
 			setData(data);
 		};
 	};
-	
+
 	const handleChange = (info) => {
 		let newFileList = [...info.fileList];
 		newFileList = newFileList.slice(-1);
@@ -320,6 +320,7 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
+		console.log(formatData);
 		for (let product in data) {
 			for (let c in code) {
 				if (product.barCode == c.barCode) {
@@ -333,7 +334,7 @@ const ImportProducts = () => {
 							lista: formatData,
 						}
 					);
-					data;
+					console.log(res);
 					if (res.isLeft()) {
 						return message.error('Ha ocurrido un error');
 					}
@@ -388,6 +389,7 @@ const ImportProducts = () => {
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
 							<Button
+								className="bg-blue-500"
 								disabled={!data?.length > 0}
 								onClick={handleSendData}
 								type="primary"

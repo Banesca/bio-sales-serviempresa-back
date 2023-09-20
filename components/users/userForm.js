@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 
 const UserForm = ({
@@ -29,22 +29,14 @@ const UserForm = ({
 		idProfileFk: user.idProfileFk || null,
 	});
 
-	const [fileList, setFileList] = useState([]);
-
 	const regexpTlp =
 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.;])[A-Za-z\d$@$!%*?&]{8,15}/;
 	const [loading, setLoading] = useState(false);
 	const [businessByUser, setBusinessByUser] = useState(userBusiness);
 	const [click, setClick] = useState(false);
-
-	const handleChange = (e) => {
-		setUserData((prevData) => ({
-			...prevData,
-			[e.target.name]: e.target.value,
-		}));
-	};
-
+	const [imageUrl, setImageUrl] = useState();
 	const [form] = Form.useForm();
+
 	const onReset = () => {
 		setUserData({
 			fullname: '',
@@ -125,66 +117,52 @@ const UserForm = ({
 		router.push('/dashboard/users');
 		setLoading(true);
 	};
-
-	const fileProgress = (fileInput) => {
-		const img = new Image();
-		img.src = window.URL.createObjectURL(fileInput);
-		img.onload = () => {
-			setIsValidImgSize({ width: img.width, height: img.height });
-			if (img.width <= 600 && img.height <= 600) {
-				setIsValidImgSize(true);
-				return true;
-			} else {
-				setIsValidImgSize(false);
-				message.error('La resolución debe ser menor a 600x600');
-				return false;
-			}
-		};
+	
+	const handleChange = (info) => {
+		if (info.file.status === 'uploading') {
+			setLoading(true);
+			return;
+		}
+		if (info.file.status === 'done') {
+			getBase64(info.file.originFileObj, (url) => {
+				setLoading(false);
+				setImageUrl(url);
+			});
+		}
+		
 	};
 
-	const uploadProps = {
-		beforeUpload: (file) => {
-			fileProgress(file);
-			const isJpgOrPng =
-				file.type === 'image/jpeg' ||
-				file.type === 'image/png' ||
-				file.type === 'image/jpeg';
-			if (!isJpgOrPng) {
-				message.error('Solo puedes subir imágenes JPG/PNG!');
-			}
-			const isLt2M = file.size / 1024 / 1024 < 2;
-			if (!isLt2M) {
-				message.error('El tamaño máximo es 2MB!');
-			}
-			let isValid = isJpgOrPng && isLt2M;
-			if (isValid) {
-				setFile(file);
-			}
-			return isValid;
-		},
-		onChange: (info) => {
-			let newFileList = [...info.fileList];
-			newFileList = newFileList.slice(-1);
-
-			if (newFileList.length === 0) {
-				setFileList(newFileList[0]);
-				return message.success('Archivo eliminado');
-			}
-
-			setFileList(newFileList);
-			if (newFileList[0].status == 'done') {
-				if (!isValidImgSize) {
-					setFileList([]);
-					return;
-				}
-				setLoading(true);
-				message.success(`${newFileList[0].name} ha sido cargado`);
-			} else if (newFileList[0].status == 'error') {
-				message.error('Ha ocurrido un error');
-			}
-			setLoading(false);
-		},
+	const getBase64 = (img, callback) => {
+		const reader = new FileReader();
+		reader.addEventListener('load', () => callback(reader.result));
+		reader.readAsDataURL(img);
+		console.log(img);
 	};
+
+	const beforeUpload = (file) => {
+		const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+		if (!isJpgOrPng) {
+			message.error('You can only upload JPG/PNG file!');
+		}
+		const isLt2M = file.size / 1024 / 1024 < 2;
+		if (!isLt2M) {
+			message.error('Image must smaller than 2MB!');
+		}
+		return isJpgOrPng && isLt2M;
+	};
+
+	const uploadButton = (
+		<div>
+			{loading ? <LoadingOutlined /> : <PlusOutlined />}
+			<div
+				style={{
+					marginTop: 8,
+				}}
+			>
+				Upload
+			</div>
+		</div>
+	);
 
 	return (
 		<div style={{ overfl: 'scroll' }}>
@@ -304,22 +282,24 @@ const UserForm = ({
 					<Form.Item label="Foto de perfil" name="file">
 						<Upload
 							name="avatar"
-							listType="picture-card"
+							listType="picture-circle"
 							className="avatar-uploader"
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
-							
 						>
-							<Button> Cargar imágen</Button>
+							{imageUrl ? (
+								<img
+									src={imageUrl}
+									alt="avatar"
+									style={{
+										width: '100%',
+									}}
+								/>
+							) : (
+								uploadButton
+							)}
 						</Upload>
-						<Image
-							width={100}
-							height={100}
-							src="https://api.menusoftware.info:8002/user/D_NQ_NP_966020-MLV52933916831_122022-V.jpg"
-							style={{ with: '50px', height: '50px' }}
-							alt="image"
-						/>
 					</Form.Item>
 
 					{!update && userData.idProfileFk && (

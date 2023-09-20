@@ -25,75 +25,50 @@ const Merchandising = () => {
 	const [users, setUsers] = useState([]);
 	const [userSelected, setUserSelected] = useState([]);
 	const [open, setOpen] = useState(false);
+	const [open2, setOpen2] = useState(false);
 	const [message, setMessage] = useState('');
 	const [clients, setClients] = useState('');
 	const [reportVisit, setReportVisit] = useState([]);
+	const [reportProduct, setReportProduct] = useState([]);
+	const [reportInventario, setReportInventario] = useState([]);
 	const [suggestedProductsList, setSuggestedProductsList] = useState('');
 	const [reportVisitDetail, setReportVisitDetail] = useState([]);
+	const [productsDetail, setProductsDetail] = useState([]);
 	const { filtered } = useProductFilter();
 	const [modalText, setModalText] = useState();
 
 	const columns = [
 		{
-			title: 'Producto',
-			dataIndex: 'nameProduct',
+			title: 'Nombre',
+			dataIndex: 'name',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Código',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
+			title: 'Descripcion',
+			dataIndex: 'description',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Precio',
-			width: '160px',
-			dataIndex: 'barCode',
-			responsive: ['md'],
-			key: 2,
+			title: 'fecha',
+			dataIndex: 'fecha',
+			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Acciones',
-			align: 'center',
-			key: 6,
-			render: (product, index) => (
-				<Space
-					size="small"
-					style={{ justifyContent: 'center', display: 'flex' }}
-				>
-					{/*<Button
-						type="primary"
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/${product.idProduct}`);
-						}}
-					>
-						<EyeTwoTone />
-					</Button>
-					
-					<Button
-						onClick={() => {
-							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
-						}}
-					>
-						<EditOutlined />
-					</Button>
-					<Button
-						type="primary"
-						danger
-						onClick={() => handleOpenDeleteModal(product)}
-					>
-						<DeleteOutlined />
-					</Button> */}
-				</Space>
+			title: 'Ver lista',
+			dataIndex: 'idUtilsH',
+			key: '4',
+			render: (record) => (
+				<Button onClick={() => showModal2(record)}>
+					<FileImageOutlined />
+				</Button>
 			),
 		},
+		
 	];
+	
 	const columns2 = [
 		{
 			title: 'Nro. de reporte',
@@ -169,9 +144,37 @@ const Merchandising = () => {
 		},
 	];
 
+	const columns4 = [
+		{
+			title: 'Imagen',
+			dataIndex: 'urlImagenProduct',
+			key: 1,
+			
+		},
+		{
+			title: 'Nombre del producto',
+			dataIndex: 'nameProduct',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title:'Codigo de barra',
+			dataIndex: 'barCode',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		}
+		
+	];
+
 	const showModal = (reporte) => {
 		setOpen(true);
 		setReportVisitDetail(reporte);
+	};
+	const showModal2 = (productos) => {
+		console.log(productos)
+		setOpen2(true);
+		setProductsDetail(productos);
+		handleOnChang3(productos); 
 	};
 
 	useEffect(() => {
@@ -193,6 +196,7 @@ const Merchandising = () => {
 		const res = await requestHandler.get(
 			`/api/v2/reportvisit/list/${value}/10`
 		);
+		console.log(res)
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -201,6 +205,36 @@ const Merchandising = () => {
 			setUserSelected(merchandise[0]);
 		}
 	};
+
+
+	const handleOnChang2  = async (value) => {
+		let id = value;
+		const res = await requestHandler.get(
+			`/api/v2/utilh/list/byuser/${value}`
+		);
+		console.log(res);
+		if (!res.isLeft()) {
+			let value = res.value.getValue();
+			value = value.response;
+			setReportProduct(value);
+			let merchandise = users.filter((b) => b.idUser == id);
+			setUserSelected(merchandise[0]);
+		}
+	};
+
+	const handleOnChang3  = async (value) => {
+		
+		const res = await requestHandler.get(
+			`/api/v2/utilb/list/${value}`
+		);
+		console.log(res);
+		if (!res.isLeft()) {
+			let value = res.value.getValue();
+			value = value.response;
+			setReportInventario(value);
+		}
+	};
+
 
 	const getSuggestedProducts = async (idClient) => {
 		const response = await requestHandler.get(
@@ -213,6 +247,9 @@ const Merchandising = () => {
 
 	const handleCancel = () => {
 		setOpen(false);
+	};
+	const handleCancel2 = () => {
+		setOpen2(false);
 	};
 
 	const getClients = async () => {
@@ -242,7 +279,7 @@ const Merchandising = () => {
 						>
 							<Select onSelect={(value, event) => handleOnChange(value, event)}>
 								{users &&
-									users.map((c, i) => (
+									users.map((c) => (
 										<Select.Option value={c.idUser} key={c.idUser}>
 											{c.fullname}
 										</Select.Option>
@@ -299,6 +336,47 @@ const Merchandising = () => {
 						</ConfigProvider>
 					</div>
 				</div>
+
+				
+			</div>
+
+			<div className="m-4 p-4">
+				<Title title={'Inventario merchandise'}></Title>
+				<Row>
+					<Col span={12}>
+						<Form.Item
+							label="Merchandise"
+							rules={[
+								{
+									required: true,
+									message: 'Elige un merchandise',
+								},
+							]}
+							name="selectClient"
+						>
+							<Select onSelect={(value, event) => handleOnChang2(value, event)}>
+								{users &&
+									users.map((c) => (
+										<Select.Option value={c.idUser} key={c.idUser}>
+											{c.fullname}
+										</Select.Option>
+									))}
+							</Select>
+						</Form.Item>
+					</Col>
+				</Row>
+				<div className="flex flex-col gap-5">
+					<ConfigProvider
+						renderEmpty={
+							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
+						}
+					>
+						<Table columns={columns} dataSource={reportProduct} />
+					</ConfigProvider>
+				
+				</div>
+
+				
 			</div>
 			<Modal
 				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / Usuario: ${userSelected.fullname}`}
@@ -327,6 +405,21 @@ const Merchandising = () => {
 						/>
 					</Card.Grid>
 				</Card>
+			</Modal>
+			<Modal
+				open={open2}
+				onCancel={handleCancel2}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-1">
+						<Button danger key="cancel" onClick={handleCancel2}>
+							Cancelar
+						</Button>
+					</div>,
+				]}
+			>
+				
+				<Table columns={columns4}  dataSource={reportInventario}  />
 			</Modal>
 		</DashboardLayout>
 	);

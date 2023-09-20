@@ -65,7 +65,7 @@ const itemsMenu = [
 	]),
 	getItem('Usuarios', '6', <UserOutlined />),
 	getItem('Clientes', '7', <TeamOutlined />),
-	getItem('Pedidos', '10', <FaShoppingCart />),
+	getItem('Ordenes', '10', <FaShoppingCart />),
 	getItem('Reportes', '11', <PieChartFilled />),
 	getItem('Horarios', '12', <ClockCircleFilled />),
 	getItem('Condiciones de pago', '8', <DollarCircleFilled />),

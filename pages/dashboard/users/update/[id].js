@@ -60,7 +60,8 @@ const UpdateUser = () => {
 	const generalContext = useContext(GeneralContext);
 	const { business } = useBusinessProvider();
 	const [startDate, setStartDate] = useState(new Date());
-
+	const [minDate, setMinDate] = useState(new Date(),1);
+	
 	const getUserRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -272,35 +273,28 @@ const UpdateUser = () => {
 	};
 
 	const editClient = async () => {
-
-
 		let day = startDate.getDate();
 		let month = startDate.getMonth() + 1;
 		let year = startDate.getFullYear();
 		var fecha2 = day + '-' + month + '-' + year;
 
-		
 		const res = await requestHandler.delete(
 			`/api/v2/user/delete/client/${edit.idSellersClient}`
 		);
 
+		console.log(edit.idSellersClient);
+		console.log(edit.idClientFk);
 		const res2 = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
-			idClientFk: edit.nameClient,
+			idClientFk: edit.idClientFk,
 			fecha: fecha2,
 		});
 
-		if (res.isLeft()) {
-			setLoading(false);
-			message.error('Ha ocurrido un error');
-			throw res.value.getErrorValue();
-		}
+		console.log(res2);
 		await getSellerClients(id);
 		setLoading(false);
 		message.success('Cliente Actualizado');
 	};
-
-
 
 	return (
 		<DashboardLayout>
@@ -458,6 +452,8 @@ const UpdateUser = () => {
 							dateFormat="dd/MM/yyyy"
 							onChange={(date) => setStartDate(date)}
 							inline
+							minDate={minDate}
+							
 						/>
 					</Form.Item>
 				</Form>
@@ -495,15 +491,10 @@ const UpdateUser = () => {
 					<Form.Item label="Clientes">
 						<Select
 							disabled="true"
-							value={edit.nameClient}  
+							value={edit.nameClient}
 							onChange={(v) => setClientsToAssign(v)}
 						>
-							{clients &&
-								clients.map((client) => (
-									<Select.Option key={client.idClient} value={client.idClient}>
-										{client.nameClient}
-									</Select.Option>
-								))}
+							<Select.Option value={clientsToAssign}></Select.Option>
 						</Select>
 					</Form.Item>
 					<Form.Item label="Fecha de visita">
@@ -511,6 +502,7 @@ const UpdateUser = () => {
 							selected={startDate}
 							dateFormat="dd/MM/yyyy"
 							onChange={(date) => setStartDate(date)}
+							minDate={minDate}
 							inline
 						/>
 					</Form.Item>
