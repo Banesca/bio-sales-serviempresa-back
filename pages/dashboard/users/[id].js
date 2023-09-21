@@ -17,7 +17,8 @@ import Link from 'next/link';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import Title from '../../../components/shared/title';
 import UserForm from '/components/users/userForm';
-
+import UserClientsTable2 from '../../../components/users/detail/clients2';
+import UserBusinessTable2 from '../../../components/users/detail/business2';
 const UserDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
@@ -262,11 +263,10 @@ const UserDetail = () => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
 
-	
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
 		if (data.pin !== '') {
-		await upPass(id, data)
+			await upPass(id, data);
 		}
 	};
 	return (
@@ -297,7 +297,7 @@ const UserDetail = () => {
 									<p>Ultima ubicación</p>
 									<Button
 										type="primary"
-										className='bg-blue-500'
+										className="bg-blue-500"
 										disabled={disabled}
 										onClick={() => getLocation(id)}
 									>
@@ -305,24 +305,25 @@ const UserDetail = () => {
 									</Button>
 								</List.Item>
 							)}
-							
 						</List>
 					</Card>
 
 					{profile?.id != PROFILES.MASTER && (
 						<>
-							<UserBusinessTable
+							<UserBusinessTable2
 								business={businessByUser}
 								setConfirmDelete={setConfirmDelete}
 								setBusinessToRemove={setBusinessToRemove}
 							/>
-							{profile?.id == PROFILES.SELLER && (
-								<UserClientsTable
-									clients={sellerClients}
-									setConfirmDelete={setConfirmRemoveClient}
-									setClientToRemove={setClientToRemove}
-								/>
-							)}
+						</>
+					)}
+					{profile?.id == PROFILES.SELLER && (
+						<>
+							<UserClientsTable2
+								clients={sellerClients}
+								setConfirmDelete={setConfirmRemoveClient}
+								setClientToRemove={setClientToRemove}
+							/>
 						</>
 					)}
 				</div>

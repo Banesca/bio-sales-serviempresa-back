@@ -181,10 +181,12 @@ export default function OrdersTable({ orders }) {
 							>
 								<EyeTwoTone />
 							</Button>
+							
 						) : (
 							<Button onClick={() => handleSeeUpdate(order, record)}>
 								<EditOutlined />
 							</Button>
+							
 						)
 					) : users.fullname !== text ||
 					  order.idStatusOrder == 2 ||  order.idStatusOrder == 6 ||
@@ -196,6 +198,7 @@ export default function OrdersTable({ orders }) {
 						<Button onClick={() => handleSeeUpdate(order, record)}>
 							<EditOutlined />
 						</Button>
+						
 					)}
 				</Space>
 			),

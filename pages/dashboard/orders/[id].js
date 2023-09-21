@@ -13,12 +13,15 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
+import DocPdf from './DocPdf';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
 const OrderDetail = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
 	const [log, setLog] = useState();
+	const [verPdf, setVerPdf] = useState(false);
 
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
@@ -107,13 +110,37 @@ const OrderDetail = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<div style={{ display: 'flex', width: '100%' }}>
+				<div style={{ display: 'flex', width: '90%' }}>
 					<Title
 						title="Detalle de pédido"
 						path="/dashboard/orders"
 						goBack={1}
 					/>
+					<div style={{ display: 'flex', width: '12%' }}>
+						<PDFDownloadLink
+							document={
+								<DocPdf
+									currentOrder={currentOrder}
+									orderStatusToUs={orderStatusToUse}
+									user={user}
+								/>
+							}
+							fileName='Orden N.pdf'
+						>
+							<Button
+								htmlType="submit"
+								type="success"
+								block
+								onClick={() => {
+									setVerPdf();
+								}}
+							>
+								Imprimir recibo
+							</Button>
+						</PDFDownloadLink>
+					</div>
 				</div>
+
 				<List
 					style={{
 						width: '96%',
@@ -125,8 +152,8 @@ const OrderDetail = () => {
 					}}
 				>
 					{log == user?.isUser ||
-						userProfile == PROFILES.MASTER ||
-						userProfile == PROFILES.ADMIN ? (
+					userProfile == PROFILES.MASTER ||
+					userProfile == PROFILES.ADMIN ? (
 						<ChangeOrderStatus
 							status={currentOrder.idStatusOrder}
 							handleOrder={handleOrder}

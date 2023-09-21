@@ -9,6 +9,7 @@ import {
 	Form,
 	Select,
 	Card,
+	Table,
 } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
@@ -71,6 +72,23 @@ const UpdateOrderPage = () => {
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
+
+	const columns = [
+		{
+			title: 'Metodo de pago',
+			dataIndex: 'pymentMethod',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Monto a pagar',
+			/* dataIndex: 'nameProduct', */
+			key: 3,
+			
+		},
+	];
+
+
 
 	const getOrderRequest = async (id) => {
 		setLoading(true);
@@ -339,7 +357,7 @@ const UpdateOrderPage = () => {
 											</p>
 
 											<Select
-												mode="multiple"
+												/* mode="multiple" */
 												placeholder="Ingrese metodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
@@ -356,6 +374,8 @@ const UpdateOrderPage = () => {
 													))}
 											</Select>
 										</List.Item>
+
+										<Table columns={columns}  dataSource={Payment}  />
 										<List.Item>
 											<div></div>
 											<div className="flex justify-end">
