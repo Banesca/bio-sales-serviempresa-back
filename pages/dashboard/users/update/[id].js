@@ -70,7 +70,6 @@ const UpdateUser = () => {
 				message.error('Usuario no encontrado');
 			}
 			setUser(user);
-			console.log({ user });
 			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
 			setLoading(false);
 		} catch (error) {
@@ -101,14 +100,18 @@ const UpdateUser = () => {
 
 	const getSellerClients = async (userId) => {
 		setLoading(true);
-		const res = await requestHandler.get(`/api/v2/user/client/${userId}`);
-		if (res.isLeft()) {
-			return;
+		try {
+			const res = await requestHandler.get(`/api/v2/user/client/${userId}`);
+			if (res.isLeft()) {
+				return;
+			}
+			const value = res.value.getValue().data;
+			setsellerClientsAdd(value);
+			console.log(sellerClientsAdd);
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+			setLoading(false);
 		}
-		const value = res.value.getValue().data;
-		setsellerClientsAdd(value);
-		console.log(sellerClientsAdd);
-		setLoading(false);
 	};
 
 	const updateUserRequest = async (data) => {
@@ -319,7 +322,9 @@ const UpdateUser = () => {
 					pin={pin}
 				/>
 			)}
-
+			{loading ? (
+				<Loading isLoading={loading} />
+			) : (
 			<Card className="w-full shadow-lg">
 				<List>
 					<List.Item key={1} style={{ padding: '10px 25px' }}>
@@ -358,6 +363,7 @@ const UpdateUser = () => {
 					</List.Item>
 				</List>
 			</Card>
+			)}
 			{profile?.id != PROFILES.SELLER && (
 				<Card className="w-full shadow-lg">
 					<List>
@@ -375,7 +381,7 @@ const UpdateUser = () => {
 					</List>
 				</Card>
 			)}
-
+		
 			<Modal
 				title="Asignar sucursal"
 				open={isModalOpen}
