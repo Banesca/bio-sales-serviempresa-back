@@ -264,15 +264,15 @@ const Merchandising = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Reporte de visita merchandise'}></Title>
+				<Title title={'Reporte de visita merchandiser'}></Title>
 				<Row>
 					<Col span={12}>
 						<Form.Item
-							label="Merchandise"
+							label="Merchandiser"
 							rules={[
 								{
 									required: true,
-									message: 'Elige un merchandise',
+									message: 'Elige un merchandiser',
 								},
 							]}
 							name="selectClient"
@@ -297,7 +297,7 @@ const Merchandising = () => {
 						<Table columns={columns2} dataSource={reportVisit} />
 					</ConfigProvider>
 					<h1 className="text-center text-4xl font-semibold">
-						Productos sugeridos por merchandise
+						Productos sugeridos por merchandiser
 					</h1>
 					<div className="w-full">
 						<Row>
@@ -341,15 +341,15 @@ const Merchandising = () => {
 			</div>
 
 			<div className="m-4 p-4">
-				<Title title={'Inventario merchandise'}></Title>
+				<Title title={'Inventario merchandiser'}></Title>
 				<Row>
 					<Col span={12}>
 						<Form.Item
-							label="Merchandise"
+							label="Merchandiser"
 							rules={[
 								{
 									required: true,
-									message: 'Elige un merchandise',
+									message: 'Elige un merchandiser',
 								},
 							]}
 							name="selectClient"

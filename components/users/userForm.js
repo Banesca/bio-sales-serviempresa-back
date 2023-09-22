@@ -159,7 +159,7 @@ const UserForm = ({
 					marginTop: 8,
 				}}
 			>
-				Upload
+				Cargar
 			</div>
 		</div>
 	);
@@ -212,6 +212,28 @@ const UserForm = ({
 					}}
 					form={form}
 				>
+					<Form.Item label="Foto de perfil" name="file">
+						<Upload
+							name="avatar"
+							listType="picture-circle"
+							className="avatar-uploader"
+							maxCount={1}
+							accept="image/png, image/jpeg"
+							multiple={false}
+						>
+							{imageUrl ? (
+								<img
+									src={imageUrl}
+									alt="avatar"
+									style={{
+										width: '100%',
+									}}
+								/>
+							) : (
+								uploadButton
+							)}
+						</Upload>
+					</Form.Item>
 					<Form.Item
 						label="Nombre y apellido"
 						name="fullname"
@@ -279,28 +301,7 @@ const UserForm = ({
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="Foto de perfil" name="file">
-						<Upload
-							name="avatar"
-							listType="picture-circle"
-							className="avatar-uploader"
-							maxCount={1}
-							accept="image/png, image/jpeg"
-							multiple={false}
-						>
-							{imageUrl ? (
-								<img
-									src={imageUrl}
-									alt="avatar"
-									style={{
-										width: '100%',
-									}}
-								/>
-							) : (
-								uploadButton
-							)}
-						</Upload>
-					</Form.Item>
+					
 
 					{!update && userData.idProfileFk && (
 						<Form.Item

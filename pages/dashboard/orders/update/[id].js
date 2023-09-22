@@ -72,6 +72,8 @@ const UpdateOrderPage = () => {
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
+	const [dataSource, setDataSource] = useState([]);
+	const [count, setCount] = useState(2);
 
 	const columns = [
 		{
@@ -82,13 +84,9 @@ const UpdateOrderPage = () => {
 		},
 		{
 			title: 'Monto a pagar',
-			/* dataIndex: 'nameProduct', */
 			key: 3,
-			
 		},
 	];
-
-
 
 	const getOrderRequest = async (id) => {
 		setLoading(true);
@@ -204,6 +202,14 @@ const UpdateOrderPage = () => {
 	const openDeleteModal = (product) => {
 		setCurrentProduct(product);
 		setDeleteOpen(true);
+	};
+
+	const handleAdd = () => {
+		console.log(Payment);
+		const newData = {
+			title: 'hola',
+		};
+		setDataSource([...dataSource, newData]);
 	};
 
 	const handleDelete = async () => {
@@ -366,6 +372,8 @@ const UpdateOrderPage = () => {
 												{Payment &&
 													Payment.map((Payment) => (
 														<Select.Option
+															onChange={handleAdd}
+															onClick={handleAdd}
 															key={Payment.idPymentMethod}
 															value={Payment.idPymentMethod}
 														>
@@ -375,7 +383,8 @@ const UpdateOrderPage = () => {
 											</Select>
 										</List.Item>
 
-										<Table columns={columns}  dataSource={Payment}  />
+										<Table columns={columns} dataSource={dataSource} />
+
 										<List.Item>
 											<div></div>
 											<div className="flex justify-end">

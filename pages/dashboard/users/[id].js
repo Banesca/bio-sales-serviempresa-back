@@ -50,7 +50,7 @@ const UserDetail = () => {
 	const [businessToAdd, setBusinessToAdd] = useState();
 	const [businessToRemove, setBusinessToRemove] = useState();
 	const [pin, setPin] = useState();
-
+	const [sellerClientsAdd, setsellerClientsAdd] = useState([]);
 	const generalContext = useContext(GeneralContext);
 
 	const { requestHandler } = useRequest();
@@ -73,6 +73,16 @@ const UserDetail = () => {
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const getSellerClient = async (userId) => {
+		const res = await requestHandler.get(`/api/v2/user/client/${userId}`);
+		if (res.isLeft()) {
+			return;
+		}
+		const value = res.value.getValue().data;
+		setsellerClientsAdd(value);
+		console.log(sellerClientsAdd);
 	};
 
 	const getClientsRequest = async () => {
@@ -113,6 +123,7 @@ const UserDetail = () => {
 		getUserRequest(id);
 		getUserBusiness(id);
 		getClientsRequest();
+		getSellerClient(id)
 		getLoc(id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -308,24 +319,13 @@ const UserDetail = () => {
 						</List>
 					</Card>
 
-					{profile?.id != PROFILES.MASTER && (
-						<>
-							<UserBusinessTable2
-								business={businessByUser}
-								setConfirmDelete={setConfirmDelete}
-								setBusinessToRemove={setBusinessToRemove}
-							/>
-						</>
-					)}
-					{profile?.id == PROFILES.SELLER && (
-						<>
-							<UserClientsTable2
-								clients={sellerClients}
-								setConfirmDelete={setConfirmRemoveClient}
-								setClientToRemove={setClientToRemove}
-							/>
-						</>
-					)}
+					<UserBusinessTable2
+						business={businessByUser}
+					/>
+
+					<UserClientsTable2
+						clients={sellerClientsAdd}
+					/>
 				</div>
 			</DashboardLayout>
 			<Loading isLoading={loading} />
