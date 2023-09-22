@@ -265,6 +265,7 @@ const UserForm = ({
 						<Input
 							type="text"
 							name="mail"
+							autoComplete="off"
 							value={userData.mail}
 							onChange={handleChange}
 						/>
@@ -355,6 +356,7 @@ const UserForm = ({
 					>
 						<Input.Password
 							type="password"
+							autoComplete="off"
 							name="pin"
 							value={userData.pin}
 							onChange={handleChange}

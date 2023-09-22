@@ -60,8 +60,8 @@ const UpdateUser = () => {
 	const generalContext = useContext(GeneralContext);
 	const { business } = useBusinessProvider();
 	const [startDate, setStartDate] = useState(new Date());
-	const [minDate, setMinDate] = useState(new Date(),1);
-	
+	const [minDate, setMinDate] = useState(new Date(), 1);
+
 	const getUserRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -72,28 +72,35 @@ const UpdateUser = () => {
 			setUser(user);
 			console.log({ user });
 			setProfile(PROFILE_LIST.filter((p) => p.id === user.idProfileFk)[0]);
+			setLoading(false);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
-		} finally {
 			setLoading(false);
 		}
 	};
 
 	const getUserBusiness = async (userId) => {
-		const res = await requestHandler.get(`/api/v2/user/branch/${userId}`);
-		if (res.isLeft()) {
-			return;
-		}
-		const value = res.value.getValue().data;
-		setBusinessByUser(value);
-		let lg = value.map((b) => b?.pin);
-		setPin(lg.length == 2 ? lg[0] : lg);
-		if (lg !== '') {
-			setPin(value[0]?.pin);
+		setLoading(true);
+		try {
+			const res = await requestHandler.get(`/api/v2/user/branch/${userId}`);
+			if (res.isLeft()) {
+				return;
+			}
+			const value = res.value.getValue().data;
+			setBusinessByUser(value);
+			let lg = value.map((b) => b?.pin);
+			setPin(lg.length == 2 ? lg[0] : lg);
+			if (lg !== '') {
+				setPin(value[0]?.pin);
+			}
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+			setLoading(false);
 		}
 	};
 
 	const getSellerClients = async (userId) => {
+		setLoading(true);
 		const res = await requestHandler.get(`/api/v2/user/client/${userId}`);
 		if (res.isLeft()) {
 			return;
@@ -101,6 +108,7 @@ const UpdateUser = () => {
 		const value = res.value.getValue().data;
 		setsellerClientsAdd(value);
 		console.log(sellerClientsAdd);
+		setLoading(false);
 	};
 
 	const updateUserRequest = async (data) => {
@@ -314,7 +322,7 @@ const UpdateUser = () => {
 
 			<Card className="w-full shadow-lg">
 				<List>
-					<List.Item style={{ padding: '10px 25px' }}>
+					<List.Item key={1} style={{ padding: '10px 25px' }}>
 						<p>Ultima ubicación</p>
 						<Button
 							type="primary"
@@ -327,7 +335,7 @@ const UpdateUser = () => {
 					</List.Item>
 
 					{profile?.id !== PROFILES.MASTER && (
-						<List.Item style={{ padding: '10px 25px' }}>
+						<List.Item key={2} style={{ padding: '10px 25px' }}>
 							<div className="flex gap-5">
 								{profile?.id == PROFILES.SELLER && (
 									<>
@@ -340,7 +348,7 @@ const UpdateUser = () => {
 						</List.Item>
 					)}
 
-					<List.Item>
+					<List.Item key={3}>
 						<UserBusinessTable
 							business={businessByUser}
 							setConfirmDelete={setConfirmDelete}
@@ -453,7 +461,6 @@ const UpdateUser = () => {
 							onChange={(date) => setStartDate(date)}
 							inline
 							minDate={minDate}
-							
 						/>
 					</Form.Item>
 				</Form>

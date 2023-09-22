@@ -4,6 +4,7 @@ import { Button, List, message } from 'antd';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+/* import { useRouter } from 'next/navigation'; */
 import { GeneralContext } from '../../_app';
 import { orderStatusToUse } from '.';
 import DetailOrderTable from '../../../components/orders/detail/orderTable';
@@ -14,11 +15,14 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import DocPdf from './DocPdf';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink, Page, Document,View, Text } from '@react-pdf/renderer';
 
 const OrderDetail = () => {
 	const router = useRouter();
-	const { id } = router.query;
+
+	console.log(router);
+
+	const { id } = router?.query;
 
 	const [log, setLog] = useState();
 	const [verPdf, setVerPdf] = useState(false);
@@ -88,6 +92,7 @@ const OrderDetail = () => {
 		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
 
@@ -98,6 +103,83 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
+
+	const MyDoc = () => (
+		<Document>
+			<Page size="A4">
+				<DashboardLayout>
+					<View
+						style={{
+							margin: '1rem',
+							display: 'flex',
+							alignItems: 'center',
+							flexDirection: 'column',
+							justifyContent: 'center',
+						}}
+					>
+						<View style={{ display: 'flex', width: '90%' }}>
+							<Text title="Detalles de pédido" />
+						</View>
+
+						<List
+							style={{
+								width: '96%',
+								padding: '10px 30px',
+								backgroundColor: 'white',
+								marginBottom: '25px',
+								borderRadius: '15px',
+								boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
+							}}
+						>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Número de pedido:</Text>
+								<Text>{currentOrder.numberOrden}</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Vendedor:</Text>
+								<Text>{user?.fullname}</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Estado:</Text>
+								<Text style={{ fontWeight: 'bold' }}>
+									{orderStatusToUse[currentOrder.idStatusOrder]}
+								</Text>
+							</List.Item>
+
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Cliente:</Text>
+								<Text>{currentOrder.fullNameClient}</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Contacto:</Text>
+								<Text>{currentOrder.phoneClient}</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Dirección:</Text>
+								<Text>{currentOrder.address}</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>Fecha de creación:</Text>
+								<Text>
+									{new Date(currentOrder.fechaEntrega).toLocaleDateString()}
+								</Text>
+							</List.Item>
+							<List.Item>
+								<Text style={{ fontWeight: 'bold' }}>
+									Observacion (opcional):
+								</Text>
+								<Text style={{}}>{currentOrder.comments}</Text>
+							</List.Item>
+						</List>
+						<DetailOrderTable
+							products={currentOrder?.body}
+							total={currentOrder?.totalBot}
+						/>
+					</View>
+				</DashboardLayout>
+			</Page>
+		</Document>
+	);
 
 	return (
 		<DashboardLayout>
@@ -117,15 +199,7 @@ const OrderDetail = () => {
 						goBack={1}
 					/>
 					<div style={{ display: 'flex', width: '12%' }}>
-						<PDFDownloadLink
-							document={
-								<DocPdf
-									currentOrder={currentOrder}
-									orderStatusToUs={orderStatusToUse}
-									user={user}
-								/>
-							}
-							fileName='Orden N.pdf'
+						<PDFDownloadLink document={<MyDoc />} fileName="Orden N.pdf"
 						>
 							<Button
 								htmlType="submit"
