@@ -15,7 +15,13 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import DocPdf from './DocPdf';
-import { PDFDownloadLink, Page, Document,View, Text } from '@react-pdf/renderer';
+import {
+	PDFDownloadLink,
+	Page,
+	Document,
+	View,
+	Text,
+} from '@react-pdf/renderer';
 
 const OrderDetail = () => {
 	const router = useRouter();
@@ -104,10 +110,12 @@ const OrderDetail = () => {
 		);
 	}
 
+	let status= orderStatusToUse[currentOrder.idStatusOrder];
+	console.log(status)
+	
 	const MyDoc = () => (
 		<Document>
 			<Page size="A4">
-				<DashboardLayout>
 					<View
 						style={{
 							margin: '1rem',
@@ -118,10 +126,10 @@ const OrderDetail = () => {
 						}}
 					>
 						<View style={{ display: 'flex', width: '90%' }}>
-							<Text title="Detalles de pédido" />
+							<Text>Detalles de pédido</Text>
 						</View>
 
-						<List
+						<View
 							style={{
 								width: '96%',
 								padding: '10px 30px',
@@ -131,52 +139,51 @@ const OrderDetail = () => {
 								boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
 							}}
 						>
-							<List.Item>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Número de pedido:</Text>
 								<Text>{currentOrder.numberOrden}</Text>
-							</List.Item>
-							<List.Item>
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Vendedor:</Text>
-								<Text>{user?.fullname}</Text>
-							</List.Item>
-							<List.Item>
+								<Text>{user?.fullname}</Text> 
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Estado:</Text>
 								<Text style={{ fontWeight: 'bold' }}>
-									{orderStatusToUse[currentOrder.idStatusOrder]}
+									{/* {orderStatusToUse[currentOrder.idStatusOrder]} */}
 								</Text>
-							</List.Item>
+							</View>
 
-							<List.Item>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Cliente:</Text>
-								<Text>{currentOrder.fullNameClient}</Text>
-							</List.Item>
-							<List.Item>
+								<Text>{currentOrder.fullNameClient}</Text> 
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Contacto:</Text>
-								<Text>{currentOrder.phoneClient}</Text>
-							</List.Item>
-							<List.Item>
+								<Text>{currentOrder.phoneClient}</Text> 
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Dirección:</Text>
-								<Text>{currentOrder.address}</Text>
-							</List.Item>
-							<List.Item>
+								<Text>{currentOrder.address}</Text> 
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>Fecha de creación:</Text>
 								<Text>
 									{new Date(currentOrder.fechaEntrega).toLocaleDateString()}
-								</Text>
-							</List.Item>
-							<List.Item>
+								</Text> 
+							</View>
+							<View>
 								<Text style={{ fontWeight: 'bold' }}>
-									Observacion (opcional):
+									Observacion:
 								</Text>
 								<Text style={{}}>{currentOrder.comments}</Text>
-							</List.Item>
-						</List>
-						<DetailOrderTable
+							</View>
+						</View>  
+						{/*  <DetailOrderTable
 							products={currentOrder?.body}
 							total={currentOrder?.totalBot}
-						/>
+						/>  */}
 					</View>
-				</DashboardLayout>
 			</Page>
 		</Document>
 	);
@@ -199,8 +206,7 @@ const OrderDetail = () => {
 						goBack={1}
 					/>
 					<div style={{ display: 'flex', width: '12%' }}>
-						<PDFDownloadLink document={<MyDoc />} fileName="Orden N.pdf"
-						>
+						<PDFDownloadLink document={<MyDoc />} fileName="Orden N.pdf">
 							<Button
 								htmlType="submit"
 								type="success"
