@@ -119,17 +119,16 @@ const UserForm = ({
 	};
 	
 	const handleChange = (info) => {
-		if (info.file.status === 'uploading') {
+		if (info.file === 'uploading') {
 			setLoading(true);
 			return;
 		}
-		if (info.file.status === 'done') {
+		if (info.file === 'done') {
 			getBase64(info.file.originFileObj, (url) => {
 				setLoading(false);
 				setImageUrl(url);
 			});
 		}
-		
 	};
 
 	const getBase64 = (img, callback) => {
