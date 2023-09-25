@@ -65,7 +65,11 @@ const UpdateOrderPage = () => {
 	const { loading, setLoading } = useLoadingContext();
 	const [Payment, setPayment] = useState();
 	const [PaymentAdd, setPaymentToAdd] = useState([]);
-
+	const [PaymentTipe, setPaymentTipe] = useState();
+	const [PaymentAddTipe, setPaymentToAddTipe] = useState([]);
+	const generalContext = useContext(GeneralContext);
+	const { requestHandler } = useRequest();
+	const { selectedBusiness } = useBusinessProvider();
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [currentProduct, setCurrentProduct] = useState();
 	const [total, setTotal] = useState(0);
@@ -143,13 +147,22 @@ const UpdateOrderPage = () => {
 		}
 	};
 
+	const getPaymentTipe = async () => {
+		const res = await requestHandler.get('/api/v2/paymentcondition/list');
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		setPaymentTipe(res.value.getValue().response);
+		console.log(PaymentTipe);
+	};
+
 	useEffect(() => {
 		if (products) {
 			addKeys(products);
 			setProduct(products);
 			getPayments();
+			getPaymentTipe();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [products]);
 
 	const calculateTotalRequest = async () => {
@@ -167,10 +180,6 @@ const UpdateOrderPage = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
-
-	const generalContext = useContext(GeneralContext);
-	const { requestHandler } = useRequest();
-	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
 		if (
@@ -205,11 +214,11 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = () => {
-		console.log(Payment);
+		console.log(PaymentAdd);
 		const newData = {
-			title: 'hola',
+			title: PaymentAdd,
 		};
-		setDataSource([...dataSource, newData]);
+		setDataSource([newData]);
 	};
 
 	const handleDelete = async () => {
@@ -357,13 +366,36 @@ const UpdateOrderPage = () => {
 												<strong>${total}</strong>
 											</p>
 										</List.Item>
+
+										<List.Item>
+											<p>
+												<strong>Condicion de pago</strong>
+											</p>
+
+											<Select
+												value={PaymentAddTipe}
+												onChange={(v) => setPaymentToAddTipe(v)}
+												style={{ width: '50%' }}
+												placeholder="Ingrese condicion de pago"
+											>
+												{PaymentTipe &&
+													PaymentTipe.map((PaymentTipe) => (
+														<Select.Option
+															key={PaymentTipe.idPaymenConditions}
+															value={PaymentTipe.idPaymenConditions}
+														>
+															{PaymentTipe.note}
+														</Select.Option>
+													))}
+											</Select>
+										</List.Item>
+
 										<List.Item>
 											<p>
 												<strong>Metodo de pago</strong>
 											</p>
 
 											<Select
-												/* mode="multiple" */
 												placeholder="Ingrese metodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
@@ -372,7 +404,6 @@ const UpdateOrderPage = () => {
 												{Payment &&
 													Payment.map((Payment) => (
 														<Select.Option
-															onChange={handleAdd}
 															onClick={handleAdd}
 															key={Payment.idPymentMethod}
 															value={Payment.idPymentMethod}

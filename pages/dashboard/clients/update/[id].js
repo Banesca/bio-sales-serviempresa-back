@@ -15,12 +15,8 @@ import { useEffect } from 'react';
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest();
-
 	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
-
-	const [Payment, setPayment] = useState();
-	const [PaymentAdd, setPaymentToAdd] = useState([]);
 	const [form] = Form.useForm();
 	const [client, setClient] = useState({});
 	const router = useRouter();
@@ -50,14 +46,7 @@ export default function EditClient() {
 	const handleSelectChange = (event) => {
 		console.log(event);
 	};
-	const getPayments = async () => {
-		const res = await requestHandler.get('/api/v2/paymentcondition/list');
-		if (res.isLeft()) {
-			throw res.value.getErrorValue();
-		}
-		setPayment(res.value.getValue().response);
-		console.log(Payment);
-	};
+	
 
 	const getClientRequest = async () => {
 		setLoading(true);
@@ -292,28 +281,6 @@ export default function EditClient() {
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="isigtf">
 									<Select options={IGTF} onChange={handleSelectChange} />
-								</Form.Item>
-							</Col>
-
-							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-							<Form.Item
-									label="Condiciones de pago"
-									style={{ marginLeft: 6 }}
-								>
-									<Select
-										value={PaymentAdd}
-										onChange={(v) => setPaymentToAdd(v)}
-									>
-										{Payment &&
-											Payment.map((Payment) => (
-												<Select.Option
-													key={Payment.idPaymenConditions}
-													value={Payment.idPaymenConditions}
-												>
-													{Payment.note}
-												</Select.Option>
-											))}
-									</Select>
 								</Form.Item>
 							</Col>
 						</Row>

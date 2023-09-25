@@ -268,27 +268,6 @@ export default function AddClient() {
 									<Select options={IGTF} onChange={handleSelectChange} />
 								</Form.Item>
 							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-								<Form.Item
-									label="Condiciones de pago"
-									style={{ marginLeft: 6 }}
-								>
-									<Select
-										value={PaymentAdd}
-										onChange={(v) => setPaymentToAdd(v)}
-									>
-										{Payment &&
-											Payment.map((Payment) => (
-												<Select.Option
-													key={Payment.idPaymenConditions}
-													value={Payment.idPaymenConditions}
-												>
-													{Payment.note}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Col>
 						</Row>
 						<Row>
 							<Col span={24}>
