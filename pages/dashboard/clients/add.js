@@ -118,7 +118,6 @@ export default function AddClient() {
 
 	const createClient = async (data, err) => {
 		setLoading(true);
-
 		await getClientsRequest();
 		try {
 			if (!validator(data).val) {
