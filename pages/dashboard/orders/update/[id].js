@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import {
 	Col,
 	Row,
@@ -10,6 +10,7 @@ import {
 	Select,
 	Card,
 	Table,
+	Input,
 } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { GeneralContext } from '../../../_app';
@@ -77,20 +78,8 @@ const UpdateOrderPage = () => {
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	const [count, setCount] = useState(0);
-
-	const columns = [
-		{
-			title: 'Metodo de pago',
-			dataIndex: 'pymentMethod',
-			key:'columna1',
-			render: (text) => <p>{text}</p>,
-		},
-		/* {
-			title: 'Monto a pagar',
-			
-		}, */
-	];
+	const [count, setCount] = useState(1);
+	const EditableContext = React.createContext(null);
 
 	const getOrderRequest = async (id) => {
 		setLoading(true);
@@ -214,19 +203,140 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = (selectOption) => {
-		setPaymentToAdd()
-		const newData = selectOption.map((option) => ({
-			columna1: option,
-			dataIndex: 'pymentMethod',
-			key:1,
-		}));
-		console.log(newData);
+		setPaymentToAdd();
+		const newData = {
+			key: count,
+			name: selectOption,
+			monto: '0',
+		};
+		setDataSource([...dataSource, newData]);
+		setCount(count + 1);
+	};
+
+	const EditableRow = ({ index, ...props }) => {
+		const [form] = Form.useForm();
+		return (
+			<Form form={form} component={false}>
+				<EditableContext.Provider value={form}>
+					<tr {...props} />
+				</EditableContext.Provider>
+			</Form>
+		);
+	};
+
+	const EditableCell = ({
+		title,
+		editable,
+		children,
+		dataIndex,
+		record,
+		handleSave,
+		...restProps
+	}) => {
+		const [editing, setEditing] = useState(false);
+		const inputRef = useRef(null);
+		const form = useContext(EditableContext);
+		useEffect(() => {
+			if (editing) {
+				inputRef.current.focus();
+			}
+		}, [editing]);
+		const toggleEdit = () => {
+			setEditing(!editing);
+			form.setFieldsValue({
+				[dataIndex]: record[dataIndex],
+			});
+		};
+		const save = async () => {
+			try {
+				const values = await form.validateFields();
+				toggleEdit();
+				handleSave({
+					...record,
+					...values,
+				});
+			} catch (errInfo) {
+				console.log('Save failed:', errInfo);
+			}
+		};
+		let childNode = children;
+		if (editable) {
+			childNode = editing ? (
+				<Form.Item
+					style={{
+						margin: 0,
+					}}
+					name={dataIndex}
+					rules={[
+						{
+							required: true,
+							message: `${title} is required.`,
+						},
+					]}
+				>
+					<Input ref={inputRef} onPressEnter={save} onBlur={save} />
+				</Form.Item>
+			) : (
+				<div
+					className="editable-cell-value-wrap"
+					style={{
+						paddingRight: 24,
+					}}
+					onClick={toggleEdit}
+				>
+					{children}
+				</div>
+			);
+		}
+		return <td {...restProps}>{childNode}</td>;
+	};
+
+	const handleSave = (row) => {
+		const newData = [...dataSource];
+		const index = newData.findIndex((item) => row.key === item.key);
+		const item = newData[index];
+		newData.splice(index, 1, {
+			...item,
+			...row,
+		});
 		setDataSource(newData);
 	};
 
-	const handleDelete = async () => {
-		await handleRemoveProduct(currentProduct);
-		setDeleteOpen(false);
+	const defaultColumns = [
+		{
+			title: 'Metodo de pago',
+			dataIndex: 'name',
+			key: 'name',
+		},
+		{
+			title: 'Monto a pagar',
+			dataIndex: 'monto',
+			key: 'monto',
+			editable: true,
+		},
+	];
+
+	const columns = defaultColumns.map((col) => {
+		if (!col.editable) {
+			return col;
+		}
+		return {
+			...col,
+			onCell: (record) => ({
+				record,
+				editable: col.editable,
+				dataIndex: col.dataIndex,
+				title: col.title,
+				handleSave,
+			}),
+		};
+	});
+
+	const components = {
+		body: {
+			row: EditableRow,
+			cell: EditableCell,
+		},
 	};
 
 	const handleReceiveOrder = async () => {
@@ -251,7 +361,6 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
-
 	const handleCancelOrder = async () => {
 		setLoading(true);
 		try {
@@ -399,7 +508,7 @@ const UpdateOrderPage = () => {
 											</p>
 
 											<Select
-												mode="multiple"
+												/* mode="multiple" */
 												placeholder="Ingrese metodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
@@ -417,8 +526,13 @@ const UpdateOrderPage = () => {
 											</Select>
 										</List.Item>
 
-										<Table columns={columns} dataSource={dataSource} />
-
+										<Table
+											bordered
+											columns={columns}
+											dataSource={dataSource}
+											rowClassName={() => 'editable-row'}
+											components={components}
+										/>
 										<List.Item>
 											<div></div>
 											<div className="flex justify-end">
@@ -533,7 +647,7 @@ const UpdateOrderPage = () => {
 							<Form>
 								<Form.Item className="w-32 my-auto">
 									<Select
-										mode="multiple"
+										/* mode="multiple" */
 										placeholder="Ingrese metodos de pago"
 										style={{ width: '100%' }}
 										value={PaymentAdd}
@@ -580,8 +694,8 @@ const UpdateOrderPage = () => {
 				<p>
 					{' '}
 					¿Estás seguro que deseas pausar la orden?
-					<br /> Podrás acceder previamente a la orden pausada desde el módulo de
-					ordenes. <br />
+					<br /> Podrás acceder previamente a la orden pausada desde el módulo
+					de ordenes. <br />
 				</p>
 			</Modal>
 			<Modal
