@@ -105,7 +105,7 @@ const TotalSales = () => {
 						fontSize: '18px',
 					}}
 				>
-					<p style={{ fontWeight: 'bold' }}>Pedidos anulados:</p>
+					<p style={{ fontWeight: 'bold' }}>Ordenes anulados:</p>
 					<p>{`${validateValue(report?.totalAnulados)}`}</p>
 				</List.Item>
 			</List>

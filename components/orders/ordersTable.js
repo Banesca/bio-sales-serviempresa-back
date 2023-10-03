@@ -2,7 +2,7 @@
 import { Button, ConfigProvider, Table } from 'antd';
 import { useLoadingContext } from '../../hooks/useLoadingProvider';
 import { Space } from 'antd';
-import { EditOutlined, EyeTwoTone } from '@ant-design/icons';
+import { EditOutlined, EyeTwoTone, PrinterOutlined } from '@ant-design/icons';
 import { orderStatusToUse } from '../../pages/dashboard/orders';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ import { useUser } from '../users/hooks/useUser';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import DocPdf from '../../pages/dashboard/orders/DocPdf';
 
 export default function OrdersTable({ orders }) {
 	const router = useRouter();
@@ -21,13 +23,11 @@ export default function OrdersTable({ orders }) {
 		router.push(`/dashboard/orders/${order.idOrderH}`);
 	};
 
-
 	const handleSeeUpdate = (order, record) => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${order.idOrderH}`);
 	};
 
-	
 	const [users, setUsers] = useState({});
 	const { getUserById } = useUser();
 
@@ -59,8 +59,8 @@ export default function OrdersTable({ orders }) {
 
 	const columns = [
 		{
-			title:"Pedido Nro.",
-			dataIndex:"numberOrden"
+			title: 'Pedido Nro.',
+			dataIndex: 'numberOrden',
 		},
 		{
 			title: 'Fecha de creación',
@@ -173,7 +173,10 @@ export default function OrdersTable({ orders }) {
 					style={{ display: 'flex', justifyContent: 'center' }}
 				>
 					{userProfile == PROFILES.MASTER ? (
-						order.idStatusOrder == 2 || order.idStatusOrder == 3 || order.idStatusOrder == 6 || order.idStatusOrder == 4 ? (
+						order.idStatusOrder == 2 ||
+						order.idStatusOrder == 3 ||
+						order.idStatusOrder == 6 ||
+						order.idStatusOrder == 4 ? (
 							<Button
 								type="primary"
 								className="bg-blue-500"
@@ -181,16 +184,16 @@ export default function OrdersTable({ orders }) {
 							>
 								<EyeTwoTone />
 							</Button>
-							
 						) : (
 							<Button onClick={() => handleSeeUpdate(order, record)}>
 								<EditOutlined />
 							</Button>
-							
 						)
 					) : users.fullname !== text ||
-					  order.idStatusOrder == 2 ||  order.idStatusOrder == 6 ||
-					  order.idStatusOrder == 3  || order.idStatusOrder == 4 ? (
+					  order.idStatusOrder == 2 ||
+					  order.idStatusOrder == 6 ||
+					  order.idStatusOrder == 3 ||
+					  order.idStatusOrder == 4 ? (
 						<Button type="primary" onClick={() => handleSeeDetail(order)}>
 							<EyeTwoTone />
 						</Button>
@@ -198,8 +201,12 @@ export default function OrdersTable({ orders }) {
 						<Button onClick={() => handleSeeUpdate(order, record)}>
 							<EditOutlined />
 						</Button>
-						
 					)}
+					<PDFDownloadLink document={<DocPdf/>} fileName="Orden N.pdf">
+						<Button onClick={() => handleSeeUpdate(order, record)}>
+							<PrinterOutlined />
+						</Button>
+					</PDFDownloadLink>
 				</Space>
 			),
 		},

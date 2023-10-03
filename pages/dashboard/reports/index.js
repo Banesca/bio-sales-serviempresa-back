@@ -291,7 +291,7 @@ const UserDetail = () => {
 							<p>{`$${report.ventaHoy}`}</p>
 						</List.Item>
 						<List.Item style={{padding: '15px 40px', justifyContent: 'space-between', fontSize: '18px'}}>
-							<p style={{fontWeight: 'bold'}}>Pedidos anulados:</p>
+							<p style={{fontWeight: 'bold'}}>Ordenes anulados:</p>
 							<p>{`${report.totalAnulados}`}</p>
 						</List.Item> */}
 					</List>

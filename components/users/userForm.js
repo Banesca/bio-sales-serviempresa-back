@@ -219,6 +219,7 @@ const UserForm = ({
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
+							
 						>
 							{imageUrl ? (
 								<img

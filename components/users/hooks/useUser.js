@@ -129,7 +129,6 @@ export function useUser() {
 	};
 
 	const updateUser = async (data, id) => {
-
 		const res = await requestHandler.put('/api/v2/user/edit/lite', {
 			fullname: data.fullname,
 			mail: data.mail,

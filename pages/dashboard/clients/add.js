@@ -15,8 +15,6 @@ import { GeneralContext } from '../../_app';
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest();
-	const [Payment, setPayment] = useState();
-	const [PaymentAdd, setPaymentToAdd] = useState([]);
 	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 
@@ -38,25 +36,17 @@ export default function AddClient() {
 	const router = useRouter();
 	const { clients } = useClients();
 
-	const getClientsRequest = async () => {
+/* 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
 			await listClients();
 		} catch (error) {
 			message.error('Ha ocurrido un error');
+			console.log(error);
 		} finally {
 			setLoading(false);
 		}
-	};
-
-	const getPayments = async () => {
-		const res = await requestHandler.get('/api/v2/paymentcondition/list');
-		if (res.isLeft()) {
-			throw res.value.getErrorValue();
-		}
-		setPayment(res.value.getValue().response);
-		console.log(Payment);
-	};
+	}; */
 
 	const validator = (data) => {
 		return {
@@ -100,10 +90,8 @@ export default function AddClient() {
 
 	useEffect(() => {
 		if (Object.keys(generalContext).length) {
-			getClientsRequest();
-			getPayments();
+			/* getClientsRequest(); */
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext]);
 
 	const handleSubmit = async (values) => {

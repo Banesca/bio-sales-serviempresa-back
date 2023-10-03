@@ -49,7 +49,7 @@ export default function OrdersPage() {
 		try {
 			await getOrders(data);
 		} catch (error) {
-			message.error('Error al cargar los pedidos');
+			message.error('Error al cargar las ordenes');
 		} finally {
 			setLoading(false);
 		}
@@ -81,7 +81,7 @@ export default function OrdersPage() {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Pedidos'}>
+				<Title title={'Ordenes'}>
 					<Link href="orders/add">
 						<Button type="success" style={{ marginRight: '-2.3rem' }}>
 							<AppstoreAddOutlined/> Crear

@@ -77,19 +77,19 @@ const UpdateOrderPage = () => {
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
-	const [count, setCount] = useState(2);
+	const [count, setCount] = useState(0);
 
 	const columns = [
 		{
 			title: 'Metodo de pago',
 			dataIndex: 'pymentMethod',
-			key: 1,
+			key:'columna1',
 			render: (text) => <p>{text}</p>,
 		},
-		{
+		/* {
 			title: 'Monto a pagar',
-			key: 3,
-		},
+			
+		}, */
 	];
 
 	const getOrderRequest = async (id) => {
@@ -213,12 +213,15 @@ const UpdateOrderPage = () => {
 		setDeleteOpen(true);
 	};
 
-	const handleAdd = () => {
-		console.log(PaymentAdd);
-		const newData = {
-			title: PaymentAdd,
-		};
-		setDataSource([newData]);
+	const handleAdd = (selectOption) => {
+		setPaymentToAdd()
+		const newData = selectOption.map((option) => ({
+			columna1: option,
+			dataIndex: 'pymentMethod',
+			key:1,
+		}));
+		console.log(newData);
+		setDataSource(newData);
 	};
 
 	const handleDelete = async () => {
@@ -396,17 +399,17 @@ const UpdateOrderPage = () => {
 											</p>
 
 											<Select
+												mode="multiple"
 												placeholder="Ingrese metodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
-												onChange={(v) => setPaymentToAdd(v)}
+												onChange={handleAdd}
 											>
 												{Payment &&
 													Payment.map((Payment) => (
 														<Select.Option
-															onClick={handleAdd}
 															key={Payment.idPymentMethod}
-															value={Payment.idPymentMethod}
+															value={Payment.pymentMethod}
 														>
 															{Payment.pymentMethod}
 														</Select.Option>
@@ -576,9 +579,9 @@ const UpdateOrderPage = () => {
 			>
 				<p>
 					{' '}
-					¿Estás seguro que deseas pausar el pedido?
-					<br /> Podrás acceder previamente al pedido pausado desde el módulo de
-					pedidos. <br />
+					¿Estás seguro que deseas pausar la orden?
+					<br /> Podrás acceder previamente a la orden pausada desde el módulo de
+					ordenes. <br />
 				</p>
 			</Modal>
 			<Modal

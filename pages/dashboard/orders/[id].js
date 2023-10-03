@@ -21,6 +21,7 @@ import {
 	Document,
 	View,
 	Text,
+	StyleSheet,
 } from '@react-pdf/renderer';
 
 const OrderDetail = () => {
@@ -75,6 +76,7 @@ const OrderDetail = () => {
 		}
 		return color;
 	};
+	
 	const handleChangeStatus = async (status) => {
 		setLoading(true);
 		try {
@@ -110,80 +112,70 @@ const OrderDetail = () => {
 		);
 	}
 
-	let status= orderStatusToUse[currentOrder.idStatusOrder];
-	console.log(status)
-	
+	let status = orderStatusToUse[currentOrder.idStatusOrder];
+
+	const styles = StyleSheet.create({
+		title: {
+			alignItems: 'center',
+			padding: '20px',
+		},
+		body: {
+			width:'50%',
+			display:'flex',
+			padding: '10px',
+		},
+	});
 	const MyDoc = () => (
 		<Document>
 			<Page size="A4">
-					<View
-						style={{
-							margin: '1rem',
-							display: 'flex',
-							alignItems: 'center',
-							flexDirection: 'column',
-							justifyContent: 'center',
-						}}
-					>
-						<View style={{ display: 'flex', width: '90%' }}>
-							<Text>Detalles de pédido</Text>
+				<View>
+					<View style={styles.title}>
+						<Text>Detalles de pédido</Text>
+					</View>
+
+					<View>
+						<View style={styles.body}>
+							<Text>Número de pedido:</Text>
+							<Text>{currentOrder.numberOrden}</Text>
 						</View>
-
-						<View
-							style={{
-								width: '96%',
-								padding: '10px 30px',
-								backgroundColor: 'white',
-								marginBottom: '25px',
-								borderRadius: '15px',
-								boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
-							}}
-						>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Número de pedido:</Text>
-								<Text>{currentOrder.numberOrden}</Text>
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Vendedor:</Text>
-								<Text>{user?.fullname}</Text> 
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Estado:</Text>
-								<Text style={{ fontWeight: 'bold' }}>
-									{/* {orderStatusToUse[currentOrder.idStatusOrder]} */}
-								</Text>
-							</View>
-
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Cliente:</Text>
-								<Text>{currentOrder.fullNameClient}</Text> 
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Contacto:</Text>
-								<Text>{currentOrder.phoneClient}</Text> 
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Dirección:</Text>
-								<Text>{currentOrder.address}</Text> 
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>Fecha de creación:</Text>
-								<Text>
-									{new Date(currentOrder.fechaEntrega).toLocaleDateString()}
-								</Text> 
-							</View>
-							<View>
-								<Text style={{ fontWeight: 'bold' }}>
-									Observacion:
-								</Text>
-								<Text style={{}}>{currentOrder.comments}</Text>
-							</View>
-						</View>  
-						{/*  <DetailOrderTable
+						<View style={styles.body}>
+							<Text>Vendedor:</Text>
+							<Text>{user?.fullname}</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Estado:</Text>
+							<Text>{status.state}</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Cliente:</Text>
+							<Text>{currentOrder.fullNameClient}</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Contacto:</Text>
+							<Text>{currentOrder.phoneClient}</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Dirección:</Text>
+							<Text>{currentOrder.address}</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Fecha de creación:</Text>
+							<Text>
+								{new Date(currentOrder.fechaEntrega).toLocaleDateString()}
+							</Text>
+						</View>
+						<View style={styles.body}>
+							<Text>Observacion:</Text>
+							<Text style={{}}>{currentOrder.comments}</Text>
+						</View>
+					</View>
+				{/* 	<View>
+						<DetailOrderTable
 							products={currentOrder?.body}
 							total={currentOrder?.totalBot}
-						/>  */}
-					</View>
+						/>
+					</View> */}
+				</View>
 			</Page>
 		</Document>
 	);

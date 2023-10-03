@@ -133,13 +133,30 @@ const ClientDetail = () => {
 				<Space
 					size="middle"
 					display={{ display: 'flex', justifyContent: 'center' }}
-				> {order.idStatusOrder == 1 ? (
-					<Button onClick={() => handleSeeDetail(order)}>
-						<EditOutlined />
-					</Button>
-				) : (<></>)}
+				>
+					{' '}
+					{order.idStatusOrder == 1 ? (
+						<Button onClick={() => handleSeeDetail(order)}>
+							<EditOutlined />
+						</Button>
+					) : (
+						<></>
+					)}
 				</Space>
 			),
+		},
+	];
+
+	const columns2 = [
+		{
+			title: 'Nombre del cliente',
+			dataIndex: 'fullNameClient',
+			key: 1,
+		},
+		{
+			title: 'Deuda',
+			dataIndex: 'Deuda',
+			key: 2,
 		},
 	];
 
@@ -158,6 +175,7 @@ const ClientDetail = () => {
 
 	const [client, setClient] = useState({});
 	const [orders, setOrders] = useState([]);
+	const [debts, setdebts] = useState([]);
 
 	const [loading, setLoading] = useState(true);
 
@@ -197,6 +215,28 @@ const ClientDetail = () => {
 		}
 	};
 
+	const getDebtsbyClient = async (phoneNumber) => {
+		setLoading(true);
+		console.log(phoneNumber);
+		try {
+			const res = await requestHandler.post(
+				'/api/v2/order/all/currentacount/hasto',
+				{
+					query: phoneNumber,
+				}
+			);
+			if (res.isLeft()) {
+				throw res.value.getErrorValue();
+			}
+			const value = res.value.getValue().data;
+			setdebts(value);
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
 		setLoading(true);
 		if (Object.keys(generalContext).length) {
@@ -208,6 +248,7 @@ const ClientDetail = () => {
 	useEffect(() => {
 		if (Object.keys(client).length) {
 			getOrderByClient(client.phone);
+			getDebtsbyClient(client.phone);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [client]);
@@ -228,8 +269,7 @@ const ClientDetail = () => {
 					<div className="w-10"></div>
 				</div>
 				<Card className="rounded-2xl shadow-md">
-					<h2 className="text-2xl text-center font-semibold">
-					</h2>
+					<h2 className="text-2xl text-center font-semibold"></h2>
 					<List>
 						<List.Item style={{ padding: '10px 25px' }}>
 							<p style={{ fontWeight: 'bold' }}>RIF:</p>
@@ -243,8 +283,9 @@ const ClientDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Estado:</p>
 							<p
 								style={{
-									color: `${client?.statusName == 'Eliminado' ? 'red' : 'black'
-										}`,
+									color: `${
+										client?.statusName == 'Eliminado' ? 'red' : 'black'
+									}`,
 								}}
 							>
 								{client?.statusName}
@@ -255,14 +296,17 @@ const ClientDetail = () => {
 							<p>{client?.address}</p>
 						</List.Item>
 						<List.Item style={{ padding: '10px 25px' }}>
-							<div style={{ fontWeight: 'bold' }}>Observación:<div style={{fontWeight:'400',textAlign: 'justify'}}>{client?.observacion}</div></div>
+							<div style={{ fontWeight: 'bold' }}>
+								Observación:
+								<div style={{ fontWeight: '400', textAlign: 'justify' }}>
+									{client?.observacion}
+								</div>
+							</div>
 						</List.Item>
-
-
 					</List>
 				</Card>
 				<div className="flex flex-col gap-5">
-					<h3 className="text-4xl text-center">Pedidos</h3>
+					<h3 className="text-4xl text-center">Ordenes</h3>
 					<ConfigProvider
 						renderEmpty={
 							orders.length !== 0 || true ? CustomizeRenderEmpty : ''
@@ -271,9 +315,16 @@ const ClientDetail = () => {
 						<Table loading={loading} columns={columns} dataSource={orders} />
 					</ConfigProvider>
 				</div>
+
+				<div className="flex flex-col gap-5">
+					<h3 className="text-4xl text-center">Deudas</h3>
+					<ConfigProvider>
+						<Table loading={loading} columns={columns2} dataSource={debts} />
+					</ConfigProvider>
+				</div>
 			</div>
 			<Loading isLoading={loading} />
-		</DashboardLayout >
+		</DashboardLayout>
 	);
 };
 
