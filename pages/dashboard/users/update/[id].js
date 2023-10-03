@@ -19,6 +19,8 @@ import {
 	Card,
 	Row,
 	Col,
+	ConfigProvider,
+	Table,
 } from 'antd';
 import { PROFILES, PROFILE_LIST } from '../../../../components/shared/profiles';
 import useClients from '../../../../components/clients/hooks/useClients';
@@ -61,6 +63,42 @@ const UpdateUser = () => {
 	const { business } = useBusinessProvider();
 	const [startDate, setStartDate] = useState(new Date());
 	const [minDate, setMinDate] = useState(new Date(), 1);
+	const [debts, setdebts] = useState([]);
+
+	const columns2 = [
+		{
+			title: 'Nombre del cliente',
+			dataIndex: 'fullNameClient',
+			key: 1,
+		},
+		{
+			title: 'Deuda',
+			dataIndex: 'Deuda',
+			key: 2,
+		},
+	];
+
+	const getDebtsbyClient = async (phoneNumber) => {
+		setLoading(true);
+		console.log(phoneNumber);
+		try {
+			const res = await requestHandler.post(
+				'/api/v2/order/all/currentacount/hasto',
+				{
+					query: phoneNumber,
+				}
+			);
+			if (res.isLeft()) {
+				throw res.value.getErrorValue();
+			}
+			const value = res.value.getValue().data;
+			setdebts(value);
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const getUserRequest = async (id) => {
 		setLoading(true);
@@ -128,10 +166,18 @@ const UpdateUser = () => {
 			getUserBusiness(id);
 			getSellerClients(id);
 			getLoc(id);
+			getDebtsbyClient(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
 	}, [generalContext, id]);
 
+	/* useEffect(() => {
+		if (Object.keys(client).length) {
+			getDebtsbyClient(client.phone);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [client]);
+ */
 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
@@ -325,44 +371,46 @@ const UpdateUser = () => {
 			{loading ? (
 				<Loading isLoading={loading} />
 			) : (
-			<Card className="w-full shadow-lg">
-				<List>
-					<List.Item key={1} style={{ padding: '10px 25px' }}>
-						<p>Ultima ubicación</p>
-						<Button
-							type="primary"
-							className="bg-blue-500"
-							disabled={disabled}
-							onClick={() => getLocation(id)}
-						>
-							<AimOutlined />
-						</Button>
-					</List.Item>
-
-					{profile?.id !== PROFILES.MASTER && (
-						<List.Item key={2} style={{ padding: '10px 25px' }}>
-							<div className="flex gap-5">
-								{profile?.id == PROFILES.SELLER && (
-									<>
-										<Button type="primary" className="bg-blue-500">
-											<Link href={`/dashboard/users/routes/${id}`}>Rutas</Link>
-										</Button>
-									</>
-								)}
-							</div>
+				<Card className="w-full shadow-lg">
+					<List>
+						<List.Item key={1} style={{ padding: '10px 25px' }}>
+							<p>Ultima ubicación</p>
+							<Button
+								type="primary"
+								className="bg-blue-500"
+								disabled={disabled}
+								onClick={() => getLocation(id)}
+							>
+								<AimOutlined />
+							</Button>
 						</List.Item>
-					)}
 
-					<List.Item key={3}>
-						<UserBusinessTable
-							business={businessByUser}
-							setConfirmDelete={setConfirmDelete}
-							setBusinessToRemove={setBusinessToRemove}
-							setIsModalOpen={setIsModalOpen}
-						/>
-					</List.Item>
-				</List>
-			</Card>
+						{profile?.id !== PROFILES.MASTER && (
+							<List.Item key={2} style={{ padding: '10px 25px' }}>
+								<div className="flex gap-5">
+									{profile?.id == PROFILES.SELLER && (
+										<>
+											<Button type="primary" className="bg-blue-500">
+												<Link href={`/dashboard/users/routes/${id}`}>
+													Rutas
+												</Link>
+											</Button>
+										</>
+									)}
+								</div>
+							</List.Item>
+						)}
+
+						<List.Item key={3}>
+							<UserBusinessTable
+								business={businessByUser}
+								setConfirmDelete={setConfirmDelete}
+								setBusinessToRemove={setBusinessToRemove}
+								setIsModalOpen={setIsModalOpen}
+							/>
+						</List.Item>
+					</List>
+				</Card>
 			)}
 			{profile?.id != PROFILES.SELLER && (
 				<Card className="w-full shadow-lg">
@@ -381,7 +429,12 @@ const UpdateUser = () => {
 					</List>
 				</Card>
 			)}
-		
+
+			<Card>
+				<h3 className="text-4xl text-center">Deudas</h3>
+				<Table loading={loading} columns={columns2} dataSource={debts} />
+			</Card>
+
 			<Modal
 				title="Asignar sucursal"
 				open={isModalOpen}
