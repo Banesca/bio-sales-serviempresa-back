@@ -51,6 +51,7 @@ const routes = [
 	'/dashboard/reports',
 	'/dashboard/time',
 	'/dashboard/cars',
+	'/dashboard/rutas',
 	'/dashboard/notifications',
 	'/dashboard/tdc',
 	'/login',
@@ -69,11 +70,12 @@ const itemsMenu = [
 	getItem('Reportes', '11', <PieChartFilled />),
 	getItem('Horarios', '12', <ClockCircleFilled />),
 	getItem('Condiciones de pago', '8', <DollarCircleFilled />),
-	getItem('Tasa de cambio', '15', <DollarOutlined />),
+	getItem('Tasa de cambio', '16', <DollarOutlined />),
 	getItem('Camiones', '13', <FaTruck />),
+	getItem('Rutas', '14', <FaTruck />),
 	getItem('Merchandising', '9', <GiftFilled />),
-	getItem('Notificaciones', '14', <BellFilled />),
-	getItem('Cerrar sesión', '16', <LogoutOutlined />),
+	getItem('Notificaciones', '15', <BellFilled />),
+	getItem('Cerrar sesión', '17', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
 	const [collapsed, setCollapsed] = useState(false);
