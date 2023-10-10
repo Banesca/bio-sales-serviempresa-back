@@ -13,9 +13,9 @@ import {
 } from '@ant-design/icons';
 
 export const statusNames = {
-	'Por facturar': 1,
+	'Por pagar': 1,
 	Cobrado: 2,
-	Facturado: 3,
+	Pagado: 3,
 	Despachado: 4,
 	Anulado: 5,
 	Eliminado: 6,
@@ -40,8 +40,8 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames['Por facturar']].state,
-				status: statusNames['Por facturar'],
+				action: orderStatusToUse[statusNames['Por pagar']].state,
+				status: statusNames['Por pagar'],
 			}));
 		},
 		2: () => {
@@ -56,8 +56,8 @@ export default function ChangeOrderStatus({
 			setModal((prev) => ({
 				...prev,
 				visible: true,
-				action: orderStatusToUse[statusNames.Facturado].state,
-				status: statusNames.Facturado,
+				action: orderStatusToUse[statusNames.Pagado].state,
+				status: statusNames.Pagado,
 			}));
 		},
 		4: () => {
@@ -115,7 +115,7 @@ export default function ChangeOrderStatus({
 										Facturar
 									</Button> */}
 									<Button
-										onClick={() => handleOpenModal(statusNames.Facturado)}
+										onClick={() => handleOpenModal(statusNames.Pagado)}
 										type="primary"
 										className="bg-blue-500"
 									>

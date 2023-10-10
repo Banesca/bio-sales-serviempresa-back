@@ -16,9 +16,9 @@ import {
 } from '@ant-design/icons';
 
 export const orderStatusToUse = {
-	1: { state: 'Por facturar', color: 'orange' },
+	1: { state: 'Por pagar', color: 'orange' },
 	2: { state: 'Cobrado', color: 'green' },
-	3: { state: 'Facturado', color: 'blue' },
+	3: { state: 'Pagado', color: 'blue' },
 	4: { state: 'Despachado', color: 'yellow' },
 	5: { state: 'Anulado', color: 'red' },
 	6: { state: 'Anulado', color: 'red' },

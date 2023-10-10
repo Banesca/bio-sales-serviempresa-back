@@ -130,11 +130,11 @@ export default function OrdersTable({ orders }) {
 			render: (text, record) => (
 				<p
 					className={`font-bold text-center  ${
-						orderStatusToUse[record.idStatusOrder].state == 'Por facturar'
+						orderStatusToUse[record.idStatusOrder].state == 'Por pagar'
 							? 'text-orange-500'
 							: orderStatusToUse[record.idStatusOrder].state == 'Cobrado'
 							? 'text-green-500'
-							: orderStatusToUse[record.idStatusOrder].state == 'Facturado'
+							: orderStatusToUse[record.idStatusOrder].state == 'Pagado'
 							? 'text-blue-500'
 							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
 							? 'text-yellow-500'
@@ -144,11 +144,11 @@ export default function OrdersTable({ orders }) {
 							? 'text-red-500'
 							: ''
 					} ${
-						orderStatusToUse[record.idStatusOrder].state == 'Por facturar'
+						orderStatusToUse[record.idStatusOrder].state == 'Por pagar'
 							? 'bg-orange-200'
 							: orderStatusToUse[record.idStatusOrder].state == 'Cobrado'
 							? 'bg-green-200'
-							: orderStatusToUse[record.idStatusOrder].state == 'Facturado'
+							: orderStatusToUse[record.idStatusOrder].state == 'Pagado'
 							? 'bg-blue-200'
 							: orderStatusToUse[record.idStatusOrder].state == 'Despachado'
 							? 'bg-yellow-200'

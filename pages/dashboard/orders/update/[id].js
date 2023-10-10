@@ -79,6 +79,8 @@ const UpdateOrderPage = () => {
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const [count, setCount] = useState(1);
+	const [newTotal, setNewTotal] = useState();
+	const [totalDeclarado, setTotalDecla] = useState();
 	const EditableContext = React.createContext(null);
 
 	const getOrderRequest = async (id) => {
@@ -167,7 +169,6 @@ const UpdateOrderPage = () => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentOrder, getOrderRequest]);
 
 	useEffect(() => {
@@ -267,12 +268,6 @@ const UpdateOrderPage = () => {
 						margin: 0,
 					}}
 					name={dataIndex}
-					rules={[
-						{
-							required: true,
-							message: `${title} is required.`,
-						},
-					]}
 				>
 					<Input ref={inputRef} onPressEnter={save} onBlur={save} />
 				</Form.Item>
@@ -288,6 +283,7 @@ const UpdateOrderPage = () => {
 				</div>
 			);
 		}
+
 		return <td {...restProps}>{childNode}</td>;
 	};
 
@@ -295,11 +291,25 @@ const UpdateOrderPage = () => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
 		const item = newData[index];
+
 		newData.splice(index, 1, {
 			...item,
 			...row,
 		});
 		setDataSource(newData);
+	
+		const calcularSumaTotal = () => {
+			let suma = 0;
+			newData.forEach((objeto) => {
+				suma += Number(objeto.monto);
+				console.log(suma);
+			});
+			return suma;
+		};
+		const sumaTotal = calcularSumaTotal();
+		
+		setTotalDecla(sumaTotal);
+		setNewTotal(total - sumaTotal);
 	};
 
 	const defaultColumns = [
@@ -320,6 +330,7 @@ const UpdateOrderPage = () => {
 		if (!col.editable) {
 			return col;
 		}
+
 		return {
 			...col,
 			onCell: (record) => ({
@@ -342,7 +353,7 @@ const UpdateOrderPage = () => {
 	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(statusNames.Facturado, currentOrder.idOrderH);
+			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
 			message.error('Error al recibir pedido');
@@ -353,7 +364,7 @@ const UpdateOrderPage = () => {
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
-			await changeStatus(statusNames['Por facturar'], currentOrder.idOrderH);
+			await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al pausar pedido');
@@ -477,8 +488,19 @@ const UpdateOrderPage = () => {
 											<p>
 												<strong>${total}</strong>
 											</p>
+											<p>
+												<strong>DECLARADO</strong>
+											</p>
+											<p>
+												<strong>${totalDeclarado}</strong>
+											</p>
+											<p>
+												<strong>RESTANTE</strong>
+											</p>
+											<p>
+												<strong>${newTotal}</strong>
+											</p>
 										</List.Item>
-
 										<List.Item>
 											<p>
 												<strong>Condicion de pago</strong>
