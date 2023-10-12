@@ -187,6 +187,14 @@ export default function Login() {
 										>
 											¿Olvidó su contraseña?
 										</a>
+										<a
+											type="link"
+											block
+											className="shadow-none text-blue-600 text-center"
+											href=''
+										>
+											Descargue la app aqui
+										</a>
 										<Modal
 											centered
 											title="¿Olvidó su contraseña?"

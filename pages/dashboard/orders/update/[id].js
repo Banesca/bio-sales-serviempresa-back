@@ -34,6 +34,7 @@ import {
 	LeftOutlined,
 	PauseOutlined,
 	CloseOutlined,
+	DeleteOutlined,
 } from '@ant-design/icons';
 
 export const UNIT_TYPE = {
@@ -81,6 +82,7 @@ const UpdateOrderPage = () => {
 	const [count, setCount] = useState(1);
 	const [newTotal, setNewTotal] = useState();
 	const [totalDeclarado, setTotalDecla] = useState();
+	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
 
 	const getOrderRequest = async (id) => {
@@ -297,7 +299,7 @@ const UpdateOrderPage = () => {
 			...row,
 		});
 		setDataSource(newData);
-	
+
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			newData.forEach((objeto) => {
@@ -307,11 +309,15 @@ const UpdateOrderPage = () => {
 			return suma;
 		};
 		const sumaTotal = calcularSumaTotal();
-		
+
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
 	};
-
+	const handleDelete = (key) => {
+		const newData = dataSource.filter((item) => item.key !== key);
+		setDataSource(newData);
+	};
+	
 	const defaultColumns = [
 		{
 			title: 'Metodo de pago',
@@ -323,6 +329,20 @@ const UpdateOrderPage = () => {
 			dataIndex: 'monto',
 			key: 'monto',
 			editable: true,
+		},
+		{
+			title: 'Accion',
+			dataIndex: 'operation',
+			render: (_, record) =>
+				dataSource.length >= 1 ? (
+					<Button
+						onClick={() => handleDelete(record.key)}
+						type="primary"
+						danger
+					>
+						<DeleteOutlined />
+					</Button>
+				) : null,
 		},
 	];
 
@@ -350,6 +370,33 @@ const UpdateOrderPage = () => {
 		},
 	};
 
+	const getDebtsbyClient = async (phoneNumber) => {
+		setLoading(true);
+		console.log(phoneNumber);
+		try {
+			const res = await requestHandler.post(
+				'/api/v2/order/all/currentacount/hasto',
+				{
+					query: phoneNumber,
+				}
+			);
+			if (res.isLeft()) {
+				throw res.value.getErrorValue();
+			}
+			const value = res.value.getValue().data;
+			setdebts(value);
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false);
+		}
+	};
+	useEffect(() => {
+		if (Object.keys(client).length) {
+			getDebtsbyClient(client.phone);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [client]);
 	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
@@ -383,7 +430,6 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
-
 	const calculateSubTotal = (item) => {
 		let subTotal = 0;
 		if (item.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
@@ -401,6 +447,10 @@ const UpdateOrderPage = () => {
 	const handleReturn = () => {
 		router.push('/dashboard/orders');
 		setLoading(true);
+	};
+
+	const handleDeletePay = () => {
+		setDataSource([]);
 	};
 
 	return (
@@ -492,13 +542,15 @@ const UpdateOrderPage = () => {
 												<strong>DECLARADO</strong>
 											</p>
 											<p>
-												<strong>${totalDeclarado}</strong>
+												<strong style={{ color: 'blue' }}>
+													${totalDeclarado}
+												</strong>
 											</p>
 											<p>
 												<strong>RESTANTE</strong>
 											</p>
 											<p>
-												<strong>${newTotal}</strong>
+												<strong style={{ color: 'red' }}>${newTotal}</strong>
 											</p>
 										</List.Item>
 										<List.Item>
@@ -530,7 +582,6 @@ const UpdateOrderPage = () => {
 											</p>
 
 											<Select
-												/* mode="multiple" */
 												placeholder="Ingrese metodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
@@ -555,6 +606,16 @@ const UpdateOrderPage = () => {
 											rowClassName={() => 'editable-row'}
 											components={components}
 										/>
+										<br></br>
+										<div className="flex justify-end">
+											<Button
+												onClick={handleDeletePay()}
+												type="primary"
+												className="bg-blue-500"
+											>
+												Limpiar metodos de pago
+											</Button>
+										</div>
 										<List.Item>
 											<div></div>
 											<div className="flex justify-end">
