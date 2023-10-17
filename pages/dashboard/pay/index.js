@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
-import { PlusOutlined, AppstoreAddOutlined } from '@ant-design/icons';
-import { Select, Button, Form, Input, Modal, Tables } from 'antd';
+import { AppstoreAddOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal } from 'antd';
 import PayForm from '/components/pay/PayForm';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
@@ -15,29 +15,23 @@ const PayConditions = () => {
 	const [clients, setClients] = useState([]);
 	const [message, setMessage] = useState('');
 
-
 	const payConditions = () => {
 		getPayConditions();
-	}
+	};
 
 	useEffect(() => {
 		getPayConditions();
 		getClientsRequest();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [PayForm])
-
+	}, [PayForm]);
 
 	const getPayConditions = async () => {
-		const response = await requestHandler.get(
-			'/api/v2/paymentcondition/list'
-		);
+		const response = await requestHandler.get('/api/v2/paymentcondition/list');
 		if (!response.isLeft()) {
 			const value = response.value._value.response;
 			setPayConditionsList(value);
 		}
-		
 	};
-
 
 	const getClientsRequest = async () => {
 		const res = await requestHandler.get('/api/v2/client/list');
@@ -48,36 +42,34 @@ const PayConditions = () => {
 		}
 	};
 
-
-
 	const getPayConditionsAdd = async () => {
 		const data = {
-			note: message
-		}
+			note: message,
+		};
 		const response = await requestHandler.post(
-			'/api/v2/paymentcondition/add', data
+			'/api/v2/paymentcondition/add',
+			data
 		);
 		if (!response.isLeft()) {
 			const value = response.value._value.response;
 			setPayConditionsList(value);
 		}
 		setOpenModal(false);
-		getPayConditions()
-		setMessage("")
+		getPayConditions();
+		setMessage('');
 	};
-
 
 	const showModal = () => {
 		setOpenModal(true);
 	};
 
-	const handleChange = event => {
+	const handleChange = (event) => {
 		setMessage(event.target.value);
-	}
+	};
 
-	const cancelModal = event => {
+	const cancelModal = (event) => {
 		setOpenModal(false);
-	}
+	};
 
 	return (
 		<DashboardLayout>
@@ -95,8 +87,14 @@ const PayConditions = () => {
 				onCancel={() => setOpenModal(false)}
 				footer={
 					<div className="flex justify-end">
-						<Button danger onClick={cancelModal}>Cancelar</Button>
-						<Button type="primary" className="bg-blue-500" onClick={getPayConditionsAdd}>
+						<Button danger onClick={cancelModal}>
+							Cancelar
+						</Button>
+						<Button
+							type="primary"
+							className="bg-blue-500"
+							onClick={getPayConditionsAdd}
+						>
 							Guardar
 						</Button>
 					</div>
@@ -106,8 +104,11 @@ const PayConditions = () => {
 					<h1>Ingrese el nombre o descripción</h1>
 					<Form>
 						<Form.Item>
-							<Input onChange={handleChange}
-								value={message} placeholder='Condición de pago'></Input>
+							<Input
+								onChange={handleChange}
+								value={message}
+								placeholder="Condición de pago"
+							></Input>
 						</Form.Item>
 					</Form>
 				</div>

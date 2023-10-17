@@ -115,6 +115,9 @@ const OrderDetail = () => {
 				currentOrder.fechaEntrega
 			).toLocaleDateString(),
 			'Observacion (opcional):': currentOrder.comments,
+		},
+		
+		{
 			'Nombre del pruducto': currentOrder?.body[0].nameProduct,
 			Código: currentOrder.body[0].barCode,
 			Precio: currentOrder.body[0].priceSale,
@@ -123,8 +126,8 @@ const OrderDetail = () => {
 			Total: currentOrder?.totalBot,
 		},
 	];
-	console.log(currentOrder.body)
-	console.log(ExcelExport)
+
+	console.log(ExcelExport);
 
 	return (
 		<DashboardLayout>
