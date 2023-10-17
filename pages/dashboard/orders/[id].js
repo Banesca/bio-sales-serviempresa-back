@@ -1,10 +1,10 @@
 /* eslint-disable indent */
 import DashboardLayout from '../../../components/shared/layout';
 import { Button, List, message } from 'antd';
+import { ExportOutlined } from '@ant-design/icons';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-/* import { useRouter } from 'next/navigation'; */
 import { GeneralContext } from '../../_app';
 import { orderStatusToUse } from '.';
 import DetailOrderTable from '../../../components/orders/detail/orderTable';
@@ -14,25 +14,12 @@ import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
-import DocPdf from './DocPdf';
-import {
-	PDFDownloadLink,
-	Page,
-	Document,
-	View,
-	Text,
-	StyleSheet,
-} from '@react-pdf/renderer';
+import * as XLSX from 'xlsx';
 
 const OrderDetail = () => {
 	const router = useRouter();
-
-	console.log(router);
-
 	const { id } = router?.query;
-
 	const [log, setLog] = useState();
-	const [verPdf, setVerPdf] = useState(false);
 
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
@@ -76,7 +63,7 @@ const OrderDetail = () => {
 		}
 		return color;
 	};
-	
+
 	const handleChangeStatus = async (status) => {
 		setLoading(true);
 		try {
@@ -100,8 +87,6 @@ const OrderDetail = () => {
 		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, id]);
 
 	if (loading || !currentOrder) {
@@ -111,74 +96,35 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
+	const exportToExcel = () => {
+		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.writeFile(workbook, 'Recibo.xlsx');
+	};
 
-	let status = orderStatusToUse[currentOrder.idStatusOrder];
-
-	const styles = StyleSheet.create({
-		title: {
-			alignItems: 'center',
-			padding: '20px',
+	const ExcelExport = [
+		{
+			'Numero del pedido': currentOrder.numberOrden,
+			Vendedor: user?.fullname,
+			Estado: orderStatusToUse[currentOrder.idStatusOrder].state,
+			Cliente: currentOrder.fullNameClient,
+			Contacto: currentOrder.phoneClient,
+			Dirección: currentOrder.address,
+			'Fecha de creacion': new Date(
+				currentOrder.fechaEntrega
+			).toLocaleDateString(),
+			'Observacion (opcional):': currentOrder.comments,
+			'Nombre del pruducto': currentOrder?.body[0].nameProduct,
+			Código: currentOrder.body[0].barCode,
+			Precio: currentOrder.body[0].priceSale,
+			Cantidad: currentOrder.body[0].weight,
+			'Sub Total': currentOrder.body[0].weight,
+			Total: currentOrder?.totalBot,
 		},
-		body: {
-			width:'50%',
-			display:'flex',
-			padding: '10px',
-		},
-	});
-	const MyDoc = () => (
-		<Document>
-			<Page size="A4">
-				<View>
-					<View style={styles.title}>
-						<Text>Detalles de pédido</Text>
-					</View>
-
-					<View>
-						<View style={styles.body}>
-							<Text>Número de pedido:</Text>
-							<Text>{currentOrder.numberOrden}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Vendedor:</Text>
-							<Text>{user?.fullname}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Estado:</Text>
-							<Text>{status.state}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Cliente:</Text>
-							<Text>{currentOrder.fullNameClient}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Contacto:</Text>
-							<Text>{currentOrder.phoneClient}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Dirección:</Text>
-							<Text>{currentOrder.address}</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Fecha de creación:</Text>
-							<Text>
-								{new Date(currentOrder.fechaEntrega).toLocaleDateString()}
-							</Text>
-						</View>
-						<View style={styles.body}>
-							<Text>Observacion:</Text>
-							<Text style={{}}>{currentOrder.comments}</Text>
-						</View>
-					</View>
-				{/* 	<View>
-						<DetailOrderTable
-							products={currentOrder?.body}
-							total={currentOrder?.totalBot}
-						/>
-					</View> */}
-				</View>
-			</Page>
-		</Document>
-	);
+	];
+	console.log(currentOrder.body)
+	console.log(ExcelExport)
 
 	return (
 		<DashboardLayout>
@@ -198,18 +144,14 @@ const OrderDetail = () => {
 						goBack={1}
 					/>
 					<div style={{ display: 'flex', width: '12%' }}>
-						<PDFDownloadLink document={<MyDoc />} fileName="Orden N.pdf">
-							<Button
-								htmlType="submit"
-								type="success"
-								block
-								onClick={() => {
-									setVerPdf();
-								}}
-							>
-								Imprimir recibo
-							</Button>
-						</PDFDownloadLink>
+						<Button
+							htmlType="submit"
+							type="success"
+							onClick={exportToExcel}
+							block
+						>
+							<ExportOutlined /> Imprimir recibo
+						</Button>
 					</div>
 				</div>
 

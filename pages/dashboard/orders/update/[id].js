@@ -80,7 +80,8 @@ const UpdateOrderPage = () => {
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const [count, setCount] = useState(1);
-	const [newTotal, setNewTotal] = useState();
+	const [newTotal, setNewTotal] = useState(0);
+	/* const [sumaTotal] = useState(0); */
 	const [totalDeclarado, setTotalDecla] = useState();
 	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
@@ -288,7 +289,7 @@ const UpdateOrderPage = () => {
 
 		return <td {...restProps}>{childNode}</td>;
 	};
-
+	/* newTotal = 0; */
 	const handleSave = (row) => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
@@ -298,6 +299,7 @@ const UpdateOrderPage = () => {
 			...item,
 			...row,
 		});
+
 		setDataSource(newData);
 
 		const calcularSumaTotal = () => {
@@ -308,16 +310,30 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-		const sumaTotal = calcularSumaTotal();
-
+		
+		sumaTotal = calcularSumaTotal();
+		
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
 	};
+
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
 		setDataSource(newData);
+		
+		const calcularSumaTotal = () => {
+			let suma = 0;
+			newData.forEach((objeto) => {
+				suma += Number(objeto.monto);
+				console.log(suma);
+			});
+			return suma;
+		};
+		sumaTotal= calcularSumaTotal();
+		setTotalDecla(sumaTotal);
+		setNewTotal(total - sumaTotal);
 	};
-	
+
 	const defaultColumns = [
 		{
 			title: 'Metodo de pago',
@@ -363,6 +379,18 @@ const UpdateOrderPage = () => {
 		};
 	});
 
+	const defaultColumns2 = [
+		{
+			title: 'Metodo de pago',
+			dataIndex: 'name',
+			key: 'name',
+		},
+		{
+			title: 'Monto a pagar',
+			dataIndex: 'monto',
+			key: 'monto',
+		},
+	];
 	const components = {
 		body: {
 			row: EditableRow,
@@ -397,6 +425,7 @@ const UpdateOrderPage = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [client]);
+
 	const handleReceiveOrder = async () => {
 		setLoading(true);
 		try {
@@ -447,10 +476,6 @@ const UpdateOrderPage = () => {
 	const handleReturn = () => {
 		router.push('/dashboard/orders');
 		setLoading(true);
-	};
-
-	const handleDeletePay = () => {
-		setDataSource([]);
 	};
 
 	return (
@@ -607,15 +632,6 @@ const UpdateOrderPage = () => {
 											components={components}
 										/>
 										<br></br>
-										<div className="flex justify-end">
-											<Button
-												onClick={handleDeletePay()}
-												type="primary"
-												className="bg-blue-500"
-											>
-												Limpiar metodos de pago
-											</Button>
-										</div>
 										<List.Item>
 											<div></div>
 											<div className="flex justify-end">
@@ -721,6 +737,18 @@ const UpdateOrderPage = () => {
 						<p>
 							<strong>${total}</strong>
 						</p>
+						<p>
+							<strong>DECLARADO</strong>
+						</p>
+						<p>
+							<strong style={{ color: 'blue' }}>${totalDeclarado}</strong>
+						</p>
+						<p>
+							<strong>RESTANTE</strong>
+						</p>
+						<p>
+							<strong style={{ color: 'red' }}>${newTotal}</strong>
+						</p>
 					</List.Item>
 					<List.Item>
 						<p>
@@ -730,7 +758,7 @@ const UpdateOrderPage = () => {
 							<Form>
 								<Form.Item className="w-32 my-auto">
 									<Select
-										/* mode="multiple" */
+										disabled="true"
 										placeholder="Ingrese metodos de pago"
 										style={{ width: '100%' }}
 										value={PaymentAdd}
@@ -750,8 +778,19 @@ const UpdateOrderPage = () => {
 							</Form>
 						</p>
 					</List.Item>
+					<List.Item style={{display:'flex', justifyContent:'center'}}>
+						<Table
+							style={{width:'100%'}}
+							bordered
+							columns={defaultColumns2}
+							dataSource={dataSource}
+							rowClassName={() => 'editable-row'}
+							components={components}
+						/>
+					</List.Item>
 				</List>
 			</Modal>
+
 			<Modal
 				title="Confirmación"
 				open={pauseOrderModal}

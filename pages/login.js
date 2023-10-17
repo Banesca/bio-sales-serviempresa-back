@@ -9,7 +9,11 @@ import { useBusinessProvider } from '../hooks/useBusinessProvider';
 import { ip } from '../util/environment';
 import { PROFILES } from '../components/shared/profiles';
 import MainLogo from '../components/logos/mainLogo';
-import { MailOutlined, SafetyOutlined } from '@ant-design/icons';
+import {
+	MailOutlined,
+	SafetyOutlined,
+	DownloadOutlined,
+} from '@ant-design/icons';
 
 const { Content } = Layout;
 
@@ -71,7 +75,7 @@ export default function Login() {
 		const value = res.value.getValue().data[0];
 		localStorage.setItem('accessToken', value.token);
 		console.log(value.idProfileFk);
-		if (value.idProfileFk !== 1 ) {
+		if (value.idProfileFk !== 1) {
 			const businessByUser = await getUserBusiness(value.idUser);
 			if (businessByUser.length < 1 || value.idProfileFk !== 1) {
 				handleLoginError('Acceso denegado');
@@ -88,7 +92,7 @@ export default function Login() {
 				JSON.stringify(value.branch[selectedBusinessIdx])
 			);
 			setLoading(false);
-			return
+			return;
 		} else {
 			localStorage.setItem('selectedBusiness', JSON.stringify(value.branch[0]));
 		}
@@ -191,10 +195,21 @@ export default function Login() {
 											type="link"
 											block
 											className="shadow-none text-blue-600 text-center"
-											href=''
+											href=""
+											style={{
+												width:'90%',
+												background:'#0091FF',
+												color:'black',
+												display:'flex',
+												justifyContent:'center',
+												borderRadius:'8px',
+												
+											}}
 										>
-											Descargue la app aqui
+											Descargue la app aqui!
+											<DownloadOutlined />
 										</a>
+										
 										<Modal
 											centered
 											title="¿Olvidó su contraseña?"
