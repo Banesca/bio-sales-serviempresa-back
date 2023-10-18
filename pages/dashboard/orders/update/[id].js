@@ -556,28 +556,7 @@ const UpdateOrderPage = () => {
 								/>
 								<Card className="rounded-2x1 shadow-lg">
 									<List dataSource={currentOrder?.body}>
-										<List.Item>
-											<p>
-												<strong>TOTAL</strong>
-											</p>
-											<p>
-												<strong>${total}</strong>
-											</p>
-											<p>
-												<strong>DECLARADO</strong>
-											</p>
-											<p>
-												<strong style={{ color: 'blue' }}>
-													${totalDeclarado}
-												</strong>
-											</p>
-											<p>
-												<strong>RESTANTE</strong>
-											</p>
-											<p>
-												<strong style={{ color: 'red' }}>${newTotal}</strong>
-											</p>
-										</List.Item>
+										
 										<List.Item>
 											<p>
 												<strong>Condicion de pago</strong>
@@ -623,7 +602,28 @@ const UpdateOrderPage = () => {
 													))}
 											</Select>
 										</List.Item>
-
+										<List.Item>
+											<p>
+												<strong>TOTAL:</strong>
+											</p>
+											<p>
+												<strong>${total}</strong>
+											</p>
+											<p>
+												<strong>DECLARADO:</strong>
+											</p>
+											<p>
+												<strong style={{ color: 'blue' }}>
+													${totalDeclarado}
+												</strong>
+											</p>
+											<p>
+												<strong>RESTANTE:</strong>
+											</p>
+											<p>
+												<strong style={{ color: 'red' }}>${newTotal}</strong>
+											</p>
+										</List.Item>
 										<Table
 											bordered
 											columns={columns}
