@@ -179,37 +179,57 @@ export default function Login() {
 										</Form.Item>
 									</Tooltip>
 									<Form.Item
-										className="my-8"
 										wrapperCol={{ span: 14, offset: 0 }}
 										justify="center"
 									>
+										<Button
+											type="primary"
+											htmlType="submit"
+											className="bg-blue-600"
+											block
+										>
+											Iniciar sesión
+										</Button>
+
 										<a
 											type="link"
 											onClick={() => setDeleteModalOpen(true)}
 											block
 											className="shadow-none text-blue-600 text-center"
+											style={{
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'center',
+											}}
 										>
 											¿Olvidó su contraseña?
 										</a>
+									</Form.Item>
+									<Form.Item
+										className="my-8"
+										wrapperCol={{ span: 14, offset: 0 }}
+										justify="center"
+									
+									>
 										<a
 											type="link"
 											block
-											className="shadow-none text-blue-600 text-center"
+											className="bg-blue-600"
 											href=""
 											style={{
-												width:'90%',
-												background:'#0091FF',
-												color:'black',
-												display:'flex',
-												justifyContent:'center',
-												borderRadius:'8px',
-												
+												background: '#0091FF',
+												color: 'black',
+												display: 'flex',
+												justifyContent: 'center',
+												borderRadius: '8px',
+												alignItems: 'center',
 											}}
 										>
-											Descargue la app aqui!
+											Descargar app 
 											<DownloadOutlined />
 										</a>
-										
+										<h5 className="text-center" style={{color:'white'}}>Versión 1.0.0</h5>
+
 										<Modal
 											centered
 											title="¿Olvidó su contraseña?"
@@ -225,22 +245,8 @@ export default function Login() {
 										</Modal>
 									</Form.Item>
 								</div>
-
-								<Form.Item
-									wrapperCol={{ span: 14, offset: 0 }}
-									justify="center"
-								>
-									<Button
-										type="primary"
-										htmlType="submit"
-										className="bg-blue-600"
-										block
-									>
-										Iniciar sesión
-									</Button>
-								</Form.Item>
 							</Form>
-							<h5 className="text-center">Versión 1.0.0</h5>
+							
 						</div>
 					</div>
 				</Content>

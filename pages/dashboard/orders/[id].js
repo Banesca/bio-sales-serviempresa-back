@@ -15,6 +15,8 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import * as XLSX from 'xlsx';
+/* import XLSX from 'xlsx-style'; */
+
 
 const OrderDetail = () => {
 	const router = useRouter();
@@ -98,36 +100,57 @@ const OrderDetail = () => {
 	}
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
+		const range = XLSX.utils.decode_range(worksheet['!ref']);
+		for (let R = range.s.r; R <= range.e.r; ++R) {
+			for (let C = range.s.c; C <= range.e.c; ++C) {
+				const cell_address = { c: C, r: R };
+				const cell_ref = XLSX.utils.encode_cell(cell_address);
+
+				if (!worksheet[cell_ref]) continue; 
+
+				
+				worksheet[cell_ref].s = {
+					font: {
+						bold: true,
+						color: { rgb: 'FFFFFF' },
+					},
+					fill: {
+						fgColor: { rgb: '000000' },
+					},
+				};
+			}
+		}
+
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Recibo.xlsx');
 	};
 
-	const ExcelExport = [
-		{
-			'Numero del pedido': currentOrder.numberOrden,
-			Vendedor: user?.fullname,
-			Estado: orderStatusToUse[currentOrder.idStatusOrder].state,
-			Cliente: currentOrder.fullNameClient,
-			Contacto: currentOrder.phoneClient,
-			Dirección: currentOrder.address,
-			'Fecha de creacion': new Date(
-				currentOrder.fechaEntrega
-			).toLocaleDateString(),
-			'Observacion (opcional):': currentOrder.comments,
-		},
-		
-		{
-			'Nombre del pruducto': currentOrder?.body[0].nameProduct,
-			Código: currentOrder.body[0].barCode,
-			Precio: currentOrder.body[0].priceSale,
-			Cantidad: currentOrder.body[0].weight,
-			'Sub Total': currentOrder.body[0].weight,
+	const commonData = {
+		'Numero del pedido': currentOrder.numberOrden,
+		Vendedor: user?.fullname,
+		Estado: orderStatusToUse[currentOrder.idStatusOrder].state,
+		Cliente: currentOrder.fullNameClient,
+		Contacto: currentOrder.phoneClient,
+		Dirección: currentOrder.address,
+		'Fecha de creacion': new Date(
+			currentOrder.fechaEntrega
+		).toLocaleDateString(),
+		'Observacion (opcional):': currentOrder.comments,
+	};
+	const ExcelExport = [commonData];
+	currentOrder.body.forEach((item, index) => {
+		const productData = {
+			'Nombre del pruducto': item.nameProduct,
+			Código: item.barCode,
+			Precio: item.priceSale,
+			Cantidad: item.weight,
+			'Sub Total': item.weight * item.priceSale,
 			Total: currentOrder?.totalBot,
-		},
-	];
+		};
 
-	console.log(ExcelExport);
+		ExcelExport.push(productData);
+	});
 
 	return (
 		<DashboardLayout>

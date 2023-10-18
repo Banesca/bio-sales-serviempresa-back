@@ -104,7 +104,7 @@ const Time = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Dias y horarios laborales'}>
+				<Title title={'Días y horarios laborales'}>
 					<div className="flex gap-5">
 						<Button className="bg-white" onClick={() => getReports()}>
 							<PlusOutlined />

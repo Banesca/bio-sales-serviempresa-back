@@ -81,7 +81,6 @@ const UpdateOrderPage = () => {
 	const [dataSource, setDataSource] = useState([]);
 	const [count, setCount] = useState(1);
 	const [newTotal, setNewTotal] = useState(0);
-	/* const [sumaTotal] = useState(0); */
 	const [totalDeclarado, setTotalDecla] = useState();
 	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
@@ -289,7 +288,7 @@ const UpdateOrderPage = () => {
 
 		return <td {...restProps}>{childNode}</td>;
 	};
-	/* newTotal = 0; */
+
 	const handleSave = (row) => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
@@ -311,7 +310,7 @@ const UpdateOrderPage = () => {
 			return suma;
 		};
 		
-		sumaTotal = calcularSumaTotal();
+		const sumaTotal = calcularSumaTotal();
 		
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
@@ -329,7 +328,8 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-		sumaTotal= calcularSumaTotal();
+		
+		sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
 	};
