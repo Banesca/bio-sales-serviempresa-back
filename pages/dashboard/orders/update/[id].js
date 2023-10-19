@@ -309,9 +309,9 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-		
+
 		const sumaTotal = calcularSumaTotal();
-		
+
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
 	};
@@ -319,7 +319,7 @@ const UpdateOrderPage = () => {
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
 		setDataSource(newData);
-		
+
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			newData.forEach((objeto) => {
@@ -328,7 +328,7 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-		
+
 		sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
 		setNewTotal(total - sumaTotal);
@@ -556,7 +556,6 @@ const UpdateOrderPage = () => {
 								/>
 								<Card className="rounded-2x1 shadow-lg">
 									<List dataSource={currentOrder?.body}>
-										
 										<List.Item>
 											<p>
 												<strong>Condicion de pago</strong>
@@ -603,26 +602,24 @@ const UpdateOrderPage = () => {
 											</Select>
 										</List.Item>
 										<List.Item>
-											<p>
-												<strong>TOTAL:</strong>
-											</p>
-											<p>
-												<strong>${total}</strong>
-											</p>
-											<p>
-												<strong>DECLARADO:</strong>
-											</p>
-											<p>
-												<strong style={{ color: 'blue' }}>
-													${totalDeclarado}
-												</strong>
-											</p>
-											<p>
-												<strong>RESTANTE:</strong>
-											</p>
-											<p>
-												<strong style={{ color: 'red' }}>${newTotal}</strong>
-											</p>
+											<div style={{ display: 'flex' }}>
+												<p>
+													<strong>TOTAL:</strong>
+												</p>
+												<p>${total}</p>
+											</div>
+											<div style={{ display: 'flex' }}>
+												<p>
+													<strong>DECLARADO:</strong>
+												</p>
+												<p style={{ color: 'blue' }}>${totalDeclarado}</p>
+											</div>
+											<div style={{ display: 'flex' }}>
+												<p>
+													<strong>RESTANTE:</strong>
+												</p>
+												<p style={{ color: 'red' }}>${newTotal}</p>
+											</div>
 										</List.Item>
 										<Table
 											bordered
@@ -730,25 +727,14 @@ const UpdateOrderPage = () => {
 						</List.Item>
 					)}
 				>
-					<List.Item style={{ borderTop: '1px solid #eee' }}>
-						<p>
-							<strong>TOTAL</strong>
-						</p>
-						<p>
-							<strong>${total}</strong>
-						</p>
-						<p>
-							<strong>DECLARADO</strong>
-						</p>
-						<p>
-							<strong style={{ color: 'blue' }}>${totalDeclarado}</strong>
-						</p>
-						<p>
-							<strong>RESTANTE</strong>
-						</p>
-						<p>
-							<strong style={{ color: 'red' }}>${newTotal}</strong>
-						</p>
+					<List.Item style={{ borderTop: '1px solid #eee', alignContent:'right' , display:'flex '}}>
+						<div></div>
+						<div style={{ display: 'flex', textAlign:'right' }}>
+							<p>
+								<strong>TOTAL:</strong>
+							</p>
+							<p>${total}</p>
+						</div>
 					</List.Item>
 					<List.Item>
 						<p>
@@ -778,9 +764,9 @@ const UpdateOrderPage = () => {
 							</Form>
 						</p>
 					</List.Item>
-					<List.Item style={{display:'flex', justifyContent:'center'}}>
+					<List.Item style={{ display: 'flex', justifyContent: 'center' }}>
 						<Table
-							style={{width:'100%'}}
+							style={{ width: '100%' }}
 							bordered
 							columns={defaultColumns2}
 							dataSource={dataSource}

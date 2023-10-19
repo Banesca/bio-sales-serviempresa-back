@@ -228,7 +228,7 @@ export default function Login() {
 											Descargar app 
 											<DownloadOutlined />
 										</a>
-										<h5 className="text-center" style={{color:'white'}}>Versión 1.0.0</h5>
+										<h5 className="text-center" style={{color:'white', marginTop:'20px'}}>Versión 1.0.0</h5>
 
 										<Modal
 											centered

@@ -36,64 +36,47 @@ const ImportProducts = () => {
 			key: 1,
 		},
 		{
-			title: 'Código',
-			dataIndex: 'barCode',
+			title: 'Descripcion',
+			dataIndex: 'nameKitchen',
 			responsive: ['sm'],
 			key: 2,
 		},
 		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
+			title: 'Codigo de barra global',
+			dataIndex: 'barCode',
 			key: 3,
-			render: (text, record) => <p>$ {text}</p>,
+		
 		},
-		{
-			title: 'Categoría',
+		/* {
+			title: 'Codigo de barra privado',
 			dataIndex: 'nameFamily',
 			responsive: ['lg'],
 			key: 4,
+		}, */
+		{
+			title: 'Referencia',
+			dataIndex: 'efectivo',
+			responsive: ['xl'],
+			key: 4,
 		},
 		{
-			title: 'Sub Categoría',
-			dataIndex: 'nameSubFamily',
-			responsive: ['xl'],
+			title: 'Categoria',
+			dataIndex: 'nameFamily',
+			responsive: ['lg'],
 			key: 5,
 		},
 		{
 			title: 'Marca',
-			dataIndex: 'nameBrand',
+			dataIndex: 'nameSubFamily',
 			responsive: ['lg'],
 			key: 6,
 		},
 		{
-			title: 'Promoción',
-			dataIndex: 'isPromo',
+			title: 'Precio lista 1',
+			dataIndex: 'priceSale',
+			responsive: ['lg'],
 			key: 7,
-			responsive: ['md'],
-			render: (bool) => {
-				return (
-					<div style={{ display: 'flex', justifyContent: 'center' }}>
-						{bool == '1' ? (
-							<CheckCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'green' }}
-							/>
-						) : (
-							<CloseCircleOutlined
-								style={{ fontSize: '1.5rem', color: 'red' }}
-							/>
-						)}
-					</div>
-				);
-			},
-		},
-		{
-			title: 'Acciones',
-			key: 8,
-			render: (product, index) => (
-				<Button type="primary" onClick={() => confirmDelete(product)} danger>
-					<DeleteOutlined />
-				</Button>
-			),
+			render: (text, record) => <p>$ {text}</p>,
 		},
 	];
 
@@ -199,9 +182,9 @@ const ImportProducts = () => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				nameProduct: row.nombre,
+				nameProduct: row.Nombre,
 				pricePurchase: 0,
-				priceSale: row.precio,
+				priceSale: row.Precio_Lista_1,
 				idUnitMeasurePurchaseFk: 17,
 				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
 				idSucursalFk: selectedBusiness.idSucursal,
@@ -211,7 +194,7 @@ const ImportProducts = () => {
 				maxProducVenta: '',
 				minStock: 0,
 				apply_inventory: true,
-				efectivo: 0,
+				efectivo: row.REFERENCIA,
 				linkPago: 0,
 				maxAditionals: 0,
 				minAditionals: 0,
@@ -219,14 +202,14 @@ const ImportProducts = () => {
 				percentageOfProfit: 0,
 				isheavy: 0,
 				idAdicionalCategoryFk: 0,
-				barCode: String(row.codigo),
-				nameKitchen: '',
+				barCode: String(row.Codigo_de_barra_global),
+				nameKitchen:  row.Descripcion,
 				unitweight: row.peso_unitario || null,
 				observation: row.observacion || '',
 				nameBrand: row.marca || null,
 				nameLine: row.linea || null,
-				nameFamily: row.categoria,
-				nameSubFamily: row.subcategoria,
+				nameFamily: row.Categoria,
+				nameSubFamily: row.Marca,
 				unitByBox: row.unidades_por_caja || null,
 				ean: row.ean || '',
 				healthRegister: row.registro_sanitario || '',
@@ -251,23 +234,6 @@ const ImportProducts = () => {
 		return filter.length > 0;
 	};
 
-	/* const handleConvertFileToJson = (files) => {
-		const file = new Blob(files, { type: files[0].type });
-		let reader = new FileReader();
-		reader.readAsArrayBuffer(file);
-		reader.onload = async (e) => {
-			const workbox = XLSX.read(e.target.result, { type: 'buffer' });
-			const worksheetName = workbox.SheetNames[0];
-			const workSheet = workbox.Sheets[worksheetName];
-			let data = XLSX.utils.sheet_to_json(workSheet);
-			const uploadData = await convertExcelDataToAPI(data);
-			addKeys(uploadData);
-			setData(uploadData);
-			console.log(uploadData);
-			console.log(data);
-		};
-	}; */
-
 	const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });
 		let reader = new FileReader();
@@ -277,11 +243,11 @@ const ImportProducts = () => {
 			const worksheetName = workbox.SheetNames[0];
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
+			console.log(data)
 			const uploadData = await convertExcelDataToAPI(data);
+			console.log(uploadData)
 			addKeys(uploadData);
 			setData(uploadData);
-			addKeys(data);
-			setData(data);
 		};
 	};
 

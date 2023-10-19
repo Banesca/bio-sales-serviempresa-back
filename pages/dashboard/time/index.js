@@ -4,7 +4,7 @@ import Title from '../../../components/shared/title';
 import { Button, ConfigProvider, Space, Table } from 'antd';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
-
+import { useLoadingContext } from '../../../hooks/useLoadingProvider';
 import {
 	DeleteOutlined,
 	EditOutlined,
@@ -13,8 +13,12 @@ import {
 } from '@ant-design/icons';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
+import { useRouter } from 'next/router';
 
 const Time = () => {
+	const router = useRouter();
+	const { id } = router?.query;
+	const { loading, setLoading } = useLoadingContext();
 	const { filtered } = useProductFilter();
 	const columns = [
 		{
@@ -59,11 +63,12 @@ const Time = () => {
 					<Button
 						onClick={() => {
 							setLoading(true);
-							router.push(`/dashboard/products/update/${product.idProduct}`);
+							/* router.push(`/dashboard/products/update/${product.idProduct}`); */
 						}}
 					>
 						<EditOutlined />
 					</Button>
+					
 					<Button
 						type="primary"
 						danger
