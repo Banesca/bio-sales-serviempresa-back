@@ -141,9 +141,7 @@ const Filter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{categories &&
@@ -180,9 +178,7 @@ const Filter = ({ setQuery, clean }) => {
 										filterOption={(input, option) => {
 											return (option?.children ?? '')
 												.toLocaleLowerCase()
-												.includes(
-													input.toLocaleLowerCase()
-												);
+												.includes(input.toLocaleLowerCase());
 										}}
 									>
 										{subCategories &&
@@ -238,7 +234,7 @@ const Filter = ({ setQuery, clean }) => {
 								</Form.Item>
 							</Col>
 						</Row>
-						
+
 						<Row>
 							<Col
 								sm={{ span: 12, offset: 0 }}
@@ -251,7 +247,7 @@ const Filter = ({ setQuery, clean }) => {
 										padding: '0 .5rem',
 									}}
 								>
-									<Button type='warning' block onClick={onReset}>
+									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
@@ -267,11 +263,7 @@ const Filter = ({ setQuery, clean }) => {
 										padding: '0 .5rem',
 									}}
 								>
-									<Button
-										htmlType="submit"
-										type="success"
-										block
-									>
+									<Button htmlType="submit" type="success" block>
 										Buscar
 									</Button>
 								</Form.Item>
