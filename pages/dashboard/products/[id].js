@@ -293,8 +293,8 @@ const Product = () => {
 					>
 						<img
 							style={{
-								maxWidth: "300px",
-								height: "auto",
+								maxWidth: '300px',
+								height: 'auto',
 							}}
 							src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
 						/>

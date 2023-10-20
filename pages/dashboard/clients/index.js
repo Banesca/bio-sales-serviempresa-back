@@ -263,8 +263,8 @@ export default function ClientsPage() {
 			<div className="m-4 p-4">
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="success" style={{ marginRight: '-2.3rem' }} >
-						<UserAddOutlined /> Crear
+						<Button type="success" style={{ marginRight: '-2.3rem' }}>
+							<UserAddOutlined /> Crear
 						</Button>
 					</Link>
 				</Title>
@@ -372,7 +372,8 @@ export default function ClientsPage() {
 				]}
 			>
 				<p>
-				¿Estás seguro de que deseas eliminar a {`${currentClient?.nameClient}`}?
+					¿Estás seguro de que deseas eliminar a{' '}
+					{`${currentClient?.nameClient}`}?
 				</p>
 			</Modal>
 			<Modal

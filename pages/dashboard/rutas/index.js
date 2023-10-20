@@ -25,7 +25,6 @@ const Rutas = () => {
 	const [users, setUsers] = useState([]);
 	const [reportProduct, setReportProduct] = useState([]);
 	const { filtered } = useProductFilter();
-	
 
 	const columns = [
 		{
@@ -41,7 +40,7 @@ const Rutas = () => {
 			render: (text) => <p>{text}</p>,
 		},
 	];
-	
+
 	useEffect(() => {
 		getUsers();
 	}, []);
@@ -53,14 +52,14 @@ const Rutas = () => {
 			value = value.data.filter((b) => b.idProfileFk == 4);
 			setUsers(value);
 		}
-		console.log(res)
+		console.log(res);
 	};
 
 	const handleOnChange = async (value) => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/get/${value}`
 		);
-		console.log(res)
+		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -101,9 +100,8 @@ const Rutas = () => {
 							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
 						}
 					>
-					<Table columns={columns} dataSource={reportProduct} /> 
+						<Table columns={columns} dataSource={reportProduct} />
 					</ConfigProvider>
-				
 				</div>
 			</div>
 		</DashboardLayout>

@@ -18,7 +18,7 @@ export const useTdc = () => {
 
 	const getTdc = async () => {
 		try {
-			const res = await requestHandler.get(`/api/v2/param`);
+			const res = await requestHandler.get('/api/v2/param');
 			if (res.isLeft()) {
 				return;
 			}
@@ -40,7 +40,7 @@ export const useTdc = () => {
 				param: result.param,
 				idParam: tdc.idParam,
 			};
-			const data = await requestHandler.put(`/api/v2/param/update`, body);
+			const data = await requestHandler.put('/api/v2/param/update', body);
 			getTdc();
 			setLoading(false);
 		} catch (error) {

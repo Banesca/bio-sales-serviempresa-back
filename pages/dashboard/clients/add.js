@@ -36,7 +36,7 @@ export default function AddClient() {
 	const router = useRouter();
 	const { clients } = useClients();
 
-/* 	const getClientsRequest = async () => {
+	/* 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
 			await listClients();

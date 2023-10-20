@@ -16,7 +16,7 @@ export default function ProductsInOrder({
 	const orderColumns = [
 		{
 			title: (
-				<div className="text-white" style={{FontSize:"15px"}}>Pédido Nro.  {order?.numberOrden}</div>
+				<div className='text-white' style={{FontSize:'15px'}}>Pédido Nro.  {order?.numberOrden}</div>
 			),
 			children: [
 				{

@@ -9,7 +9,7 @@ import {
 	AuditOutlined,
 	CarryOutOutlined,
 	CreditCardOutlined,
-	PrinterOutlined
+	PrinterOutlined,
 } from '@ant-design/icons';
 
 export const statusNames = {
@@ -100,87 +100,87 @@ export default function ChangeOrderStatus({
 	return (
 		<>
 			{status != 2 && (
-					<List.Item  style={{ width: '100%' }}>
-						<h3 className="font-bold">Actualizar Estado</h3>
-						<Space>
-							{status == 1 && (
-								<>
-									<Button
-										onClick={() => handleOpenModal(statusNames.Anulado)}
-										danger
-									>
-										<CloseCircleOutlined/> Anular pedido
-									</Button>
-									{/* <Button onClick={() => handleOrder()} type="info">
+				<List.Item style={{ width: '100%' }}>
+					<h3 className="font-bold">Actualizar Estado</h3>
+					<Space>
+						{status == 1 && (
+							<>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Anulado)}
+									danger
+								>
+									<CloseCircleOutlined /> Anular pedido
+								</Button>
+								{/* <Button onClick={() => handleOrder()} type="info">
 										Facturar
 									</Button> */}
-									<Button
-										onClick={() => handleOpenModal(statusNames.Pagado)}
-										type="primary"
-										className="bg-blue-500"
-									>
-										<PrinterOutlined /> Facturar
-									</Button>
-								</>
-							)}
-							{status == 3 && (
-								<>
-									<Button
-										onClick={() => handleOpenModal(statusNames.Anulado)}
-										danger
-									>
-										<CloseCircleOutlined/>  Anular pedido
-									</Button>
-									{/* <Button
+								<Button
+									onClick={() => handleOpenModal(statusNames.Pagado)}
+									type="primary"
+									className="bg-blue-500"
+								>
+									<PrinterOutlined /> Facturar
+								</Button>
+							</>
+						)}
+						{status == 3 && (
+							<>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Anulado)}
+									danger
+								>
+									<CloseCircleOutlined /> Anular pedido
+								</Button>
+								{/* <Button
 										onClick={() => handleOpenModal(statusNames.Retenido)}
 										type="primary"
 										danger
 									>
 										Retener
 									</Button> */}
-									<Button
-										onClick={() => handleOpenModal(statusNames.Despachado)}
-										type="warning"
-									>
-										<CarryOutOutlined /> Despachar
-									</Button>
-								</>
-							)}
-							{status == 4 && (
-								<>
-									<Button
-										onClick={() => handleOpenModal(statusNames.Anulado)}
-										danger
-									>
-										<CloseCircleOutlined/>  Anular pedido
-									</Button>
-									<Button
-										onClick={() => handleOpenModal(statusNames.Cobrado)}
-										type="success"
-									>
-										<CreditCardOutlined/> Cobrar
-									</Button>
-								</>
-							)}
-							{status == 5 && (
-								<>
-									<Button
-										onClick={() => handleOpenModal(statusNames.Anulado)}
-										danger
-									>
-										<CloseCircleOutlined/>  Anular pedido
-									</Button>
-									<Button
-										onClick={() => handleOpenModal(statusNames['Procesado'])}
-										type="warning"
-									>
-									<AuditOutlined />	Procesar
-									</Button>
-								</>
-							)}
-							{status == 6 && <></>}
-						</Space>
-					</List.Item>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Despachado)}
+									type="warning"
+								>
+									<CarryOutOutlined /> Despachar
+								</Button>
+							</>
+						)}
+						{status == 4 && (
+							<>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Anulado)}
+									danger
+								>
+									<CloseCircleOutlined /> Anular pedido
+								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Cobrado)}
+									type="success"
+								>
+									<CreditCardOutlined /> Cobrar
+								</Button>
+							</>
+						)}
+						{status == 5 && (
+							<>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Anulado)}
+									danger
+								>
+									<CloseCircleOutlined /> Anular pedido
+								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Procesado'])}
+									type="warning"
+								>
+									<AuditOutlined /> Procesar
+								</Button>
+							</>
+						)}
+						{status == 6 && <></>}
+					</Space>
+				</List.Item>
 			)}
 			<Modal
 				open={modal.visible}
@@ -192,13 +192,15 @@ export default function ChangeOrderStatus({
 						<Button danger key="cancel" onClick={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button key="submit" primary onClick={() => handleChangeStatus(modal.status)}>
+						<Button
+							key="submit"
+							primary
+							onClick={() => handleChangeStatus(modal.status)}
+						>
 							Aceptar
 						</Button>
-					</div>
+					</div>,
 				]}
-			
-			
 			>
 				<p>{`¿Seguro de marcar este pédido como '${modal.action}'?`}</p>
 			</Modal>

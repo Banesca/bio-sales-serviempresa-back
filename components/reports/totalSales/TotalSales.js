@@ -2,39 +2,31 @@ import { Button, Card, List } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useRequest } from '../../../hooks/useRequest';
 
-
 const TotalSales = () => {
-	const [report, setReport] = useState("");
+	const [report, setReport] = useState('');
 	const { requestHandler } = useRequest();
-	
 
 	useEffect(() => {
 		getReports();
-	},[]);
+	}, []);
 
-	
-	useEffect(() => {
-	},[report]);
+	useEffect(() => {}, [report]);
 
-
-	
 	const getReports = async () => {
 		const res = await requestHandler.post('/api/v2/report/totals/');
 		if (!res.isLeft()) {
 			const value = res.value.getValue().response[0];
 			return setReport(value);
-		} 
-	};
-	
-
-	function validateValue(value){
-		if(value == null){
-			return 0
-		} else {
-			return value
 		}
-    }
+	};
 
+	function validateValue(value) {
+		if (value == null) {
+			return 0;
+		} else {
+			return value;
+		}
+	}
 
 	return (
 		<Card className="w-[50%] shadow-lg">
@@ -46,8 +38,7 @@ const TotalSales = () => {
 						justifyContent: 'space-between',
 						fontSize: '18px',
 					}}
-				>
-				</List.Item>
+				></List.Item>
 				<List.Item
 					style={{
 						padding: '0px 40px',
