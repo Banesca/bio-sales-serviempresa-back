@@ -436,7 +436,15 @@ const UpdateOrderPage = () => {
 		} finally {
 			setLoading(false);
 		}
+
+		const res = await requestHandler.put('/api/v2/order/close/', {
+			idOrder: currentOrder.idOrderH,
+			data: 'hola',
+		});
+
+		console.log(res);
 	};
+
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
@@ -727,9 +735,15 @@ const UpdateOrderPage = () => {
 						</List.Item>
 					)}
 				>
-					<List.Item style={{ borderTop: '1px solid #eee', alignContent:'right' , display:'flex '}}>
+					<List.Item
+						style={{
+							borderTop: '1px solid #eee',
+							alignContent: 'right',
+							display: 'flex ',
+						}}
+					>
 						<div></div>
-						<div style={{ display: 'flex', textAlign:'right' }}>
+						<div style={{ display: 'flex', textAlign: 'right' }}>
 							<p>
 								<strong>TOTAL:</strong>
 							</p>

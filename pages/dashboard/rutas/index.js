@@ -49,7 +49,7 @@ const Rutas = () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
-			value = value.data.filter((b) => b.idProfileFk == 4);
+			value = value.data.filter((b) => b.idProfileFk == 3);
 			setUsers(value);
 		}
 		console.log(res);
