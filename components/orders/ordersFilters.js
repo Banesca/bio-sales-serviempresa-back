@@ -1,4 +1,4 @@
-import { Button, Select } from 'antd';
+import { Button, Select, Input } from 'antd';
 import { DatePicker } from 'antd';
 import { Col, Form, Row } from 'antd';
 import { Collapse } from 'antd';
@@ -19,6 +19,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 		});
 		setQuery({
 			idStatusOrder: 0,
+		
 			startDate: null,
 			endDate: null,
 		});
@@ -30,6 +31,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 			idStatusOrder: values.idStatusOrder || 0,
 			startDate: values.date ? values.date[0]?.$d : null,
 			endDate: values.date ? values.date[1]?.$d : null,
+			fullname: values.fullname || '',
 		});
 
 		if (values.date) {
@@ -57,6 +59,29 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 					>
 						<Col span={11}>
 							<Form.Item
+								label="Cliente"
+								style={{ padding: '0 .5rem' }}
+								
+								name="fullname"
+							>
+								<Input type="text" />
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Vendedor"
+								style={{
+									padding: '0 .5rem',
+								}}
+							
+							
+								name="name"
+							>
+								<Input type="text" />
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
 								label="Estado"
 								name="idStatusOrder"
 								style={{
@@ -64,21 +89,17 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								}}
 							>
 								<Select>
-									{Object.entries(orderStatusToUse).map(
-										(o) => {
-											return (
-												<Select.Option
-													key={o[0]}
-													value={o[0]}
-												>
-													{o[1].state}
-												</Select.Option>
-											);
-										}
-									)}
+									{Object.entries(orderStatusToUse).map((o) => {
+										return (
+											<Select.Option key={o[0]} value={o[0]}>
+												{o[1].state}
+											</Select.Option>
+										);
+									})}
 								</Select>
 							</Form.Item>
 						</Col>
+
 						<Col span={12}>
 							<Form.Item
 								label="Fecha"
@@ -88,10 +109,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								}}
 							>
 								<DatePicker.RangePicker
-									placeholder={[
-										'Fecha inicial',
-										'Fecha final',
-									]}
+									placeholder={['Fecha inicial', 'Fecha final']}
 								/>
 							</Form.Item>
 						</Col>
@@ -102,7 +120,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								<Button
 									htmlType="submit"
 									block
-									type='warning'
+									type="warning"
 									onClick={onReset}
 								>
 									Limpiar

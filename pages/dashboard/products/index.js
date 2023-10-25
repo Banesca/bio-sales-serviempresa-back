@@ -38,8 +38,8 @@ export default function Products() {
 			key: 1,
 			render: (text) => (
 				<Image
-					width={100}
-					height={100}
+					width={70}
+					height={70}
 					src={`${ip}:${generalContext?.api_port}/product/${text}`}
 					style={{ with: '50px', height: '50px' }}
 					alt='image'

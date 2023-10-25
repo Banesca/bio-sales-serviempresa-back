@@ -18,7 +18,10 @@ import {
 	TrademarkCircleFilled,
 	DollarCircleFilled,
 	SettingOutlined,
+	BankOutlined,
 	DollarOutlined,
+	ApartmentOutlined,
+	NodeIndexOutlined,
 } from '@ant-design/icons';
 import { FaShoppingCart, FaTruck, FaUsers } from 'react-icons/fa';
 
@@ -54,6 +57,7 @@ const routes = [
 	'/dashboard/rutas',
 	'/dashboard/notifications',
 	'/dashboard/tdc',
+	'/dashboard/sucursal',
 	'/login',
 ];
 
@@ -69,23 +73,14 @@ const itemsMenu = [
 	getItem('Ordenes', '10', <FaShoppingCart />),
 	getItem('Reportes', '11', <PieChartFilled />),
 	getItem('Horarios', '12', <ClockCircleFilled />),
-	getItem(
-		'Condiciones de pago',
-		'8',
-		<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"> {/* <style>svg{fill:#fcfcfc}</style>  */}<path d="M112 112c0 35.3-28.7 64-64 64V336c35.3 0 64 28.7 64 64H464c0-35.3 28.7-64 64-64V176c-35.3 0-64-28.7-64-64H112zM0 128C0 92.7 28.7 64 64 64H512c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM176 256a112 112 0 1 1 224 0 112 112 0 1 1 -224 0zm80-48c0 8.8 7.2 16 16 16v64h-8c-8.8 0-16 7.2-16 16s7.2 16 16 16h24 24c8.8 0 16-7.2 16-16s-7.2-16-16-16h-8V208c0-8.8-7.2-16-16-16H272c-8.8 0-16 7.2-16 16z"/></svg>
-	),
+	getItem('Condiciones de pago', '8', <BankOutlined />),
 	getItem('Tasa de cambio', '16', <DollarOutlined />),
 	getItem('Camiones', '13', <FaTruck />),
-	getItem(
-		'Rutas',
-		'14',
-		<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-			<path d="M512 96c0 50.2-59.1 125.1-84.6 155c-3.8 4.4-9.4 6.1-14.5 5H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c53 0 96 43 96 96s-43 96-96 96H139.6c8.7-9.9 19.3-22.6 30-36.8c6.3-8.4 12.8-17.6 19-27.2H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320c-53 0-96-43-96-96s43-96 96-96h39.8c-21-31.5-39.8-67.7-39.8-96c0-53 43-96 96-96s96 43 96 96zM117.1 489.1c-3.8 4.3-7.2 8.1-10.1 11.3l-1.8 2-.2-.2c-6 4.6-14.6 4-20-1.8C59.8 473 0 402.5 0 352c0-53 43-96 96-96s96 43 96 96c0 30-21.1 67-43.5 97.9c-10.7 14.7-21.7 28-30.8 38.5l-.6 .7zM128 352a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM416 128a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
-		</svg>
-	),
+	getItem('Rutas', '14', <NodeIndexOutlined />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '15', <BellFilled />),
-	getItem('Cerrar sesión', '17', <LogoutOutlined />),
+	getItem('Sucursal', '17', <ApartmentOutlined />),
+	getItem('Cerrar sesión', '18', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
 	const [collapsed, setCollapsed] = useState(false);

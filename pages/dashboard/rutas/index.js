@@ -18,25 +18,76 @@ import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
 import { ip } from '/util/environment.js';
-import { FileImageOutlined } from '@ant-design/icons';
+import { NodeIndexOutlined } from '@ant-design/icons';
 
 const Rutas = () => {
 	const { requestHandler } = useRequest();
 	const [users, setUsers] = useState([]);
 	const [reportProduct, setReportProduct] = useState([]);
 	const { filtered } = useProductFilter();
+	const [open2, setOpen2] = useState(false);
+	const [productsDetail, setProductsDetail] = useState([]);
+	const [detailsRutas, setDetailsRutas] = useState([]);
 
 	const columns = [
 		{
-			title: 'Ruta Inicial',
-			dataIndex: 'name',
+			title: 'Titulo',
+			dataIndex: 'titulo',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Ruta Final',
-			dataIndex: 'description',
+			title: 'Fecha de creacion',
+			dataIndex: 'created_at',
 			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Id de la orden',
+			dataIndex: 'idOrdersbypassing',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Id del chofer',
+			dataIndex: 'idChoferFk',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Ver rutas',
+			dataIndex: 'idUtilsH',
+			key: '4',
+			render: (record) => (
+				<Button onClick={() => showModal2(record)}>
+					<NodeIndexOutlined />
+				</Button>
+			),
+		},
+	];
+	const columns2 = [
+		{
+			title: 'Titulo',
+			dataIndex: 'titulo',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Fecha de creacion',
+			dataIndex: 'created_at',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Id de la orden',
+			dataIndex: 'idOrdersbypassing',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Id del chofer',
+			dataIndex: 'idChoferFk',
+			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
 	];
@@ -45,6 +96,24 @@ const Rutas = () => {
 		getUsers();
 	}, []);
 
+	const showModal2 = (productos) => {
+		console.log(productos);
+		setOpen2(true);
+		setProductsDetail(productos);
+		handleOnChang(productos);
+	};
+
+	const handleOnChang = async (value) => {
+		const res = await requestHandler.get(`/api/v2/ordersbypassingh/list/${value}`);
+		console.log(res);
+		if (!res.isLeft()) {
+			let value = res.value.getValue();
+			value = value.response;
+			setDetailsRutas(value);
+		}
+	};
+
+	
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
 		if (!res.isLeft()) {
@@ -54,10 +123,9 @@ const Rutas = () => {
 		}
 		console.log(res);
 	};
-
 	const handleOnChange = async (value) => {
 		const res = await requestHandler.get(
-			`/api/v2/ordersbypassingh/get/${value}`
+			`/api/v2/ordersbypassingh/list/byuser/${value}`
 		);
 		console.log(res);
 		if (!res.isLeft()) {
@@ -65,6 +133,9 @@ const Rutas = () => {
 			value = value.response;
 			setReportProduct(value);
 		}
+	};
+	const handleCancel = () => {
+		setOpen2(false);
 	};
 
 	return (
@@ -104,6 +175,21 @@ const Rutas = () => {
 					</ConfigProvider>
 				</div>
 			</div>
+
+			<Modal
+				open={open2}
+				onCancel={handleCancel}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-1">
+						<Button danger key="cancel" onClick={handleCancel}>
+							Cancelar
+						</Button>
+					</div>,
+				]}
+			>
+				<Table columns={columns2} dataSource={detailsRutas} /> 
+			</Modal>
 		</DashboardLayout>
 	);
 };

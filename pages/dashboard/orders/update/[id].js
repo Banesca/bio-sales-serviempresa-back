@@ -391,6 +391,7 @@ const UpdateOrderPage = () => {
 			key: 'monto',
 		},
 	];
+	
 	const components = {
 		body: {
 			row: EditableRow,
@@ -419,6 +420,7 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
+
 	useEffect(() => {
 		if (Object.keys(client).length) {
 			getDebtsbyClient(client.phone);

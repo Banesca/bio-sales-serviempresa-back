@@ -6,6 +6,7 @@ import {
 	DeleteOutlined,
 	ExclamationCircleFilled,
 	UploadOutlined,
+	DownloadOutlined,
 } from '@ant-design/icons';
 import {
 	Upload,
@@ -45,14 +46,7 @@ const ImportProducts = () => {
 			title: 'Codigo de barra global',
 			dataIndex: 'barCode',
 			key: 3,
-		
 		},
-		/* {
-			title: 'Codigo de barra privado',
-			dataIndex: 'nameFamily',
-			responsive: ['lg'],
-			key: 4,
-		}, */
 		{
 			title: 'Referencia',
 			dataIndex: 'efectivo',
@@ -203,7 +197,7 @@ const ImportProducts = () => {
 				isheavy: 0,
 				idAdicionalCategoryFk: 0,
 				barCode: String(row.Codigo_de_barra_global),
-				nameKitchen:  row.Descripcion,
+				nameKitchen: row.Descripcion,
 				unitweight: row.peso_unitario || null,
 				observation: row.observacion || '',
 				nameBrand: row.marca || null,
@@ -243,12 +237,45 @@ const ImportProducts = () => {
 			const worksheetName = workbox.SheetNames[0];
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
-			console.log(data)
+			console.log(data);
 			const uploadData = await convertExcelDataToAPI(data);
-			console.log(uploadData)
+			console.log(uploadData);
 			addKeys(uploadData);
 			setData(uploadData);
 		};
+	};
+	const exportToExcel = () => {
+		const data = [ExcelExport];
+		const worksheet = XLSX.utils.json_to_sheet(data);
+
+		const range = XLSX.utils.decode_range(worksheet['!ref']);
+		for (let R = range.s.r; R <= range.e.r; ++R) {
+			for (let C = range.s.c; C <= range.e.c; ++C) {
+				const cell_address = { c: C, r: R };
+				const cell_ref = XLSX.utils.encode_cell(cell_address);
+				if (!worksheet[cell_ref]) continue;
+				worksheet[cell_ref].s = {
+					fill: { patternType: 'solid', fgColor: { rgb: 'FF0000FF' } },
+					font: { bold: true },
+					alignment: { wrapText: true },
+				};
+			}
+		}
+
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.writeFile(workbook, 'Plantilla.xlsx');
+	};
+
+	const ExcelExport = {
+		Nombre: '',
+		Descripcion: '',
+		Codigo_de_barra_global: '',
+		Codigo_de_barra_privado: '',
+		Referencia: '',
+		Categoria: '',
+		Marca: '',
+		Precio_Lista_1: '',
 	};
 
 	const handleChange = (info) => {
@@ -376,6 +403,16 @@ const ImportProducts = () => {
 									Archivo
 								</Button>
 							</Upload>
+						</Col>
+						<Col>
+							<Button
+								onClick={exportToExcel}
+								icon={<DownloadOutlined />}
+								block
+								style={{marginLeft:'1rem'}}
+							>
+								Descargar Plantilla
+							</Button>
 						</Col>
 					</Row>
 

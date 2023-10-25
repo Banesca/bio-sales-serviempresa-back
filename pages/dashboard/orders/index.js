@@ -14,6 +14,7 @@ import Title from '../../../components/shared/title';
 import {
 	AppstoreAddOutlined
 } from '@ant-design/icons';
+import UserFilters from '../../../components/users/filters';
 
 export const orderStatusToUse = {
 	1: { state: 'Por pagar', color: 'orange' },
