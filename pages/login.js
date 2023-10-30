@@ -13,6 +13,8 @@ import {
 	MailOutlined,
 	SafetyOutlined,
 	DownloadOutlined,
+	AndroidOutlined,
+	AppleOutlined,
 } from '@ant-design/icons';
 
 const { Content } = Layout;
@@ -228,6 +230,8 @@ export default function Login() {
 											Descargar app 
 											<DownloadOutlined />
 										</a>
+										<AndroidOutlined />
+										<AppleOutlined />
 										<h5 className="text-center" style={{color:'white', marginTop:'20px'}}>Versión 1.0.0</h5>
 
 										<Modal

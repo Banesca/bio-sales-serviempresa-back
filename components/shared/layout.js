@@ -68,6 +68,7 @@ const itemsMenu = [
 		getItem('Inventario', '4', <StockOutlined />),
 		getItem('Almacenes', '5', <ShopFilled />),
 	]),
+	getItem('Sucursal', '17', <ApartmentOutlined />),
 	getItem('Usuarios', '6', <UserOutlined />),
 	getItem('Clientes', '7', <TeamOutlined />),
 	getItem('Ordenes', '10', <FaShoppingCart />),
@@ -79,7 +80,7 @@ const itemsMenu = [
 	getItem('Rutas', '14', <NodeIndexOutlined />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '15', <BellFilled />),
-	getItem('Sucursal', '17', <ApartmentOutlined />),
+	
 	getItem('Cerrar sesión', '18', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {

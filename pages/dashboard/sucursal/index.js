@@ -34,6 +34,8 @@ const Sucursal = () => {
 	const [horario, setHorario] = useState('');
 	const [iva, setIva] = useState('');
 	const [direccion, setDireccion] = useState('');
+	const [nombreSucursal, setNombreSursal] = useState();
+	const [idSucu, setId] = useState();
 
 	const columns = [
 		{
@@ -60,7 +62,10 @@ const Sucursal = () => {
 	};
 	const showModal2 = (record) => {
 		setOpenModal2(true);
-		updateSucursal(record)
+		console.log(record);
+		setNombreSursal(record.sucursal);
+		setId(record.idSucursal);
+		console.log(idSucu);
 	};
 
 	const [formState, setFormState] = useState({
@@ -114,10 +119,12 @@ const Sucursal = () => {
 		setOpenModal(false);
 	};
 
-	const updateSucursal = async (record) => {
-		console.log(record);
-		const response = await requestHandler.post('/api/v2/mapas/update', {
-			id: record.idSucursal,
+	const updateSucursal = async () => {
+		console.log(idSucu);
+		console.log(body);
+		console.log(nombre);
+		const response = await requestHandler.put('/api/v2/mapas/update', {
+			id: idSucu,
 			location: body,
 			nameSucursal: nombre,
 		});
@@ -130,39 +137,13 @@ const Sucursal = () => {
 
 	let body = {
 		nameSucursal: nombre,
-		/* timeStore: this.form.controls['timeStore'].value, */
-		/* 	timeDelivery: this.form.controls['timeDelivery'].value, */
 		liWs: numero,
-		/* isOpen: this.open == true ? '1' : '0',
-		numberBank:, */
 		address: direccion,
 		clienteid: iva,
 		secretid: documento,
 		nameAppExternal: razon,
 		deliveryStore: horario,
 		delieveryExternal: tiempo,
-		/* squedule: this.form.controls['squedule'].value,
-		isChash: this.form.controls['isCash'].value == true ? '1' : '0',
-		isDebit: this.form.controls['isDebit'].value == true ? '1' : '0',
-		isTransfer: this.form.controls['numberBank'].value != '' ? '1' : '0',
-		isCredit: this.form.controls['isCredit'].value == true ? '1' : '0',
-		isBofa: this.form.controls['isBofaInput'].value != '' ? '1' : '0',
-		isPayapal: this.form.controls['isPayapalInput'].value != '' ? '1' : '0',
-		isZelle: this.form.controls['isZelleInput'].value != '' ? '1' : '0',
-		accountPayapal:
-			this.form.controls['isPayapalInput'].value == ''
-				? null
-				: this.form.controls['isPayapalInput'].value,
-		accountZelle:
-			this.form.controls['isZelleInput'].value == ''
-				? null
-				: this.form.controls['isZelleInput'].value,
-		accountBofa:
-			this.form.controls['isBofaInput'].value == ''
-				? null
-				: this.form.controls['isBofaInput'].value,
-		idSucursal: Number(this.id),
-		areas: area, */
 	};
 
 	return (
@@ -293,7 +274,7 @@ const Sucursal = () => {
 				}
 			>
 				<div className="flex flex-col gap-5">
-					<h1>Editar datos de la sucursal</h1>
+					<h1>Editar datos de la sucursal:{nombreSucursal}</h1>
 					<Form>
 						<Form.Item>
 							<p>Nombre de la sucursal</p>
@@ -301,7 +282,7 @@ const Sucursal = () => {
 								name="nombre"
 								onChange={handleChange}
 								value={formState.nombre}
-								placeholder="Nombre de la sucursal"
+								placeholder={nombreSucursal}
 							></Input>
 						</Form.Item>
 						<Form.Item>
