@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: false,
+	output: 'export',
+	/*distDir: 'dist', */
 	redirects: async () => {
 		return [
 			{
@@ -12,6 +14,7 @@ const nextConfig = {
 	},
 	images: {
 		domains: ['api.menusoftware.info'],
+		unoptimized:true
 	},
 };
 

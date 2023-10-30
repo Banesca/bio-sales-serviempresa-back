@@ -34,16 +34,17 @@ const Sucursal = () => {
 	const [horario, setHorario] = useState('');
 	const [iva, setIva] = useState('');
 	const [direccion, setDireccion] = useState('');
-	
+
 	const columns = [
 		{
 			title: 'Sucursales',
+			dataIndex: 'sucursal',
 			key: 1,
 		},
 		{
 			title: 'Acciones',
 			render: (record) => (
-				<Button  onClick={() => showModal2(record)}>
+				<Button onClick={() => showModal2(record)}>
 					<EditOutlined />
 				</Button>
 			),
@@ -57,10 +58,10 @@ const Sucursal = () => {
 	const showModal = () => {
 		setOpenModal(true);
 	};
-	const showModal2 = () => {
+	const showModal2 = (record) => {
 		setOpenModal2(true);
+		updateSucursal(record)
 	};
-
 
 	const [formState, setFormState] = useState({
 		nombre: '',
@@ -72,6 +73,7 @@ const Sucursal = () => {
 		iva: '',
 		direccion: '',
 	});
+
 	const handleChange = (event) => {
 		setFormState({
 			...formState,
@@ -90,7 +92,12 @@ const Sucursal = () => {
 		const res = await requestHandler.get(`/api/v2/mapas/list/all`);
 		let value = res.value.getValue();
 		if (value && Array.isArray(value.mapas)) {
-			let listaSucursales = value.mapas.map((mapa) => mapa.sucursal);
+			let listaSucursales = value.mapas.map((mapa) => {
+				return {
+					sucursal: mapa.sucursal,
+					idSucursal: mapa.idSucursal,
+				};
+			});
 			setSucursales(listaSucursales);
 		}
 	};
@@ -107,9 +114,10 @@ const Sucursal = () => {
 		setOpenModal(false);
 	};
 
-	const updateSucursal = async (id) => {
+	const updateSucursal = async (record) => {
+		console.log(record);
 		const response = await requestHandler.post('/api/v2/mapas/update', {
-			id: id,
+			id: record.idSucursal,
 			location: body,
 			nameSucursal: nombre,
 		});
@@ -124,19 +132,16 @@ const Sucursal = () => {
 		nameSucursal: nombre,
 		/* timeStore: this.form.controls['timeStore'].value, */
 		/* 	timeDelivery: this.form.controls['timeDelivery'].value, */
-		/* liWs: this.form.controls['liWs'].value,
-		isOpen: this.open == true ? '1' : '0',
-		numberBank:
-			this.form.controls['numberBank'].value == ''
-				? null
-				: this.form.controls['numberBank'].value, */
+		liWs: numero,
+		/* isOpen: this.open == true ? '1' : '0',
+		numberBank:, */
 		address: direccion,
-		/* clienteid: this.applyIGTF,
-		secretid: this.applyDeposit,
-		nameAppExternal: this.form.controls['nameAppExternal'].value,
-		deliveryStore: this.delivery == true ? '1' : '0',
-		delieveryExternal: this.deliverExterno == true ? '1' : '0',
-		squedule: this.form.controls['squedule'].value,
+		clienteid: iva,
+		secretid: documento,
+		nameAppExternal: razon,
+		deliveryStore: horario,
+		delieveryExternal: tiempo,
+		/* squedule: this.form.controls['squedule'].value,
 		isChash: this.form.controls['isCash'].value == true ? '1' : '0',
 		isDebit: this.form.controls['isDebit'].value == true ? '1' : '0',
 		isTransfer: this.form.controls['numberBank'].value != '' ? '1' : '0',
@@ -280,7 +285,7 @@ const Sucursal = () => {
 						<Button
 							type="primary"
 							className="bg-blue-500"
-							onClick={addSucursal}
+							onClick={updateSucursal}
 						>
 							Guardar
 						</Button>

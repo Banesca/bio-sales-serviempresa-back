@@ -410,7 +410,7 @@ const ProductForm = (props) => {
 								style={{
 									padding: '0 .5rem',
 								}}
-								label="Sub Categoría"
+								label="Marca"
 								name="idProductSubFamilyFk"
 								rules={[
 									{

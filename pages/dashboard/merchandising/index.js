@@ -7,9 +7,7 @@ import {
 	Modal,
 	Row,
 	Select,
-	Space,
 	Table,
-	Meta,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';

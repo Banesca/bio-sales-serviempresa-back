@@ -22,7 +22,7 @@
     "fs": "0.0.1-security",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
-    "next": "13.0.6",
+    "next": "^14.0.0",
     "primereact": "^8.7.3",
     "prop-types": "^15.8.1",
     "react": "18.2.0",

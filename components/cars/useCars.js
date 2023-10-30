@@ -28,16 +28,23 @@ export default function useCars() {
 			title: 'Acciones',
 			align: 'center',
 			render: (_, record) => (
-				<Space size="small" style={{ justifyContent: 'center', display: 'flex' }}>
-					<Button onClick={() => openDrivers(record) }>
+				<Space
+					size="small"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
+					<Button onClick={() => openDrivers(record)}>
 						<EditOutlined />
 					</Button>
-					<Button type="primary" danger onClick={()=>deleteDrivers(record.idUserDriver)}>
+					<Button
+						type="primary"
+						danger
+						onClick={() => deleteDrivers(record.idUserDriver)}
+					>
 						<DeleteOutlined />
 					</Button>
 				</Space>
 			),
-		}
+		},
 	];
 
 	const columns2 = [
@@ -64,11 +71,18 @@ export default function useCars() {
 			title: 'Acciones',
 			align: 'center',
 			render: (_, record) => (
-				<Space size="small" style={{ justifyContent: 'center', display: 'flex' }}>
-					<Button onClick={()=>openTrucks(record)}>
+				<Space
+					size="small"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
+					<Button onClick={() => openTrucks(record)}>
 						<EditOutlined />
 					</Button>
-					<Button type="primary" danger onClick={()=>deleteTrucks(record.idDriver)}>
+					<Button
+						type="primary"
+						danger
+						onClick={() => deleteTrucks(record.idDriver)}
+					>
 						<DeleteOutlined />
 					</Button>
 				</Space>
@@ -87,7 +101,7 @@ export default function useCars() {
 	const listDrivers = async () => {
 		try {
 			const res = await requestHandler.get('/api/v2/userdrivers/list');
-			console.log({ conductores: res });
+
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
@@ -100,7 +114,7 @@ export default function useCars() {
 	const listTrucks = async () => {
 		try {
 			const res = await requestHandler.get('/api/v2/drivers/list');
-			console.log({ camiones: res });
+
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
@@ -120,7 +134,6 @@ export default function useCars() {
 	const [loading, setLoading] = useState(false);
 	const [onEdit, setOnEdit] = useState(false);
 
-	// crear / editar - choferes
 	const saveDrivers = async (data) => {
 		setLoading(true);
 		try {
@@ -132,12 +145,12 @@ export default function useCars() {
 			closeModals(false);
 			listDrivers();
 		} catch (error) {
-			message.error('Ocurrió un error al registrar.')
+			message.error('Ocurrió un error al registrar.');
 		} finally {
 			setLoading(false);
 		}
-	}
-	// crear / editar - camiones
+	};
+
 	const saveTrucks = async (data) => {
 		try {
 			let res = !onEdit
@@ -152,8 +165,7 @@ export default function useCars() {
 		} finally {
 			setLoading(false);
 		}
-	}
-
+	};
 
 	// cerrar modals y limpiar formularios
 	const closeModals = () => {
@@ -162,45 +174,47 @@ export default function useCars() {
 		setOnEdit(false);
 		formDrive.resetFields();
 		formTruck.resetFields();
-	}
-
+	};
 
 	// abrir chofer
 	const openDrivers = (driver) => {
 		setOnEdit(true);
 		setOpenModal(true);
-		formDrive.setFieldsValue({...driver})
-	}
+		formDrive.setFieldsValue({ ...driver });
+	};
 	// abrir camión
 	const openTrucks = (truck) => {
-		console.log({truck})
+		console.log({ truck });
 
 		setOnEdit(true);
 		setOpenModal2(true);
-		formTruck.setFieldsValue({...truck})
-	}
-
+		formTruck.setFieldsValue({ ...truck });
+	};
 
 	// eliminar chofer
 	const deleteDrivers = async (idUserDriver) => {
 		try {
-			let res = await requestHandler.delete(`/api/v2/userdrivers/delete/${idUserDriver}`)
+			let res = await requestHandler.delete(
+				`/api/v2/userdrivers/delete/${idUserDriver}`
+			);
 			if (res.isLeft()) throw res.value.getErrorValue();
 			listDrivers();
 		} catch (error) {
 			message.error('Ocurrió un error al eliminar.');
 		}
-	}
+	};
 	// eliminar camión
 	const deleteTrucks = async (idDriver) => {
 		try {
-			let res = await requestHandler.delete(`/api/v2/drivers/delete/${idDriver}`)
+			let res = await requestHandler.delete(
+				`/api/v2/drivers/delete/${idDriver}`
+			);
 			if (res.isLeft()) throw res.value.getErrorValue();
 			listTrucks();
 		} catch (error) {
 			message.error('Ocurrió un error al eliminar.');
 		}
-	}
+	};
 
 	return {
 		columns,

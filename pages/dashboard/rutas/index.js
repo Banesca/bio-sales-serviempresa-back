@@ -7,9 +7,7 @@ import {
 	Modal,
 	Row,
 	Select,
-	Space,
 	Table,
-	Meta,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
@@ -97,7 +95,6 @@ const Rutas = () => {
 	}, []);
 
 	const showModal2 = (productos) => {
-		console.log(productos);
 		setOpen2(true);
 		setProductsDetail(productos);
 		handleOnChang(productos);

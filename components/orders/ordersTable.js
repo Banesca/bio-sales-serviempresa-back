@@ -11,7 +11,7 @@ import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import DocPdf from '../../pages/dashboard/orders/DocPdf';
+
 
 export default function OrdersTable({ orders }) {
 	const router = useRouter();
@@ -202,11 +202,11 @@ export default function OrdersTable({ orders }) {
 							<EditOutlined />
 						</Button>
 					)}
-					<PDFDownloadLink document={<DocPdf/>} fileName="Orden N.pdf">
+					{/* <PDFDownloadLink document={<DocPdf/>} fileName="Orden N.pdf">
 						<Button onClick={() => handleSeeUpdate(order, record)}>
 							<PrinterOutlined />
 						</Button>
-					</PDFDownloadLink>
+					</PDFDownloadLink> */}
 				</Space>
 			),
 		},
