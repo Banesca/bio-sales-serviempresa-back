@@ -64,6 +64,7 @@ const UpdateUser = () => {
 	const [startDate, setStartDate] = useState(new Date());
 	const [minDate, setMinDate] = useState(new Date(), 1);
 	const [debts, setdebts] = useState([]);
+	const [jornadas, setJornadas] = useState([]);
 
 	const columns2 = [
 		{
@@ -74,6 +75,18 @@ const UpdateUser = () => {
 		{
 			title: 'Deuda',
 			dataIndex: 'Deuda',
+			key: 2,
+		},
+	];
+	const columns3 = [
+		{
+			title: 'fecha de entrada',
+			dataIndex: 'date',
+			key: 1,
+		},
+		{
+			title: 'fecha de salida',
+			dataIndex: 'date',
 			key: 2,
 		},
 	];
@@ -152,6 +165,27 @@ const UpdateUser = () => {
 		}
 	};
 
+	const getJornadas = async () => {
+		setLoading(true);
+		let dates = [];
+		try {
+			const res = await requestHandler.get(`/api/v2/userjournal/get/${id}`);
+			if (res.isLeft()) {
+				return;
+			}
+			const value = res.value.getValue().data;
+			console.log(value);
+			if (Number(value.isClose) === 0 || Number(value.isClose) === 1) {
+				dates.push(value.date);
+			}
+			console.log(dates); // Imprime el arreglo de fechas
+			setJornadas([value]);
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+			setLoading(false);
+		}
+	};
+
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
 		if (data.pin !== '') {
@@ -167,6 +201,7 @@ const UpdateUser = () => {
 			getSellerClients(id);
 			getLoc(id);
 			getDebtsbyClient(id);
+			getJornadas(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
 	}, [generalContext, id]);
@@ -433,6 +468,10 @@ const UpdateUser = () => {
 			<Card>
 				<h3 className="text-4xl text-center">Deudas</h3>
 				<Table loading={loading} columns={columns2} dataSource={debts} />
+			</Card>
+			<Card>
+				<h3 className="text-4xl text-center">Jornadas</h3>
+				<Table loading={loading} columns={columns3} dataSource={jornadas} />
 			</Card>
 
 			<Modal

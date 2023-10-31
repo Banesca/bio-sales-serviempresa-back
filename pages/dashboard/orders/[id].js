@@ -15,11 +15,10 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import * as XLSX from 'xlsx';
-/* import XLSX from 'xlsx-style'; */
-
 
 const OrderDetail = () => {
 	const router = useRouter();
+
 	const { id } = router?.query;
 	const [log, setLog] = useState();
 
@@ -79,6 +78,9 @@ const OrderDetail = () => {
 		}
 	};
 
+	const handleButtonClick = () => {
+		router.push(`/dashboard/orders/update/${currentOrder.id}`);
+	};
 	const handleOrder = () => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${id}`);
@@ -98,7 +100,7 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
-	
+
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
 		const range = XLSX.utils.decode_range(worksheet['!ref']);
@@ -107,9 +109,8 @@ const OrderDetail = () => {
 				const cell_address = { c: C, r: R };
 				const cell_ref = XLSX.utils.encode_cell(cell_address);
 
-				if (!worksheet[cell_ref]) continue; 
+				if (!worksheet[cell_ref]) continue;
 
-				
 				worksheet[cell_ref].s = {
 					font: {
 						bold: true,
@@ -169,14 +170,28 @@ const OrderDetail = () => {
 						path="/dashboard/orders"
 						goBack={1}
 					/>
-					<div style={{ display: 'flex', width: '12%' }}>
+					<div style={{ display: 'flex' }}>
 						<Button
 							htmlType="submit"
 							type="success"
 							onClick={exportToExcel}
 							block
+							style={{ width: '100%' }}
 						>
 							<ExportOutlined /> Imprimir recibo
+						</Button>
+					</div>
+					<div style={{ display: 'flex', width: '12%', marginLeft: '10px' }}>
+						<Button
+							htmlType="submit"
+							type="success"
+							block
+							disabled={
+								orderStatusToUse[currentOrder.idStatusOrder].state !== 'cobrado'
+							}
+							onClick={handleButtonClick}
+						>
+							Pagar
 						</Button>
 					</div>
 				</div>

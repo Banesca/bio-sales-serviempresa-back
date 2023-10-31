@@ -32,6 +32,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 			startDate: values.date ? values.date[0]?.$d : null,
 			endDate: values.date ? values.date[1]?.$d : null,
 			fullname: values.fullname || '',
+			name: values.name || '', 
 		});
 
 		if (values.date) {
@@ -39,6 +40,8 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 				idBranchFk: `${selectedBusiness.idSucursal}`,
 				dateStart: values.date[0].$d,
 				dateEnd: values.date[1].$d,
+				fullname: values.fullname, 
+				name: values.name,
 			});
 		}
 	};
