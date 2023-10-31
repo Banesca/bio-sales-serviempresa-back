@@ -64,9 +64,8 @@ const Merchandising = () => {
 				</Button>
 			),
 		},
-		
 	];
-	
+
 	const columns2 = [
 		{
 			title: 'Nro. de reporte',
@@ -147,7 +146,6 @@ const Merchandising = () => {
 			title: 'Imagen',
 			dataIndex: 'urlImagenProduct',
 			key: 1,
-			
 		},
 		{
 			title: 'Nombre del producto',
@@ -156,12 +154,11 @@ const Merchandising = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title:'Codigo de barra',
+			title: 'Codigo de barra',
 			dataIndex: 'barCode',
 			key: 3,
 			render: (text) => <p>{text}</p>,
-		}
-		
+		},
 	];
 
 	const showModal = (reporte) => {
@@ -169,10 +166,10 @@ const Merchandising = () => {
 		setReportVisitDetail(reporte);
 	};
 	const showModal2 = (productos) => {
-		console.log(productos)
+		console.log(productos);
 		setOpen2(true);
 		setProductsDetail(productos);
-		handleOnChang3(productos); 
+		handleOnChang3(productos);
 	};
 
 	useEffect(() => {
@@ -194,7 +191,7 @@ const Merchandising = () => {
 		const res = await requestHandler.get(
 			`/api/v2/reportvisit/list/${value}/10`
 		);
-		console.log(res)
+		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -204,12 +201,9 @@ const Merchandising = () => {
 		}
 	};
 
-
-	const handleOnChang2  = async (value) => {
+	const handleOnChang2 = async (value) => {
 		let id = value;
-		const res = await requestHandler.get(
-			`/api/v2/utilh/list/byuser/${value}`
-		);
+		const res = await requestHandler.get(`/api/v2/utilh/list/byuser/${value}`);
 		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
@@ -220,11 +214,8 @@ const Merchandising = () => {
 		}
 	};
 
-	const handleOnChang3  = async (value) => {
-		
-		const res = await requestHandler.get(
-			`/api/v2/utilb/list/${value}`
-		);
+	const handleOnChang3 = async (value) => {
+		const res = await requestHandler.get(`/api/v2/utilb/list/${value}`);
 		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
@@ -232,7 +223,6 @@ const Merchandising = () => {
 			setReportInventario(value);
 		}
 	};
-
 
 	const getSuggestedProducts = async (idClient) => {
 		const response = await requestHandler.get(
@@ -262,7 +252,9 @@ const Merchandising = () => {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Reporte de visita merchandiser'}></Title>
+				<h1 className="text-center text-4xl font-semibold">
+					Reporte de visita merchandiser
+				</h1>
 				<Row>
 					<Col span={12}>
 						<Form.Item
@@ -334,12 +326,13 @@ const Merchandising = () => {
 						</ConfigProvider>
 					</div>
 				</div>
-
-				
 			</div>
 
 			<div className="m-4 p-4">
-				<Title title={'Inventario merchandiser'}></Title>
+				
+				<h1 className="text-center text-4xl font-semibold">
+					Inventario merchandiser
+				</h1>
 				<Row>
 					<Col span={12}>
 						<Form.Item
@@ -371,10 +364,7 @@ const Merchandising = () => {
 					>
 						<Table columns={columns} dataSource={reportProduct} />
 					</ConfigProvider>
-				
 				</div>
-
-				
 			</div>
 			<Modal
 				title={`Detalle de reporte: N#-${reportVisitDetail.idReportVisit} / Usuario: ${userSelected.fullname}`}
@@ -416,8 +406,7 @@ const Merchandising = () => {
 					</div>,
 				]}
 			>
-				
-				<Table columns={columns4}  dataSource={reportInventario}  />
+				<Table columns={columns4} dataSource={reportInventario} />
 			</Modal>
 		</DashboardLayout>
 	);

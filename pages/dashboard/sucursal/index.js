@@ -29,10 +29,7 @@ const Sucursal = () => {
 	const [nombre, setNombre] = useState('');
 	const [numero, setNumero] = useState('');
 	const [razon, setRazon] = useState('');
-	const [documento, setDocumento] = useState('');
-	const [tiempo, setTiempo] = useState('');
-	const [horario, setHorario] = useState('');
-	const [iva, setIva] = useState('');
+	const [rif, setRif] = useState('');
 	const [direccion, setDireccion] = useState('');
 	const [nombreSucursal, setNombreSursal] = useState();
 	const [idSucu, setId] = useState();
@@ -70,13 +67,10 @@ const Sucursal = () => {
 
 	const [formState, setFormState] = useState({
 		nombre: '',
-		numero: '',
 		razon: '',
-		documento: '',
-		tiempo: '',
-		horario: '',
-		iva: '',
+		rif: '',
 		direccion: '',
+		numero: '',
 	});
 
 	const handleChange = (event) => {
@@ -85,6 +79,10 @@ const Sucursal = () => {
 			[event.target.name]: event.target.value,
 		});
 	};
+
+	useEffect(() => {
+		console.log(formState);
+	}, [formState]);
 
 	const cancelModal = (event) => {
 		setOpenModal(false);
@@ -108,9 +106,10 @@ const Sucursal = () => {
 	};
 
 	const addSucursal = async () => {
+		console.log(body);
 		const response = await requestHandler.post('/api/v2/mapas/add', {
 			location: body,
-			nameSucursal: nombre,
+			nameSucursal: formState.nombre,
 		});
 		if (!response.isLeft()) {
 			const value = response.value._value.response;
@@ -120,13 +119,32 @@ const Sucursal = () => {
 	};
 
 	const updateSucursal = async () => {
-		console.log(idSucu);
-		console.log(body);
-		console.log(nombre);
 		const response = await requestHandler.put('/api/v2/mapas/update', {
-			id: idSucu,
-			location: body,
-			nameSucursal: nombre,
+			nameSucursal: formState.nombre,
+			timeStore: "0",
+			timeDelivery: formState.rif,
+			liWs: formState.numero,
+			isOpen: "0",
+			numberBank: "0",
+			address: formState.direccion,
+			clienteid: "0",
+			secretid: "0",
+			nameAppExternal: formState.razon,
+			deliveryStore: formState.rif,
+			delieveryExternal: "0",
+			squedule: "0",
+			isChash: "0",
+			isDebit: "0",
+			isTransfer: "0",
+			isCredit: "0",
+			isBofa: "0",
+			isPayapal: "0",
+			isZelle: "0",
+			accountPayapal: "0",
+			accountZelle: "0",
+			accountBofa: "0",
+			idSucursal: idSucu,
+			areas: "0",
 		});
 		if (!response.isLeft()) {
 			const value = response.value._value.response;
@@ -136,15 +154,28 @@ const Sucursal = () => {
 	};
 
 	let body = {
-		nameSucursal: nombre,
-		liWs: numero,
-		address: direccion,
-		clienteid: iva,
-		secretid: documento,
-		nameAppExternal: razon,
-		deliveryStore: horario,
-		delieveryExternal: tiempo,
+		nameSucursal: formState.nombre,
+		nameAppExternal: formState.razon,
+		timeDelivery: formState.rif,
+		address: formState.direccion,
+		liWs: formState.numero,
 	};
+
+	let body2 = {
+		idSucursal: idSucu,
+		nameSucursal: formState.nombre,
+		nameAppExternal: formState.razon,
+		timeDelivery: formState.rif,
+		address: formState.direccion,
+		liWs: formState.numero,
+		area: {
+			coordenadas: [
+				{ latitud: -58.49077601125959, longitud: -34.575744562684704 },
+			],
+		},
+	};
+
+	let body3 = {};
 
 	return (
 		<DashboardLayout>
@@ -190,15 +221,6 @@ const Sucursal = () => {
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Numero de Whatsapp</p>
-							<Input
-								name="numero"
-								onChange={handleChange}
-								value={formState.numero}
-								placeholder="Numero de Whatsapp"
-							></Input>
-						</Form.Item>
-						<Form.Item>
 							<p>Razon social</p>
 							<Input
 								name="razon"
@@ -208,39 +230,12 @@ const Sucursal = () => {
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Nro de documento</p>
+							<p>Rif</p>
 							<Input
-								name="documento"
+								name="rif"
 								onChange={handleChange}
-								value={formState.documento}
-								placeholder="Nro de documento"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Tiempo de espera</p>
-							<Input
-								name="tiempo"
-								onChange={handleChange}
-								value={formState.tiempo}
-								placeholder="Tiempo de espera"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Horario</p>
-							<Input
-								name="horario"
-								onChange={handleChange}
-								value={formState.horario}
-								placeholder="Horario"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Iva por defecto</p>
-							<Input
-								name="iva"
-								onChange={handleChange}
-								value={formState.iva}
-								placeholder="Iva por defecto"
+								value={formState.rif}
+								placeholder="Nro de rif"
 							></Input>
 						</Form.Item>
 						<Form.Item>
@@ -250,6 +245,15 @@ const Sucursal = () => {
 								onChange={handleChange}
 								value={formState.direccion}
 								placeholder="Dirección"
+							></Input>
+						</Form.Item>
+						<Form.Item>
+							<p>Contacto</p>
+							<Input
+								name="numero"
+								onChange={handleChange}
+								value={formState.numero}
+								placeholder="Numero de Whatsapp"
 							></Input>
 						</Form.Item>
 					</Form>
@@ -282,16 +286,7 @@ const Sucursal = () => {
 								name="nombre"
 								onChange={handleChange}
 								value={formState.nombre}
-								placeholder={nombreSucursal}
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Numero de Whatsapp</p>
-							<Input
-								name="numero"
-								onChange={handleChange}
-								value={formState.numero}
-								placeholder="Numero de Whatsapp"
+								placeholder="Nombre de la sucursal"
 							></Input>
 						</Form.Item>
 						<Form.Item>
@@ -304,39 +299,12 @@ const Sucursal = () => {
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Nro de documento</p>
+							<p>Rif</p>
 							<Input
-								name="documento"
+								name="rif"
 								onChange={handleChange}
-								value={formState.documento}
-								placeholder="Nro de documento"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Tiempo de espera</p>
-							<Input
-								name="tiempo"
-								onChange={handleChange}
-								value={formState.tiempo}
-								placeholder="Tiempo de espera"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Horario</p>
-							<Input
-								name="horario"
-								onChange={handleChange}
-								value={formState.horario}
-								placeholder="Horario"
-							></Input>
-						</Form.Item>
-						<Form.Item>
-							<p>Iva por defecto</p>
-							<Input
-								name="iva"
-								onChange={handleChange}
-								value={formState.iva}
-								placeholder="Iva por defecto"
+								value={formState.rif}
+								placeholder="Nro de rif"
 							></Input>
 						</Form.Item>
 						<Form.Item>
@@ -346,6 +314,15 @@ const Sucursal = () => {
 								onChange={handleChange}
 								value={formState.direccion}
 								placeholder="Dirección"
+							></Input>
+						</Form.Item>
+						<Form.Item>
+							<p>Contacto</p>
+							<Input
+								name="numero"
+								onChange={handleChange}
+								value={formState.numero}
+								placeholder="Numero de Whatsapp"
 							></Input>
 						</Form.Item>
 					</Form>

@@ -98,6 +98,7 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
+	
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
 		const range = XLSX.utils.decode_range(worksheet['!ref']);
@@ -148,7 +149,6 @@ const OrderDetail = () => {
 			'Sub Total': item.weight * item.priceSale,
 			Total: currentOrder?.totalBot,
 		};
-
 		ExcelExport.push(productData);
 	});
 

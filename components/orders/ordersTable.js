@@ -202,11 +202,6 @@ export default function OrdersTable({ orders }) {
 							<EditOutlined />
 						</Button>
 					)}
-					{/* <PDFDownloadLink document={<DocPdf/>} fileName="Orden N.pdf">
-						<Button onClick={() => handleSeeUpdate(order, record)}>
-							<PrinterOutlined />
-						</Button>
-					</PDFDownloadLink> */}
 				</Space>
 			),
 		},

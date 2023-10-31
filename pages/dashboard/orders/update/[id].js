@@ -35,8 +35,9 @@ import {
 	PauseOutlined,
 	CloseOutlined,
 	DeleteOutlined,
+	PrinterOutlined,
 } from '@ant-design/icons';
-
+import * as XLSX from 'xlsx';
 export const UNIT_TYPE = {
 	UNIT: 17,
 	KG: 3,
@@ -391,7 +392,7 @@ const UpdateOrderPage = () => {
 			key: 'monto',
 		},
 	];
-	
+
 	const components = {
 		body: {
 			row: EditableRow,
@@ -441,11 +442,60 @@ const UpdateOrderPage = () => {
 
 		const res = await requestHandler.put('/api/v2/order/close/', {
 			idOrder: currentOrder.idOrderH,
-			data: 'hola',
+			data: body,
 		});
 
 		console.log(res);
 	};
+
+	/* let body = {
+		comments: 'PAGO',
+		mpCash: this.validateMP('mpCash'),
+		mpCreditCard: this.validateMP('mpCreditCard'),
+		mpDebitCard: this.validateMP('mpDebitCard'),
+		mpTranferBack: this.validateMP('mpTranferBack'),
+		totalBot: this.total,
+		mpMpago: this.validateMP('mpMpago'),
+		idCurrencyFk: 1,
+		listPaymentMethod: this.paymentAdd,
+		isAfip: 0,
+		mpRappi: this.validateMP('mpRappi'),
+		mpGlovo: this.validateMP('mpGlovo'),
+		mpUber: this.validateMP('mpUber'),
+		mpPedidosya: this.validateMP('mpPedidosya'),
+		mpJust: this.validateMP('mpJust'),
+		mpWabi: this.validateMP('mpWabi'),
+		mpOtro2: this.validateMP('mpOtro2'),
+		mpPedidosyacash: this.validateMP('mpPedidosyacash'),
+		mpPersonal: this.validateMP('mpPersonal'),
+		mpRapicash: this.validateMP('mpRapicash'),
+		mpPresent: this.validateMP('mpPresent'),
+		mpPaypal: this.validateMP('mpPaypal'),
+		mpZelle: this.validateMP('mpZelle'),
+		mpBofa: this.validateMP('mpBofa'),
+		mpYumi: this.validateMP('mpYumi'),
+		waste: 0,
+		isPrintBillin: 0,
+		tasa: this.dolarRate,
+		puntoVtaAfit: Number(this.conditionsSelect),
+		comprobanteAfit: result,
+		isacountCourrient: this.orden.isacountCourrient,
+	}; */
+
+	function validateMP(descriptPayMent) {
+		let result;
+		result = this.paymentAdd.filter((event) => event.value == descriptPayMent);
+		if (result.length != 0) {
+			if (descriptPayMent == 'mpCash') {
+				result = this.paymentAdd.length > 0 ? result[0].monto : 0;
+			} else {
+				result = this.paymentAdd.length > 0 ? result[0].monto : 0;
+			}
+		} else {
+			result = 0;
+		}
+		return result;
+	}
 
 	const handlePauseOrder = async () => {
 		setLoading(true);
@@ -488,6 +538,48 @@ const UpdateOrderPage = () => {
 		setLoading(true);
 	};
 
+	const exportToExcel = () => {
+		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
+		const range = XLSX.utils.decode_range(worksheet['!ref']);
+		for (let R = range.s.r; R <= range.e.r; ++R) {
+			for (let C = range.s.c; C <= range.e.c; ++C) {
+				const cell_address = { c: C, r: R };
+				const cell_ref = XLSX.utils.encode_cell(cell_address);
+
+				if (!worksheet[cell_ref]) continue;
+
+				worksheet[cell_ref].s = {
+					font: {
+						bold: true,
+						color: { rgb: 'FFFFFF' },
+					},
+					fill: {
+						fgColor: { rgb: '000000' },
+					},
+				};
+			}
+		}
+
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.writeFile(workbook, 'Comprobante.xlsx');
+	};
+
+	const ExcelExport = [];
+	currentOrder?.body.forEach((item, index) => {
+		const productData = {
+			'Nombre del pruducto': item.nameProduct,
+			Cantidad: item.weight,
+			Precio: item.priceSale,
+			'metodos de pago': dataSource.name,
+			'monto a pagar': dataSource.monto,
+			Total: total,
+			Declarado: totalDeclarado,
+			Restante: newTotal,
+		};
+		ExcelExport.push(productData);
+	});
+
 	return (
 		<DashboardLayout>
 			<div
@@ -524,6 +616,9 @@ const UpdateOrderPage = () => {
 						Agregar productos
 					</h1>
 					<div className="flex gap-4">
+						<Button onClick={exportToExcel} className="bg-blue-500">
+							<PrinterOutlined /> Imprimir comprobante
+						</Button>
 						<Button
 							onClick={() => setIsCancelOrderModal(true)}
 							type="primary"
