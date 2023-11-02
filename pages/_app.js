@@ -40,7 +40,10 @@ function MyApp({ Component, pageProps }) {
 			);
 
 			setGeneralData(response.data.restaurante);
-			await localStorage.setItem('apiPort', response.data?.restaurante?.api_port)
+			await localStorage.setItem(
+				'apiPort',
+				response.data?.restaurante?.api_port
+			);
 		} catch (error) {
 			error;
 		}
