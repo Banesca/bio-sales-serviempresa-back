@@ -83,7 +83,7 @@ const UpdateOrderPage = () => {
 	const [count, setCount] = useState(1);
 	const [newTotal, setNewTotal] = useState(0);
 	const [totalDeclarado, setTotalDecla] = useState();
-	const [client, setClient] = useState({});
+	/* const [client, setClient] = useState({}); */
 	const EditableContext = React.createContext(null);
 
 	const getOrderRequest = async (id) => {
@@ -421,13 +421,6 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
-
-	useEffect(() => {
-		if (Object.keys(client).length) {
-			getDebtsbyClient(client.phone);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [client]);
 
 	const handleReceiveOrder = async () => {
 		setLoading(true);

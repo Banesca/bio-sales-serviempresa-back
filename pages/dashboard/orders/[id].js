@@ -126,18 +126,8 @@ const OrderDetail = () => {
 	};
 
 	const handleButtonClick = () => {
-		const { idStatusOrder, id } = currentOrder;
-	
-		if (idStatusOrder === 1) {
-		  // Redirige a la ruta especificada
-		  router.push(`/dashboard/orders/update/${id}`);
-		} else if (idStatusOrder === 2) {
-		  // Cambia el estado del pedido
-		  let updatedStatus = {...status};
-		  updatedStatus[idStatusOrder].state = 3;
-		  setStatus(updatedStatus);
-		}
-	  }
+		router.push(`/dashboard/orders/update/${id}`);
+	};
 
 	const commonData = {
 		'Numero del pedido': currentOrder.numberOrden,
@@ -152,7 +142,7 @@ const OrderDetail = () => {
 		'Observacion (opcional):': currentOrder.comments,
 	};
 	const ExcelExport = [commonData];
-	currentOrder.body.forEach((item, index) => {
+	(currentOrder?.body || []).forEach((item, index) => {
 		const productData = {
 			'Nombre del pruducto': item.nameProduct,
 			Código: item.barCode,
@@ -197,7 +187,13 @@ const OrderDetail = () => {
 							htmlType="submit"
 							type="success"
 							block
-							disabled={orderStatusToUse[currentOrder.idStatusOrder].state !== 'cobrado'}
+							disabled={
+								orderStatusToUse[currentOrder.idStatusOrder].state ==
+									'Cobrado' ||
+								orderStatusToUse[currentOrder.idStatusOrder].state ==
+									'Despachado' ||
+								orderStatusToUse[currentOrder.idStatusOrder].state == 'Anulado'
+							}
 							onClick={handleButtonClick}
 						>
 							Pagar

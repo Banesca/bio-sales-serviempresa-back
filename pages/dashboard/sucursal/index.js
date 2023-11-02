@@ -61,6 +61,10 @@ const Sucursal = () => {
 		setOpenModal2(true);
 		console.log(record);
 		setNombreSursal(record.sucursal);
+		setNumero(record.liWs);
+		setRazon(record.nameAppExternal);
+		setRif(record.timeDelivery)
+		setDireccion(record.address);
 		setId(record.idSucursal);
 		console.log(idSucu);
 	};
@@ -99,6 +103,10 @@ const Sucursal = () => {
 				return {
 					sucursal: mapa.sucursal,
 					idSucursal: mapa.idSucursal,
+					nameAppExternal:mapa.nameAppExternal,
+					timeDelivery:mapa.timeDelivery,
+					address:mapa.address,
+					liWs:mapa.liWs
 				};
 			});
 			setSucursales(listaSucursales);
@@ -161,21 +169,8 @@ const Sucursal = () => {
 		liWs: formState.numero,
 	};
 
-	let body2 = {
-		idSucursal: idSucu,
-		nameSucursal: formState.nombre,
-		nameAppExternal: formState.razon,
-		timeDelivery: formState.rif,
-		address: formState.direccion,
-		liWs: formState.numero,
-		area: {
-			coordenadas: [
-				{ latitud: -58.49077601125959, longitud: -34.575744562684704 },
-			],
-		},
-	};
 
-	let body3 = {};
+	
 
 	return (
 		<DashboardLayout>
@@ -281,48 +276,49 @@ const Sucursal = () => {
 					<h1>Editar datos de la sucursal:{nombreSucursal}</h1>
 					<Form>
 						<Form.Item>
-							<p>Nombre de la sucursal</p>
+							<p>Nombre de la sucursal: {nombreSucursal}</p>
 							<Input
 								name="nombre"
 								onChange={handleChange}
 								value={formState.nombre}
-								placeholder="Nombre de la sucursal"
+								placeholder = {nombreSucursal}
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Razon social</p>
+							<p>Razon social: {razon}</p>
 							<Input
 								name="razon"
 								onChange={handleChange}
 								value={formState.razon}
-								placeholder="Razon social"
+								placeholder={razon}
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Rif</p>
+							<p>Rif:{rif}</p>
 							<Input
 								name="rif"
 								onChange={handleChange}
 								value={formState.rif}
-								placeholder="Nro de rif"
+								placeholder={rif}
+								
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Dirección</p>
+							<p>Dirección: {direccion}</p>
 							<Input
 								name="direccion"
 								onChange={handleChange}
 								value={formState.direccion}
-								placeholder="Dirección"
+								placeholder={direccion}
 							></Input>
 						</Form.Item>
 						<Form.Item>
-							<p>Contacto</p>
+							<p>Contacto: {numero}</p>
 							<Input
 								name="numero"
 								onChange={handleChange}
 								value={formState.numero}
-								placeholder="Numero de Whatsapp"
+								placeholder={numero}
 							></Input>
 						</Form.Item>
 					</Form>
