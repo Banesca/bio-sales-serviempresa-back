@@ -178,7 +178,7 @@ const UpdateUser = () => {
 			if (Number(value.isClose) === 0 || Number(value.isClose) === 1) {
 				dates.push(value.date);
 			}
-			console.log(dates); // Imprime el arreglo de fechas
+			console.log(dates); 
 			setJornadas([value]);
 		} catch (error) {
 			message.error('Ha ocurrido un error');

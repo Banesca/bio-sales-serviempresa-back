@@ -78,9 +78,6 @@ const OrderDetail = () => {
 		}
 	};
 
-	const handleButtonClick = () => {
-		router.push(`/dashboard/orders/update/${currentOrder.id}`);
-	};
 	const handleOrder = () => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${id}`);
@@ -127,6 +124,20 @@ const OrderDetail = () => {
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Recibo.xlsx');
 	};
+
+	const handleButtonClick = () => {
+		const { idStatusOrder, id } = currentOrder;
+	
+		if (idStatusOrder === 1) {
+		  // Redirige a la ruta especificada
+		  router.push(`/dashboard/orders/update/${id}`);
+		} else if (idStatusOrder === 2) {
+		  // Cambia el estado del pedido
+		  let updatedStatus = {...status};
+		  updatedStatus[idStatusOrder].state = 3;
+		  setStatus(updatedStatus);
+		}
+	  }
 
 	const commonData = {
 		'Numero del pedido': currentOrder.numberOrden,
@@ -186,9 +197,7 @@ const OrderDetail = () => {
 							htmlType="submit"
 							type="success"
 							block
-							disabled={
-								orderStatusToUse[currentOrder.idStatusOrder].state !== 'cobrado'
-							}
+							disabled={orderStatusToUse[currentOrder.idStatusOrder].state !== 'cobrado'}
 							onClick={handleButtonClick}
 						>
 							Pagar
