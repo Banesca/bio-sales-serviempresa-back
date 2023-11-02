@@ -206,13 +206,13 @@ const UpdateUser = () => {
 		}
 	}, [generalContext, id]);
 
-	/* useEffect(() => {
+	useEffect(() => {
 		if (Object.keys(client).length) {
 			getDebtsbyClient(client.phone);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [client]);
- */
+
 	const getClientsRequest = async () => {
 		setLoading(true);
 		try {

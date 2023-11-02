@@ -566,7 +566,7 @@ const UpdateOrderPage = () => {
 	};
 
 	const ExcelExport = [];
-	currentOrder?.body.forEach((item, index) => {
+	(currentOrder?.body || []).forEach((item, index) => {
 		const productData = {
 			'Nombre del pruducto': item.nameProduct,
 			Cantidad: item.weight,
