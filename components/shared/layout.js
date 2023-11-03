@@ -73,7 +73,7 @@ const itemsMenu = [
 	getItem('Clientes', '7', <TeamOutlined />),
 	getItem('Ordenes', '10', <FaShoppingCart />),
 	getItem('Reportes', '11', <PieChartFilled />),
-	getItem('Horarios', '12', <ClockCircleFilled />),
+	/* getItem('Horarios', '12', <ClockCircleFilled />), */
 	getItem('Condiciones de pago', '8', <BankOutlined />),
 	getItem('Tasa de cambio', '16', <DollarOutlined />),
 	getItem('Camiones', '13', <FaTruck />),

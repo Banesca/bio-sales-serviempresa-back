@@ -47,7 +47,8 @@ const setData = (data) => {
 		ean: data.ean,
 		healthRegister: data.healthRegister,
 		idProduct: data.idProduct,
-		isheavy: '1',
+		isheavy: data.isheavy,
+		maxProducVenta: data.maxProducVenta,
 	};
 
 	return body;

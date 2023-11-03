@@ -192,7 +192,9 @@ const OrderDetail = () => {
 									'Cobrado' ||
 								orderStatusToUse[currentOrder.idStatusOrder].state ==
 									'Despachado' ||
-								orderStatusToUse[currentOrder.idStatusOrder].state == 'Anulado'
+								orderStatusToUse[currentOrder.idStatusOrder].state ==
+									'Anulado' ||
+								orderStatusToUse[currentOrder.idStatusOrder].state == 'Pagado'
 							}
 							onClick={handleButtonClick}
 						>
@@ -211,18 +213,13 @@ const OrderDetail = () => {
 						boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
 					}}
 				>
-					{log == user?.isUser ||
-					userProfile == PROFILES.MASTER ||
-					userProfile == PROFILES.ADMIN ? (
-						<ChangeOrderStatus
-							status={currentOrder.idStatusOrder}
-							handleOrder={handleOrder}
-							orderId={id}
-							handleChangeStatus={handleChangeStatus}
-						/>
-					) : (
-						<></>
-					)}
+					<ChangeOrderStatus
+						status={currentOrder.idStatusOrder}
+						handleOrder={handleOrder}
+						orderId={id}
+						handleChangeStatus={handleChangeStatus}
+					/>
+
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
 						<p>{currentOrder.numberOrden}</p>

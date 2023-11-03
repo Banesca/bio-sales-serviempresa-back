@@ -234,9 +234,9 @@ const Product = () => {
 							<>
 								<p style={{ fontWeight: 'bold' }}>Unidad por Caja</p>
 								<p>
-									{!currentProduct.unitByBox
+									{!currentProduct.isheavy
 										? 'Indefinido'
-										: currentProduct.unitByBox}
+										: currentProduct.isheavy}
 								</p>
 							</>
 						) : (

@@ -55,12 +55,12 @@ const ProductForm = (props) => {
 		marketPrice: props.product.marketPrice || 0,
 		idUnitMeasureSaleFk: props.product.idUnitMeasureSaleFk || '',
 		unitweight: props.product.unitweight || null,
-		unitByBox: props.product.unitByBox || '',
+		isheavy: props.product.isheavy || '',
 		observation: props.product.observation || '',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
 		efectivo:props.product.efectivo || '',
-		maxproduct:props.product.maxproduct || '',
+		maxProducVenta:props.product.maxProducVenta || '',
 	};
 
 	const { requestHandler } = useRequest();
@@ -199,6 +199,7 @@ const ProductForm = (props) => {
 	const onSubmit = async () => {
 		router.push('/dashboard/products');
 		setLoading(true);
+		console.log(product)
 		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
 		await props.handleRequest(product, file);
 		setLoading(false);
@@ -223,11 +224,11 @@ const ProductForm = (props) => {
 			cpe: '',
 			marketPrice: '',
 			idUnitMeasureSaleFk: '',
-			unitByBox: '',
+			isheavy: '',
 			unitweight: '',
 			observation: '',
 			efectivo:'',
-			maxproduct:'',
+			maxProducVenta:'',
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
@@ -271,11 +272,11 @@ const ProductForm = (props) => {
 						cpe: product.cpe,
 						marketPrice: product.marketPrice,
 						idUnitMeasureSaleFk: product.idUnitMeasureSaleFk,
-						unitByBox: product.unitByBox,
+						isheavy: product.isheavy,
 						unitweight: product.unitweight,
 						observation: product.observation,
 						efectivo: product.efectivo,
-						maxproduct: product.maxproduct,
+						maxProducVenta: product.maxProducVenta,
 					}}
 					onFinish={onSubmit}
 					autoComplete="off"
@@ -507,7 +508,8 @@ const ProductForm = (props) => {
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								label="Peso neto"
-								name="maxpruduc"
+								name="maxProducVenta"
+								value={product.maxProducVenta}
 								style={{
 									padding: '0 .5rem',
 								}}
@@ -521,7 +523,7 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Input
-									value={product.maxproduct}
+									value={product.maxProducVenta}
 									onChange={(e) =>
 										setProduct({
 											...product,
@@ -772,14 +774,9 @@ const ProductForm = (props) => {
 										padding: '0 .5rem',
 									}}
 									label="Unidades/Caja"
-									name="unitByBox"
-									required={product.idUnitMeasureSaleFk === 17}
-									rules={[
-										{
-											required: true,
-											message: 'Especifica las unidades por caja',
-										},
-									]}
+									name="isheavy"
+									value={product.isheavy}
+									
 									labelCol={{
 										md: { span: 10 },
 										sm: { span: 6 },
@@ -790,11 +787,11 @@ const ProductForm = (props) => {
 									}}
 								>
 									<Input
-										value={product.unitByBox}
+										value={product.isheavy}
 										onChange={(e) =>
 											setProduct({
 												...product,
-												unitByBox: e.target.value,
+												isheavy: e.target.value,
 											})
 										}
 									/>
