@@ -24,6 +24,8 @@ import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { MEASURE_UNITS, useProducts } from './hooks/useProducts';
 import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
+import Image from 'next/image';
+import { ip } from '../../util/environment';
 
 const ProductForm = (props) => {
 	const router = useRouter();
@@ -37,11 +39,12 @@ const ProductForm = (props) => {
 		lines,
 		getLines,
 	} = useCategoryContext();
-
+	const [product2, setProduct2] = useState(null);
 	const [file, setFile] = useState(null);
 	const [fileList, setFileList] = useState([]);
 	const [isValidImgSize, setIsValidImgSize] = useState();
-
+	const { getProductById, updateProduct, currentProduct } = useProducts();
+	const { id } = router.query;
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -59,8 +62,8 @@ const ProductForm = (props) => {
 		observation: props.product.observation || '',
 		idSucursalFk: props.product.idSucursalFk,
 		idProduct: props.product.idProduct,
-		efectivo:props.product.efectivo || '',
-		maxProducVenta:props.product.maxProducVenta || '',
+		efectivo: props.product.efectivo || '',
+		maxProducVenta: props.product.maxProducVenta || '',
 	};
 
 	const { requestHandler } = useRequest();
@@ -151,6 +154,35 @@ const ProductForm = (props) => {
 		},
 	};
 
+	const getProductRequest = async (id) => {
+		setLoading(true);
+		try {
+			await getProductById(id);
+		} catch (error) {
+			message.error('Error al cargar producto');
+		} finally {
+			setLoading(false);
+		}
+
+	};
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const res = await requestHandler.get(`/api/v2/product/get/${id}`);
+			if (res.isLeft()) {
+				throw res.value.getErrorValue();
+			}
+			const value = res.value.getValue().data;
+			setProduct(value);
+		};
+
+		fetchData();
+	}, [id]);
+
+	if (!product) {
+		return <div>Cargando...</div>;
+	}
+	
 	const handleSwitchChange = (value) => {
 		setProduct({ ...product, isPromo: value ? '1' : '0' });
 	};
@@ -179,6 +211,7 @@ const ProductForm = (props) => {
 	const { selectedBusiness } = useBusinessProvider();
 
 	useEffect(() => {
+		getProductRequest(id);
 		if (
 			Object.keys(generalContext).length &&
 			Object.keys(selectedBusiness).length
@@ -193,13 +226,14 @@ const ProductForm = (props) => {
 			setLoading(false);
 			codeListRequest(selectedBusiness.idSucursal);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [generalContext, selectedBusiness]);
+	}, [generalContext, selectedBusiness, id]);
 
 	const onSubmit = async () => {
 		router.push('/dashboard/products');
 		setLoading(true);
-		console.log(product)
+		console.log(product);
 		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
 		await props.handleRequest(product, file);
 		setLoading(false);
@@ -227,8 +261,8 @@ const ProductForm = (props) => {
 			isheavy: '',
 			unitweight: '',
 			observation: '',
-			efectivo:'',
-			maxProducVenta:'',
+			efectivo: '',
+			maxProducVenta: '',
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
@@ -499,7 +533,7 @@ const ProductForm = (props) => {
 									onChange={(e) =>
 										setProduct({
 											...product,
-											ean: e.target.value,
+											efectivo: e.target.value,
 										})
 									}
 								/>
@@ -527,7 +561,7 @@ const ProductForm = (props) => {
 									onChange={(e) =>
 										setProduct({
 											...product,
-											ean: e.target.value,
+											maxProducVenta: e.target.value,
 										})
 									}
 								/>
@@ -757,7 +791,7 @@ const ProductForm = (props) => {
 									}}
 								>
 									<Input
-								     	type="number"
+										type="number"
 										value={product.unitweight}
 										onChange={(e) =>
 											setProduct({
@@ -776,7 +810,6 @@ const ProductForm = (props) => {
 									label="Unidades/Caja"
 									name="isheavy"
 									value={product.isheavy}
-									
 									labelCol={{
 										md: { span: 10 },
 										sm: { span: 6 },
@@ -846,6 +879,14 @@ const ProductForm = (props) => {
 									},
 								]}
 							>
+								<img
+									style={{
+										maxWidth: '150px',
+										height: 'auto',
+										marginBottom:'10px'
+									}}
+									src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
+								/>
 								<Upload
 									name="avatar"
 									className="avatar-uploader"
@@ -856,6 +897,7 @@ const ProductForm = (props) => {
 								>
 									<Button icon={<UploadOutlined />}>Subir imagen</Button>
 								</Upload>
+								
 							</Form.Item>
 						</Col>
 					</Row>

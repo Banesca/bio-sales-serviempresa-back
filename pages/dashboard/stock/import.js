@@ -28,6 +28,23 @@ import Title from '../../../components/shared/title';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
 const ImportProducts = () => {
+	const generalContext = useContext(GeneralContext);
+	const { selectedBusiness } = useBusinessProvider();
+	const { requestHandler } = useRequest();
+	const [currentProduct, setCurrentProduct] = useState();
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [notificationOpen, setNotificationOpen] = useState(false);
+	const [fileList, setFileList] = useState([]);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [categories, setCategories] = useState([]);
+	const [brands, setBrands] = useState([]);
+
+	const [rejectedBrands, setRejectedBrands] = useState([]);
+	const [rejectedCategories, setRejectedCategories] = useState([]);
+
+	const [api, contextHolder] = notification.useNotification();
 	const columns = [
 		{
 			title: 'Nombre',
@@ -138,24 +155,6 @@ const ImportProducts = () => {
 		handleSeeModal();
 	};
 
-	const generalContext = useContext(GeneralContext);
-	const { selectedBusiness } = useBusinessProvider();
-	const { requestHandler } = useRequest();
-	const [currentProduct, setCurrentProduct] = useState();
-	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-	const [notificationOpen, setNotificationOpen] = useState(false);
-	const [fileList, setFileList] = useState([]);
-	const [selectedFile, setSelectedFile] = useState(null);
-	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [categories, setCategories] = useState([]);
-	const [brands, setBrands] = useState([]);
-
-	const [rejectedBrands, setRejectedBrands] = useState([]);
-	const [rejectedCategories, setRejectedCategories] = useState([]);
-
-	const [api, contextHolder] = notification.useNotification();
-
 	useEffect(() => {
 		if (selectedBusiness && generalContext) {
 			setLoading(true);
@@ -201,7 +200,7 @@ const ImportProducts = () => {
 		}
 		return uploadData;
 	};
-
+	
 	const existCategory = (name) => {
 		const filter = categories.filter(
 			(c) => c.name.toLowerCase() === name.toLowerCase()

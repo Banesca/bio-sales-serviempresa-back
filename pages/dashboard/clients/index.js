@@ -263,8 +263,13 @@ export default function ClientsPage() {
 			<div className="m-4 p-4">
 				<Title title={'Clientes'}>
 					<Link href="/dashboard/clients/add">
-						<Button type="success" style={{ marginRight: '-2.3rem' }}>
+						<Button type="success" style={{ /* marginRight: '-2.3rem'  */}}>
 							<UserAddOutlined /> Crear
+						</Button>
+					</Link>
+					<Link href="/dashboard/clients/import">
+						<Button type="success" style={{marginLeft:'20px'}}>
+							 Cargar clientes
 						</Button>
 					</Link>
 				</Title>

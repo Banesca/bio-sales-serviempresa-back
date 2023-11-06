@@ -146,10 +146,22 @@ const Merchandising = () => {
 			title: 'Imagen',
 			dataIndex: 'urlImagenProduct',
 			key: 1,
+			render: (text, record) => (
+				<img
+					src={record.urlImagenProduct}
+					style={{ width: '50px', height: '50px' }}
+				/>
+			),
 		},
 		{
 			title: 'Nombre del producto',
 			dataIndex: 'nameProduct',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Stock',
+			dataIndex: 'stock',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
@@ -159,14 +171,26 @@ const Merchandising = () => {
 			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
+		{
+			title: 'Precio',
+			dataIndex: 'priceSale',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Precio de compentencia',
+			dataIndex: 'pricecompetencia',
+			key: 3,
+			render: (text) => <p>{text}</p>,
+		},
 	];
 
 	const showModal = (reporte) => {
 		setOpen(true);
 		setReportVisitDetail(reporte);
 	};
+
 	const showModal2 = (productos) => {
-		console.log(productos);
 		setOpen2(true);
 		setProductsDetail(productos);
 		handleOnChang3(productos);
@@ -231,6 +255,7 @@ const Merchandising = () => {
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 		}
+		console.log(response)
 	};
 
 	const handleCancel = () => {
@@ -329,7 +354,6 @@ const Merchandising = () => {
 			</div>
 
 			<div className="m-4 p-4">
-				
 				<h1 className="text-center text-4xl font-semibold">
 					Inventario merchandiser
 				</h1>
@@ -397,6 +421,7 @@ const Merchandising = () => {
 			<Modal
 				open={open2}
 				onCancel={handleCancel2}
+				title={`Usuario: ${userSelected.fullname}`}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
@@ -405,6 +430,7 @@ const Merchandising = () => {
 						</Button>
 					</div>,
 				]}
+				width={760}
 			>
 				<Table columns={columns4} dataSource={reportInventario} />
 			</Modal>

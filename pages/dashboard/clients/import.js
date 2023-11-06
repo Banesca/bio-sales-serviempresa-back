@@ -1,5 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
 import {
+	CheckCircleOutlined,
+	CloseCircleOutlined,
+	ConsoleSqlOutlined,
 	DeleteOutlined,
 	ExclamationCircleFilled,
 	UploadOutlined,
@@ -26,7 +29,7 @@ import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
-const ImportProducts = () => {
+const ImportClients = () => {
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
@@ -39,80 +42,65 @@ const ImportProducts = () => {
 	const [loading, setLoading] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
+	const [code, setCode] = useState();
+	const [warningModal, setWarningModal] = useState(false);
 	const [rejectedBrands, setRejectedBrands] = useState([]);
 	const [rejectedCategories, setRejectedCategories] = useState([]);
-	const [api, contextHolder] = notification.useNotification();
+
 	const columns = [
 		{
-			title: 'ID',
-			dataIndex: 'idProduct',
+			title: 'Razon social',
+			dataIndex: 'nameClient',
 			key: 1,
-			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Nombre',
-			dataIndex: 'nameProduct',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Código',
-			dataIndex: 'barCode',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Familia',
-			dataIndex: 'nameFamily',
-			responsive: ['lg'],
-			key: 4,
-			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
-		},
-		{
-			title: 'Subfamilia',
-			dataIndex: 'nameSubFamily',
-			responsive: ['lg'],
-			key: 6,
-			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
-		},
-		{
-			title: 'Precio venta',
-			dataIndex: 'priceSale',
-			key: 3,
-			render: (text) => <p>${text}</p>,
-		},
-		{
-			title: 'Valor total',
-			dataIndex: 'totalPrice',
-			responsive: ['sm'],
+			title: 'Telefono',
+			dataIndex: 'phone',
 			key: 2,
-			render: (text) => <p>${text}</p>,
 		},
 		{
-			title: 'Stock',
-			dataIndex: 'stock',
-			key: 1,
-			render: (text) => <p>{text}</p>,
+			title: 'Dirección',
+			dataIndex: 'address',
+			key: 3,
 		},
 		{
-			title: 'Unidad de medida',
-			responsive: ['xs'],
-			dataIndex: 'idUnidadMedida',
-			key: 1,
-			render: (text) => <p>{text}</p>,
+			title: 'Dirección de despacho',
+			dataIndex: 'dispatchaddress',
+			key: 4,
 		},
 		{
-			title: 'Acciones',
+			title: 'Limite de credito disponible',
+			dataIndex: 'limitcredit',
+			key: 5,
+		},
+		{
+			title: 'RIF',
+			dataIndex: 'numberDocument',
+			key: 6,
+		},
+		{
+			title: 'IGTF',
+			dataIndex: 'isigtf',
+			key: 7,
+			render: (text, record) => <p>$ {text}</p>,
+		},
+		{
+			title: 'Descripcion',
+			dataIndex: 'description',
 			key: 8,
-			render: (product, index) => (
-				<Button type="primary" onClick={() => confirmDelete(product)} danger>
-					<DeleteOutlined />
-				</Button>
-			),
+		},
+		{
+			title: 'Condiciones comerciales',
+			dataIndex: 'idPaymenConditions',
+			key: 9,
+		},
+		{
+			title: 'Observación',
+			dataIndex: 'observacion',
+			key: 10,
 		},
 	];
 
-	
 	const confirmDelete = (product) => {
 		Modal.confirm({
 			title: 'Eliminar',
@@ -145,11 +133,47 @@ const ImportProducts = () => {
 		handleSeeModal();
 	};
 
+	const codeListRequest = async (business) => {
+		const response = await requestHandler.get(
+			`/api/v2/product/list/0/0/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().data;
+		setCode(value);
+	};
+	const categoryListRequest = async (business) => {
+		const response = await requestHandler.get(
+			`/api/v2/family/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().response;
+		setCategories(value);
+	};
+
+	const brandListRequest = async (business) => {
+		const response = await requestHandler.get(
+			`/api/v2/subfamily/list/${business}`
+		);
+		if (response.isLeft()) {
+			return;
+		}
+		const value = response.value.getValue().response;
+		setBrands(value);
+	};
+
 	useEffect(() => {
 		if (selectedBusiness && generalContext) {
 			setLoading(true);
+			categoryListRequest(selectedBusiness.idSucursal);
+			codeListRequest(selectedBusiness.idSucursal);
+			brandListRequest(selectedBusiness.idSucursal);
 			setLoading(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedBusiness, generalContext]);
 
 	const getFileExtension = (filename) => {
@@ -160,33 +184,74 @@ const ImportProducts = () => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				idUserAddFk: 1,
-				idProduction: 1,
-				idProductionCenter: 1,
-				priceSale: row?.PRECIO_TIENDA,
-				nameFamily: row?.Categoría || 'No especificada',
-				nameSubFamily: row?.SubCategoría || 'No especificada',
-				nameProduct: row?.nombre,
-				barCode: row?.Codigo_de_barra_global,
-				quantity: row?.Cantidad,
-				efectivo: row?.REFERENCIA,
-				wareHouse: row?.Almacen,
-				idInventaryB: 1,
-				key: '',
-				stock: row?.Cantidad,
-				idProduct: row?.Id,
-				idSucursalFk: selectedBusiness?.idSucursal,
-				apply_inventory: true,
-				idStatusFk: 1,
-				idUnidadMedida: row?.Unidad_de_medida,
-				idRestaurantFk: 1,
+				nameProduct: row.Nombre,
+				pricePurchase: 0,
+				priceSale: row.Precio_Lista_1,
+				idUnitMeasurePurchaseFk: 17,
+				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
+				idSucursalFk: selectedBusiness.idSucursal,
+				idTypeProductFk: 1,
+				is5050: 1,
+				isPromo: row.en_promocion ? 1 : 0,
+				maxProducVenta: '',
 				minStock: 0,
+				apply_inventory: true,
+				efectivo: row.REFERENCIA,
+				linkPago: 0,
+				maxAditionals: 0,
+				minAditionals: 0,
+				marketPrice: row.precio_promocion || 0,
+				percentageOfProfit: 0,
+				isheavy: 0,
+				idAdicionalCategoryFk: 0,
+				barCode: String(row.Codigo_de_barra_global),
+				nameKitchen: row.Descripcion,
+				unitweight: row.peso_unitario || null,
+				observation: row.observacion || '',
+				nameBrand: row.marca || null,
+				nameLine: row.linea || null,
+				nameFamily: row.Categoria,
+				nameSubFamily: row.Marca,
+				unitByBox: row.unidades_por_caja || null,
+				ean: row.ean || '',
+				healthRegister: row.registro_sanitario || '',
+				cpe: row.cpe || '',
 			};
 			uploadData.push(obj);
 		}
 		return uploadData;
 	};
 
+	const existCategory = (name) => {
+		const filter = categories.filter(
+			(c) => c.name.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
+	};
+
+	const existBrand = (name) => {
+		const filter = brands.filter(
+			(b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
+		);
+		return filter.length > 0;
+	};
+
+	const handleConvertFileToJson = (files) => {
+		const file = new Blob(files, { type: files[0].type });
+		let reader = new FileReader();
+		reader.readAsBinaryString(file);
+		reader.onload = async (e) => {
+			const workbox = XLSX.read(e.target.result, { type: 'binary' });
+			const worksheetName = workbox.SheetNames[0];
+			const workSheet = workbox.Sheets[worksheetName];
+			let data = XLSX.utils.sheet_to_json(workSheet);
+			console.log(data);
+			const uploadData = await convertExcelDataToAPI(data);
+			console.log(uploadData);
+			addKeys(uploadData);
+			setData(uploadData);
+		};
+	};
 	const exportToExcel = () => {
 		const data = [ExcelExport];
 		const worksheet = XLSX.utils.json_to_sheet(data);
@@ -211,31 +276,16 @@ const ImportProducts = () => {
 	};
 
 	const ExcelExport = {
-		ID: '',
-		Nombre: '',
-		Código: '',
-		Familia: '',
-		Subfamilia: '',
-		'Precio venta': '',
-		'Valor total': '',
-		Stock: '',
-		'Unidad de medida':'',
-	};
-
-	const handleConvertFileToJson = (files) => {
-		const file = new Blob(files, { type: files[0].type });
-		let reader = new FileReader();
-		reader.readAsArrayBuffer(file);
-		reader.onload = async (e) => {
-			const workbox = XLSX.read(e.target.result, { type: 'buffer' });
-			const worksheetName = workbox.SheetNames[0];
-			const workSheet = workbox.Sheets[worksheetName];
-			let data = XLSX.utils.sheet_to_json(workSheet);
-			const uploadData = await convertExcelDataToAPI(data);
-			addKeys(uploadData);
-			setData(uploadData);
-			uploadData;
-		};
+		'Razon social': '',
+		'Numero telefonico': '',
+		Direccion: '',
+		'direccion de despacho': '',
+		'Limite de credito disponible': '',
+		Rif: '',
+		IGTF: '',
+		Descripcion: '',
+		'Condiciones comerciales': '',
+		Observación: '',
 	};
 
 	const handleChange = (info) => {
@@ -257,7 +307,6 @@ const ImportProducts = () => {
 		if (newFileList[0].status == 'done') {
 			setLoading(true);
 			handleConvertFileToJson([selectedFile]);
-			message.success(`${newFileList[0].name} ha sido cargado`);
 		} else if (newFileList[0].status == 'error') {
 			message.error('Ha ocurrido un error');
 		}
@@ -274,16 +323,43 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		setLoading(true);
-		const res = await requestHandler.post(
-			'/api/v2/inventary/product/add/masive',
-			{
-				data,
+		console.log(formatData);
+		for (let product in data) {
+			for (let c in code) {
+				if (product.barCode == c.barCode) {
+					setWarningModal(true);
+					break;
+				} else {
+					setLoading(true);
+					const res = await requestHandler.post(
+						'/api/v2/product/add/masive/sales',
+						{
+							lista: formatData,
+						}
+					);
+					console.log(res);
+					if (res.isLeft()) {
+						return message.error('Ha ocurrido un error');
+					}
+					message.success('Productos agregados exitosamente');
+					setData([]);
+					setRejectedBrands([]);
+					setRejectedCategories([]);
+					setFileList([]);
+					setLoading(false);
+				}
 			}
-		);
-		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
-		if (rest.isLeft()) {
-			setLoading(false);
+		}
+	};
+
+	const handleSend = async () => {
+		const formatData = removeKeys(data);
+		setLoading(true);
+		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
+			lista: formatData,
+		});
+		data;
+		if (res.isLeft()) {
 			return message.error('Ha ocurrido un error');
 		}
 		message.success('Productos agregados exitosamente');
@@ -292,6 +368,7 @@ const ImportProducts = () => {
 		setRejectedCategories([]);
 		setFileList([]);
 		setLoading(false);
+		setWarningModal(false);
 	};
 
 	useEffect(() => {
@@ -310,17 +387,18 @@ const ImportProducts = () => {
 						flexDirection: 'column',
 					}}
 				>
-					<Title title="Importar" path="/dashboard/stock" goBack={1} />
+					<Title title="Importar" path="/dashboard/clients" goBack={1} />
 
 					<Row style={{ margin: '1rem 0', width: '100%' }}>
 						<Col>
 							<Button
+								className="bg-blue-500"
 								disabled={!data?.length > 0}
 								onClick={handleSendData}
 								type="primary"
 								style={{ marginRight: '1rem' }}
 							>
-								Cargar
+								Agregar
 							</Button>
 						</Col>
 						<Col>
@@ -347,8 +425,9 @@ const ImportProducts = () => {
 							</Button>
 						</Col>
 					</Row>
+
 					<ConfigProvider
-						renderEmpty={data.length !== 0 ? CustomizeRenderEmpty : ''}
+						renderEmpty={data.length !== 0 || true ? CustomizeRenderEmpty : ''}
 					>
 						<Table columns={columns} dataSource={data} />
 					</ConfigProvider>
@@ -362,6 +441,21 @@ const ImportProducts = () => {
 					cancelText="Cancelar"
 				>
 					<p>Estas seguro de que deseas eliminar este producto</p>
+				</Modal>
+				<Modal
+					title="Advertencia"
+					open={warningModal}
+					onCancel={() => setWarningModal(false)}
+					onOk={handleSend}
+					okText="Importar"
+					okType="warning"
+					cancelText="Cancelar"
+				>
+					<p>
+						Algunos de los productos que intentas exportar ya estan en
+						existencia. Si continuas los datos de estos productos se
+						sobreescribiran con los previos, <br /> <br /> ¿Deseas continuar?
+					</p>
 				</Modal>
 				<Modal
 					title="Notificación"
@@ -407,4 +501,4 @@ const ImportProducts = () => {
 	);
 };
 
-export default ImportProducts;
+export default ImportClients;
