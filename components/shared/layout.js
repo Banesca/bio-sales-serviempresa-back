@@ -17,7 +17,7 @@ import {
 	BellFilled,
 	TrademarkCircleFilled,
 	DollarCircleFilled,
-	SettingOutlined,
+	ExceptionOutlined,
 	BankOutlined,
 	DollarOutlined,
 	ApartmentOutlined,
@@ -58,7 +58,9 @@ const routes = [
 	'/dashboard/notifications',
 	'/dashboard/tdc',
 	'/dashboard/sucursal',
+	'/dashboard/cuentas',
 	'/login',
+	
 ];
 
 const itemsMenu = [
@@ -76,12 +78,13 @@ const itemsMenu = [
 	/* getItem('Horarios', '12', <ClockCircleFilled />), */
 	getItem('Condiciones de pago', '8', <BankOutlined />),
 	getItem('Tasa de cambio', '16', <DollarOutlined />),
+	getItem('Cuentas por cobrar', '18',<ExceptionOutlined />),
 	getItem('Camiones', '13', <FaTruck />),
 	getItem('Rutas', '14', <NodeIndexOutlined />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '15', <BellFilled />),
 	
-	getItem('Cerrar sesión', '18', <LogoutOutlined />),
+	getItem('Cerrar sesión', '19', <LogoutOutlined />),
 ];
 export default function DashboardLayout({ children }) {
 	const [collapsed, setCollapsed] = useState(false);

@@ -32,6 +32,9 @@ export default function EditClient() {
 			address: '',
 			rif: '',
 			comments: '',
+			dispatchaddress:'',
+			limitcredit:'',
+
 		});
 		click ? setClick(false) : setClick(true);
 	};
@@ -109,6 +112,7 @@ export default function EditClient() {
 
 	const updateClient = async (data) => {
 		setLoading(true);
+
 		await getClientRequest();
 		try {
 			if (!validator(data).val) {
@@ -121,6 +125,8 @@ export default function EditClient() {
 					idStatusFK: 1,
 					observacion: data.comments,
 					idClient: client.idClient,
+					limitcredit:data.limitcredit,
+					dispatchaddress:data.dispatchaddress,
 				});
 				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
@@ -173,6 +179,9 @@ export default function EditClient() {
 							address: client?.address,
 							rif: client?.numberDocument,
 							comments: client?.observacion,
+							dispatchaddress: client?.dispatchaddress,
+							limitcredit:client?.limitcredit
+
 						}}
 						layout="vertical"
 						autoComplete="off"

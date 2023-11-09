@@ -82,7 +82,6 @@ const ImportClients = () => {
 			title: 'IGTF',
 			dataIndex: 'isigtf',
 			key: 7,
-			render: (text, record) => <p>$ {text}</p>,
 		},
 		{
 			title: 'Descripcion',
@@ -184,38 +183,16 @@ const ImportClients = () => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				nameProduct: row.Nombre,
-				pricePurchase: 0,
-				priceSale: row.Precio_Lista_1,
-				idUnitMeasurePurchaseFk: 17,
-				idUnitMeasureSaleFk: row.medida === 'UNIDAD' ? 17 : 3,
-				idSucursalFk: selectedBusiness.idSucursal,
-				idTypeProductFk: 1,
-				is5050: 1,
-				isPromo: row.en_promocion ? 1 : 0,
-				maxProducVenta: '',
-				minStock: 0,
-				apply_inventory: true,
-				efectivo: row.REFERENCIA,
-				linkPago: 0,
-				maxAditionals: 0,
-				minAditionals: 0,
-				marketPrice: row.precio_promocion || 0,
-				percentageOfProfit: 0,
-				isheavy: 0,
-				idAdicionalCategoryFk: 0,
-				barCode: String(row.Codigo_de_barra_global),
-				nameKitchen: row.Descripcion,
-				unitweight: row.peso_unitario || null,
-				observation: row.observacion || '',
-				nameBrand: row.marca || null,
-				nameLine: row.linea || null,
-				nameFamily: row.Categoria,
-				nameSubFamily: row.Marca,
-				unitByBox: row.unidades_por_caja || null,
-				ean: row.ean || '',
-				healthRegister: row.registro_sanitario || '',
-				cpe: row.cpe || '',
+				nameClient: row.razon_social,
+				phone: row.numero_telefonico,
+				address: row.direccion,
+				dispatchaddress: row.direccion_de_despacho,
+				limitcredit: row.limite_de_credito_disponible,
+				numberDocument: row.rif,
+				isigtf: row.IGTF,
+				description: row.Descripcion,
+				idPaymenConditions: row.Condiciones_comerciales,
+				observacion: row.Observación,
 			};
 			uploadData.push(obj);
 		}
@@ -245,9 +222,7 @@ const ImportClients = () => {
 			const worksheetName = workbox.SheetNames[0];
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
-			console.log(data);
 			const uploadData = await convertExcelDataToAPI(data);
-			console.log(uploadData);
 			addKeys(uploadData);
 			setData(uploadData);
 		};
@@ -276,15 +251,15 @@ const ImportClients = () => {
 	};
 
 	const ExcelExport = {
-		'Razon social': '',
-		'Numero telefonico': '',
-		Direccion: '',
-		'direccion de despacho': '',
-		'Limite de credito disponible': '',
-		Rif: '',
+		razon_social: '',
+		numero_telefonico: '',
+		direccion: '',
+		direccion_de_despacho: '',
+		limite_de_credito_disponible: '',
+		rif: '',
 		IGTF: '',
 		Descripcion: '',
-		'Condiciones comerciales': '',
+		Condiciones_comerciales: '',
 		Observación: '',
 	};
 

@@ -41,6 +41,7 @@ const OrderDetail = () => {
 		} finally {
 			setLoading(false);
 		}
+		console.log(currentOrder);
 	};
 
 	const getStatus = () => {
@@ -239,6 +240,7 @@ const OrderDetail = () => {
 						<p style={{ fontWeight: 'bold' }}>Cliente:</p>
 						<p>{currentOrder.fullNameClient}</p>
 					</List.Item>
+
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Contacto:</p>
 						<p>{currentOrder.phoneClient}</p>
@@ -251,9 +253,16 @@ const OrderDetail = () => {
 						<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
 						<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
 					</List.Item>
+
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
 						<p style={{}}>{currentOrder.comments}</p>
+					</List.Item>
+					<List.Item>
+						<p></p>
+						<p style={{ fontWeight: 'bold', color:'red'}}>
+							{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+						</p>
 					</List.Item>
 				</List>
 				<DetailOrderTable
