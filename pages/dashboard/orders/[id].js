@@ -15,6 +15,7 @@ import { useOrders } from '../../../components/orders/hooks/useOrders';
 import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
 
 const OrderDetail = () => {
 	const router = useRouter();
@@ -64,6 +65,20 @@ const OrderDetail = () => {
 			color = '#969696';
 		}
 		return color;
+	};
+
+	const captureElement = async (elementId) => {
+		const element = document.getElementById(elementId);
+		if (element) {
+			const canvas = await html2canvas(element);
+			const imgData = canvas.toDataURL('image/png');
+			const link = document.createElement('a');
+			link.href = imgData;
+			link.download = 'image.png';
+			link.click();
+		} else {
+			console.error(`Element with id "${elementId}" not found`);
+		}
 	};
 
 	const handleChangeStatus = async (status) => {
@@ -143,6 +158,7 @@ const OrderDetail = () => {
 		'Observacion (opcional):': currentOrder.comments,
 	};
 	const ExcelExport = [commonData];
+
 	(currentOrder?.body || []).forEach((item, index) => {
 		const productData = {
 			'Nombre del pruducto': item.nameProduct,
@@ -176,7 +192,7 @@ const OrderDetail = () => {
 						<Button
 							htmlType="submit"
 							type="success"
-							onClick={exportToExcel}
+							onClick={() => captureElement('factura')}
 							block
 							style={{ width: '100%' }}
 						>
@@ -203,72 +219,73 @@ const OrderDetail = () => {
 						</Button>
 					</div>
 				</div>
+				<div id="factura">
+					<List
+						style={{
+							width: '96%',
+							padding: '10px 30px',
+							backgroundColor: 'white',
+							marginBottom: '25px',
+							borderRadius: '15px',
+							boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
+						}}
+					>
+						<ChangeOrderStatus
+							status={currentOrder.idStatusOrder}
+							handleOrder={handleOrder}
+							orderId={id}
+							handleChangeStatus={handleChangeStatus}
+						/>
 
-				<List
-					style={{
-						width: '96%',
-						padding: '10px 30px',
-						backgroundColor: 'white',
-						marginBottom: '25px',
-						borderRadius: '15px',
-						boxShadow: '4px 4px 8px rgba(207, 207, 207, 0.479)',
-					}}
-				>
-					<ChangeOrderStatus
-						status={currentOrder.idStatusOrder}
-						handleOrder={handleOrder}
-						orderId={id}
-						handleChangeStatus={handleChangeStatus}
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
+							<p>{currentOrder.numberOrden}</p>
+						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Vendedor:</p>
+							<p>{user?.fullname}</p>
+						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Estado:</p>
+							<p style={{ color: `${getStatus()}`, fontWeight: 'bold' }}>
+								{orderStatusToUse[currentOrder.idStatusOrder].state}
+							</p>
+						</List.Item>
+
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Cliente:</p>
+							<p>{currentOrder.fullNameClient}</p>
+						</List.Item>
+
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Contacto:</p>
+							<p>{currentOrder.phoneClient}</p>
+						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Dirección:</p>
+							<p>{currentOrder.address}</p>
+						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
+							<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
+						</List.Item>
+
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
+							<p style={{}}>{currentOrder.comments}</p>
+						</List.Item>
+						<List.Item>
+							<p></p>
+							<p style={{ fontWeight: 'bold', color: 'red' }}>
+								{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+							</p>
+						</List.Item>
+					</List>
+					<DetailOrderTable
+						products={currentOrder?.body}
+						total={currentOrder?.totalBot}
 					/>
-
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
-						<p>{currentOrder.numberOrden}</p>
-					</List.Item>
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Vendedor:</p>
-						<p>{user?.fullname}</p>
-					</List.Item>
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Estado:</p>
-						<p style={{ color: `${getStatus()}`, fontWeight: 'bold' }}>
-							{orderStatusToUse[currentOrder.idStatusOrder].state}
-						</p>
-					</List.Item>
-
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Cliente:</p>
-						<p>{currentOrder.fullNameClient}</p>
-					</List.Item>
-
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Contacto:</p>
-						<p>{currentOrder.phoneClient}</p>
-					</List.Item>
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Dirección:</p>
-						<p>{currentOrder.address}</p>
-					</List.Item>
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
-						<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
-					</List.Item>
-
-					<List.Item>
-						<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
-						<p style={{}}>{currentOrder.comments}</p>
-					</List.Item>
-					<List.Item>
-						<p></p>
-						<p style={{ fontWeight: 'bold', color:'red'}}>
-							{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
-						</p>
-					</List.Item>
-				</List>
-				<DetailOrderTable
-					products={currentOrder?.body}
-					total={currentOrder?.totalBot}
-				/>
+				</div>
 			</div>
 		</DashboardLayout>
 	);
