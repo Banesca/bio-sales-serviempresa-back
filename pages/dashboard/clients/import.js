@@ -329,9 +329,10 @@ const ImportClients = () => {
 
 	const handleSend = async () => {
 		const formatData = removeKeys(data);
+		console.log(formatData)
 		setLoading(true);
-		const res = await requestHandler.post('/api/v2/product/add/masive/sales', {
-			lista: formatData,
+		const res = await requestHandler.post('/api/v2/client//add/masive', {
+			data: formatData,
 		});
 		data;
 		if (res.isLeft()) {

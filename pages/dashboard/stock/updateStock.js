@@ -25,7 +25,7 @@ import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
-
+import { useProductFilter } from '../../../components/products/useProductFilter';
 const ImportStock = () => {
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
@@ -42,6 +42,8 @@ const ImportStock = () => {
 	const [rejectedBrands, setRejectedBrands] = useState([]);
 	const [rejectedCategories, setRejectedCategories] = useState([]);
 	const [api, contextHolder] = notification.useNotification();
+	const { clean, filtered, setProduct, setQuery } = useProductFilter();
+
 	const columns = [
 		{
 			title: 'ID',
@@ -166,6 +168,13 @@ const ImportStock = () => {
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Plantilla.xlsx');
 	};
+	
+	/* const exportToExcel = () => {
+		const worksheet = XLSX.utils.json_to_sheet(filtered());
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.writeFile(workbook, 'Inventario.xlsx');
+	}; */
 
 	const ExcelExport = {
 		ID: '',
@@ -189,7 +198,6 @@ const ImportStock = () => {
 			uploadData;
 		};
 	};
-   
 
 	const handleChange = (info) => {
 		let newFileList = [...info.fileList];
@@ -227,12 +235,17 @@ const ImportStock = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-        console.log(data)
+		console.log(formatData);
 		setLoading(true);
 		const res = await requestHandler.post(
-			'/api/v2/inventary/product/add/masive/adjustment ',
+			'/api/v2/inventary/masive/adjustment',
 			{
-				data,
+				data: {
+					idProduct: formatData.idProductFk,
+					quanity: formatData.stock,
+					reference: formatData.barCode,
+					isSum: '1',
+				},
 			}
 		);
 		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
