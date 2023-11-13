@@ -26,6 +26,7 @@ import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
+import { useProducts } from '../../../components/products/hooks/useProducts';
 const ImportStock = () => {
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
@@ -43,7 +44,7 @@ const ImportStock = () => {
 	const [rejectedCategories, setRejectedCategories] = useState([]);
 	const [api, contextHolder] = notification.useNotification();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
-
+	const { updateProductInv, productsInv, getProductsInv } = useProducts();
 	const columns = [
 		{
 			title: 'ID',
@@ -125,15 +126,15 @@ const ImportStock = () => {
 				priceSale: row?.PRECIO_TIENDA,
 				nameFamily: row?.Categoría || 'No especificada',
 				nameSubFamily: row?.SubCategoría || 'No especificada',
-				nameProduct: row?.Nombre,
-				barCode: row?.Codigo,
+				nameProduct: row?.nameProduct,
+				barCode: row?.barCode,
 				quantity: row?.Cantidad,
 				efectivo: row?.REFERENCIA,
 				wareHouse: row?.Almacen,
 				idInventaryB: 1,
 				key: '',
-				stock: row?.Stock,
-				idProduct: row?.ID,
+				stock: row?.stock,
+				idProduct: row?.idProduct,
 				idSucursalFk: selectedBusiness?.idSucursal,
 				apply_inventory: true,
 				idStatusFk: 1,
@@ -146,42 +147,41 @@ const ImportStock = () => {
 		return uploadData;
 	};
 
-	const exportToExcel = () => {
-		const data = [ExcelExport];
-		const worksheet = XLSX.utils.json_to_sheet(data);
-
-		const range = XLSX.utils.decode_range(worksheet['!ref']);
-		for (let R = range.s.r; R <= range.e.r; ++R) {
-			for (let C = range.s.c; C <= range.e.c; ++C) {
-				const cell_address = { c: C, r: R };
-				const cell_ref = XLSX.utils.encode_cell(cell_address);
-				if (!worksheet[cell_ref]) continue;
-				worksheet[cell_ref].s = {
-					fill: { patternType: 'solid', fgColor: { rgb: 'FF0000FF' } },
-					font: { bold: true },
-					alignment: { wrapText: true },
-				};
-			}
+	useEffect(() => {
+		let list = productsInv;
+		addKeys(list);
+		setProduct(list);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [productsInv]);
+	const getProductsRequest = async (businessId) => {
+		setLoading(true);
+		try {
+			await getProductsInv(businessId);
+		} catch (error) {
+			message.error('Error al obtener inventario');
+		} finally {
+			setLoading(false);
 		}
-
-		const workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-		XLSX.writeFile(workbook, 'Plantilla.xlsx');
 	};
-	
-	/* const exportToExcel = () => {
+	useEffect(() => {
+		setLoading(true);
+		if (
+			Object.keys(generalContext).length > 0 &&
+			Object.keys(selectedBusiness).length > 0
+		) {
+			getProductsRequest(selectedBusiness.idSucursal);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [generalContext, selectedBusiness]);
+
+
+	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Inventario.xlsx');
-	}; */
-
-	const ExcelExport = {
-		ID: '',
-		Nombre: '',
-		Codigo: '',
-		Stock: '',
 	};
+
 
 	const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });

@@ -37,7 +37,7 @@ import {
 	DeleteOutlined,
 	PrinterOutlined,
 } from '@ant-design/icons';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -84,7 +84,7 @@ const UpdateOrderPage = () => {
 	const [count, setCount] = useState(1);
 	const [newTotal, setNewTotal] = useState(0);
 	const [totalDeclarado, setTotalDecla] = useState();
-	/* const [client, setClient] = useState({}); */
+	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
 
 	const getOrderRequest = async (id) => {
@@ -148,7 +148,7 @@ const UpdateOrderPage = () => {
 			throw res.value.getErrorValue();
 		}
 		setPaymentTipe(res.value.getValue().response);
-		console.log(PaymentTipe);
+		
 	};
 
 	useEffect(() => {
@@ -181,6 +181,7 @@ const UpdateOrderPage = () => {
 			Object.keys(selectedBusiness).length
 		) {
 			getOrderRequest(id);
+			getDebtsbyClient(id)
 			getBrandsRequest(selectedBusiness.idSucursal);
 			getCategoriesRequest(selectedBusiness.idSucursal);
 			handleListProductRequest(selectedBusiness.idSucursal);
@@ -401,20 +402,28 @@ const UpdateOrderPage = () => {
 		},
 	};
 
-	const getDebtsbyClient = async (phoneNumber) => {
+	/* useEffect(() => {
+		console.log(currentOrder)
+		if (Object.keys(client).length) {
+			getDebtsbyClient(client.phone);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [client]); */
+
+	const getDebtsbyClient = async (id) => {
+		
 		setLoading(true);
-		console.log(phoneNumber);
+		console.log(id); 
 		try {
-			const res = await requestHandler.post(
-				'/api/v2/order/all/currentacount/hasto',
-				{
-					query: phoneNumber,
-				}
+			const res = await requestHandler.get(
+				`/api/v2/wallet/get/",${id}"/1000`
 			);
+			console.log(res)
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
 			const value = res.value.getValue().data;
+
 			setdebts(value);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
@@ -532,38 +541,12 @@ const UpdateOrderPage = () => {
 		setLoading(true);
 	};
 
-	const XLSX = require('xlsx');
-	const XLSXStyle = require('xlsx-style');
-
 	const exportToExcel = () => {
 		const workbook = XLSX.utils.book_new();
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
-
-		const range = XLSX.utils.decode_range(worksheet['!ref']);
-		for (let R = range.s.r; R <= range.e.r; ++R) {
-			for (let C = range.s.c; C <= range.e.c; ++C) {
-				const cell_address = { c: C, r: R };
-				const cell_ref = XLSX.utils.encode_cell(cell_address);
-
-				if (!worksheet[cell_ref]) continue;
-
-				worksheet[cell_ref].s = {
-					font: {
-						bold: true,
-						color: { rgb: 'FFFFFF' },
-					},
-					fill: {
-						fgColor: { rgb: '000000' },
-					},
-				};
-			}
-		}
-
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-		XLSXStyle.writeFile(workbook, 'Comprobante.xlsx');
+		XLSX.writeFile(workbook, 'Comprobante.xlsx');
 	};
-
-	exportToExcel();
 
 	const ExcelExport = [];
 	(currentOrder?.body || []).forEach((item, index) => {

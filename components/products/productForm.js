@@ -68,7 +68,7 @@ const ProductForm = (props) => {
 
 	const { requestHandler } = useRequest();
 	const [c, setC] = useState();
-
+	const [product, setProduct] = useState(initialState);
 	const codeListRequest = async (business = 1) => {
 		let code = [];
 		const response = await requestHandler.get(
@@ -91,8 +91,6 @@ const ProductForm = (props) => {
 		}
 		setC(code);
 	};
-
-	const [product, setProduct] = useState(initialState);
 
 	const fileProgress = (fileInput) => {
 		const img = new Image();
@@ -163,7 +161,6 @@ const ProductForm = (props) => {
 		} finally {
 			setLoading(false);
 		}
-
 	};
 
 	useEffect(() => {
@@ -182,7 +179,7 @@ const ProductForm = (props) => {
 	if (!product) {
 		return <div>Cargando...</div>;
 	}
-	
+
 	const handleSwitchChange = (value) => {
 		setProduct({ ...product, isPromo: value ? '1' : '0' });
 	};
@@ -277,6 +274,11 @@ const ProductForm = (props) => {
 		router.push('/dashboard/products');
 		setLoading(true);
 	};
+
+	
+
+
+
 
 	return (
 		<div className="flex flex-col">
@@ -879,14 +881,16 @@ const ProductForm = (props) => {
 									},
 								]}
 							>
-								<img
-									style={{
-										maxWidth: '150px',
-										height: 'auto',
-										marginBottom:'10px'
-									}}
-									src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
-								/>
+								{currentProduct && currentProduct.urlImagenProduct && (
+									<img
+										style={{
+											maxWidth: '150px',
+											height: 'auto',
+											marginBottom: '10px',
+										}}
+										src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
+									/>
+								)}
 								<Upload
 									name="avatar"
 									className="avatar-uploader"
@@ -897,7 +901,6 @@ const ProductForm = (props) => {
 								>
 									<Button icon={<UploadOutlined />}>Subir imagen</Button>
 								</Upload>
-								
 							</Form.Item>
 						</Col>
 					</Row>

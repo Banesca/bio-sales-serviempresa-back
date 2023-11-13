@@ -19,7 +19,7 @@ const Cuentas = () => {
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
 		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
-		{ title: 'Amount', dataIndex: 'amount', key: 'amount' },
+		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
 		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
 	];
 
