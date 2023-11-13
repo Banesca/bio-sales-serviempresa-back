@@ -8,6 +8,7 @@ import {
 	Row,
 	Select,
 	Table,
+	Collapse,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
@@ -108,10 +109,17 @@ const Merchandising = () => {
 			),
 		},
 	];
+
 	const columns3 = [
 		{
 			title: 'Código',
 			dataIndex: 'barCode',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Estado',
+			dataIndex: 'idStatusFk',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -255,7 +263,7 @@ const Merchandising = () => {
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 		}
-		console.log(response)
+		console.log(response);
 	};
 
 	const handleCancel = () => {
@@ -264,6 +272,38 @@ const Merchandising = () => {
 	const handleCancel2 = () => {
 		setOpen2(false);
 	};
+	const onChange = (key) => {
+		console.log(key);
+	};
+	const text = (
+		<Card>
+			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
+				<img
+					alt="example"
+					src={`${ip}:8078/visit/${reportVisitDetail.image}`}
+				/>
+			</Card.Grid>
+			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
+				<img
+					alt="example"
+					src={`${ip}:8078/visit/${reportVisitDetail.image2}`}
+				/>
+			</Card.Grid>
+		</Card>
+	);
+	const items = [
+		{
+			key: '1',
+			label: 'Antes',
+			children: <p>{text}</p>,
+		},
+		{
+			key: '2',
+			label: 'Despues',
+			children: <p>{text}</p>,
+		},
+		
+	];
 
 	const getClients = async () => {
 		const res = await requestHandler.get('/api/v2/client/list');
@@ -403,20 +443,7 @@ const Merchandising = () => {
 					</div>,
 				]}
 			>
-				<Card>
-					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-						<img
-							alt="example"
-							src={`${ip}:8078/visit/${reportVisitDetail.image}`}
-						/>
-					</Card.Grid>
-					<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-						<img
-							alt="example"
-							src={`${ip}:8078/visit/${reportVisitDetail.image2}`}
-						/>
-					</Card.Grid>
-				</Card>
+				<Collapse items={items} defaultActiveKey={['1']} onChange={onChange} />;
 			</Modal>
 			<Modal
 				open={open2}

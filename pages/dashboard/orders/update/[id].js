@@ -38,6 +38,7 @@ import {
 	PrinterOutlined,
 } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+
 export const UNIT_TYPE = {
 	UNIT: 17,
 	KG: 3,
@@ -531,8 +532,13 @@ const UpdateOrderPage = () => {
 		setLoading(true);
 	};
 
+	const XLSX = require('xlsx');
+	const XLSXStyle = require('xlsx-style');
+
 	const exportToExcel = () => {
+		const workbook = XLSX.utils.book_new();
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
+
 		const range = XLSX.utils.decode_range(worksheet['!ref']);
 		for (let R = range.s.r; R <= range.e.r; ++R) {
 			for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -553,10 +559,11 @@ const UpdateOrderPage = () => {
 			}
 		}
 
-		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-		XLSX.writeFile(workbook, 'Comprobante.xlsx');
+		XLSXStyle.writeFile(workbook, 'Comprobante.xlsx');
 	};
+
+	exportToExcel();
 
 	const ExcelExport = [];
 	(currentOrder?.body || []).forEach((item, index) => {

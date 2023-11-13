@@ -307,7 +307,7 @@ const ImportClients = () => {
 				} else {
 					setLoading(true);
 					const res = await requestHandler.post(
-						'/api/v2/product/add/masive/sales',
+						'/api/v2/client/add',
 						{
 							lista: formatData,
 						}

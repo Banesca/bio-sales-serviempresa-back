@@ -61,6 +61,7 @@ const routes = [
 	'/dashboard/cuentas',
 	'/login',
 	
+	
 ];
 
 const itemsMenu = [

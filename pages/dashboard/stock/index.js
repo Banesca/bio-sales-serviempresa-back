@@ -189,6 +189,15 @@ export default function Products() {
 				<div className="m-4 p-4">
 					<Title goBack={false} title={'Inventario'}>
 						<div>
+							<Button
+								block
+								style={{ marginRight: ' 0.3rem', marginLeft: ' -0.8rem' }}
+								onClick={() => router.push('/dashboard/stock/updateStock')}
+							>
+								Cargar stock
+							</Button>
+						</div>
+						<div>
 							<Button onClick={exportToExcel} block>
 								Exportar
 							</Button>

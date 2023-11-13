@@ -178,7 +178,7 @@ const UpdateUser = () => {
 			if (Number(value.isClose) === 0 || Number(value.isClose) === 1) {
 				dates.push(value.date);
 			}
-			console.log(dates); 
+			console.log(dates);
 			setJornadas([value]);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
@@ -205,7 +205,7 @@ const UpdateUser = () => {
 			setLog(localStorage.getItem('userProfile'));
 		}
 	}, [generalContext, id]);
-	
+
 	/* useEffect(() => {
 		if (Object.keys(client).length) {
 			getDebtsbyClient(client.phone);
@@ -300,10 +300,6 @@ const UpdateUser = () => {
 		var fecha2 = day + '-' + month + '-' + year;
 		console.log(fecha2.toString());
 
-		if (clientsToAssign.length > 0 && profile?.id != PROFILES.SELLER) {
-			setLoading(false);
-			return message.info('Este usuario ya tiene un cliente asignado');
-		}
 		console.log(clientsToAssign);
 
 		const res = await requestHandler.post('/api/v2/user/assign/client', {

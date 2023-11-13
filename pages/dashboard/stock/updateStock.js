@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from 'react';
-
 import {
 	DeleteOutlined,
 	ExclamationCircleFilled,
 	UploadOutlined,
+	DownloadOutlined,
 } from '@ant-design/icons';
 import {
 	Upload,
@@ -16,7 +16,6 @@ import {
 	ConfigProvider,
 } from 'antd';
 import * as XLSX from 'xlsx';
-
 import DashboardLayout from '../../../components/shared/layout';
 import { addKeys, removeKeys } from '../../../util/setKeys';
 import Loading from '../../../components/shared/loading';
@@ -27,7 +26,7 @@ import { notification } from 'antd';
 import Title from '../../../components/shared/title';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
-const ImportProducts = () => {
+const ImportStock = () => {
 	const generalContext = useContext(GeneralContext);
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
@@ -40,12 +39,16 @@ const ImportProducts = () => {
 	const [loading, setLoading] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [brands, setBrands] = useState([]);
-
 	const [rejectedBrands, setRejectedBrands] = useState([]);
 	const [rejectedCategories, setRejectedCategories] = useState([]);
-
 	const [api, contextHolder] = notification.useNotification();
 	const columns = [
+		{
+			title: 'ID',
+			dataIndex: 'idProduct',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
 		{
 			title: 'Nombre',
 			dataIndex: 'nameProduct',
@@ -55,71 +58,15 @@ const ImportProducts = () => {
 		{
 			title: 'Código',
 			dataIndex: 'barCode',
-			responsive: ['sm'],
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Referencia',
-			dataIndex: 'efectivo',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
+
 		{
-			title: 'Categoría',
-			dataIndex: 'nameFamily',
-			responsive: ['lg'],
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Marca',
-			dataIndex: 'nameSubFamily',
-			responsive: ['lg'],
-			key: 6,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Cantidad',
-			dataIndex: 'quantity',
+			title: 'Stock',
+			dataIndex: 'stock',
 			key: 1,
 			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Unidad de medida',
-			responsive: ['xs'],
-			dataIndex: 'idUnidadMedida',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Precio Tienda',
-			dataIndex: 'pricePurchase',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? <p>$ {record.marketPrice}</p> : <p>$ {text}</p>,
-		},
-		{
-			title: 'Precio venta',
-			dataIndex: 'priceSale',
-			key: 3,
-			render: (text, record) =>
-				record.isPromo == '1' ? <p>$ {record.marketPrice}</p> : <p>$ {text}</p>,
-		},
-		{
-			title: 'Almacen',
-			dataIndex: 'wareHouse',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Acciones',
-			key: 8,
-			render: (product, index) => (
-				<Button type="primary" onClick={() => confirmDelete(product)} danger>
-					<DeleteOutlined />
-				</Button>
-			),
 		},
 	];
 
@@ -170,49 +117,61 @@ const ImportProducts = () => {
 		let uploadData = [];
 		for (const row of rows) {
 			const obj = {
-				pricePurchase: row.PriceSale,
-				nameFamily: row.nombre,
-				nameSubFamily: String(row.nameSubFamily),
-				nameProduct: row.nameProduct,
-				barCode: String(row.idProduct),
-				quantity: row.quantity,
-				efectivo: row.REFERENCIA,
-				wareHouse: row.wareHouse,
-				nameSubFamily: row.nameSubFamily,
-				idInventaryB: 0,
-				idProductFk: row.idProduct,
-				priceSale: row.PriceSale,
-				idSucursalFk: selectedBusiness?.idInventory,
-				idInventaryHFK: selectedBusiness?.idInventory,
-				idTypeProductFk: 1,
-				isPromo: 0,
-				linkPago: 0,
-				isheavy: 0,
+				idUserAddFk: 1,
+				idProduction: 1,
+				idProductionCenter: 1,
+				priceSale: row?.PRECIO_TIENDA,
+				nameFamily: row?.Categoría || 'No especificada',
+				nameSubFamily: row?.SubCategoría || 'No especificada',
+				nameProduct: row?.Nombre,
+				barCode: row?.Codigo,
+				quantity: row?.Cantidad,
+				efectivo: row?.REFERENCIA,
+				wareHouse: row?.Almacen,
+				idInventaryB: 1,
+				key: '',
+				stock: row?.Stock,
+				idProduct: row?.ID,
+				idSucursalFk: selectedBusiness?.idSucursal,
 				apply_inventory: true,
-				nameKitchen: '',
 				idStatusFk: 1,
 				idUnidadMedida: row?.Unidad_de_medida,
-				idProductionCenter: 0,
-				idRestaurantFk: String(selectedBusiness.idRestaurantFk),
+				idRestaurantFk: 1,
 				minStock: 0,
 			};
 			uploadData.push(obj);
 		}
 		return uploadData;
 	};
-	
-	const existCategory = (name) => {
-		const filter = categories.filter(
-			(c) => c.name.toLowerCase() === name.toLowerCase()
-		);
-		return filter.length > 0;
+
+	const exportToExcel = () => {
+		const data = [ExcelExport];
+		const worksheet = XLSX.utils.json_to_sheet(data);
+
+		const range = XLSX.utils.decode_range(worksheet['!ref']);
+		for (let R = range.s.r; R <= range.e.r; ++R) {
+			for (let C = range.s.c; C <= range.e.c; ++C) {
+				const cell_address = { c: C, r: R };
+				const cell_ref = XLSX.utils.encode_cell(cell_address);
+				if (!worksheet[cell_ref]) continue;
+				worksheet[cell_ref].s = {
+					fill: { patternType: 'solid', fgColor: { rgb: 'FF0000FF' } },
+					font: { bold: true },
+					alignment: { wrapText: true },
+				};
+			}
+		}
+
+		const workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.writeFile(workbook, 'Plantilla.xlsx');
 	};
 
-	const existBrand = (name) => {
-		const filter = brands.filter(
-			(b) => b.nameSubFamily?.toLowerCase() === name.toLowerCase()
-		);
-		return filter.length > 0;
+	const ExcelExport = {
+		ID: '',
+		Nombre: '',
+		Codigo: '',
+		Stock: '',
 	};
 
 	const handleConvertFileToJson = (files) => {
@@ -227,8 +186,10 @@ const ImportProducts = () => {
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
 			setData(uploadData);
+			uploadData;
 		};
 	};
+   
 
 	const handleChange = (info) => {
 		let newFileList = [...info.fileList];
@@ -264,18 +225,16 @@ const ImportProducts = () => {
 		},
 	};
 
-	const body = {
-		idUserAddFk: '0',
-		idProductionCenter: '1',
-		isProduction: '2',
-	};
-
 	const handleSendData = async () => {
-		data;
+		const formatData = removeKeys(data);
+        console.log(data)
 		setLoading(true);
-		const restt = await requestHandler.post('/api/v2/production/product/add', {
-			data,
-		});
+		const res = await requestHandler.post(
+			'/api/v2/inventary/product/add/masive/adjustment ',
+			{
+				data,
+			}
+		);
 		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
 		if (rest.isLeft()) {
 			setLoading(false);
@@ -331,16 +290,21 @@ const ImportProducts = () => {
 								</Button>
 							</Upload>
 						</Col>
+						<Col>
+							<Button
+								onClick={exportToExcel}
+								icon={<DownloadOutlined />}
+								block
+								style={{ marginLeft: '1rem' }}
+							>
+								Descargar Plantilla
+							</Button>
+						</Col>
 					</Row>
 					<ConfigProvider
 						renderEmpty={data.length !== 0 ? CustomizeRenderEmpty : ''}
 					>
-						<Table
-							style={{ overflow: 'scroll' }}
-							scroll={{ x: '100vw' }}
-							columns={columns}
-							dataSource={data}
-						/>
+						<Table columns={columns} dataSource={data} />
 					</ConfigProvider>
 				</div>
 				<Modal
@@ -397,4 +361,4 @@ const ImportProducts = () => {
 	);
 };
 
-export default ImportProducts;
+export default ImportStock;

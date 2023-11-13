@@ -120,6 +120,7 @@ const Rutas = () => {
 		}
 		console.log(res);
 	};
+	
 	const handleOnChange = async (value) => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/list/byuser/${value}`
