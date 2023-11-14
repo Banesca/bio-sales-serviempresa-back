@@ -37,7 +37,7 @@ import {
 	DeleteOutlined,
 	PrinterOutlined,
 } from '@ant-design/icons';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 
 export const UNIT_TYPE = {
 	UNIT: 17,
@@ -172,6 +172,8 @@ const UpdateOrderPage = () => {
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
+			console.log(currentOrder.phoneClient)
+			getDebtsbyClient(currentOrder.phoneClient)
 		}
 	}, [currentOrder, getOrderRequest]);
 
@@ -181,7 +183,7 @@ const UpdateOrderPage = () => {
 			Object.keys(selectedBusiness).length
 		) {
 			getOrderRequest(id);
-			getDebtsbyClient(id)
+			
 			getBrandsRequest(selectedBusiness.idSucursal);
 			getCategoriesRequest(selectedBusiness.idSucursal);
 			handleListProductRequest(selectedBusiness.idSucursal);
@@ -402,13 +404,7 @@ const UpdateOrderPage = () => {
 		},
 	};
 
-	/* useEffect(() => {
-		console.log(currentOrder)
-		if (Object.keys(client).length) {
-			getDebtsbyClient(client.phone);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [client]); */
+	
 
 	const getDebtsbyClient = async (id) => {
 		
@@ -426,7 +422,7 @@ const UpdateOrderPage = () => {
 
 			setdebts(value);
 		} catch (error) {
-			message.error('Ha ocurrido un error');
+			/* message.error('Ha ocurrido un error'); */
 		} finally {
 			setLoading(false);
 		}
@@ -546,6 +542,7 @@ const UpdateOrderPage = () => {
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Comprobante.xlsx');
+
 	};
 
 	const ExcelExport = [];
