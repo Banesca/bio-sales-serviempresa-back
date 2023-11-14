@@ -45,6 +45,7 @@ const ProductForm = (props) => {
 	const [isValidImgSize, setIsValidImgSize] = useState();
 	const { getProductById, updateProduct, currentProduct } = useProducts();
 	const { id } = router.query;
+
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -66,9 +67,37 @@ const ProductForm = (props) => {
 		maxProducVenta: props.product.maxProducVenta || '',
 	};
 
+	const generalContext = useContext(GeneralContext);
+	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
 	const [c, setC] = useState();
 	const [product, setProduct] = useState(initialState);
+	const [form] = Form.useForm();
+	const [click, setClick] = useState(false);
+	const onReset = () => {
+		setProduct({
+			nameProduct: '',
+			barCode: '',
+			idProductFamilyFk: '',
+			idProductSubFamilyFk: '',
+			idBrandFk: '',
+			idLineFk: '',
+			ean: '',
+			healthRegister: '',
+			priceSale: '',
+			cpe: '',
+			marketPrice: '',
+			idUnitMeasureSaleFk: '',
+			isheavy: '',
+			unitweight: '',
+			observation: '',
+			efectivo: '',
+			maxProducVenta: '',
+		});
+		form.resetFields();
+		click ? setClick(false) : setClick(true);
+	};
+
 	const codeListRequest = async (business = 1) => {
 		let code = [];
 		const response = await requestHandler.get(
@@ -163,19 +192,6 @@ const ProductForm = (props) => {
 		}
 	};
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const res = await requestHandler.get(`/api/v2/product/get/${id}`);
-			if (res.isLeft()) {
-				throw res.value.getErrorValue();
-			}
-			const value = res.value.getValue().data;
-			setProduct(value);
-		};
-
-		fetchData();
-	}, [id]);
-
 	if (!product) {
 		return <div>Cargando...</div>;
 	}
@@ -204,8 +220,17 @@ const ProductForm = (props) => {
 		}
 	};
 
-	const generalContext = useContext(GeneralContext);
-	const { selectedBusiness } = useBusinessProvider();
+	const onSubmit = async () => {
+		router.push('/dashboard/products');
+		setLoading(true);
+		console.log(product);
+		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
+		await props.handleRequest(product, file);
+		setLoading(false);
+		if (!props.update) {
+			return onReset();
+		}
+	};
 
 	useEffect(() => {
 		getProductRequest(id);
@@ -227,58 +252,29 @@ const ProductForm = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness, id]);
 
-	const onSubmit = async () => {
-		router.push('/dashboard/products');
-		setLoading(true);
-		console.log(product);
-		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
-		await props.handleRequest(product, file);
-		setLoading(false);
-		if (!props.update) {
-			return onReset();
-		}
-	};
-
-	const [form] = Form.useForm();
-	const [click, setClick] = useState(false);
-	const onReset = () => {
-		setProduct({
-			nameProduct: '',
-			barCode: '',
-			idProductFamilyFk: '',
-			idProductSubFamilyFk: '',
-			idBrandFk: '',
-			idLineFk: '',
-			ean: '',
-			healthRegister: '',
-			priceSale: '',
-			cpe: '',
-			marketPrice: '',
-			idUnitMeasureSaleFk: '',
-			isheavy: '',
-			unitweight: '',
-			observation: '',
-			efectivo: '',
-			maxProducVenta: '',
-		});
-		form.resetFields();
-		click ? setClick(false) : setClick(true);
-	};
-
 	useEffect(() => {
 		click ? onReset() : '';
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [click]);
 
+	/* useEffect(() => {
+		const fetchData = async () => {
+			const res = await requestHandler.get(`/api/v2/product/get/${id}`);
+			if (res.isLeft()) {
+				throw res.value.getErrorValue();
+			}
+			const value = res.value.getValue().data;
+			setProduct(value);
+		};
+
+		fetchData();
+	}, [id]); */
+
+
 	const handleReturn = () => {
 		router.push('/dashboard/products');
 		setLoading(true);
 	};
-
-	
-
-
-
 
 	return (
 		<div className="flex flex-col">

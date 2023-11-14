@@ -403,9 +403,7 @@ const UpdateOrderPage = () => {
 			cell: EditableCell,
 		},
 	};
-
 	
-
 	const getDebtsbyClient = async (id) => {
 		
 		setLoading(true);
@@ -447,17 +445,17 @@ const UpdateOrderPage = () => {
 		console.log(res);
 	};
 
-	/* let body = {
-		comments: 'PAGO',
+	let body = {
+		/* comments: 'PAGO',
 		mpCash: this.validateMP('mpCash'),
 		mpCreditCard: this.validateMP('mpCreditCard'),
 		mpDebitCard: this.validateMP('mpDebitCard'),
-		mpTranferBack: this.validateMP('mpTranferBack'),
-		totalBot: this.total,
-		mpMpago: this.validateMP('mpMpago'),
+		mpTranferBack: this.validateMP('mpTranferBack'), */
+		totalBot:total,
+		/* mpMpago: this.validateMP('mpMpago'), */
 		idCurrencyFk: 1,
-		listPaymentMethod: this.paymentAdd,
-		isAfip: 0,
+		listPaymentMethod: dataSource,
+		/* isAfip: 0,
 		mpRappi: this.validateMP('mpRappi'),
 		mpGlovo: this.validateMP('mpGlovo'),
 		mpUber: this.validateMP('mpUber'),
@@ -472,14 +470,14 @@ const UpdateOrderPage = () => {
 		mpPaypal: this.validateMP('mpPaypal'),
 		mpZelle: this.validateMP('mpZelle'),
 		mpBofa: this.validateMP('mpBofa'),
-		mpYumi: this.validateMP('mpYumi'),
-		waste: 0,
-		isPrintBillin: 0,
-		tasa: this.dolarRate,
+		mpYumi: this.validateMP('mpYumi'), */
+		waste: totalDeclarado,
+		isPrintBillin: newTotal,
+	/* 	tasa: this.dolarRate,
 		puntoVtaAfit: Number(this.conditionsSelect),
 		comprobanteAfit: result,
-		isacountCourrient: this.orden.isacountCourrient,
-	}; */
+		isacountCourrient: this.orden.isacountCourrient, */
+	}; 
 
 	function validateMP(descriptPayMent) {
 		let result;

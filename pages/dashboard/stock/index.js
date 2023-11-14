@@ -189,26 +189,21 @@ export default function Products() {
 				<div className="m-4 p-4">
 					<Title goBack={false} title={'Inventario'}>
 						<div>
+							<Button onClick={exportToExcel} block>
+								Exportar
+							</Button>
+						</div>
+						<div>
 							<Button
+								type="warning"
 								block
-								style={{ marginRight: ' 0.3rem', marginLeft: ' -0.8rem' }}
+								style={{ marginRight: '-2.3rem', marginLeft: '1.3rem' }}
 								onClick={() => router.push('/dashboard/stock/updateStock')}
 							>
 								Cargar stock
 							</Button>
 						</div>
-						<div>
-							<Button onClick={exportToExcel} block>
-								Exportar
-							</Button>
-						</div>
-						<Button
-							type="warning"
-							style={{ marginRight: '-2.3rem', marginLeft: '1.3rem' }}
-							onClick={() => router.push('/dashboard/stock/imp')}
-						>
-							Importar
-						</Button>
+						
 					</Title>
 					<Filter setQuery={setQuery} clean={clean} />
 					<ConfigProvider

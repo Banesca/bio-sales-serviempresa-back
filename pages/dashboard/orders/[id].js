@@ -114,32 +114,7 @@ const OrderDetail = () => {
 		);
 	}
 
-	const exportToExcel = () => {
-		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
-		const range = XLSX.utils.decode_range(worksheet['!ref']);
-		for (let R = range.s.r; R <= range.e.r; ++R) {
-			for (let C = range.s.c; C <= range.e.c; ++C) {
-				const cell_address = { c: C, r: R };
-				const cell_ref = XLSX.utils.encode_cell(cell_address);
-
-				if (!worksheet[cell_ref]) continue;
-
-				worksheet[cell_ref].s = {
-					font: {
-						bold: true,
-						color: { rgb: 'FFFFFF' },
-					},
-					fill: {
-						fgColor: { rgb: '000000' },
-					},
-				};
-			}
-		}
-
-		const workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-		XLSX.writeFile(workbook, 'Recibo.xlsx');
-	};
+	console.log(currentOrder.body)	
 
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
@@ -219,10 +194,12 @@ const OrderDetail = () => {
 						</Button>
 					</div>
 				</div>
-				<div id="factura">
+				<div id="factura" style={{
+					width:'96%'
+				}}>
 					<List
 						style={{
-							width: '96%',
+							width: '100%',
 							padding: '10px 30px',
 							backgroundColor: 'white',
 							marginBottom: '25px',

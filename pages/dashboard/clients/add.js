@@ -36,7 +36,7 @@ export default function AddClient() {
 	const router = useRouter();
 	const { clients } = useClients();
 
-	/* 	const getClientsRequest = async () => {
+		const getClientsRequest = async () => {
 		setLoading(true);
 		try {
 			await listClients();
@@ -46,7 +46,7 @@ export default function AddClient() {
 		} finally {
 			setLoading(false);
 		}
-	}; */
+	};
 
 	const validator = (data) => {
 		return {
@@ -90,7 +90,7 @@ export default function AddClient() {
 
 	useEffect(() => {
 		if (Object.keys(generalContext).length) {
-			/* getClientsRequest(); */
+			getClientsRequest();
 		}
 	}, [generalContext]);
 

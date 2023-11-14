@@ -180,8 +180,8 @@ export default function EditClient() {
 							rif: client?.numberDocument,
 							comments: client?.observacion,
 							dispatchaddress: client?.dispatchaddress,
-							limitcredit:client?.limitcredit
-
+							limitcredit:client?.limitcredit,
+							isigtf: client?.isigtf,
 						}}
 						layout="vertical"
 						autoComplete="off"
