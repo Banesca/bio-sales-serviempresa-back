@@ -90,21 +90,17 @@ const UpdateUser = () => {
 			key: 2,
 		},
 	];
-
-	const getDebtsbyClient = async (phoneNumber) => {
+	const getDebtsbyClient = async (id) => {
 		setLoading(true);
-		console.log(phoneNumber);
+		console.log(id);
 		try {
-			const res = await requestHandler.post(
-				'/api/v2/order/all/currentacount/hasto',
-				{
-					query: phoneNumber,
-				}
-			);
+			const res = await requestHandler.get(`/api/v2/wallet/get/",${id}"/1000`);
+
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
 			const value = res.value.getValue().data;
+			console.log(res);
 			setdebts(value);
 		} catch (error) {
 			message.error('Ha ocurrido un error');

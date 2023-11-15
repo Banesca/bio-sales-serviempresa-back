@@ -246,6 +246,10 @@ const OrderDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Fecha de creación:</p>
 							<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
 						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
+							<p>{currentOrder.Urlbank}</p>
+						</List.Item>
 
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
