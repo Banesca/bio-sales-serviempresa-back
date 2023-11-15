@@ -45,6 +45,7 @@ const ImportStock = () => {
 	const [api, contextHolder] = notification.useNotification();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 	const { updateProductInv, productsInv, getProductsInv } = useProducts();
+
 	const columns = [
 		{
 			title: 'ID',
@@ -68,6 +69,12 @@ const ImportStock = () => {
 		{
 			title: 'Stock',
 			dataIndex: 'stock',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Cantidad',
+			dataIndex: 'quantity',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -126,15 +133,15 @@ const ImportStock = () => {
 				priceSale: row?.PRECIO_TIENDA,
 				nameFamily: row?.Categoría || 'No especificada',
 				nameSubFamily: row?.SubCategoría || 'No especificada',
-				nameProduct: row?.nameProduct,
-				barCode: row?.barCode,
+				nameProduct: row?.Nombre_de_producto,
+				barCode: row?.Codigo_de_barra,
 				quantity: row?.Cantidad,
-				efectivo: row?.REFERENCIA,
+				efectivo: row?.Codigo_interno,
 				wareHouse: row?.Almacen,
 				idInventaryB: 1,
 				key: '',
-				stock: row?.stock,
-				idProduct: row?.idProduct,
+				stock: row?.Stock_Actual,
+				idProduct: row?.Nro,
 				idSucursalFk: selectedBusiness?.idSucursal,
 				apply_inventory: true,
 				idStatusFk: 1,
@@ -153,6 +160,7 @@ const ImportStock = () => {
 		setProduct(list);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [productsInv]);
+
 	const getProductsRequest = async (businessId) => {
 		setLoading(true);
 		try {
@@ -174,14 +182,29 @@ const ImportStock = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-
 	const exportToExcel = () => {
-		const worksheet = XLSX.utils.json_to_sheet(filtered());
+		const productos = [];
+
+		for (let product of productsInv) {
+			const body = {
+				Nro: product.idProduct,
+				Nombre_de_producto: product.nameProduct,
+				Codigo_de_barra: product.barCode,
+				Codigo_interno: product.efectivo,
+				Stock_Actual: product.stock,
+				Cantidad: '',
+			};
+			productos.push(body);
+		}
+		const worksheet = XLSX.utils.json_to_sheet(productos);
 		const workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+		XLSX.utils.book_append_sheet(
+			workbook,
+			worksheet,
+			'Productos para inventariar'
+		);
 		XLSX.writeFile(workbook, 'Inventario.xlsx');
 	};
-
 
 	const handleConvertFileToJson = (files) => {
 		const file = new Blob(files, { type: files[0].type });
@@ -237,19 +260,28 @@ const ImportStock = () => {
 		const formatData = removeKeys(data);
 		console.log(formatData);
 		setLoading(true);
+
+
+		const productos = [];
+
+		for (let product of formatData) {
+			const body = {
+				idProduct: product.idProduct,
+				quanity: product.quantity,
+				reference: 'Carga masiva',
+				isSum: 1,
+			};
+			productos.push(body);
+		}
+
 		const res = await requestHandler.post(
 			'/api/v2/inventary/masive/adjustment',
 			{
-				data: {
-					idProduct: formatData.idProductFk,
-					quanity: formatData.stock,
-					reference: formatData.barCode,
-					isSum: '1',
-				},
+				data: productos,
 			}
 		);
-		const rest = await requestHandler.get('/api/v2/product/listint/lite/1');
-		if (rest.isLeft()) {
+	
+		if (res.isLeft()) {
 			setLoading(false);
 			return message.error('Ha ocurrido un error');
 		}
