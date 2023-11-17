@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Button, Col, Row, Form, Input, Select, Upload } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 import { message } from 'antd';
 import Loading from '../shared/loading';
 import { useRouter } from 'next/router';
@@ -9,7 +9,9 @@ import { useUser } from './hooks/useUser';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { LeftOutlined, PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import Image from 'next/image';
+import { GeneralContext } from '../../pages/_app';
 
+import { ip } from '../../util/environment';
 const UserForm = ({
 	user,
 	update,
@@ -19,7 +21,7 @@ const UserForm = ({
 	pin,
 }) => {
 	const { requestHandler } = useRequest();
-
+	const generalContext = useContext(GeneralContext);
 	const { findUserByEmail } = useUser();
 
 	const [userData, setUserData] = useState({
@@ -117,7 +119,7 @@ const UserForm = ({
 		router.push('/dashboard/users');
 		setLoading(true);
 	};
-	
+
 	const handleChange = (info) => {
 		if (info.file === 'uploading') {
 			setLoading(true);
@@ -219,15 +221,14 @@ const UserForm = ({
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
-							
 						>
 							{imageUrl ? (
 								<img
-									src={imageUrl}
 									alt="avatar"
 									style={{
 										width: '100%',
 									}}
+									src={`${ip}:${generalContext?.api_port}/user/${userData.image}`}
 								/>
 							) : (
 								uploadButton
@@ -301,8 +302,6 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
-
-					
 
 					{!update && userData.idProfileFk && (
 						<Form.Item

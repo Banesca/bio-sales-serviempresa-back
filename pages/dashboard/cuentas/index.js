@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
-import { AppstoreAddOutlined } from '@ant-design/icons';
+import { FileImageOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Table } from 'antd';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
@@ -16,12 +16,52 @@ const Cuentas = () => {
 	const { selectedBusiness } = useBusinessProvider();
 	const generalContext = useContext(GeneralContext);
 	const { loading, setLoading } = useLoadingContext();
+	const [productsDetail, setProductsDetail] = useState([]);
+	const [open2, setOpen2] = useState(false);
+	const [reportInventario, setReportInventario] = useState([]);
+	const [nombre, setNombre] = useState([]);
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
 		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
 		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
 		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
+		{
+			title: 'Accion',
+			dataIndex: 'idReportVisit',
+			key: '6',
+			render: (index, record) => (
+				<Button onClick={() => showModal2(record)}>
+					<FileImageOutlined />
+				</Button>
+			),
+		},
 	];
+	const columns2 = [
+		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
+		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
+		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
+	];
+
+	const showModal2 = (productos) => {
+		setOpen2(true);
+		setProductsDetail(productos);
+		handleOnChang3(productos);
+	};
+
+	const handleOnChang3 = async (value) => {
+		console.log(value.idClientFk);
+		
+		setNombre(value.nameclient);
+		const res = await requestHandler.get(
+			`/api/v2/wallet/get/"${String(value.idClientFk)}"/1000`
+		);
+		console.log(res);
+		if (!res.isLeft()) {
+			let value = res.value.getValue();
+			value = value.response;
+			setReportInventario(value);
+		}
+	};
 
 	const accountsReceivable = () => {
 		getAccountsReceivable();
@@ -63,6 +103,7 @@ const Cuentas = () => {
 					amount: obj.amount,
 					abonos: obj.abonos,
 					deuda: obj.deuda,
+					idClientFk: obj.data.idClientFk,
 				}));
 
 				console.log(arrayForTable);
@@ -74,7 +115,6 @@ const Cuentas = () => {
 			console.error('Hubo un error al hacer la petición:', error);
 		}
 	};
-
 
 	const getClientsRequest = async () => {
 		/* const res = await requestHandler.get('/api/v2/client/list'); */
@@ -109,52 +149,35 @@ const Cuentas = () => {
 	const handleChange = (event) => {
 		setMessage(event.target.value);
 	};
+	const handleCancel2 = () => {
+		setOpen2(false);
+	};
 
 	const cancelModal = (event) => {
 		setOpenModal(false);
 	};
-
+	/* console.log(productos.nameclient) */
 	return (
 		<DashboardLayout>
 			<div className="p-4 m-4">
-				<Title title={'Cuentas por cobrar'} goBack={false}>
-					{/* <Button className="bg-white" onClick={showModal}>
-						<AppstoreAddOutlined />
-						Crear
-					</Button> */}
-				</Title>
+				<Title title={'Cuentas por cobrar'} goBack={false}></Title>
 				<Table columns={columns} dataSource={AccountsReceivable} />
 			</div>
 			<Modal
-				open={openModal}
-				onCancel={() => setOpenModal(false)}
-				footer={
-					<div className="flex justify-end">
-						<Button danger onClick={cancelModal}>
+				open={open2}
+				onCancel={handleCancel2}
+				title={`Usuario: ${nombre}`}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-1">
+						<Button danger key="cancel" onClick={handleCancel2}>
 							Cancelar
 						</Button>
-						<Button
-							type="primary"
-							className="bg-blue-500"
-							onClick={getAccountsReceivableAdd}
-						>
-							Guardar
-						</Button>
-					</div>
-				}
+					</div>,
+				]}
+				width={760}
 			>
-				<div className="flex flex-col gap-5">
-					<h1>Ingrese el nombre o descripción</h1>
-					<Form>
-						<Form.Item>
-							<Input
-								onChange={handleChange}
-								value={message}
-								placeholder="Condición de pago"
-							></Input>
-						</Form.Item>
-					</Form>
-				</div>
+				<Table columns={columns2} dataSource={reportInventario} />
 			</Modal>
 		</DashboardLayout>
 	);

@@ -10,7 +10,7 @@ import {
 	Table,
 	Collapse,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 import { useProductFilter } from '../../../components/products/useProductFilter';
 import DashboardLayout from '../../../components/shared/layout';
@@ -18,6 +18,7 @@ import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
 import { ip } from '/util/environment.js';
 import { FileImageOutlined } from '@ant-design/icons';
+import { GeneralContext } from '../../_app';
 
 const Merchandising = () => {
 	const { requestHandler } = useRequest();
@@ -35,6 +36,7 @@ const Merchandising = () => {
 	const [productsDetail, setProductsDetail] = useState([]);
 	const { filtered } = useProductFilter();
 	const [modalText, setModalText] = useState();
+	const generalContext = useContext(GeneralContext);
 
 	const columns = [
 		{
@@ -154,13 +156,19 @@ const Merchandising = () => {
 			title: 'Imagen',
 			dataIndex: 'urlImagenProduct',
 			key: 1,
-			render: (text, record) => (
-				<img
-					src={record.urlImagenProduct}
-					style={{ width: '50px', height: '50px' }}
-				/>
-			),
+			render: (text, record) =>
+				record.urlImagenProduct ? (
+					<img
+						style={{
+							maxWidth: '150px',
+							height: 'auto',
+							marginBottom: '10px',
+						}}
+						src={`${ip}:${generalContext?.api_port}/product/${record.urlImagenProduct}`}
+					/>
+				) : null,
 		},
+
 		{
 			title: 'Nombre del producto',
 			dataIndex: 'nameProduct',
@@ -260,6 +268,7 @@ const Merchandising = () => {
 		const response = await requestHandler.get(
 			`/api/v2/productclient/list/${idClient}`
 		);
+		console.log(response);
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 		}
@@ -302,7 +311,6 @@ const Merchandising = () => {
 			label: 'Despues',
 			children: <p>{text}</p>,
 		},
-		
 	];
 
 	const getClients = async () => {

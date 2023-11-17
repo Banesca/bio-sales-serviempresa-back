@@ -38,6 +38,7 @@ const UpdateUser = () => {
 	const { loading, setLoading } = useLoadingContext();
 	const [user, setUser] = useState({});
 	const [businessByUser, setBusinessByUser] = useState([]);
+	const [AccountsReceivable, setAccountsReceivable] = useState();
 	const [pin, setPin] = useState();
 	const [profile, setProfile] = useState();
 	const [log, setLog] = useState();
@@ -65,7 +66,8 @@ const UpdateUser = () => {
 	const [minDate, setMinDate] = useState(new Date(), 1);
 	const [debts, setdebts] = useState([]);
 	const [jornadas, setJornadas] = useState([]);
-
+	const { selectedBusiness } = useBusinessProvider();
+	
 	const columns2 = [
 		{
 			title: 'Nombre del cliente',
@@ -77,6 +79,13 @@ const UpdateUser = () => {
 			dataIndex: 'Deuda',
 			key: 2,
 		},
+	];
+	const columns = [
+		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
+		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
+		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
+		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
+		
 	];
 	const columns3 = [
 		{
@@ -90,25 +99,38 @@ const UpdateUser = () => {
 			key: 2,
 		},
 	];
-	const getDebtsbyClient = async (id) => {
-		setLoading(true);
-		console.log(id);
+	const getAccountsReceivable = async () => {
+		console.log(selectedBusiness.idSucursal);
+		let id = selectedBusiness.idSucursal;
 		try {
-			const res = await requestHandler.get(`/api/v2/wallet/get/",${id}"/1000`);
+			const response = await requestHandler.get(
+				`/api/v2/wallet/list/client/deuda/${id}`
+			);
+			console.log(response.value);
 
-			if (res.isLeft()) {
-				throw res.value.getErrorValue();
+			if (
+				response.value._value &&
+				response.value._value.list &&
+				Array.isArray(response.value._value.list)
+			) {
+				const arrayForTable = response.value._value.list.map((obj) => ({
+					nameclient: obj.data.nameclient,
+					amount: obj.amount,
+					abonos: obj.abonos,
+					deuda: obj.deuda,
+					idClientFk: obj.data.idClientFk,
+				}));
+
+				console.log(arrayForTable);
+				setAccountsReceivable(arrayForTable);
+			} else {
+				console.error('Unexpected response from API:', response.value);
 			}
-			const value = res.value.getValue().data;
-			console.log(res);
-			setdebts(value);
 		} catch (error) {
-			message.error('Ha ocurrido un error');
-		} finally {
-			setLoading(false);
+			console.error('Hubo un error al hacer la petición:', error);
 		}
 	};
-
+	
 	const getUserRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -196,18 +218,12 @@ const UpdateUser = () => {
 			getUserBusiness(id);
 			getSellerClients(id);
 			getLoc(id);
-			getDebtsbyClient(id);
+			getAccountsReceivable(id);
 			getJornadas(id);
 			setLog(localStorage.getItem('userProfile'));
 		}
 	}, [generalContext, id]);
 
-	/* useEffect(() => {
-		if (Object.keys(client).length) {
-			getDebtsbyClient(client.phone);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [client]); */
 
 	const getClientsRequest = async () => {
 		setLoading(true);
@@ -229,7 +245,6 @@ const UpdateUser = () => {
 			window.open(`https://www.google.com/maps/place/${lat}+${long}`, '_blank');
 		} catch {
 			setLoading(false);
-			message.error('Ha ocurrido un error');
 		} finally {
 			setLoading(false);
 		}
@@ -405,7 +420,7 @@ const UpdateUser = () => {
 							<Button
 								type="primary"
 								className="bg-blue-500"
-								disabled={disabled}
+								/* disabled={disabled} */
 								onClick={() => getLocation(id)}
 							>
 								<AimOutlined />
@@ -459,7 +474,7 @@ const UpdateUser = () => {
 
 			<Card>
 				<h3 className="text-4xl text-center">Deudas</h3>
-				<Table loading={loading} columns={columns2} dataSource={debts} />
+				<Table columns={columns} dataSource={AccountsReceivable} />
 			</Card>
 			<Card>
 				<h3 className="text-4xl text-center">Jornadas</h3>

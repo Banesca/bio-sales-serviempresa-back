@@ -228,7 +228,7 @@ const UserDetail = () => {
 			window.open(`https://www.google.com/maps/place/${lat}+${long}`, '_blank');
 		} catch {
 			setLoading(false);
-			message.error('Ha ocurrido un error');
+			
 		} finally {
 			setLoading(false);
 		}
@@ -309,7 +309,7 @@ const UserDetail = () => {
 									<Button
 										type="primary"
 										className="bg-blue-500"
-										disabled={disabled}
+										/* disabled={disabled} */
 										onClick={() => getLocation(id)}
 									>
 										{React.createElement(AimOutlined)}
