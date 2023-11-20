@@ -218,7 +218,7 @@ export default function AddClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="Limite de credito disponible"
+									label="Límite de crédito disponible"
 									style={{ marginRight: 6 }}
 									rules={[
 										{

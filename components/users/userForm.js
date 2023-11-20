@@ -19,7 +19,7 @@ const UserForm = ({
 	pin,
 }) => {
 	const { requestHandler } = useRequest();
-
+	const router = useRouter();
 	const { findUserByEmail } = useUser();
 
 	const [userData, setUserData] = useState({
@@ -27,6 +27,7 @@ const UserForm = ({
 		mail: user.mail || '',
 		pin: pin || '',
 		idProfileFk: user.idProfileFk || null,
+		image: user.image || '',
 	});
 
 	const regexpTlp =
@@ -36,6 +37,9 @@ const UserForm = ({
 	const [click, setClick] = useState(false);
 	const [imageUrl, setImageUrl] = useState();
 	const [form] = Form.useForm();
+	const [fileList, setFileList] = useState([]);
+
+	const handleChange2 = ({ fileList }) => setFileList(fileList);
 
 	const onReset = () => {
 		setUserData({
@@ -53,7 +57,7 @@ const UserForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [click]);
 
-	const router = useRouter();
+	console.log(userData);
 
 	const handleAsigne = async (userId, businessId) => {
 		const res = await requestHandler.post('/api/v2/user/branch/add', {
@@ -79,7 +83,7 @@ const UserForm = ({
 			setLoading(true);
 			const info = await submitFunction({
 				...e,
-				file: e.file ? e.file.file : null,
+				file: fileList[0] ? fileList[0].originFileObj : null,
 			});
 			console.log(info);
 			if (
@@ -117,11 +121,8 @@ const UserForm = ({
 		router.push('/dashboard/users');
 		setLoading(true);
 	};
-	
+
 	const handleChange = (info) => {
-
-		console.log(userData);
-
 		if (info.file === 'uploading') {
 			setLoading(true);
 			return;
@@ -210,24 +211,26 @@ const UserForm = ({
 						idProfileFk: userData.idProfileFk,
 						pin: userData.pin,
 						Repit: userData.pin,
+						image: userData.image,
 						business: userBusiness,
 					}}
 					form={form}
 				>
 					<Form.Item label="Foto de perfil" name="file">
 						<Upload
-							name="avatar"
+							name="image"
 							listType="picture-circle"
 							className="avatar-uploader"
 							maxCount={1}
 							accept="image/png, image/jpeg"
 							multiple={false}
-							
+							onChange={handleChange2}
+							fileList={fileList}
 						>
 							{imageUrl ? (
 								<img
 									src={imageUrl}
-									alt="avatar"
+									alt="image"
 									style={{
 										width: '100%',
 									}}
@@ -304,8 +307,6 @@ const UserForm = ({
 							})}
 						</Select>
 					</Form.Item>
-
-					
 
 					{!update && userData.idProfileFk && (
 						<Form.Item

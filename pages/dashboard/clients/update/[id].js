@@ -1,4 +1,4 @@
-import { Button, Col, Row, Select } from 'antd';
+import { Button, Col, Row, Select,InputNumber } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -32,9 +32,8 @@ export default function EditClient() {
 			address: '',
 			rif: '',
 			comments: '',
-			dispatchaddress:'',
-			limitcredit:'',
-
+			dispatchaddress: '',
+			limitcredit: '',
 		});
 		click ? setClick(false) : setClick(true);
 	};
@@ -49,7 +48,6 @@ export default function EditClient() {
 	const handleSelectChange = (event) => {
 		console.log(event);
 	};
-	
 
 	const getClientRequest = async () => {
 		setLoading(true);
@@ -125,8 +123,8 @@ export default function EditClient() {
 					idStatusFK: 1,
 					observacion: data.comments,
 					idClient: client.idClient,
-					limitcredit:data.limitcredit,
-					dispatchaddress:data.dispatchaddress,
+					limitcredit: data.limitcredit,
+					dispatchaddress: data.dispatchaddress,
 				});
 				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
@@ -140,10 +138,10 @@ export default function EditClient() {
 		}
 	};
 
- 	if (Object.entries(client).length === 0) {
+	if (Object.entries(client).length === 0) {
 		getClientRequest();
 		return <Loading isLoading={true} />;
-	} 
+	}
 
 	return (
 		<DashboardLayout>
@@ -180,7 +178,7 @@ export default function EditClient() {
 							rif: client?.numberDocument,
 							comments: client?.observacion,
 							dispatchaddress: client?.dispatchaddress,
-							limitcredit:client?.limitcredit,
+							limitcredit: client?.limitcredit,
 							isigtf: client?.isigtf,
 						}}
 						layout="vertical"
@@ -255,7 +253,7 @@ export default function EditClient() {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="Limite de credito disponible"
+									label="Límite de crédito disponible"
 									style={{ marginRight: 6 }}
 									rules={[
 										{
@@ -265,7 +263,13 @@ export default function EditClient() {
 									]}
 									name="limitcredit"
 								>
-									<Input type="text" />
+									<InputNumber
+									style={{width:'100%'}}
+										formatter={(value) =>
+											`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+										}
+										parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+									/>
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
