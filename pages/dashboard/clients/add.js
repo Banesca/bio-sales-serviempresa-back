@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Select } from 'antd';
+import { Button, Card, Col, Row, Select,InputNumber } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -228,7 +228,13 @@ export default function AddClient() {
 									]}
 									name="limitcredit"
 								>
-									<Input type="text" />
+									<InputNumber
+									style={{width:'100%'}}
+										formatter={(value) =>
+											`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+										}
+										parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
+									/>
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
