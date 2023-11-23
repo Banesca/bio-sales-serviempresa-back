@@ -148,7 +148,6 @@ const UpdateOrderPage = () => {
 			throw res.value.getErrorValue();
 		}
 		setPaymentTipe(res.value.getValue().response);
-		
 	};
 
 	useEffect(() => {
@@ -161,6 +160,7 @@ const UpdateOrderPage = () => {
 	}, [products]);
 
 	const calculateTotalRequest = async () => {
+		
 		const res = await requestHandler.get(`/api/v2/order/calculate/total/${id}`);
 		if (res.isLeft()) {
 			return;
@@ -168,14 +168,19 @@ const UpdateOrderPage = () => {
 		const value = res.value.getValue();
 		setTotal(value.message[0].TOTAL);
 	};
-
+	
 	useEffect(() => {
+		
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
-			console.log(currentOrder.phoneClient)
-			getDebtsbyClient(currentOrder.phoneClient)
+			console.log(currentOrder.phoneClient);
+			getDebtsbyClient(currentOrder.phoneClient);
 		}
+		
+		
 	}, [currentOrder, getOrderRequest]);
+
+	
 
 	useEffect(() => {
 		if (
@@ -183,7 +188,7 @@ const UpdateOrderPage = () => {
 			Object.keys(selectedBusiness).length
 		) {
 			getOrderRequest(id);
-			
+
 			getBrandsRequest(selectedBusiness.idSucursal);
 			getCategoriesRequest(selectedBusiness.idSucursal);
 			handleListProductRequest(selectedBusiness.idSucursal);
@@ -403,16 +408,13 @@ const UpdateOrderPage = () => {
 			cell: EditableCell,
 		},
 	};
-	
+
 	const getDebtsbyClient = async (id) => {
-		
 		setLoading(true);
-		console.log(id); 
+		console.log(id);
 		try {
-			const res = await requestHandler.get(
-				`/api/v2/wallet/get/",${id}"/1000`
-			);
-			console.log(res)
+			const res = await requestHandler.get(`/api/v2/wallet/get/",${id}"/1000`);
+			console.log(res);
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
@@ -427,6 +429,7 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleReceiveOrder = async () => {
+		
 		setLoading(true);
 		try {
 			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
@@ -451,7 +454,7 @@ const UpdateOrderPage = () => {
 		mpCreditCard: this.validateMP('mpCreditCard'),
 		mpDebitCard: this.validateMP('mpDebitCard'),
 		mpTranferBack: this.validateMP('mpTranferBack'), */
-		totalBot:total,
+		totalBot: total,
 		/* mpMpago: this.validateMP('mpMpago'), */
 		idCurrencyFk: 1,
 		listPaymentMethod: dataSource,
@@ -473,11 +476,11 @@ const UpdateOrderPage = () => {
 		mpYumi: this.validateMP('mpYumi'), */
 		waste: totalDeclarado,
 		isPrintBillin: newTotal,
-	/* 	tasa: this.dolarRate,
+		/* 	tasa: this.dolarRate,
 		puntoVtaAfit: Number(this.conditionsSelect),
 		comprobanteAfit: result,
 		isacountCourrient: this.orden.isacountCourrient, */
-	}; 
+	};
 
 	function validateMP(descriptPayMent) {
 		let result;
@@ -540,10 +543,10 @@ const UpdateOrderPage = () => {
 		const worksheet = XLSX.utils.json_to_sheet(ExcelExport);
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Comprobante.xlsx');
-
 	};
 
 	const ExcelExport = [];
+
 	(currentOrder?.body || []).forEach((item, index) => {
 		const productData = {
 			'Nombre del pruducto': item.nameProduct,
@@ -557,6 +560,8 @@ const UpdateOrderPage = () => {
 		};
 		ExcelExport.push(productData);
 	});
+
+	console.log(currentOrder?.body)
 
 	return (
 		<DashboardLayout>
@@ -593,6 +598,9 @@ const UpdateOrderPage = () => {
 					<h1 className="text-center font-semibold text-4xl w-[350px]">
 						Agregar productos
 					</h1>
+					{/* <p style={{ fontWeight: 'bold', color: 'red' }}>
+						{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+					</p> */}
 					<div className="flex gap-4">
 						<Button onClick={exportToExcel} className="bg-blue-500">
 							<PrinterOutlined /> Imprimir comprobante

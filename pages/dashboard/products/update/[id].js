@@ -37,7 +37,7 @@ export const UpdateProduct = () => {
 			message.error('Error al actualizar producto');
 		} finally {
 			setLoading(false);
-			router.push(`/dashboard/products/${id}`)
+			/* router.push(`/dashboard/products/${id}`) */
 		}
 	};
 

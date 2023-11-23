@@ -228,7 +228,12 @@ const OrderDetail = () => {
 								{orderStatusToUse[currentOrder.idStatusOrder].state}
 							</p>
 						</List.Item>
-
+						<List.Item>
+							<p></p>
+							<p style={{ fontWeight: 'bold', color: 'red' }}>
+								{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+							</p>
+						</List.Item>
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Cliente:</p>
 							<p>{currentOrder.fullNameClient}</p>
@@ -255,12 +260,7 @@ const OrderDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>
-						<List.Item>
-							<p></p>
-							<p style={{ fontWeight: 'bold', color: 'red' }}>
-								{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
-							</p>
-						</List.Item>
+						
 					</List>
 					<DetailOrderTable
 						products={currentOrder?.body}

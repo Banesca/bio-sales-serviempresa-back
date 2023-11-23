@@ -160,7 +160,7 @@ const Merchandising = () => {
 				record.urlImagenProduct ? (
 					<img
 						style={{
-							maxWidth: '150px',
+							maxWidth: '100px',
 							height: 'auto',
 							marginBottom: '10px',
 						}}
@@ -288,13 +288,11 @@ const Merchandising = () => {
 		<Card>
 			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
 				<img
-					alt="example"
 					src={`${ip}:8078/visit/${reportVisitDetail.image}`}
 				/>
 			</Card.Grid>
 			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
 				<img
-					alt="example"
 					src={`${ip}:8078/visit/${reportVisitDetail.image2}`}
 				/>
 			</Card.Grid>

@@ -18,8 +18,9 @@ const Cuentas = () => {
 	const { loading, setLoading } = useLoadingContext();
 	const [productsDetail, setProductsDetail] = useState([]);
 	const [open2, setOpen2] = useState(false);
-	const [reportInventario, setReportInventario] = useState([]);
+	const [abonos, setAbonos] = useState([]);
 	const [nombre, setNombre] = useState([]);
+	const [totalAbonos, setTotal] = useState([]);
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
 		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
@@ -36,10 +37,10 @@ const Cuentas = () => {
 			),
 		},
 	];
+	
 	const columns2 = [
-		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
-		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
-		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
+		{ title: 'abonos', dataIndex: 'amount', key: 'amount' },
+		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
 	];
 
 	const showModal2 = (productos) => {
@@ -48,24 +49,22 @@ const Cuentas = () => {
 		handleOnChang3(productos);
 	};
 
-	const handleOnChang3 = async (value) => {
-		console.log(value.idClientFk);
-		
-		setNombre(value.nameclient);
-		const res = await requestHandler.get(
-			`/api/v2/wallet/get/"${String(value.idClientFk)}"/1000`
-		);
+	const handleOnChang3 = async (resp) => {
+		let id = resp.idClientFk;
+		console.log(id);
+		setNombre(resp.nameclient);
+		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
 		console.log(res);
+		console.log(totalAbonos)
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
-			value = value.response;
-			setReportInventario(value);
+			value = value.data;
+			console.log(value);
+			setAbonos(value);
 		}
 	};
 
-	const accountsReceivable = () => {
-		getAccountsReceivable();
-	};
+
 
 	useEffect(() => {
 		getAccountsReceivable();
@@ -125,27 +124,6 @@ const Cuentas = () => {
 		} */
 	};
 
-	const getAccountsReceivableAdd = async () => {
-		const data = {
-			note: message,
-		};
-		/* const response = await requestHandler.post(
-			'/api/v2/paymentcondition/add',
-			data
-		); */
-		/* if (!response.isLeft()) {
-			const value = response.value._value.response;
-			setAccountsReceivable(value);
-		} */
-		setOpenModal(false);
-		getAccountsReceivable();
-		setMessage('');
-	};
-
-	const showModal = () => {
-		setOpenModal(true);
-	};
-
 	const handleChange = (event) => {
 		setMessage(event.target.value);
 	};
@@ -170,6 +148,7 @@ const Cuentas = () => {
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
+						<Button>Abonar</Button>
 						<Button danger key="cancel" onClick={handleCancel2}>
 							Cancelar
 						</Button>
@@ -177,7 +156,8 @@ const Cuentas = () => {
 				]}
 				width={760}
 			>
-				<Table columns={columns2} dataSource={reportInventario} />
+				
+				<Table columns={columns2} dataSource={abonos} />
 			</Modal>
 		</DashboardLayout>
 	);

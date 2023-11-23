@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Select,InputNumber } from 'antd';
+import { Button, Card, Col, Row, Select, InputNumber } from 'antd';
 import DashboardLayout from '../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -36,7 +36,7 @@ export default function AddClient() {
 	const router = useRouter();
 	const { clients } = useClients();
 
-		const getClientsRequest = async () => {
+	const getClientsRequest = async () => {
 		setLoading(true);
 		try {
 			await listClients();
@@ -229,7 +229,7 @@ export default function AddClient() {
 									name="limitcredit"
 								>
 									<InputNumber
-									style={{width:'100%'}}
+										style={{ width: '100%' }}
 										formatter={(value) =>
 											`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 										}
@@ -247,13 +247,13 @@ export default function AddClient() {
 											message: 'Ingresa el RIF del cliente',
 										},
 										{
-											pattern: regexpRif,
+											pattern: /^[JGVEP][-][0-9]{8}[-][0-9]$/,
 											message: 'Ingresa un RIF valido',
 										},
 									]}
 									name="rif"
 								>
-									<Input type="text" placeholder="Ej: J-12345678-10" />
+									<Input type="text" placeholder="Ej: J-12345678-1" />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>

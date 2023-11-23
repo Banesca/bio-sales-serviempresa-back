@@ -53,10 +53,10 @@ const Rutas = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Ver rutas',
-			dataIndex: 'idUtilsH',
-			key: '4',
-			render: (record) => (
+			title: 'Accion',
+			dataIndex: 'idReportVisit',
+			key: '6',
+			render: (index, record) => (
 				<Button onClick={() => showModal2(record)}>
 					<NodeIndexOutlined />
 				</Button>
@@ -100,8 +100,8 @@ const Rutas = () => {
 		handleOnChang(productos);
 	};
 
-	const handleOnChang = async (value) => {
-		const res = await requestHandler.get(`/api/v2/ordersbypassingh/list/${value}`);
+	const handleOnChang = async (productos) => {
+		const res = await requestHandler.get(`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`);
 		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
@@ -132,6 +132,7 @@ const Rutas = () => {
 			setReportProduct(value);
 		}
 	};
+
 	const handleCancel = () => {
 		setOpen2(false);
 	};
