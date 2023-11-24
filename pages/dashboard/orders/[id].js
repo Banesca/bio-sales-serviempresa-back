@@ -70,12 +70,19 @@ const OrderDetail = () => {
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
 		if (element) {
+			const img = document.createElement('img');
+			img.src = '/Images/LOGO.png';
+			img.style.maxWidth = '150px';
+			img.style.maxHeight = '150px';
+			element.insertBefore(img, element.firstChild);
 			const canvas = await html2canvas(element);
 			const imgData = canvas.toDataURL('image/png');
 			const link = document.createElement('a');
 			link.href = imgData;
 			link.download = 'image.png';
 			link.click();
+
+			element.removeChild(img);
 		} else {
 			console.error(`Element with id "${elementId}" not found`);
 		}
@@ -113,8 +120,6 @@ const OrderDetail = () => {
 			</DashboardLayout>
 		);
 	}
-
-	console.log(currentOrder.body)	
 
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
@@ -194,9 +199,12 @@ const OrderDetail = () => {
 						</Button>
 					</div>
 				</div>
-				<div id="factura" style={{
-					width:'96%'
-				}}>
+				<div
+					id="factura"
+					style={{
+						width: '96%',
+					}}
+				>
 					<List
 						style={{
 							width: '100%',
@@ -260,7 +268,6 @@ const OrderDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>
-						
 					</List>
 					<DetailOrderTable
 						products={currentOrder?.body}

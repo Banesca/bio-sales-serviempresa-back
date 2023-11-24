@@ -29,9 +29,9 @@ const Rutas = () => {
 
 	const columns = [
 		{
-			title: 'Titulo',
-			dataIndex: 'titulo',
-			key: 1,
+			title: 'Chofer',
+			dataIndex: 'idChoferFk',
+			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -46,12 +46,7 @@ const Rutas = () => {
 			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
-		{
-			title: 'Id del chofer',
-			dataIndex: 'idChoferFk',
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
+		
 		{
 			title: 'Accion',
 			dataIndex: 'idReportVisit',
@@ -66,7 +61,13 @@ const Rutas = () => {
 	const columns2 = [
 		{
 			title: 'Titulo',
-			dataIndex: 'titulo',
+			dataIndex: 'nameRestaurant',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Numero de la orden',
+			dataIndex: 'numberOrden',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -88,6 +89,7 @@ const Rutas = () => {
 			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
+
 	];
 
 	useEffect(() => {
@@ -178,6 +180,7 @@ const Rutas = () => {
 			<Modal
 				open={open2}
 				onCancel={handleCancel}
+				width={700}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
