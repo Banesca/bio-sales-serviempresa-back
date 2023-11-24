@@ -160,7 +160,6 @@ const UpdateOrderPage = () => {
 	}, [products]);
 
 	const calculateTotalRequest = async () => {
-		
 		const res = await requestHandler.get(`/api/v2/order/calculate/total/${id}`);
 		if (res.isLeft()) {
 			return;
@@ -168,19 +167,14 @@ const UpdateOrderPage = () => {
 		const value = res.value.getValue();
 		setTotal(value.message[0].TOTAL);
 	};
-	
+
 	useEffect(() => {
-		
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
 			console.log(currentOrder.phoneClient);
 			getDebtsbyClient(currentOrder.phoneClient);
 		}
-		
-		
 	}, [currentOrder, getOrderRequest]);
-
-	
 
 	useEffect(() => {
 		if (
@@ -429,7 +423,6 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleReceiveOrder = async () => {
-		
 		setLoading(true);
 		try {
 			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
@@ -508,6 +501,7 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
+
 	const handleCancelOrder = async () => {
 		setLoading(true);
 		try {
@@ -561,7 +555,7 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder?.body)
+	console.log(currentOrder?.isacountCourrient);
 
 	return (
 		<DashboardLayout>
@@ -598,9 +592,9 @@ const UpdateOrderPage = () => {
 					<h1 className="text-center font-semibold text-4xl w-[350px]">
 						Agregar productos
 					</h1>
-					{/* <p style={{ fontWeight: 'bold', color: 'red' }}>
-						{currentOrder.isacountCourrient === 1 ? 'Orden a crédito' : ''}
-					</p> */}
+					<p style={{ fontWeight: 'bold', color: 'red' }}>
+						{currentOrder?.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+					</p>
 					<div className="flex gap-4">
 						<Button onClick={exportToExcel} className="bg-blue-500">
 							<PrinterOutlined /> Imprimir comprobante
