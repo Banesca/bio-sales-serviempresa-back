@@ -67,7 +67,7 @@ const UpdateUser = () => {
 	const [debts, setdebts] = useState([]);
 	const [jornadas, setJornadas] = useState([]);
 	const { selectedBusiness } = useBusinessProvider();
-	
+
 	const columns2 = [
 		{
 			title: 'Nombre del cliente',
@@ -85,7 +85,6 @@ const UpdateUser = () => {
 		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
 		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
 		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
-		
 	];
 	const columns3 = [
 		{
@@ -130,7 +129,7 @@ const UpdateUser = () => {
 			console.error('Hubo un error al hacer la petición:', error);
 		}
 	};
-	
+
 	const getUserRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -223,7 +222,6 @@ const UpdateUser = () => {
 			setLog(localStorage.getItem('userProfile'));
 		}
 	}, [generalContext, id]);
-
 
 	const getClientsRequest = async () => {
 		setLoading(true);
@@ -472,10 +470,13 @@ const UpdateUser = () => {
 				</Card>
 			)}
 
-			<Card>
-				<h3 className="text-4xl text-center">Deudas</h3>
-				<Table columns={columns} dataSource={AccountsReceivable} />
-			</Card>
+			{profile?.id != PROFILES.SELLER && (
+				<Card>
+					<h3 className="text-4xl text-center">Deudas</h3>
+					<Table columns={columns} dataSource={AccountsReceivable} />
+				</Card>
+			)}
+
 			<Card>
 				<h3 className="text-4xl text-center">Jornadas</h3>
 				<Table loading={loading} columns={columns3} dataSource={jornadas} />
@@ -521,7 +522,6 @@ const UpdateUser = () => {
 				open={isAssignClientOpen}
 				onCancel={() => setIsAssignClientOpen(false)}
 				footer={[
-					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-6">
 						<Button
 							key="cancel"
@@ -538,6 +538,7 @@ const UpdateUser = () => {
 							key="asigne"
 							type="primary"
 							onClick={() => handleAssignClientsToSeller(false)}
+							disabled={clientsToAssign.length === 0 || !startDate}
 						>
 							Asignar
 						</Button>
@@ -569,6 +570,11 @@ const UpdateUser = () => {
 						/>
 					</Form.Item>
 				</Form>
+				{(clientsToAssign.length === 0 || !startDate) && (
+					<p style={{ color: 'red' }}>
+						Por favor, selecciona ambos campos antes de asignar un cliente.
+					</p>
+				)}
 			</Modal>
 
 			<Modal

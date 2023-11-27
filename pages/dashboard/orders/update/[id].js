@@ -433,7 +433,7 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 
-		const res = await requestHandler.put('/api/v2/order/close/', {
+		const res = await requestHandler.post('/api/v2/order/close/', {
 			idOrder: currentOrder.idOrderH,
 			data: body,
 		});
