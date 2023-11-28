@@ -19,7 +19,6 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 		});
 		setQuery({
 			idStatusOrder: 0,
-		
 			startDate: null,
 			endDate: null,
 		});
@@ -27,12 +26,14 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 	};
 
 	const handleSearch = async (values) => {
+		console.log(values.fullname);
+		console.log(fullname);
 		setQuery({
 			idStatusOrder: values.idStatusOrder || 0,
 			startDate: values.date ? values.date[0]?.$d : null,
 			endDate: values.date ? values.date[1]?.$d : null,
-			fullname: values.fullname || '',
-			name: values.name || '', 
+			fullNameClient: values.fullNameClient || '',
+			fullname: values.fullname || '', 
 		});
 
 		if (values.date) {
@@ -40,8 +41,8 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 				idBranchFk: `${selectedBusiness.idSucursal}`,
 				dateStart: values.date[0].$d,
 				dateEnd: values.date[1].$d,
-				fullname: values.fullname, 
-				name: values.name,
+				fullNameClient: values.fullNameClient, 
+				fullname: values.fullname,
 			});
 		}
 	};
@@ -64,8 +65,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 							<Form.Item
 								label="Cliente"
 								style={{ padding: '0 .5rem' }}
-								
-								name="fullname"
+								name="fullNameClient"
 							>
 								<Input type="text" />
 							</Form.Item>
@@ -76,9 +76,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								style={{
 									padding: '0 .5rem',
 								}}
-							
-							
-								name="name"
+								name="fullname"
 							>
 								<Input type="text" />
 							</Form.Item>
@@ -102,7 +100,6 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 								</Select>
 							</Form.Item>
 						</Col>
-
 						<Col span={12}>
 							<Form.Item
 								label="Fecha"

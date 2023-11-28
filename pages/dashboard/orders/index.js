@@ -35,6 +35,8 @@ export default function OrdersPage() {
 		idStatusOrder: 0,
 		startDate: null,
 		endDate: null,
+		fullNameClient:null,
+		fullname:null,
 	});
 
 	const handleSeeModal = () => {
@@ -74,6 +76,16 @@ export default function OrdersPage() {
 		if (query.idStatusOrder) {
 			if (list) {
 				list = list.filter((o) => o.idStatusOrder == query.idStatusOrder);
+			}
+		}
+		if (query.fullNameClient) {
+			if (list) {
+				list = list.filter((o) => o.fullNameClient == query.fullNameClient);
+			}
+		}
+		if (query.fullname) {
+			if (list) {
+				list = list.filter((o) => o.fullname == query.fullname);
 			}
 		}
 		return list;

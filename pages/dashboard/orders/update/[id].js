@@ -169,14 +169,6 @@ const UpdateOrderPage = () => {
 	};
 
 	useEffect(() => {
-		if (currentOrder) {
-			calculateTotalRequest(currentOrder.idOrderH);
-			console.log(currentOrder.phoneClient);
-			getDebtsbyClient(currentOrder.phoneClient);
-		}
-	}, [currentOrder, getOrderRequest]);
-
-	useEffect(() => {
 		if (
 			Object.keys(generalContext).length &&
 			Object.keys(selectedBusiness).length
@@ -317,7 +309,9 @@ const UpdateOrderPage = () => {
 		const sumaTotal = calcularSumaTotal();
 
 		setTotalDecla(sumaTotal);
-		setNewTotal(total - sumaTotal);
+		let result = total - sumaTotal;
+		result = parseFloat(result.toFixed(2));
+		setNewTotal(result);
 	};
 
 	const handleDelete = (key) => {
@@ -335,7 +329,9 @@ const UpdateOrderPage = () => {
 
 		sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
-		setNewTotal(total - sumaTotal);
+		let result = total - sumaTotal;
+		result = parseFloat(result.toFixed(2));
+		setNewTotal(result);
 	};
 
 	const defaultColumns = [
@@ -407,88 +403,86 @@ const UpdateOrderPage = () => {
 		setLoading(true);
 		console.log(id);
 		try {
-			const res = await requestHandler.get(`/api/v2/wallet/get/",${id}"/1000`);
+			const res = await requestHandler.get(
+				`/api/v2/wallet/get/` + id + `/1000`
+			);
 			console.log(res);
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
 			const value = res.value.getValue().data;
-
 			setdebts(value);
 		} catch (error) {
-			/* message.error('Ha ocurrido un error'); */
+			/* message.error('Ha ocurrido un error');  */
 		} finally {
 			setLoading(false);
 		}
 	};
 
+	useEffect(() => {
+		if (currentOrder) {
+			calculateTotalRequest(currentOrder.idOrderH);
+			getDebtsbyClient(currentOrder?.phoneClient);
+		}
+	}, [currentOrder, getOrderRequest]);
+
 	const handleReceiveOrder = async () => {
+		let id = String(currentOrder.idOrderH);
+		console.log(id);
 		setLoading(true);
 		try {
-			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
-			router.push(`/dashboard/orders/${id}`);
+			if (newTotal === 0) {
+				await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
+			} else {
+				message.error('Aun queda un monto pediente de: ' + newTotal);
+			}
 		} catch (error) {
 			message.error('Error al recibir pedido');
 		} finally {
 			setLoading(false);
 		}
+		
+		console.log(dataSource)
 
-		const res = await requestHandler.post('/api/v2/order/close/', {
-			idOrder: currentOrder.idOrderH,
-			data: body,
+		const res = await requestHandler.put('/api/v2/order/close/' + id, {
+			body: {
+				comments: 'PAGO',
+				/*mpCash: this.validateMP('mpCash'),
+			mpCreditCard: this.validateMP('mpCreditCard'),
+			mpDebitCard: this.validateMP('mpDebitCard'),
+			mpTranferBack: this.validateMP('mpTranferBack'), */
+				totalBot: total,
+				/* mpMpago: this.validateMP('mpMpago'), */
+				idCurrencyFk: 1,
+				listPaymentMethod: dataSource,
+				isAfip: 0,
+				/* mpRappi: this.validateMP('mpRappi'),
+			mpGlovo: this.validateMP('mpGlovo'),
+			mpUber: this.validateMP('mpUber'),
+			mpPedidosya: this.validateMP('mpPedidosya'),
+			mpJust: this.validateMP('mpJust'),
+			mpWabi: this.validateMP('mpWabi'),
+			mpOtro2: this.validateMP('mpOtro2'),
+			mpPedidosyacash: this.validateMP('mpPedidosyacash'),
+			mpPersonal: this.validateMP('mpPersonal'),
+			mpRapicash: this.validateMP('mpRapicash'),
+			mpPresent: this.validateMP('mpPresent'),
+			mpPaypal: this.validateMP('mpPaypal'),
+			mpZelle: this.validateMP('mpZelle'),
+			mpBofa: this.validateMP('mpBofa'),
+			mpYumi: this.validateMP('mpYumi'), */
+				waste: totalDeclarado,
+				isPrintBillin: newTotal,
+				/* 	tasa: this.dolarRate,
+			puntoVtaAfit: Number(this.conditionsSelect),
+			comprobanteAfit: result, */
+			isacountCourrient: currentOrder?.isacountCourrient,
+			},
 		});
-
 		console.log(res);
+		router.push(`/dashboard/orders/${id}`);
 	};
 
-	let body = {
-		/* comments: 'PAGO',
-		mpCash: this.validateMP('mpCash'),
-		mpCreditCard: this.validateMP('mpCreditCard'),
-		mpDebitCard: this.validateMP('mpDebitCard'),
-		mpTranferBack: this.validateMP('mpTranferBack'), */
-		totalBot: total,
-		/* mpMpago: this.validateMP('mpMpago'), */
-		idCurrencyFk: 1,
-		listPaymentMethod: dataSource,
-		/* isAfip: 0,
-		mpRappi: this.validateMP('mpRappi'),
-		mpGlovo: this.validateMP('mpGlovo'),
-		mpUber: this.validateMP('mpUber'),
-		mpPedidosya: this.validateMP('mpPedidosya'),
-		mpJust: this.validateMP('mpJust'),
-		mpWabi: this.validateMP('mpWabi'),
-		mpOtro2: this.validateMP('mpOtro2'),
-		mpPedidosyacash: this.validateMP('mpPedidosyacash'),
-		mpPersonal: this.validateMP('mpPersonal'),
-		mpRapicash: this.validateMP('mpRapicash'),
-		mpPresent: this.validateMP('mpPresent'),
-		mpPaypal: this.validateMP('mpPaypal'),
-		mpZelle: this.validateMP('mpZelle'),
-		mpBofa: this.validateMP('mpBofa'),
-		mpYumi: this.validateMP('mpYumi'), */
-		waste: totalDeclarado,
-		isPrintBillin: newTotal,
-		/* 	tasa: this.dolarRate,
-		puntoVtaAfit: Number(this.conditionsSelect),
-		comprobanteAfit: result,
-		isacountCourrient: this.orden.isacountCourrient, */
-	};
-
-	function validateMP(descriptPayMent) {
-		let result;
-		result = this.paymentAdd.filter((event) => event.value == descriptPayMent);
-		if (result.length != 0) {
-			if (descriptPayMent == 'mpCash') {
-				result = this.paymentAdd.length > 0 ? result[0].monto : 0;
-			} else {
-				result = this.paymentAdd.length > 0 ? result[0].monto : 0;
-			}
-		} else {
-			result = 0;
-		}
-		return result;
-	}
 
 	const handlePauseOrder = async () => {
 		setLoading(true);
@@ -513,6 +507,7 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 	};
+
 	const calculateSubTotal = (item) => {
 		let subTotal = 0;
 		if (item.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
@@ -653,14 +648,18 @@ const UpdateOrderPage = () => {
 												placeholder="Ingrese condicion de pago"
 											>
 												{PaymentTipe &&
-													PaymentTipe.map((PaymentTipe) => (
-														<Select.Option
-															key={PaymentTipe.idPaymenConditions}
-															value={PaymentTipe.idPaymenConditions}
-														>
-															{PaymentTipe.note}
-														</Select.Option>
-													))}
+													PaymentTipe.map(
+														(PaymentTipe) =>
+															(currentOrder?.isacountCourrient !== 1 ||
+																PaymentTipe.note !== 'CREDITO') && (
+																<Select.Option
+																	key={PaymentTipe.idPaymenConditions}
+																	value={PaymentTipe.idPaymenConditions}
+																>
+																	{PaymentTipe.note}
+																</Select.Option>
+															)
+													)}
 											</Select>
 										</List.Item>
 
