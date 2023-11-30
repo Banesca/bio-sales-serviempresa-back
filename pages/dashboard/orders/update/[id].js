@@ -404,7 +404,7 @@ const UpdateOrderPage = () => {
 		console.log(id);
 		try {
 			const res = await requestHandler.get(
-				`/api/v2/wallet/get/` + id + `/1000`
+				`/api/v2/wallet/get/` + id.idUser + `/1000`
 			);
 			console.log(res);
 			if (res.isLeft()) {
@@ -422,7 +422,8 @@ const UpdateOrderPage = () => {
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
-			getDebtsbyClient(currentOrder?.phoneClient);
+			getDebtsbyClient(currentOrder);
+			console.log(currentOrder)
 		}
 	}, [currentOrder, getOrderRequest]);
 
