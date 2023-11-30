@@ -33,21 +33,21 @@ const Filter = ({ setQuery, clean }) => {
 
 	return (
 		<Collapse style={{ width: '100%', marginBottom: '2rem' }}>
-			<Collapse.Panel header='Filtros'>
+			<Collapse.Panel header="Filtros">
 				<Row style={{ justifyContent: 'center' }}>
 					<Form
 						form={form}
 						style={{ maxWidth: '800px', width: '100%', fontWeight: 'bold' }}
-						name='productFilters'
+						name="productFilters"
 						onFinish={onSubmit}
 					>
 						{userProfile == PROFILES.MASTER && <SelectBusiness />}
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Nombre'
+									label="Nombre"
 									style={{ padding: '0 .5rem' }}
-									name='nameProduct'
+									name="nameProduct"
 									labelCol={{
 										md: { span: 8 },
 										sm: { span: 10 },
@@ -62,8 +62,8 @@ const Filter = ({ setQuery, clean }) => {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Código'
-									name='barCode'
+									label="Código"
+									name="barCode"
 									style={{ padding: '0 .5rem' }}
 									labelCol={{
 										md: { span: 8 },
@@ -81,8 +81,8 @@ const Filter = ({ setQuery, clean }) => {
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Precio compra'
-									name='priceSale'
+									label="Precio compra"
+									name="priceSale"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -95,13 +95,13 @@ const Filter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Input type='number' allowClear />
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Precio venta'
-									name='pricePurchase'
+									label="Precio venta"
+									name="pricePurchase"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -114,15 +114,15 @@ const Filter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Input type='number' allowClear />
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 						</Row>
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Categoría'
-									name='nameFamily'
+									label="Categoría"
+									name="nameFamily"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -158,8 +158,8 @@ const Filter = ({ setQuery, clean }) => {
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Sub Categoría'
-									name='nameSubFamily'
+									label="Sub Categoría"
+									name="nameSubFamily"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -197,8 +197,8 @@ const Filter = ({ setQuery, clean }) => {
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='Stock'
-									name='stock'
+									label="Stock"
+									name="stock"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -211,13 +211,13 @@ const Filter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Input type='number' allowClear />
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 								<Form.Item
-									label='ID'
-									name='idProduct'
+									label="ID"
+									name="idProduct"
 									style={{
 										padding: '0 .5rem',
 									}}
@@ -230,7 +230,7 @@ const Filter = ({ setQuery, clean }) => {
 										sm: { span: 14 },
 									}}
 								>
-									<Input type='number' allowClear />
+									<Input type="number" allowClear />
 								</Form.Item>
 							</Col>
 						</Row>
@@ -247,7 +247,7 @@ const Filter = ({ setQuery, clean }) => {
 										padding: '0 .5rem',
 									}}
 								>
-									<Button type='warning' block onClick={onReset}>
+									<Button type="warning" block onClick={onReset}>
 										Limpiar
 									</Button>
 								</Form.Item>
@@ -263,7 +263,7 @@ const Filter = ({ setQuery, clean }) => {
 										padding: '0 .5rem',
 									}}
 								>
-									<Button htmlType='submit' type='success' block>
+									<Button htmlType="submit" type="success" block>
 										Buscar
 									</Button>
 								</Form.Item>
