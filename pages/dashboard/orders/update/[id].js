@@ -399,7 +399,7 @@ const UpdateOrderPage = () => {
 		},
 	};
 
-	const getDebtsbyClient = async (id) => {
+	/* const getDebtsbyClient = async (id) => {
 		setLoading(true);
 		console.log(id);
 		try {
@@ -413,17 +413,17 @@ const UpdateOrderPage = () => {
 			const value = res.value.getValue().data;
 			setdebts(value);
 		} catch (error) {
-			/* message.error('Ha ocurrido un error');  */
+			message.error('Ha ocurrido un error'); 
 		} finally {
 			setLoading(false);
 		}
-	};
+	}; */
 
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
-			getDebtsbyClient(currentOrder);
-			console.log(currentOrder)
+			/* getDebtsbyClient(currentOrder);
+			console.log(currentOrder) */
 		}
 	}, [currentOrder, getOrderRequest]);
 
