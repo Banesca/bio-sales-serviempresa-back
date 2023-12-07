@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import DashboardLayout from '../../../components/shared/layout';
-import { Button, List, message } from 'antd';
+import { Button, List, message, Table } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
@@ -30,7 +30,7 @@ const OrderDetail = () => {
 	const { loading, setLoading } = useLoadingContext();
 	const { user, currentOrder, getOrderById, changeStatus } = useOrders();
 	const { userProfile } = useAuthContext();
-
+	const [dataSource, setDataSource] = useState([]);
 	const generalContext = useContext(GeneralContext);
 
 	const getOrderRequest = async (id) => {
@@ -66,6 +66,52 @@ const OrderDetail = () => {
 		}
 		return color;
 	};
+	const defaultColumns2 = [
+		{
+			title: 'Metodo de pago',
+			dataIndex: 'name',
+			key: 'name',
+		},
+		{
+			title: 'Monto a pagar',
+			dataIndex: 'monto',
+			key: 'monto',
+		},
+	];
+	
+	/* console.log(currentOrder.isPrintBillin);//newtotal
+	console.log(currentOrder.waste); *///totaldeclardo
+	
+	console.log(currentOrder)
+
+	const attributes = [
+		'mpCash',
+		'mpCreditCard',
+		'mpDebitCard',
+		'mpTranferBack',
+		'mpMpago',
+		'mpRappi',
+		'mpGlovo',
+		'mpUber',
+		'mpPedidosya',
+		'mpJust',
+		'mpWabi',
+		'mpOtro2',
+		'mpPedidosyacash',
+		'mpPersonal',
+		'mpRapicash',
+		'mpPresent',
+		'mpPaypal',
+		'mpZelle',
+		'mpBofa',
+		'mpYumi'
+	];
+	
+	const mpObjects = attributes.map(key => ({ name: key, monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0 })).filter(obj => obj.monto > 0);
+
+	
+	
+	
 
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
@@ -272,6 +318,12 @@ const OrderDetail = () => {
 					<DetailOrderTable
 						products={currentOrder?.body}
 						total={currentOrder?.totalBot}
+					/>
+					<Table
+						style={{ width: '100%' }}
+						bordered
+						columns={defaultColumns2}
+						dataSource={mpObjects}
 					/>
 				</div>
 			</div>

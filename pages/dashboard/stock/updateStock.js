@@ -260,10 +260,7 @@ const ImportStock = () => {
 		const formatData = removeKeys(data);
 		console.log(formatData);
 		setLoading(true);
-
-
 		const productos = [];
-
 		for (let product of formatData) {
 			const body = {
 				idProduct: product.idProduct,
@@ -273,14 +270,12 @@ const ImportStock = () => {
 			};
 			productos.push(body);
 		}
-
 		const res = await requestHandler.post(
 			'/api/v2/inventary/masive/adjustment',
 			{
 				data: productos,
 			}
 		);
-	
 		if (res.isLeft()) {
 			setLoading(false);
 			return message.error('Ha ocurrido un error');

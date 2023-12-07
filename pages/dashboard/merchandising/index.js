@@ -449,7 +449,7 @@ const Merchandising = () => {
 					</div>,
 				]}
 			>
-				<Collapse items={items} defaultActiveKey={['1']} onChange={onChange} />;
+				<Collapse items={items} defaultActiveKey={['1']} onChange={onChange} />
 			</Modal>
 			<Modal
 				open={open2}

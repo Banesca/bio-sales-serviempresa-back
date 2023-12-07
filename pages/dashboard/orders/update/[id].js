@@ -29,6 +29,7 @@ import { useProducts } from '../../../../components/products/hooks/useProducts';
 import { useCategoryContext } from '../../../../hooks/useCategoriesProvider';
 import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
+import { useTdc } from '../../../../components/tdc/useTdc';
 import {
 	ArrowLeftOutlined,
 	LeftOutlined,
@@ -86,7 +87,7 @@ const UpdateOrderPage = () => {
 	const [totalDeclarado, setTotalDecla] = useState();
 	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
-
+	const { actualTdc, updateTdc } = useTdc();
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -202,6 +203,7 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = (selectOption) => {
+		console.log(selectOption)
 		setPaymentToAdd();
 		const newData = {
 			key: count,
@@ -285,18 +287,17 @@ const UpdateOrderPage = () => {
 		return <td {...restProps}>{childNode}</td>;
 	};
 
+
 	const handleSave = (row) => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
 		const item = newData[index];
-
+		console.log(dataSource)
 		newData.splice(index, 1, {
 			...item,
 			...row,
 		});
-
-		setDataSource(newData);
-
+	
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			newData.forEach((objeto) => {
@@ -305,14 +306,22 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-
+	
 		const sumaTotal = calcularSumaTotal();
-
-		setTotalDecla(sumaTotal);
+	
 		let result = total - sumaTotal;
 		result = parseFloat(result.toFixed(2));
-		setNewTotal(result);
+		if (result < 0) {
+			alert('El resultado no puede ser menor que 0');
+		} else {
+			setDataSource(newData);
+			setTotalDecla(sumaTotal);
+			setNewTotal(result);
+		}
 	};
+	
+
+	
 
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
@@ -420,6 +429,7 @@ const UpdateOrderPage = () => {
 	}; */
 
 	useEffect(() => {
+	
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
 			/* getDebtsbyClient(currentOrder);
@@ -442,49 +452,64 @@ const UpdateOrderPage = () => {
 		} finally {
 			setLoading(false);
 		}
-		
-		console.log(dataSource)
 
-		const res = await requestHandler.put('/api/v2/order/close/' + id, {
-			body: {
+		let data = []
+
+		const res = await requestHandler.put('/api/v2/order/close/' + id, 
+			data={
 				comments: 'PAGO',
-				/*mpCash: this.validateMP('mpCash'),
-			mpCreditCard: this.validateMP('mpCreditCard'),
-			mpDebitCard: this.validateMP('mpDebitCard'),
-			mpTranferBack: this.validateMP('mpTranferBack'), */
+				mpCash: await validateMP('Efectivo'),
+				mpCreditCard: await validateMP('Credito'),
+				mpDebitCard: await validateMP('Debito'),
+				mpTranferBack:await validateMP('Transferencia'),
 				totalBot: total,
-				/* mpMpago: this.validateMP('mpMpago'), */
+				mpMpago:await validateMP('Mpago'),
 				idCurrencyFk: 1,
-				listPaymentMethod: dataSource,
+				listPaymentMethod: 0,
 				isAfip: 0,
-				/* mpRappi: this.validateMP('mpRappi'),
-			mpGlovo: this.validateMP('mpGlovo'),
-			mpUber: this.validateMP('mpUber'),
-			mpPedidosya: this.validateMP('mpPedidosya'),
-			mpJust: this.validateMP('mpJust'),
-			mpWabi: this.validateMP('mpWabi'),
-			mpOtro2: this.validateMP('mpOtro2'),
-			mpPedidosyacash: this.validateMP('mpPedidosyacash'),
-			mpPersonal: this.validateMP('mpPersonal'),
-			mpRapicash: this.validateMP('mpRapicash'),
-			mpPresent: this.validateMP('mpPresent'),
-			mpPaypal: this.validateMP('mpPaypal'),
-			mpZelle: this.validateMP('mpZelle'),
-			mpBofa: this.validateMP('mpBofa'),
-			mpYumi: this.validateMP('mpYumi'), */
+				mpRappi:await validateMP('Rappi'),
+				mpGlovo:await validateMP('Glovo'),
+				mpUber:await validateMP('Uber'),
+				mpPedidosya:await validateMP('Pedidosya'),
+				mpJust:await validateMP('Just Eat'),
+				mpWabi:await validateMP('Wabi'),
+				mpOtro2:await validateMP('Otro2'),
+				mpPedidosyacash:await validateMP('Pedidos Ya Efectivo'),
+				mpPersonal:await validateMP('Personal'),
+				mpRapicash:await validateMP('Rapicash'),
+				mpPresent:await validateMP('Present'),
+				mpPaypal:await validateMP('Paypal'),
+				mpZelle:await validateMP('Zelle'),
+				mpBofa:await validateMP('Bofa'),
+				mpYumi:await validateMP('Yumi'),
 				waste: totalDeclarado,
 				isPrintBillin: newTotal,
-				/* 	tasa: this.dolarRate,
-			puntoVtaAfit: Number(this.conditionsSelect),
-			comprobanteAfit: result, */
-			isacountCourrient: currentOrder?.isacountCourrient,
-			},
-		});
+				tasa: actualTdc,
+				puntoVtaAfit: '',
+				comprobanteAfit: '',
+				isacountCourrient: currentOrder?.isacountCourrient,
+			}
+		);
 		console.log(res);
 		router.push(`/dashboard/orders/${id}`);
 	};
 
 
+	const validateMP = async (descriptPayMent) => {
+		let result;
+		result = dataSource.filter((event) => event.name === descriptPayMent);
+		if (result.length !== 0) {
+			if (descriptPayMent === 'mpCash') {
+				result = result.length > 0 ? result[0].monto : 0;
+			} else {
+				result = result.length > 0 ? result[0].monto : 0;
+			}
+		} else {
+			result = 0;
+		}
+		return result;
+	};
+	
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
