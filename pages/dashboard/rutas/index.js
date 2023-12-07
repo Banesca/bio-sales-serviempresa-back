@@ -8,6 +8,7 @@ import {
 	Row,
 	Select,
 	Table,
+	Input,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
@@ -46,7 +47,7 @@ const Rutas = () => {
 			key: 3,
 			render: (text) => <p>{text}</p>,
 		},
-		
+
 		{
 			title: 'Accion',
 			dataIndex: 'idReportVisit',
@@ -60,9 +61,9 @@ const Rutas = () => {
 	];
 	const columns2 = [
 		{
-			title: 'Titulo',
-			dataIndex: 'nameRestaurant',
-			key: 1,
+			title: 'Cabecera de la ruta',
+			dataIndex: 'Cabecera',
+			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -90,6 +91,30 @@ const Rutas = () => {
 			render: (text) => <p>{text}</p>,
 		},
 
+		{
+			title: 'Limite de peso del camion',
+			dataIndex: 'Limite',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Cantidad',
+			dataIndex: 'Cantidad',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Peso',
+			dataIndex: 'Peso',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Consolidado',
+			dataIndex: 'Consolidado',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
 	];
 
 	useEffect(() => {
@@ -103,7 +128,9 @@ const Rutas = () => {
 	};
 
 	const handleOnChang = async (productos) => {
-		const res = await requestHandler.get(`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`);
+		const res = await requestHandler.get(
+			`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
+		);
 		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
@@ -112,7 +139,6 @@ const Rutas = () => {
 		}
 	};
 
-	
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
 		if (!res.isLeft()) {
@@ -122,7 +148,7 @@ const Rutas = () => {
 		}
 		console.log(res);
 	};
-	
+
 	const handleOnChange = async (value) => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/list/byuser/${value}`
@@ -180,7 +206,7 @@ const Rutas = () => {
 			<Modal
 				open={open2}
 				onCancel={handleCancel}
-				width={700}
+				width={1000}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
@@ -190,7 +216,8 @@ const Rutas = () => {
 					</div>,
 				]}
 			>
-				<Table columns={columns2} dataSource={detailsRutas} /> 
+				<Title title={'Consolidado de ruta'}></Title>
+				<Table columns={columns2} dataSource={detailsRutas} />
 			</Modal>
 		</DashboardLayout>
 	);
