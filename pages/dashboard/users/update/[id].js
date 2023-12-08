@@ -89,15 +89,18 @@ const UpdateUser = () => {
 	const columns3 = [
 		{
 			title: 'fecha de entrada',
-			dataIndex: 'date',
-			key: 1,
+			dataIndex: 'created_at',
+			key: 'entrada',
+			render: (text, record) => record.isClose === '0' ? text : '',
 		},
 		{
 			title: 'fecha de salida',
-			dataIndex: 'date',
-			key: 2,
+			dataIndex: 'updated_at',
+			key: 'salida',
+			render: (text, record) => record.isClose === '1' ? text : '',
 		},
 	];
+
 	const getAccountsReceivable = async () => {
 		console.log(selectedBusiness.idSucursal);
 		let id = selectedBusiness.idSucursal;
@@ -184,25 +187,23 @@ const UpdateUser = () => {
 
 	const getJornadas = async () => {
 		setLoading(true);
-		let dates = [];
+		
 		try {
-			const res = await requestHandler.get(`/api/v2/userjournal/get/${id}`);
-			if (res.isLeft()) {
-				return;
-			}
-			const value = res.value.getValue().data;
-			console.log(value);
-			if (Number(value.isClose) === 0 || Number(value.isClose) === 1) {
-				dates.push(value.date);
-			}
-			console.log(dates);
-			setJornadas([value]);
+			const res = await requestHandler.get(`/api/v2/userjournal/list/${id}`);
+			console.log('Response from API:', res);  // Agrega esta línea
+			setJornadas(res.value._value.response);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
 			setLoading(false);
 		}
 	};
+	
 
+	useEffect(() => {
+		console.log(jornadas);
+	}, [jornadas]);
+
+	
 	const updateUserRequest = async (data) => {
 		await updateUser(data, id);
 		if (data.pin !== '') {
