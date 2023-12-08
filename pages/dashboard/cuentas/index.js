@@ -37,7 +37,7 @@ const Cuentas = () => {
 			),
 		},
 	];
-	
+
 	const columns2 = [
 		{ title: 'abonos', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
@@ -55,7 +55,7 @@ const Cuentas = () => {
 		setNombre(resp.nameclient);
 		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
 		console.log(res);
-		console.log(totalAbonos)
+		console.log(totalAbonos);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.data;
@@ -63,8 +63,6 @@ const Cuentas = () => {
 			setAbonos(value);
 		}
 	};
-
-
 
 	useEffect(() => {
 		getAccountsReceivable();
@@ -148,7 +146,11 @@ const Cuentas = () => {
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
+						<Form.Item label="Abono" name="abono">
+							<Input />
+						</Form.Item>
 						<Button>Abonar</Button>
+
 						<Button danger key="cancel" onClick={handleCancel2}>
 							Cancelar
 						</Button>
@@ -156,7 +158,6 @@ const Cuentas = () => {
 				]}
 				width={760}
 			>
-				
 				<Table columns={columns2} dataSource={abonos} />
 			</Modal>
 		</DashboardLayout>
