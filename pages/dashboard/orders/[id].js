@@ -78,11 +78,11 @@ const OrderDetail = () => {
 			key: 'monto',
 		},
 	];
-	
+
 	/* console.log(currentOrder.isPrintBillin);//newtotal
-	console.log(currentOrder.waste); *///totaldeclardo
-	
-	console.log(currentOrder)
+	console.log(currentOrder.waste); */ //totaldeclardo
+
+	console.log(currentOrder);
 
 	const attributes = [
 		'mpCash',
@@ -104,14 +104,15 @@ const OrderDetail = () => {
 		'mpPaypal',
 		'mpZelle',
 		'mpBofa',
-		'mpYumi'
+		'mpYumi',
 	];
-	
-	const mpObjects = attributes.map(key => ({ name: key, monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0 })).filter(obj => obj.monto > 0);
 
-	
-	
-	
+	const mpObjects = attributes
+		.map((key) => ({
+			name: key,
+			monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0,
+		}))
+		.filter((obj) => obj.monto > 0);
 
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
@@ -196,6 +197,14 @@ const OrderDetail = () => {
 		};
 		ExcelExport.push(productData);
 	});
+
+	let weight = currentOrder.body[0].weight;
+	console.log(weight);
+
+	console.log(currentOrder.totalBot);
+	let newTotal = 0;
+	newTotal = weight * currentOrder.totalBot;
+	console.log(newTotal);
 
 	return (
 		<DashboardLayout>
@@ -315,10 +324,7 @@ const OrderDetail = () => {
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>
 					</List>
-					<DetailOrderTable
-						products={currentOrder?.body}
-						total={currentOrder?.totalBot}
-					/>
+					<DetailOrderTable products={currentOrder?.body} total={currentOrder.totalBot} />
 					<Table
 						style={{ width: '100%' }}
 						bordered
