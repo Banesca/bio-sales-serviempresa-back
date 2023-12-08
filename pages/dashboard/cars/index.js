@@ -153,7 +153,7 @@ const Cars = () => {
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Email" name="mail" {...{rules}}>
+								<Form.Item label="Limite de peso" name="mail" {...{rules}}>
 									<Input />
 								</Form.Item>
 							</Col>
