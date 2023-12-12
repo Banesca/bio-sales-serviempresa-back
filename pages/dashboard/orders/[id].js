@@ -16,13 +16,14 @@ import { useAuthContext } from '../../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
+import { useTdc } from '../../../components/tdc/useTdc';
 
 const OrderDetail = () => {
 	const router = useRouter();
 
 	const { id } = router?.query;
 	const [log, setLog] = useState();
-
+	const { actualTdc, updateTdc } = useTdc();
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
@@ -82,7 +83,17 @@ const OrderDetail = () => {
 	/* console.log(currentOrder.isPrintBillin);//newtotal
 	console.log(currentOrder.waste); */ //totaldeclardo
 
-	console.log(currentOrder);
+	console.log(actualTdc)
+	
+	function divideByActualTdc(number) {
+		return number / actualTdc;
+	}
+
+	const result = divideByActualTdc(); 
+
+	/* return (
+		<p>{result}</p>
+	) */;
 
 	const attributes = [
 		'mpCash',
@@ -198,14 +209,8 @@ const OrderDetail = () => {
 		ExcelExport.push(productData);
 	});
 
-	let weight = currentOrder.body[0].weight;
-	console.log(weight);
-
-	console.log(currentOrder.totalBot);
-	let newTotal = 0;
-	newTotal = weight * currentOrder.totalBot;
-	console.log(newTotal);
-
+	console.log(currentOrder)
+	
 	return (
 		<DashboardLayout>
 			<div
@@ -320,7 +325,7 @@ const OrderDetail = () => {
 						</List.Item>
 
 						<List.Item>
-							<p style={{ fontWeight: 'bold' }}>Observacion (opcional):</p>
+							<p style={{ fontWeight: 'bold' , width:'100%' }}>Observacion (opcional):</p>
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>
 					</List>

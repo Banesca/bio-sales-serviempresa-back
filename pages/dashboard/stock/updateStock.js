@@ -44,7 +44,8 @@ const ImportStock = () => {
 	const [rejectedCategories, setRejectedCategories] = useState([]);
 	const [api, contextHolder] = notification.useNotification();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
-	const { updateProductInv, productsInv, getProductsInv } = useProducts();
+
+	const { getProducts, deleteProduct, products } = useProducts();
 
 	const columns = [
 		{
@@ -155,18 +156,18 @@ const ImportStock = () => {
 	};
 
 	useEffect(() => {
-		let list = productsInv;
+		let list = products;
 		addKeys(list);
 		setProduct(list);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [productsInv]);
+	}, [products]);
 
 	const getProductsRequest = async (businessId) => {
 		setLoading(true);
 		try {
-			await getProductsInv(businessId);
+			await getProducts(businessId);
 		} catch (error) {
-			message.error('Error al obtener inventario');
+			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);
 		}
@@ -185,13 +186,13 @@ const ImportStock = () => {
 	const exportToExcel = () => {
 		const productos = [];
 
-		for (let product of productsInv) {
+		for (let product of products) {
 			const body = {
 				Nro: product.idProduct,
 				Nombre_de_producto: product.nameProduct,
 				Codigo_de_barra: product.barCode,
 				Codigo_interno: product.efectivo,
-				Stock_Actual: product.stock,
+				Stock_Actual: product.minStock,
 				Cantidad: '',
 			};
 			productos.push(body);

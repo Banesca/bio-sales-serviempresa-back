@@ -88,6 +88,7 @@ const UpdateOrderPage = () => {
 	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
 	const { actualTdc, updateTdc } = useTdc();
+
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -559,6 +560,8 @@ const UpdateOrderPage = () => {
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Comprobante.xlsx');
 	};
+
+	console.log(actualTdc)
 
 	const ExcelExport = [];
 

@@ -16,8 +16,28 @@ import Title from '../../../components/shared/title';
 import * as XLSX from 'xlsx';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
 
+
 export default function Products() {
 	const router = useRouter();
+
+	const { loading, setLoading } = useLoadingContext();
+
+	const generalContext = useContext(GeneralContext);
+
+	const { getProducts, deleteProduct, products } = useProducts();
+	const { clean, filtered, setProduct, setQuery } = useProductFilter();
+
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [createForm] = Form.useForm();
+
+	const [object, setObject] = useState();
+
+	const [lineBody, setLineBody] = useState({
+		counter: '',
+	});
+	const [lineBodys, setLineBodys] = useState({
+		reference: '',
+	});
 	const columns = [
 		{
 			title: 'ID',
@@ -39,7 +59,7 @@ export default function Products() {
 		},
 		{
 			title: 'Familia',
-			dataIndex: 'nameFamily',
+			dataIndex: 'nameSubFamily',
 			responsive: ['lg'],
 			key: 4,
 			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
@@ -66,13 +86,7 @@ export default function Products() {
 		},
 		{
 			title: 'Stock',
-			dataIndex: 'stock',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Marca',
-			dataIndex: 'branch',
+			dataIndex: 'minStock',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -103,45 +117,27 @@ export default function Products() {
 			),
 		},
 	];
-	const { loading, setLoading } = useLoadingContext();
-
-	const generalContext = useContext(GeneralContext);
-
-	const { updateProductInv, productsInv, getProductsInv } = useProducts();
-	const { clean, filtered, setProduct, setQuery } = useProductFilter();
-
-	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-	const [createForm] = Form.useForm();
-
-	const [object, setObject] = useState();
-
-	const [lineBody, setLineBody] = useState({
-		counter: '',
-	});
-	const [lineBodys, setLineBodys] = useState({
-		reference: '',
-	});
-
+	
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Inventario.xlsx');
 	};
-
+	
 	useEffect(() => {
-		let list = productsInv;
+		let list = products;
 		addKeys(list);
 		setProduct(list);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [productsInv]);
+	}, [products]);
 
 	const getProductsRequest = async (businessId) => {
 		setLoading(true);
 		try {
-			await getProductsInv(businessId);
+			await getProducts(businessId);
 		} catch (error) {
-			message.error('Error al obtener inventario');
+			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);
 		}
