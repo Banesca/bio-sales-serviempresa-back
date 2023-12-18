@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }) {
 		} catch (error) {
 			error;
 		}
-	}*/
+	} */
  
 	async function setBusiness(business = 'demo') {
 		try {

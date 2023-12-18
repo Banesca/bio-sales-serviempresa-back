@@ -1,12 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
-import { FileImageOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Table } from 'antd';
+import { FileImageOutlined, EditOutlined } from '@ant-design/icons';
+import {
+	Button,
+	Form,
+	Input,
+	Modal,
+	Table,
+	Space,
+	List,
+	Select,
+	Row,
+	Col,
+} from 'antd';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
 import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
+import AbonosFilters from '../../../components/abonos/abonosFilter';
+import { LeftOutlined } from '@ant-design/icons';
 const Cuentas = () => {
 	const [openModal, setOpenModal] = useState(false);
 	const { requestHandler } = useRequest();
@@ -18,9 +31,20 @@ const Cuentas = () => {
 	const { loading, setLoading } = useLoadingContext();
 	const [productsDetail, setProductsDetail] = useState([]);
 	const [open2, setOpen2] = useState(false);
+	const [open, setOpen] = useState(false);
 	const [abonos, setAbonos] = useState([]);
 	const [nombre, setNombre] = useState([]);
+	const [descripcion, setDescripcion] = useState([]);
+	const [abono, setAbono] = useState([]);
+	const [montoTotal, setMontoTotal] = useState([]);
+	const [deuda, setDeuda] = useState([]);
 	const [totalAbonos, setTotal] = useState([]);
+	const [PaymentAdd, setPaymentToAdd] = useState([]);
+	const [PaymentAbono, setPaymentAbono] = useState('');
+	const [Payment, setPayment] = useState();
+	const [pago, setPago] = useState(0);
+	const [abono2, setAbono2] = useState(0);
+	const [phoneFG, setPhoneFG] = useState(0);
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
 		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
@@ -31,28 +55,82 @@ const Cuentas = () => {
 			dataIndex: 'idReportVisit',
 			key: '6',
 			render: (index, record) => (
-				<Button onClick={() => showModal2(record)}>
-					<FileImageOutlined />
-				</Button>
+				<Space
+					size="small"
+					style={{ justifyContent: 'center', display: 'flex' }}
+				>
+					<Button onClick={() => showModal2(record)}>
+						<FileImageOutlined />
+					</Button>
+				</Space>
 			),
 		},
 	];
 
+	const [query, setQuery] = useState({
+		fullNameClient: null,
+	});
 	const columns2 = [
 		{ title: 'abonos', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
+		{
+			title: 'Accion',
+			render: (index, record) => (
+				<Button onClick={() => showModal(record)}>
+					<EditOutlined />
+				</Button>
+			),
+		},
 	];
-
+	const handleReturn = () => {
+		setOpen(false);
+		setOpen2(true);
+	};
 	const showModal2 = (productos) => {
 		setOpen2(true);
 		setProductsDetail(productos);
 		handleOnChang3(productos);
 	};
+	const showModal = (productos) => {
+		setOpen2(false);
+		setOpen(true);
+		setProductsDetail(productos);
+		setDescripcion(productos.title);
+	};
+
+	const handleAbonarClick = async () => {
+		console.log(abonos);
+		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
+		console.log(walletBody);
+
+		if (walletBody) {
+			const response = await requestHandler.post('/api/v2/wallet/add', {
+				walletBody,
+			});
+			console.log(response);
+		}
+	};
+
+	const handleAbono2Change = (event) => {
+		setAbono2(event.target.value);
+	};
+
+	const getPayments = async () => {
+		const res = await requestHandler.get('/api/v2/utils/typepayment');
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		setPayment(res.value.getValue().response);
+		console.log(Payment);
+	};
 
 	const handleOnChang3 = async (resp) => {
 		let id = resp.idClientFk;
 		console.log(id);
+		setAbono(resp.abonos);
+		setDeuda(resp.deuda);
 		setNombre(resp.nameclient);
+		setMontoTotal(resp.amount);
 		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
 		console.log(res);
 		console.log(totalAbonos);
@@ -62,11 +140,32 @@ const Cuentas = () => {
 			console.log(value);
 			setAbonos(value);
 		}
+		console.log(abonos);
 	};
+
+	function createWalletBody(abono2, PaymentAbono, abonos) {
+		const firstAbono = abonos[0];
+
+		const walletBody = {
+			title: 'Abono en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
+			amount: abono2, // Utiliza 'pago' para el monto si 'type' es 1
+			/* nameclient: orden.fullNameClient,
+			idUserAddFk: Number(localStorage.getItem('idUser')), */
+			/* isEntry: type == 1 ? 1 : 0, */
+			idClientFk: firstAbono.idClientFk,
+			idBranchFk: localStorage.getItem('idBranchFk'),
+			/*idCurrencyFk: 99, */
+			idPaymentMethodFk: PaymentAbono, // Utiliza 'PaymentAbono' para el método de pago
+			idOrder: firstAbono.idOrder,
+		};
+		console.log(walletBody);
+		return walletBody;
+	}
 
 	useEffect(() => {
 		getAccountsReceivable();
 		getClientsRequest();
+		getPayments();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -128,16 +227,36 @@ const Cuentas = () => {
 	const handleCancel2 = () => {
 		setOpen2(false);
 	};
+	const handleCancel = () => {
+		setOpen(false);
+	};
 
 	const cancelModal = (event) => {
 		setOpenModal(false);
 	};
 	/* console.log(productos.nameclient) */
+
+	const Accounts = useMemo(() => {
+		let list = AccountsReceivable;
+
+		if (query.nameclient) {
+			if (list) {
+				list = list.filter((o) => o.nameclient == query.nameclient);
+			}
+		}
+
+		return list;
+	}, [query, AccountsReceivable]);
+
 	return (
 		<DashboardLayout>
 			<div className="p-4 m-4">
 				<Title title={'Cuentas por cobrar'} goBack={false}></Title>
-				<Table columns={columns} dataSource={AccountsReceivable} />
+				<AbonosFilters
+					setQuery={setQuery}
+					getOrdersRequest={getClientsRequest}
+				/>
+				<Table columns={columns} dataSource={Accounts} />
 			</div>
 			<Modal
 				open={open2}
@@ -146,11 +265,6 @@ const Cuentas = () => {
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-1">
-						<Form.Item label="Abono" name="abono">
-							<Input />
-						</Form.Item>
-						<Button>Abonar</Button>
-
 						<Button danger key="cancel" onClick={handleCancel2}>
 							Cancelar
 						</Button>
@@ -160,6 +274,120 @@ const Cuentas = () => {
 			>
 				<Table columns={columns2} dataSource={abonos} />
 			</Modal>
+			<Modal
+				open={open}
+				onCancel={handleCancel}
+				footer={[
+					<Button
+						style={{ marginRight: '48%', height: '42px', borderRadius: '20px' }}
+						onClick={handleReturn}
+					>
+						<LeftOutlined style={{ fontSize: '1.5rem', marginRight: '50%' }} />
+					</Button>,
+					<div
+						className="flex justify-center gap-1"
+						style={{ marginBottom: '10px' }}
+					>
+						<p style={{ fontWeight: 'bold' }}>Usuario:{nombre}</p>
+						<p style={{ fontWeight: 'bold' }}>Descripcion: {descripcion}</p>
+					</div>,
+					<div
+						className="flex justify-center gap-1"
+						style={{ marginBottom: '10px' }}
+					>
+						<p style={{ fontWeight: 'bold' }}>Abonos: {abono}</p>
+						<p style={{ fontWeight: 'bold' }}>Deuda: {deuda}</p>
+						<p style={{ fontWeight: 'bold' }}>Monto total: {montoTotal}</p>
+					</div>,
+
+					<Row gutter={16}>
+						<Col xs={24} sm={24} md={12} lg={12} xl={12}>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									justifyContent: 'center',
+									width: '100%',
+								}}
+							>
+								<p>Metodo de pago:</p>
+								<List.Item>
+									<Select
+										style={{ width: '100%' }}
+										onChange={(value) => setPaymentToAdd(value)}
+									>
+										{Payment &&
+											Payment.map((Payment) => (
+												<Select.Option
+													key={Payment.idPymentMethod}
+													value={Payment.pymentMethod}
+												>
+													{Payment.pymentMethod}
+												</Select.Option>
+											))}
+									</Select>
+								</List.Item>
+								<Form.Item
+									label="Monto a pagar"
+									name="pago"
+									style={{ width: '50%' }}
+								>
+									<Input />
+								</Form.Item>
+								<Button>Pagar</Button>
+							</div>
+						</Col>
+
+						<Col xs={24} sm={24} md={12} lg={12} xl={12}>
+							<div
+								className=""
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+							>
+								<p>Metodo de pago:</p>
+								<List.Item>
+									<Select
+										style={{ width: '100%' }}
+										onChange={(value) => setPaymentAbono(value)}
+									>
+										{Payment &&
+											Payment.map((Payment) => (
+												<Select.Option
+													key={Payment.idPymentMethod}
+													value={Payment.pymentMethod}
+												>
+													{Payment.pymentMethod}
+												</Select.Option>
+											))}
+									</Select>
+								</List.Item>
+								<Form.Item
+									label="Monto a abonar"
+									name="abono2"
+									style={{ width: '50%' }}
+								>
+									<Input onChange={handleAbono2Change} />
+								</Form.Item>
+								<Button onClick={handleAbonarClick}>Abonar</Button>
+							</div>
+						</Col>
+					</Row>,
+
+					<div
+						style={{ width: '100%', display: 'flex', justifyContent: 'right' }}
+					>
+						<Button danger key="cancel" onClick={handleCancel}>
+							Cancelar
+						</Button>
+					</div>,
+				]}
+				width={1000}
+			></Modal>
 		</DashboardLayout>
 	);
 };

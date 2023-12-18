@@ -33,7 +33,8 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 			startDate: values.date ? values.date[0]?.$d : null,
 			endDate: values.date ? values.date[1]?.$d : null,
 			fullNameClient: values.fullNameClient || '',
-			fullname: values.fullname || '', 
+			fullname: values.fullname || '',
+			numberOrden: values.numberOrden || '', 
 		});
 
 		if (values.date) {
@@ -43,6 +44,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 				dateEnd: values.date[1].$d,
 				fullNameClient: values.fullNameClient, 
 				fullname: values.fullname,
+				numberOrden: values.numberOrden, 
 			});
 		}
 	};
@@ -77,6 +79,17 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 									padding: '0 .5rem',
 								}}
 								name="fullname"
+							>
+								<Input type="text" />
+							</Form.Item>
+						</Col>
+						<Col span={11}>
+							<Form.Item
+								label="Numero de pedido"
+								style={{
+									padding: '0 .5rem',
+								}}
+								name="numberOrden"
 							>
 								<Input type="text" />
 							</Form.Item>

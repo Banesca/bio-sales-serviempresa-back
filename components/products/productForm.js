@@ -27,6 +27,7 @@ import { useRequest } from '../../hooks/useRequest';
 import Image from 'next/image';
 import { ip } from '../../util/environment';
 
+
 const ProductForm = (props) => {
 	const router = useRouter();
 	const { setLoading } = useLoadingContext();
@@ -45,7 +46,8 @@ const ProductForm = (props) => {
 	const [isValidImgSize, setIsValidImgSize] = useState();
 	const { getProductById, updateProduct, currentProduct } = useProducts();
 	const { id } = router.query;
-
+	const [isFileSelected, setIsFileSelected] = useState(false);
+	
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -122,56 +124,72 @@ const ProductForm = (props) => {
 	};
 
 	const fileProgress = (fileInput) => {
-		const img = new Image();
-		img.src = window.URL.createObjectURL(fileInput);
-		img.onload = () => {
-			setIsValidImgSize({ width: img.width, height: img.height });
-			if (img.width <= 600 && img.height <= 600) {
-				setIsValidImgSize(true);
-				return true;
-			} else {
-				setIsValidImgSize(false);
-				message.error('La resolución debe ser menor a 600x600');
-				return false;
-			}
-		};
+		return new Promise((resolve, reject) => {
+			const img = new window.Image(); 
+			img.src = window.URL.createObjectURL(fileInput);
+			img.onload = () => {
+				const isValidSize = img.width <= 600 && img.height <= 600;
+				setIsValidImgSize(isValidSize);
+				if (isValidSize) {
+					setFile(fileInput);
+					setIsFileSelected(true); 
+					resolve(fileInput);
+				} else {
+					message.error('La resolución debe ser menor a 600x600');
+					reject(new Error('Invalid image size'));
+				}
+			};
+		});
 	};
 
 	const uploadProps = {
-		beforeUpload: (file) => {
-			fileProgress(file);
-			const isJpgOrPng =
-				file.type === 'image/jpeg' ||
-				file.type === 'image/png' ||
-				file.type === 'image/jpeg';
-			if (!isJpgOrPng) {
-				message.error('Solo puedes subir imágenes JPG/PNG!');
+		beforeUpload: async (file) => {
+			try {
+				await fileProgress(file);
+				const isJpgOrPng =
+					file.type === 'image/jpeg' ||
+					file.type === 'image/png' ||
+					file.type === 'image/jpeg';
+				if (!isJpgOrPng) {
+					message.error('Solo puedes subir imágenes JPG/PNG!');
+					return false;
+				}
+				const isLt2M = file.size / 1024 / 1024 < 2;
+				console.log(`El tamaño del archivo es: ${file.size / 1024 / 1024} MB`); 
+				if (!isLt2M) {
+					message.error('El tamaño máximo es 2MB!');
+					return false;
+				}
+				let isValid = isJpgOrPng && isLt2M;
+				if (isValid) {
+					console.log(file);
+					setFile(file); 
+					setIsFileSelected(true); 
+					return true;
+				}
+			} catch (error) {
+				console.error(error);
+				return false;
 			}
-			const isLt2M = file.size / 1024 / 1024 < 2;
-			if (!isLt2M) {
-				message.error('El tamaño máximo es 2MB!');
-			}
-			let isValid = isJpgOrPng && isLt2M;
-			if (isValid) {
-				setFile(file);
-			}
-			return isValid;
 		},
 		onChange: (info) => {
 			let newFileList = [...info.fileList];
 			newFileList = newFileList.slice(-1);
-
+		
 			if (newFileList.length === 0) {
-				setFileList(newFileList[0]);
+				setFileList([]);
+				setFile(null); 
+				setIsFileSelected(false);
 				return message.success('Archivo eliminado');
 			}
-
 			setFileList(newFileList);
 			if (newFileList[0].status == 'done') {
 				if (!isValidImgSize) {
 					setFileList([]);
 					return;
 				}
+				setFile(newFileList[0].originFileObj); 
+				setIsFileSelected(true); 
 				setLoading(true);
 				message.success(`${newFileList[0].name} ha sido cargado`);
 			} else if (newFileList[0].status == 'error') {
@@ -179,6 +197,24 @@ const ProductForm = (props) => {
 			}
 			setLoading(false);
 		},
+	};
+
+	const onSubmit = async () => {
+		if (!isFileSelected) {
+			message.error('No se seleccionó ningún archivo');
+			return;
+		}
+		setLoading(true);
+		const updatedProduct = {
+			...product,
+			idSucursalFk: selectedBusiness.idSucursal,
+		};
+		await props.handleRequest(updatedProduct, file);
+		setProduct(updatedProduct);
+		setLoading(false);
+		if (!props.update) {
+			return onReset();
+		}
 	};
 
 	const getProductRequest = async (id) => {
@@ -220,18 +256,6 @@ const ProductForm = (props) => {
 		}
 	};
 
-	const onSubmit = async () => {
-		router.push('/dashboard/products');
-		setLoading(true);
-		console.log(product);
-		setProduct({ ...product, idSucursalFk: selectedBusiness.idSucursal });
-		await props.handleRequest(product, file);
-		setLoading(false);
-		if (!props.update) {
-			return onReset();
-		}
-	};
-
 	useEffect(() => {
 		getProductRequest(id);
 		if (
@@ -269,7 +293,6 @@ const ProductForm = (props) => {
 
 		fetchData();
 	}, [id]); */
-
 
 	const handleReturn = () => {
 		router.push('/dashboard/products');

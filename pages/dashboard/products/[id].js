@@ -56,7 +56,7 @@ const Product = () => {
 			setLoading(false);
 		}
 	};
-
+	console.log(currentProduct);
 	const getSubCategoryRequest = async (subCategoryId) => {
 		setLoading(false);
 		try {

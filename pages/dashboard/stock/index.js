@@ -24,7 +24,7 @@ export default function Products() {
 
 	const generalContext = useContext(GeneralContext);
 
-	const { getProducts, deleteProduct, products } = useProducts();
+	const { getProductsInv, deleteProduct, productsInv } = useProducts();
 	const { clean, filtered, setProduct, setQuery } = useProductFilter();
 
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function Products() {
 		},
 		{
 			title: 'Familia',
-			dataIndex: 'nameSubFamily',
+			dataIndex: 'nameFamily',
 			responsive: ['lg'],
 			key: 4,
 			render: (text) => <p>{text ? text : 'Indefinida'}</p>,
@@ -86,7 +86,13 @@ export default function Products() {
 		},
 		{
 			title: 'Stock',
-			dataIndex: 'minStock',
+			dataIndex: 'stock',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Marca',
+			dataIndex: 'branch',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
@@ -126,17 +132,18 @@ export default function Products() {
 	};
 	
 	useEffect(() => {
-		let list = products;
+		let list = productsInv;
 		addKeys(list);
 		setProduct(list);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [products]);
+	}, [productsInv]);
 
 	const getProductsRequest = async (businessId) => {
 		setLoading(true);
 		try {
-			await getProducts(businessId);
+			await getProductsInv(businessId);
 		} catch (error) {
+			console.log(error)
 			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);

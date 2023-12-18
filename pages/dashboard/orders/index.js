@@ -14,7 +14,7 @@ import Title from '../../../components/shared/title';
 import {
 	AppstoreAddOutlined
 } from '@ant-design/icons';
-import UserFilters from '../../../components/users/filters';
+
 
 export const orderStatusToUse = {
 	1: { state: 'Por pagar', color: 'orange' },
@@ -37,6 +37,7 @@ export default function OrdersPage() {
 		endDate: null,
 		fullNameClient:null,
 		fullname:null,
+		numberOrden:null,
 	});
 
 	const handleSeeModal = () => {
@@ -88,9 +89,16 @@ export default function OrdersPage() {
 				list = list.filter((o) => o.fullname == query.fullname);
 			}
 		}
+		if (query.numberOrden) {
+			if (list) {
+				list = list.filter((o) => o.numberOrden == query.numberOrden);
+			}
+		}
 		return list;
 	}, [query, orders]);
 
+
+	
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">

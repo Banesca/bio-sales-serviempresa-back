@@ -85,6 +85,7 @@ const OrderDetail = () => {
 
 	console.log(actualTdc)
 	
+	
 	function divideByActualTdc(number) {
 		return number / actualTdc;
 	}
@@ -210,7 +211,7 @@ const OrderDetail = () => {
 	});
 
 	console.log(currentOrder)
-	
+	console.log(currentOrder.Urlbank)
 	return (
 		<DashboardLayout>
 			<div
@@ -321,7 +322,7 @@ const OrderDetail = () => {
 						</List.Item>
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
-							<p>{currentOrder.Urlbank}</p>
+							<p>{currentOrder.n_comprobante}</p>
 						</List.Item>
 
 						<List.Item>
