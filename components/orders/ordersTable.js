@@ -10,7 +10,7 @@ import { useUser } from '../users/hooks/useUser';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { PROFILES, PROFILE_LIST } from '../shared/profiles';
 import { CustomizeRenderEmpty } from '../common/customizeRenderEmpty';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+
 
 
 export default function OrdersTable({ orders }) {
@@ -61,6 +61,10 @@ export default function OrdersTable({ orders }) {
 		{
 			title: 'Pedido Nro.',
 			dataIndex: 'numberOrden',
+		},
+		{
+			title: 'Nro. de Factura',
+			dataIndex: 'facturaAfip',
 		},
 		{
 			title: 'Fecha de creación',
@@ -206,6 +210,8 @@ export default function OrdersTable({ orders }) {
 			),
 		},
 	];
+
+	console.log(orders);
 
 	return (
 		<ConfigProvider

@@ -97,7 +97,7 @@ export default function OrdersPage() {
 		return list;
 	}, [query, orders]);
 
-
+	console.log(ordersList)
 	
 	return (
 		<DashboardLayout>

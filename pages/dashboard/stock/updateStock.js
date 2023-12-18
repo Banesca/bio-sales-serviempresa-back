@@ -66,13 +66,6 @@ const ImportStock = () => {
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
-
-		{
-			title: 'Stock',
-			dataIndex: 'stock',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
 		{
 			title: 'Cantidad',
 			dataIndex: 'quantity',
@@ -192,7 +185,6 @@ const ImportStock = () => {
 				Nombre_de_producto: product.nameProduct,
 				Codigo_de_barra: product.barCode,
 				Codigo_interno: product.efectivo,
-				Stock_Actual: product.minStock,
 				Cantidad: '',
 			};
 			productos.push(body);

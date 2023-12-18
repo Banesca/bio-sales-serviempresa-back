@@ -211,7 +211,7 @@ const OrderDetail = () => {
 	});
 
 	console.log(currentOrder)
-	console.log(currentOrder.Urlbank)
+	console.log(currentOrder.facturaAfip)
 	return (
 		<DashboardLayout>
 			<div
@@ -321,8 +321,12 @@ const OrderDetail = () => {
 							<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
 						</List.Item>
 						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Numero de factura:</p>
+							<p>{currentOrder.facturaAfip}</p>
+						</List.Item>
+						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
-							<p>{currentOrder.n_comprobante}</p>
+							<p>{currentOrder.Urlbank}</p>
 						</List.Item>
 
 						<List.Item>
