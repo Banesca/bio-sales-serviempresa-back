@@ -276,7 +276,7 @@ export default function Login() {
 											className="text-center"
 											style={{ color: 'white', marginTop: '20px' }}
 										>
-											Versión 1.5.0
+											Versión 1.6.0
 										</h5>
 
 										<Modal
