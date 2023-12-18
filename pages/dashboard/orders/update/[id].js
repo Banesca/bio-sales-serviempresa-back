@@ -31,7 +31,7 @@ import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
 import { useTdc } from '../../../../components/tdc/useTdc';
 import {
-	ArrowLeftOutlined,
+	EditOutlined,
 	LeftOutlined,
 	PauseOutlined,
 	CloseOutlined,
@@ -80,6 +80,7 @@ const UpdateOrderPage = () => {
 	const [total, setTotal] = useState(0);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
+	const [calculadora, setIsCalculadora] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const [count, setCount] = useState(1);
@@ -88,7 +89,8 @@ const UpdateOrderPage = () => {
 	const [client, setClient] = useState({});
 	const EditableContext = React.createContext(null);
 	const { actualTdc, updateTdc } = useTdc();
-
+	const [inputValue, setInputValue] = useState('');
+	const [result, setResult] = useState(0);
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -204,7 +206,7 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = (selectOption) => {
-		console.log(selectOption)
+		console.log(selectOption);
 		setPaymentToAdd();
 		const newData = {
 			key: count,
@@ -288,17 +290,16 @@ const UpdateOrderPage = () => {
 		return <td {...restProps}>{childNode}</td>;
 	};
 
-
 	const handleSave = (row) => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
 		const item = newData[index];
-		console.log(dataSource)
+		console.log(dataSource);
 		newData.splice(index, 1, {
 			...item,
 			...row,
 		});
-	
+
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			newData.forEach((objeto) => {
@@ -307,9 +308,9 @@ const UpdateOrderPage = () => {
 			});
 			return suma;
 		};
-	
+
 		const sumaTotal = calcularSumaTotal();
-	
+
 		let result = total - sumaTotal;
 		result = parseFloat(result.toFixed(2));
 		if (result < 0) {
@@ -320,9 +321,6 @@ const UpdateOrderPage = () => {
 			setNewTotal(result);
 		}
 	};
-	
-
-	
 
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
@@ -359,16 +357,27 @@ const UpdateOrderPage = () => {
 		{
 			title: 'Accion',
 			dataIndex: 'operation',
-			render: (_, record) =>
-				dataSource.length >= 1 ? (
-					<Button
-						onClick={() => handleDelete(record.key)}
-						type="primary"
-						danger
-					>
-						<DeleteOutlined />
-					</Button>
-				) : null,
+			render: (_, record) => (
+				<>
+					<div style={{ display: 'flex', gap: '8px' }}>
+						<Button
+							onClick={() => setIsCalculadora(true)}
+							className="bg-blue-500"
+						>
+							<EditOutlined />
+						</Button>
+						{dataSource.length >= 1 && (
+							<Button
+								onClick={() => handleDelete(record.key)}
+								type="primary"
+								danger
+							>
+								<DeleteOutlined />
+							</Button>
+						)}
+					</div>
+				</>
+			),
 		},
 	];
 
@@ -430,7 +439,6 @@ const UpdateOrderPage = () => {
 	}; */
 
 	useEffect(() => {
-	
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
 			/* getDebtsbyClient(currentOrder);
@@ -454,47 +462,47 @@ const UpdateOrderPage = () => {
 			setLoading(false);
 		}
 
-		let data = []
+		let data = [];
 
-		const res = await requestHandler.put('/api/v2/order/close/' + id, 
-			data={
+		const res = await requestHandler.put(
+			'/api/v2/order/close/' + id,
+			(data = {
 				comments: 'PAGO',
 				mpCash: await validateMP('Efectivo'),
 				mpCreditCard: await validateMP('Credito'),
 				mpDebitCard: await validateMP('Debito'),
-				mpTranferBack:await validateMP('Transferencia'),
+				mpTranferBack: await validateMP('Transferencia'),
 				totalBot: total,
-				mpMpago:await validateMP('Mpago'),
+				mpMpago: await validateMP('Mpago'),
 				idCurrencyFk: 1,
 				listPaymentMethod: 0,
 				isAfip: 0,
-				mpRappi:await validateMP('Rappi'),
-				mpGlovo:await validateMP('Glovo'),
-				mpUber:await validateMP('Uber'),
-				mpPedidosya:await validateMP('Pedidosya'),
-				mpJust:await validateMP('Just Eat'),
-				mpWabi:await validateMP('Wabi'),
-				mpOtro2:await validateMP('Otro2'),
-				mpPedidosyacash:await validateMP('Pedidos Ya Efectivo'),
-				mpPersonal:await validateMP('Personal'),
-				mpRapicash:await validateMP('Rapicash'),
-				mpPresent:await validateMP('Present'),
-				mpPaypal:await validateMP('Paypal'),
-				mpZelle:await validateMP('Zelle'),
-				mpBofa:await validateMP('Bofa'),
-				mpYumi:await validateMP('Yumi'),
+				mpRappi: await validateMP('Rappi'),
+				mpGlovo: await validateMP('Glovo'),
+				mpUber: await validateMP('Uber'),
+				mpPedidosya: await validateMP('Pedidosya'),
+				mpJust: await validateMP('Just Eat'),
+				mpWabi: await validateMP('Wabi'),
+				mpOtro2: await validateMP('Otro2'),
+				mpPedidosyacash: await validateMP('Pedidos Ya Efectivo'),
+				mpPersonal: await validateMP('Personal'),
+				mpRapicash: await validateMP('Rapicash'),
+				mpPresent: await validateMP('Present'),
+				mpPaypal: await validateMP('Paypal'),
+				mpZelle: await validateMP('Zelle'),
+				mpBofa: await validateMP('Bofa'),
+				mpYumi: await validateMP('Yumi'),
 				waste: totalDeclarado,
 				isPrintBillin: newTotal,
 				tasa: actualTdc,
 				puntoVtaAfit: '',
 				comprobanteAfit: '',
 				isacountCourrient: currentOrder?.isacountCourrient,
-			}
+			})
 		);
 		console.log(res);
 		router.push(`/dashboard/orders/${id}`);
 	};
-
 
 	const validateMP = async (descriptPayMent) => {
 		let result;
@@ -510,7 +518,7 @@ const UpdateOrderPage = () => {
 		}
 		return result;
 	};
-	
+
 	const handlePauseOrder = async () => {
 		setLoading(true);
 		try {
@@ -561,7 +569,15 @@ const UpdateOrderPage = () => {
 		XLSX.writeFile(workbook, 'Comprobante.xlsx');
 	};
 
-	console.log(actualTdc)
+	console.log(actualTdc);
+
+	const divideVariablePorTdc = (variable) => {
+		return variable / actualTdc;
+	};
+
+	const handleCalculate = () => {
+		setResult(divideVariablePorTdc(inputValue));
+	};
 
 	const ExcelExport = [];
 
@@ -766,7 +782,7 @@ const UpdateOrderPage = () => {
 				title="Confirmación"
 				open={deleteOpen}
 				onCancel={() => setDeleteOpen(false)}
-				onOk={handleCancelOrder}
+				onOk={handleRemoveProduct}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-6">
@@ -777,7 +793,7 @@ const UpdateOrderPage = () => {
 							key="delete"
 							danger
 							type="primary"
-							onClick={handleCancelOrder}
+							onClick={handleRemoveProduct}
 						>
 							Anular
 						</Button>
@@ -948,6 +964,35 @@ const UpdateOrderPage = () => {
 				]}
 			>
 				<p>¿Está seguro de que deseas anular esta orden?</p>
+			</Modal>
+
+			<Modal
+				title="Calculadora de Bs a Dolares"
+				open={calculadora}
+				onCancel={() => setIsCalculadora(false)}
+				footer={[
+					<div className="flex justify-end gap-6" key="footer">
+						<Button key="cancel" onClick={() => setIsCalculadora(false)}>
+							Cancelar
+						</Button>
+						<Button
+							type="primary"
+							className="bg-blue-500"
+							onClick={handleCalculate}
+							disabled={!Number(inputValue)}
+						>
+							Calcular
+						</Button>
+					</div>,
+				]}
+			>
+				<input
+					style={{ width: '50%' }}
+					placeholder="Ingrese el monto a calcular"
+					value={inputValue}
+					onChange={(e) => setInputValue(e.target.value)}
+				/>
+				<p>El resultado es: {Number(result).toFixed(2)}$</p>
 			</Modal>
 		</DashboardLayout>
 	);
