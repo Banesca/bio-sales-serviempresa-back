@@ -49,6 +49,7 @@ const setData = (data) => {
 		idProduct: data.idProduct,
 		isheavy: data.isheavy,
 		maxProducVenta: data.maxProducVenta,
+		is5050: data.is5050,
 	};
 
 	return body;

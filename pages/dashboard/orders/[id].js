@@ -1,6 +1,16 @@
 /* eslint-disable indent */
 import DashboardLayout from '../../../components/shared/layout';
-import { Button, List, message, Table } from 'antd';
+import {
+	Button,
+	List,
+	message,
+	Table,
+	Modal,
+	Form,
+	Row,
+	Col,
+	Input,
+} from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
@@ -17,23 +27,24 @@ import { PROFILES, PROFILE_LIST } from '../../../components/shared/profiles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import { useTdc } from '../../../components/tdc/useTdc';
+import { useRequest } from '../../../hooks/useRequest';
 
 const OrderDetail = () => {
 	const router = useRouter();
-
+	const [openModal2, setOpenModal2] = useState(false);
 	const { id } = router?.query;
 	const [log, setLog] = useState();
 	const { actualTdc, updateTdc } = useTdc();
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-
+	const { requestHandler } = useRequest();
 	const { loading, setLoading } = useLoadingContext();
 	const { user, currentOrder, getOrderById, changeStatus } = useOrders();
 	const { userProfile } = useAuthContext();
 	const [dataSource, setDataSource] = useState([]);
 	const generalContext = useContext(GeneralContext);
-
+	const [model, setModel] = useState('');
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -83,18 +94,7 @@ const OrderDetail = () => {
 	/* console.log(currentOrder.isPrintBillin);//newtotal
 	console.log(currentOrder.waste); */ //totaldeclardo
 
-	console.log(actualTdc)
-	
-	
-	function divideByActualTdc(number) {
-		return number / actualTdc;
-	}
-
-	const result = divideByActualTdc(); 
-
-	/* return (
-		<p>{result}</p>
-	) */;
+	console.log(actualTdc);
 
 	const attributes = [
 		'mpCash',
@@ -164,7 +164,9 @@ const OrderDetail = () => {
 		setLoading(true);
 		router.push(`/dashboard/orders/update/${id}`);
 	};
-
+	const handleInputChange = (e) => {
+		setModel(e.target.value);
+	};
 	useEffect(() => {
 		setLoading(true);
 		if (Object.keys(generalContext).length && id) {
@@ -180,8 +182,24 @@ const OrderDetail = () => {
 		);
 	}
 
+	const openTrucks = () => {
+		setOpenModal2(true);
+	};
+	const closeModals = () => {
+		setOpenModal2(false);
+	};
+
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
+	};
+	let idOrderH = currentOrder.idOrderH;
+
+	const actualizaciónFactura = () => {
+		console.log(idOrderH);
+
+		const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, {factura:model});
+		console.log(res);
+		message.success('Factura actualizada');
 	};
 
 	const commonData = {
@@ -210,8 +228,8 @@ const OrderDetail = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder)
-	console.log(currentOrder.facturaAfip)
+	console.log(currentOrder);
+	console.log(currentOrder.idOrderH);
 	return (
 		<DashboardLayout>
 			<div
@@ -238,6 +256,17 @@ const OrderDetail = () => {
 							style={{ width: '100%' }}
 						>
 							<ExportOutlined /> Imprimir recibo
+						</Button>
+					</div>
+					<div style={{ display: 'flex', marginLeft: '10px' }}>
+						<Button
+							htmlType="submit"
+							type="success"
+							onClick={() => openTrucks()}
+							block
+							style={{ width: '100%' }}
+						>
+							Agregar factura
 						</Button>
 					</div>
 					<div style={{ display: 'flex', width: '12%', marginLeft: '10px' }}>
@@ -330,11 +359,16 @@ const OrderDetail = () => {
 						</List.Item>
 
 						<List.Item>
-							<p style={{ fontWeight: 'bold' , width:'100%' }}>Observacion (opcional):</p>
+							<p style={{ fontWeight: 'bold', width: '100%' }}>
+								Observacion (opcional):
+							</p>
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>
 					</List>
-					<DetailOrderTable products={currentOrder?.body} total={currentOrder.totalBot} />
+					<DetailOrderTable
+						products={currentOrder?.body}
+						total={currentOrder.totalBot}
+					/>
 					<Table
 						style={{ width: '100%' }}
 						bordered
@@ -343,6 +377,23 @@ const OrderDetail = () => {
 					/>
 				</div>
 			</div>
+			<Modal open={openModal2} onCancel={closeModals} footer={false}>
+				<div className="flex flex-col gap-5">
+					<h1>Agregar factura</h1>
+					<Form layout="vertical">
+						<Form.Item label="Numero de factura" name="model">
+							<Input onChange={handleInputChange} />
+						</Form.Item>
+
+						<div className="flex flex-row gap-5">
+							<Button onClick={() => actualizaciónFactura(idOrderH)}>
+								Aceptar
+							</Button>
+							<Button close={() => setOpenModal2(false)}>Cerrar</Button>
+						</div>
+					</Form>
+				</div>
+			</Modal>
 		</DashboardLayout>
 	);
 };

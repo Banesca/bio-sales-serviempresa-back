@@ -19,7 +19,7 @@ import useCars from '../../../components/cars/useCars';
 
 const Cars = () => {
 	const { filtered } = useProductFilter();
-	
+
 	const {
 		columns,
 		columns2,
@@ -38,24 +38,31 @@ const Cars = () => {
 		loading,
 
 		drivers,
-		trucks, 
+		trucks,
 		closeModals,
 
 		onEdit,
 	} = useCars();
 
 	const FooterModal = () => {
-		return <Row justify={'end'} style={{gap: 10, marginTop: 20}}>
-			<Button danger onClick={closeModals}>Cancelar</Button>
-			<Button type="primary" htmlType='submit' className="bg-blue-500" loading={loading}>
-				Guardar
-			</Button>
-		</Row>
-	}
+		return (
+			<Row justify={'end'} style={{ gap: 10, marginTop: 20 }}>
+				<Button danger onClick={closeModals}>
+					Cancelar
+				</Button>
+				<Button
+					type="primary"
+					htmlType="submit"
+					className="bg-blue-500"
+					loading={loading}
+				>
+					Guardar
+				</Button>
+			</Row>
+		);
+	};
 
-	const rules = [
-		{required: true, message: 'El campo es requerido'}
-	];
+	const rules = [{ required: true, message: 'El campo es requerido' }];
 
 	return (
 		<DashboardLayout>
@@ -67,10 +74,17 @@ const Cars = () => {
 					</Button>
 				</Title>
 				<div className="flex flex-col gap-10">
-					<ConfigProvider renderEmpty={filtered().length !== 0 || true ? CustomizeRenderEmpty : ''} >
-						<Table columns={columns} dataSource={drivers} rowKey={(record) => record.idUserDriver} />
+					<ConfigProvider
+						renderEmpty={
+							filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
+						}
+					>
+						<Table
+							columns={columns}
+							dataSource={drivers}
+							rowKey={(record) => record.idUserDriver}
+						/>
 					</ConfigProvider>
-
 
 					<div>
 						<Title>
@@ -79,44 +93,103 @@ const Cars = () => {
 								Agregar un camión
 							</Button>
 						</Title>
-						<ConfigProvider renderEmpty={ filtered().length !== 0 || true ? CustomizeRenderEmpty : ''}>
-							<Table columns={columns2} dataSource={trucks} rowKey={(record) => record.idDriver} />
+						<ConfigProvider
+							renderEmpty={
+								filtered().length !== 0 || true ? CustomizeRenderEmpty : ''
+							}
+						>
+							<Table
+								columns={columns2}
+								dataSource={trucks}
+								rowKey={(record) => record.idDriver}
+							/>
 						</ConfigProvider>
 					</div>
 				</div>
 			</div>
 
-
 			{/* crear / editar - conductor */}
 			<Modal open={openModal} onCancel={closeModals} footer={false}>
 				<div className="flex flex-col gap-5">
 					<h1>{!onEdit ? 'Agrega un chofer' : 'Editar chofer'}</h1>
-					<Form layout='vertical' form={formDrive} onFinish={saveDrivers}>
+					<Form layout="vertical" form={formDrive} onFinish={saveDrivers}>
 						<Row gutter={24}>
 							<Col span={12}>
-								<Form.Item label="Nombre Completo" name="fullname" {...{rules}}>
+								<Form.Item
+									label="Nombre Completo"
+									name="fullname"
+									{...{ rules }}
+									rules={[
+										...rules,
+										{
+											validator: (_, value) =>
+												/[^a-zA-Z\s]/.test(value)
+													? Promise.reject(new Error('Solo se permiten letras'))
+													: Promise.resolve(),
+										},
+									]}
+								>
 									<Input />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="CI" name="cedula" {...{rules}}>
-									<Input />
+								<Form.Item
+									label="CI"
+									name="cedula"
+									{...{ rules }}
+									rules={[
+										...rules,
+										{
+											validator: (_, value) =>
+												value && value.length >= 7 && value.length <= 8
+													? Promise.resolve()
+													: Promise.reject(
+															new Error(
+																'El campo debe tener entre 7 y 8 dígitos'
+															)
+													  ),
+										},
+									]}
+								>
+									<Input maxLength={8} />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Licencia" name="carnet" {...{rules}}>
-									<Input />
+								<Form.Item
+									label="Licencia"
+									name="carnet"
+									{...{ rules }}
+									rules={[
+										...rules,
+										{
+											validator: (_, value) =>
+												value && value.length >= 7 && value.length <= 8
+													? Promise.resolve()
+													: Promise.reject(
+															new Error(
+																'El campo debe tener entre 7 y 8 dígitos'
+															)
+													  ),
+										},
+									]}
+								>
+									<Input maxLength={8} />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Dirección" name="direccion" {...{rules}}>
+								<Form.Item label="Dirección" name="direccion" {...{ rules }}>
 									<Input />
 								</Form.Item>
 							</Col>
 
-							{onEdit && <Form.Item name="idUserDriver" hidden> <Input /></Form.Item> }
+							{onEdit && (
+								<Form.Item name="idUserDriver" hidden>
+									{' '}
+									<Input />
+								</Form.Item>
+							)}
 						</Row>
-						
+
 						<FooterModal close={() => setOpenModal(false)} />
 					</Form>
 				</div>
@@ -126,39 +199,71 @@ const Cars = () => {
 			<Modal open={openModal2} onCancel={closeModals} footer={false}>
 				<div className="flex flex-col gap-5">
 					<h1>{!onEdit ? 'Agrega un camión' : 'Editar camión'}</h1>
-					<Form layout='vertical' form={formTruck} onFinish={saveTrucks}>
+					<Form layout="vertical" form={formTruck} onFinish={saveTrucks}>
 						<Row gutter={24}>
 							<Col span={24}>
-								<Form.Item label="Chofer" name="idUserFk" {...{rules}}>
+								<Form.Item label="Chofer" name="idUserFk" {...{ rules }}>
 									<Select placeholder="Seleccionar chofer">
-										{drivers.map(({idUserDriver, fullname}) => 
-											<Select.Option key={idUserDriver} value={idUserDriver}>{fullname}</Select.Option>
-										)}
+										{drivers.map(({ idUserDriver, fullname }) => (
+											<Select.Option key={idUserDriver} value={idUserDriver}>
+												{fullname}
+											</Select.Option>
+										))}
 									</Select>
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Marca" name="brand" {...{rules}}>
+								<Form.Item
+									label="Marca"
+									name="brand"
+									{...{ rules }}
+									rules={[
+										...rules,
+										{
+											validator: (_, value) =>
+												/\d/.test(value)
+													? Promise.reject(new Error('No se permiten números'))
+													: Promise.resolve(),
+										},
+									]}
+								>
 									<Input />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Modelo" name="model" {...{rules}}>
+								<Form.Item label="Modelo" name="model" {...{ rules }}>
 									<Input />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Placa" name="plate" {...{rules}}>
-									<Input />
+								<Form.Item label="Placa" name="plate" {...{ rules }}>
+									<Input maxLength={8} />
 								</Form.Item>
 							</Col>
 							<Col span={12}>
-								<Form.Item label="Limite de peso" name="mail" {...{rules}}>
+								<Form.Item
+									label="Limite de peso"
+									name="mail"
+									{...{ rules }}
+									rules={[
+										...rules,
+										{
+											validator: (_, value) =>
+												/[a-zA-Z]/.test(value)
+													? Promise.reject(new Error('No se permiten letras'))
+													: Promise.resolve(),
+										},
+									]}
+								>
 									<Input />
 								</Form.Item>
 							</Col>
-							{onEdit && <Form.Item name="idDriver" hidden> <Input /></Form.Item> }
-
+							{onEdit && (
+								<Form.Item name="idDriver" hidden>
+									{' '}
+									<Input />
+								</Form.Item>
+							)}
 						</Row>
 						<FooterModal close={() => setOpenModal2(false)} />
 					</Form>

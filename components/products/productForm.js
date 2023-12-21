@@ -26,7 +26,8 @@ import { useRouter } from 'next/router';
 import { useRequest } from '../../hooks/useRequest';
 import Image from 'next/image';
 import { ip } from '../../util/environment';
-
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 
 const ProductForm = (props) => {
 	const router = useRouter();
@@ -47,7 +48,9 @@ const ProductForm = (props) => {
 	const { getProductById, updateProduct, currentProduct } = useProducts();
 	const { id } = router.query;
 	const [isFileSelected, setIsFileSelected] = useState(false);
-	
+	const [inputValue, setInputValue] = useState('');
+	const [chips, setChips] = useState([]);
+
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -67,6 +70,7 @@ const ProductForm = (props) => {
 		idProduct: props.product.idProduct,
 		efectivo: props.product.efectivo || '',
 		maxProducVenta: props.product.maxProducVenta || '',
+		is5050: props.product.is5050 || '',
 	};
 
 	const generalContext = useContext(GeneralContext);
@@ -95,6 +99,7 @@ const ProductForm = (props) => {
 			observation: '',
 			efectivo: '',
 			maxProducVenta: '',
+			is5050: '',
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
@@ -125,14 +130,14 @@ const ProductForm = (props) => {
 
 	const fileProgress = (fileInput) => {
 		return new Promise((resolve, reject) => {
-			const img = new window.Image(); 
+			const img = new window.Image();
 			img.src = window.URL.createObjectURL(fileInput);
 			img.onload = () => {
 				const isValidSize = img.width <= 600 && img.height <= 600;
 				setIsValidImgSize(isValidSize);
 				if (isValidSize) {
 					setFile(fileInput);
-					setIsFileSelected(true); 
+					setIsFileSelected(true);
 					resolve(fileInput);
 				} else {
 					message.error('La resolución debe ser menor a 600x600');
@@ -155,7 +160,7 @@ const ProductForm = (props) => {
 					return false;
 				}
 				const isLt2M = file.size / 1024 / 1024 < 2;
-				console.log(`El tamaño del archivo es: ${file.size / 1024 / 1024} MB`); 
+				console.log(`El tamaño del archivo es: ${file.size / 1024 / 1024} MB`);
 				if (!isLt2M) {
 					message.error('El tamaño máximo es 2MB!');
 					return false;
@@ -163,8 +168,8 @@ const ProductForm = (props) => {
 				let isValid = isJpgOrPng && isLt2M;
 				if (isValid) {
 					console.log(file);
-					setFile(file); 
-					setIsFileSelected(true); 
+					setFile(file);
+					setIsFileSelected(true);
 					return true;
 				}
 			} catch (error) {
@@ -175,10 +180,10 @@ const ProductForm = (props) => {
 		onChange: (info) => {
 			let newFileList = [...info.fileList];
 			newFileList = newFileList.slice(-1);
-		
+
 			if (newFileList.length === 0) {
 				setFileList([]);
-				setFile(null); 
+				setFile(null);
 				setIsFileSelected(false);
 				return message.success('Archivo eliminado');
 			}
@@ -188,8 +193,8 @@ const ProductForm = (props) => {
 					setFileList([]);
 					return;
 				}
-				setFile(newFileList[0].originFileObj); 
-				setIsFileSelected(true); 
+				setFile(newFileList[0].originFileObj);
+				setIsFileSelected(true);
 				setLoading(true);
 				message.success(`${newFileList[0].name} ha sido cargado`);
 			} else if (newFileList[0].status == 'error') {
@@ -199,12 +204,13 @@ const ProductForm = (props) => {
 		},
 	};
 
+	const words = chips.map(chip => ({ word: chip }));
+
 	const onSubmit = async () => {
-		if (!isFileSelected) {
-			message.error('No se seleccionó ningún archivo');
-			return;
-		}
 		setLoading(true);
+		const words = chips.map(chip => chip);
+		console.log(words);
+		product.is5050 = JSON.stringify(words);
 		const updatedProduct = {
 			...product,
 			idSucursalFk: selectedBusiness.idSucursal,
@@ -255,6 +261,7 @@ const ProductForm = (props) => {
 			message.error('Error al cargar las marcas');
 		}
 	};
+	
 
 	useEffect(() => {
 		getProductRequest(id);
@@ -281,22 +288,16 @@ const ProductForm = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [click]);
 
-	/* useEffect(() => {
-		const fetchData = async () => {
-			const res = await requestHandler.get(`/api/v2/product/get/${id}`);
-			if (res.isLeft()) {
-				throw res.value.getErrorValue();
-			}
-			const value = res.value.getValue().data;
-			setProduct(value);
-		};
-
-		fetchData();
-	}, [id]); */
-
 	const handleReturn = () => {
 		router.push('/dashboard/products');
 		setLoading(true);
+	};
+	const handleKeyPress = (event) => {
+		if (event.key === 'Enter') {
+			setChips([...chips, { word: inputValue }]);
+			setInputValue('');
+			event.preventDefault();
+		}
 	};
 
 	return (
@@ -332,6 +333,7 @@ const ProductForm = (props) => {
 						observation: product.observation,
 						efectivo: product.efectivo,
 						maxProducVenta: product.maxProducVenta,
+						is5050: JSON.stringify(chips),
 					}}
 					onFinish={onSubmit}
 					autoComplete="off"
@@ -786,6 +788,29 @@ const ProductForm = (props) => {
 									))}
 								</Select>
 							</Form.Item>
+							<Form.Item
+								label="Palabras clave"
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Stack direction="row" spacing={1}>
+									{chips.map((chip, index) => (
+										<div key={index}>{chip.word}</div>
+									))}
+								</Stack>
+								<Input
+									style={{ marginTop: '1rem' }}
+									value={inputValue}
+									onChange={(e) => setInputValue(e.target.value)}
+									onKeyPress={handleKeyPress}
+								/>
+							</Form.Item>
 						</Col>
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							{product.idUnitMeasureSaleFk == 3 && (
@@ -853,6 +878,7 @@ const ProductForm = (props) => {
 							)}
 						</Col>
 					</Row>
+
 					<Row>
 						<Col span={24}>
 							<Form.Item

@@ -68,6 +68,13 @@ export default function useCars() {
 			render: (_, record) => record.brand,
 		},
 		{
+			title: 'Peso limite',
+			width: '160px',
+			dataIndex: 'barCode',
+			responsive: ['md'],
+			render: (_, record) => record.mail,
+		},
+		{
 			title: 'Acciones',
 			align: 'center',
 			render: (_, record) => (

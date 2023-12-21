@@ -121,7 +121,7 @@ const Merchandising = () => {
 		},
 		{
 			title: 'Estado',
-			dataIndex: 'idStatusFk',
+			dataIndex: 'statusProductClient',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},

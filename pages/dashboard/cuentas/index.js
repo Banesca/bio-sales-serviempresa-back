@@ -71,7 +71,7 @@ const Cuentas = () => {
 		fullNameClient: null,
 	});
 	const columns2 = [
-		{ title: 'abonos', dataIndex: 'amount', key: 'amount' },
+		{ title: 'Monto', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
 		{
 			title: 'Accion',
@@ -102,10 +102,9 @@ const Cuentas = () => {
 		console.log(abonos);
 		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
 		console.log(walletBody);
-
 		if (walletBody) {
 			const response = await requestHandler.post('/api/v2/wallet/add', {
-				walletBody,
+				data:walletBody,
 			});
 			console.log(response);
 		}
@@ -133,11 +132,9 @@ const Cuentas = () => {
 		setMontoTotal(resp.amount);
 		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
 		console.log(res);
-		console.log(totalAbonos);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.data;
-			console.log(value);
 			setAbonos(value);
 		}
 		console.log(abonos);
@@ -145,17 +142,17 @@ const Cuentas = () => {
 
 	function createWalletBody(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-
+		console.log(firstAbono);
 		const walletBody = {
 			title: 'Abono en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
-			amount: abono2, // Utiliza 'pago' para el monto si 'type' es 1
-			/* nameclient: orden.fullNameClient,
-			idUserAddFk: Number(localStorage.getItem('idUser')), */
-			/* isEntry: type == 1 ? 1 : 0, */
+			amount: abono2,
+			nameclient: firstAbono.nameclient,
+			idUserAddFk: firstAbono.idUserAddFk,
+			isEntry: 1,
 			idClientFk: firstAbono.idClientFk,
-			idBranchFk: localStorage.getItem('idBranchFk'),
-			/*idCurrencyFk: 99, */
-			idPaymentMethodFk: PaymentAbono, // Utiliza 'PaymentAbono' para el método de pago
+			idBranchFk: firstAbono.idBranchFk,
+			idCurrencyFk: 99,
+			idPaymentMethodFk: PaymentAbono,
 			idOrder: firstAbono.idOrder,
 		};
 		console.log(walletBody);
@@ -221,9 +218,6 @@ const Cuentas = () => {
 		} */
 	};
 
-	const handleChange = (event) => {
-		setMessage(event.target.value);
-	};
 	const handleCancel2 = () => {
 		setOpen2(false);
 	};
@@ -234,7 +228,6 @@ const Cuentas = () => {
 	const cancelModal = (event) => {
 		setOpenModal(false);
 	};
-	/* console.log(productos.nameclient) */
 
 	const Accounts = useMemo(() => {
 		let list = AccountsReceivable;
