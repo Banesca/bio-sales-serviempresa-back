@@ -103,9 +103,7 @@ const Cuentas = () => {
 		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
 		console.log(walletBody);
 		if (walletBody) {
-			const response = await requestHandler.post('/api/v2/wallet/add', {
-				data:walletBody,
-			});
+			const response = await requestHandler.post('/api/v2/wallet/add',walletBody);
 			console.log(response);
 		}
 	};
