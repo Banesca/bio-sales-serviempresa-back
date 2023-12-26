@@ -61,60 +61,29 @@ const Rutas = () => {
 	];
 	const columns2 = [
 		{
-			title: 'Cabecera de la ruta',
-			dataIndex: 'Cabecera',
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Numero de la orden',
-			dataIndex: 'numberOrden',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Fecha de creacion',
-			dataIndex: 'created_at',
-			key: 2,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Id de la orden',
-			dataIndex: 'idOrdersbypassing',
-			key: 3,
-			render: (text) => <p>{text}</p>,
-		},
-		{
-			title: 'Id del chofer',
-			dataIndex: 'idChoferFk',
-			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
-
-		{
-			title: 'Limite de peso del camion',
-			dataIndex: 'Limite',
+			title: 'Productos',
+			dataIndex: 'nameProduct',
 			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Cantidad',
-			dataIndex: 'Cantidad',
-			key: 4,
+			dataIndex: 'quantityProduct',
+			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Peso',
-			dataIndex: 'Peso',
-			key: 4,
+			title: 'Peso unitario',
+			dataIndex: 'weight',
+			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Consolidado',
-			dataIndex: 'Consolidado',
-			key: 4,
+			title: 'Total',
+			dataIndex: 'idOrdersbypassing',
+			key: 3,
 			render: (text) => <p>{text}</p>,
-		},
+		}
 	];
 
 	useEffect(() => {
@@ -131,11 +100,11 @@ const Rutas = () => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
 		);
-		console.log(res);
-		if (!res.isLeft()) {
-			let value = res.value.getValue();
-			value = value.response;
-			setDetailsRutas(value);
+		if (res.value && res.value._value && res.value._value.data) {
+			const products = res.value._value.data.map(item => item.ordenes[0].products).flat();
+			setDetailsRutas(products);
+		} else {
+			console.log('res.value._value.data is undefined');
 		}
 	};
 
@@ -160,7 +129,7 @@ const Rutas = () => {
 			setReportProduct(value);
 		}
 	};
-
+	console.log(productsDetail);
 	const handleCancel = () => {
 		setOpen2(false);
 	};
@@ -217,7 +186,12 @@ const Rutas = () => {
 				]}
 			>
 				<Title title={'Consolidado de ruta'}></Title>
-				<Table columns={columns2} dataSource={detailsRutas} />
+				<div>
+					<p>Chofer: {productsDetail.idChoferFk}</p>
+					<p>Id de la ruta: {productsDetail.idReportVisit}</p>
+					<p>Peso total</p>
+					<Table columns={columns2} dataSource={detailsRutas} />
+				</div>
 			</Modal>
 		</DashboardLayout>
 	);

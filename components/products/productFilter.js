@@ -29,6 +29,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 			nameSubFamily: values.nameSubFamily || 0,
 			idBrandFk: values.idBrandFk || 0,
 			idLineFk: values.idLineFk || 0,
+			is5050: values.is5050 || '',
 		});
 	};
 
@@ -65,6 +66,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Input allowClear />
 							</Form.Item>
 						</Col>
+						
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
 								label="Código"
@@ -186,6 +188,23 @@ const ProductFilter = ({ setQuery, clean }) => {
 											</Select.Option>
 										))}
 								</Select>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Palabras clave"
+								className="p-2"
+								name="is5050"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Input allowClear />
 							</Form.Item>
 						</Col>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>

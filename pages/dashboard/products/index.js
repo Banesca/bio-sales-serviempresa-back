@@ -227,6 +227,7 @@ export default function Products() {
 						)}
 					</Title>
 					<ProductFilter setQuery={setQuery} clean={clean} />
+					
 					<ConfigProvider
 						renderEmpty={
 							filtered()?.length !== 0 || true ? CustomizeRenderEmpty : ''

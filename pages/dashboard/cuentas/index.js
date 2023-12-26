@@ -13,6 +13,7 @@ import {
 	Select,
 	Row,
 	Col,
+	Checkbox,
 } from 'antd';
 import { useRequest } from '../../../hooks/useRequest';
 import { GeneralContext } from '../../_app';
@@ -44,6 +45,7 @@ const Cuentas = () => {
 	const [Payment, setPayment] = useState();
 	const [pago, setPago] = useState(0);
 	const [abono2, setAbono2] = useState(0);
+	const [selectedCheckbox, setSelectedCheckbox] = useState(null);
 	const [phoneFG, setPhoneFG] = useState(0);
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
@@ -103,9 +105,18 @@ const Cuentas = () => {
 		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
 		console.log(walletBody);
 		if (walletBody) {
-			const response = await requestHandler.post('/api/v2/wallet/add',walletBody);
+			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
 			console.log(response);
 		}
+	};
+	const handlePagarClick = async () => {
+		/* console.log(abonos);
+		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
+		console.log(walletBody);
+		if (walletBody) {
+			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
+			console.log(response);
+		} */
 	};
 
 	const handleAbono2Change = (event) => {
@@ -227,6 +238,15 @@ const Cuentas = () => {
 		setOpenModal(false);
 	};
 
+	function handleCheckChange(label, checked) {
+
+		if (checked) {
+			setSelectedCheckbox(label);
+		} else {
+			setSelectedCheckbox(null);
+		}
+	}
+
 	const Accounts = useMemo(() => {
 		let list = AccountsReceivable;
 
@@ -280,7 +300,6 @@ const Cuentas = () => {
 						style={{ marginBottom: '10px' }}
 					>
 						<p style={{ fontWeight: 'bold' }}>Usuario:{nombre}</p>
-						<p style={{ fontWeight: 'bold' }}>Descripcion: {descripcion}</p>
 					</div>,
 					<div
 						className="flex justify-center gap-1"
@@ -291,44 +310,30 @@ const Cuentas = () => {
 						<p style={{ fontWeight: 'bold' }}>Monto total: {montoTotal}</p>
 					</div>,
 
-					<Row gutter={16}>
-						<Col xs={24} sm={24} md={12} lg={12} xl={12}>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									justifyContent: 'center',
-									width: '100%',
-								}}
+					<Row
+						gutter={16}
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						<div>
+							<Checkbox
+								checked={selectedCheckbox === 'pagar'}
+								onChange={(e) => handleCheckChange('pagar', e.target.checked)}
 							>
-								<p>Metodo de pago:</p>
-								<List.Item>
-									<Select
-										style={{ width: '100%' }}
-										onChange={(value) => setPaymentToAdd(value)}
-									>
-										{Payment &&
-											Payment.map((Payment) => (
-												<Select.Option
-													key={Payment.idPymentMethod}
-													value={Payment.pymentMethod}
-												>
-													{Payment.pymentMethod}
-												</Select.Option>
-											))}
-									</Select>
-								</List.Item>
-								<Form.Item
-									label="Monto a pagar"
-									name="pago"
-									style={{ width: '50%' }}
-								>
-									<Input />
-								</Form.Item>
-								<Button>Pagar</Button>
-							</div>
-						</Col>
+								Pagar
+							</Checkbox>
+
+							<Checkbox
+								checked={selectedCheckbox === 'abonar'}
+								onChange={(e) => handleCheckChange('abonar', e.target.checked)}
+							>
+								Abonar
+							</Checkbox>
+						</div>
 
 						<Col xs={24} sm={24} md={12} lg={12} xl={12}>
 							<div
@@ -340,7 +345,7 @@ const Cuentas = () => {
 									justifyContent: 'center',
 								}}
 							>
-								<p>Metodo de pago:</p>
+								<p>Método de {selectedCheckbox}:</p>
 								<List.Item>
 									<Select
 										style={{ width: '100%' }}
@@ -358,13 +363,15 @@ const Cuentas = () => {
 									</Select>
 								</List.Item>
 								<Form.Item
-									label="Monto a abonar"
+									label={`Monto a ${selectedCheckbox}`}
 									name="abono2"
 									style={{ width: '50%' }}
 								>
 									<Input onChange={handleAbono2Change} />
 								</Form.Item>
-								<Button onClick={handleAbonarClick}>Abonar</Button>
+								<Button onClick={selectedCheckbox === 'pagar' ? handlePagarClick : handleAbonarClick}>
+									{selectedCheckbox ? selectedCheckbox.charAt(0).toUpperCase() + selectedCheckbox.slice(1) : ''}
+								</Button>
 							</div>
 						</Col>
 					</Row>,
@@ -377,7 +384,7 @@ const Cuentas = () => {
 						</Button>
 					</div>,
 				]}
-				width={1000}
+				width={500}
 			></Modal>
 		</DashboardLayout>
 	);

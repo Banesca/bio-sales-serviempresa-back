@@ -50,7 +50,7 @@ const ProductForm = (props) => {
 	const [isFileSelected, setIsFileSelected] = useState(false);
 	const [inputValue, setInputValue] = useState('');
 	const [chips, setChips] = useState([]);
-
+	const [chips2, setChips2] = useState([]);
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -204,7 +204,6 @@ const ProductForm = (props) => {
 		},
 	};
 
-	const words = chips.map(chip => ({ word: chip }));
 
 	const onSubmit = async () => {
 		setLoading(true);
@@ -217,6 +216,7 @@ const ProductForm = (props) => {
 		};
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
+		
 		setLoading(false);
 		if (!props.update) {
 			return onReset();
@@ -261,7 +261,7 @@ const ProductForm = (props) => {
 			message.error('Error al cargar las marcas');
 		}
 	};
-	
+
 
 	useEffect(() => {
 		getProductRequest(id);
@@ -299,7 +299,7 @@ const ProductForm = (props) => {
 			event.preventDefault();
 		}
 	};
-
+	console.log(product.is5050)
 	return (
 		<div className="flex flex-col">
 			<section className="flex justify-between items-center my-6">
@@ -386,7 +386,7 @@ const ProductForm = (props) => {
 										required: true,
 										message: 'Ingresa un código',
 									},
-									({}) => ({
+									({ }) => ({
 										validator(_, value) {
 											if (!value || !c?.includes(value)) {
 												return Promise.resolve();
@@ -799,6 +799,11 @@ const ProductForm = (props) => {
 									sm: { span: 18 },
 								}}
 							>
+								<Stack direction="row" spacing={1}>
+									{chips.map((chip, index) => (
+										<div key={index}>{product.is5050}</div>
+									))}
+								</Stack>
 								<Stack direction="row" spacing={1}>
 									{chips.map((chip, index) => (
 										<div key={index}>{chip.word}</div>
