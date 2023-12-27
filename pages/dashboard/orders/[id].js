@@ -389,7 +389,7 @@ const OrderDetail = () => {
 							<Button onClick={() => actualizaciónFactura(idOrderH)}>
 								Aceptar
 							</Button>
-							<Button close={() => setOpenModal2(false)}>Cerrar</Button>
+							<Button close={() => closeModals(false)}>Cerrar</Button>
 						</div>
 					</Form>
 				</div>
