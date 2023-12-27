@@ -335,7 +335,7 @@ const UpdateOrderPage = () => {
 			return suma;
 		};
 
-		sumaTotal = calcularSumaTotal();
+		let sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
 		let result = total - sumaTotal;
 		result = parseFloat(result.toFixed(2));

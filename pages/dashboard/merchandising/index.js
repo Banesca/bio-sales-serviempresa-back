@@ -204,6 +204,7 @@ const Merchandising = () => {
 	const showModal = (reporte) => {
 		setOpen(true);
 		setReportVisitDetail(reporte);
+		console.log(reporte);
 	};
 
 	const showModal2 = (productos) => {
@@ -284,30 +285,40 @@ const Merchandising = () => {
 	const onChange = (key) => {
 		console.log(key);
 	};
-	const text = (
+
+	const imagesBefore = reportVisitDetail.body.filter(item => item.isOld === 1);
+	const imagesAfter = reportVisitDetail.body.filter(item => item.isOld === 2);
+
+	const textBefore = (
 		<Card>
-			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-				<img
-					src={`${ip}:8078/visit/${reportVisitDetail.image}`}
-				/>
-			</Card.Grid>
-			<Card.Grid style={{ width: '50%', textAlign: 'center' }}>
-				<img
-					src={`${ip}:8078/visit/${reportVisitDetail.image2}`}
-				/>
-			</Card.Grid>
+			{imagesBefore.map((item, index) => (
+				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
+					<img src={`${ip}:8078/visit/${item.image}`} />
+				</Card.Grid>
+			))}
 		</Card>
 	);
+
+	const textAfter = (
+		<Card>
+			{imagesAfter.map((item, index) => (
+				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
+					<img src={`${ip}:8078/visit/${item.image}`} />
+				</Card.Grid>
+			))}
+		</Card>
+	);
+	
 	const items = [
 		{
 			key: '1',
 			label: 'Antes',
-			children: <p>{text}</p>,
+			children: <p>{textBefore}</p>,
 		},
 		{
 			key: '2',
 			label: 'Despues',
-			children: <p>{text}</p>,
+			children: <p>{textAfter}</p>,
 		},
 	];
 

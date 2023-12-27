@@ -216,7 +216,7 @@ const ProductForm = (props) => {
 		};
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
-		
+
 		setLoading(false);
 		if (!props.update) {
 			return onReset();
@@ -299,7 +299,10 @@ const ProductForm = (props) => {
 			event.preventDefault();
 		}
 	};
-	console.log(product.is5050)
+	useEffect(() => {
+		// Este código se ejecutará cada vez que `product.is5050` cambie
+	}, [product.is5050]);
+
 	return (
 		<div className="flex flex-col">
 			<section className="flex justify-between items-center my-6">
@@ -800,10 +803,12 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Stack direction="row" spacing={1}>
-									{chips.map((chip, index) => (
-										<div key={index}>{product.is5050}</div>
+									{product.is5050 && JSON.parse(product.is5050).map((item, index) => (
+										<Chip key={index} label={item.word}/>
 									))}
 								</Stack>
+
+
 								<Stack direction="row" spacing={1}>
 									{chips.map((chip, index) => (
 										<div key={index}>{chip.word}</div>

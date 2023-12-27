@@ -161,8 +161,8 @@ export default function Products() {
 			setIsEditModalOpen(false);
 			await updateProductInv(
 				object.idProduct,
-				lineBody.undefined,
-				lineBodys.undefined,
+				lineBody,
+				lineBodys,
 				selectedBusiness.idSucursal
 			);
 			message.success('Stock actualizado');

@@ -36,17 +36,7 @@ export default function AddClient() {
 	const router = useRouter();
 	const { clients } = useClients();
 
-	const getClientsRequest = async () => {
-		setLoading(true);
-		try {
-			await listClients();
-		} catch (error) {
-			message.error('Ha ocurrido un error');
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
+	
 
 	const validator = (data) => {
 		return {
@@ -88,11 +78,7 @@ export default function AddClient() {
 
 	const generalContext = useContext(GeneralContext);
 
-	useEffect(() => {
-		if (Object.keys(generalContext).length) {
-			getClientsRequest();
-		}
-	}, [generalContext]);
+	
 
 	const handleSubmit = async (values) => {
 		setLoading(true);
