@@ -110,13 +110,14 @@ const Cuentas = () => {
 		}
 	};
 	const handlePagarClick = async () => {
-		/* console.log(abonos);
-		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
-		console.log(walletBody);
+		let id = abonos[0].idOrder;
+		const walletBody = createWalletBody2(abono2, PaymentAbono, abonos);
 		if (walletBody) {
-			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
+			const response = await requestHandler.post(`/api/v2/order/update/currentacount/${id}`,{ 
+				walletBody,
+				isacountCourrient:false});
 			console.log(response);
-		} */
+		}
 	};
 
 	const handleAbono2Change = (event) => {
@@ -154,6 +155,25 @@ const Cuentas = () => {
 		console.log(firstAbono);
 		const walletBody = {
 			title: 'Abono en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
+			amount: abono2,
+			nameclient: firstAbono.nameclient,
+			idUserAddFk: firstAbono.idUserAddFk,
+			isEntry: 1,
+			idClientFk: firstAbono.idClientFk,
+			idBranchFk: firstAbono.idBranchFk,
+			idCurrencyFk: 99,
+			idPaymentMethodFk: PaymentAbono,
+			idOrder: firstAbono.idOrder,
+		};
+		console.log(walletBody);
+		return walletBody;
+	}
+
+	function createWalletBody2(abono2, PaymentAbono, abonos) {
+		const firstAbono = abonos[0];
+		console.log(firstAbono);
+		const walletBody = {
+			title: 'Pago en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
 			amount: abono2,
 			nameclient: firstAbono.nameclient,
 			idUserAddFk: firstAbono.idUserAddFk,

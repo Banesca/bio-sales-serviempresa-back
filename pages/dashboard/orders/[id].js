@@ -197,7 +197,7 @@ const OrderDetail = () => {
 	const actualizaciónFactura = () => {
 		console.log(idOrderH);
 
-		const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, {factura:model});
+		const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
 		console.log(res);
 		message.success('Factura actualizada');
 	};
@@ -276,11 +276,11 @@ const OrderDetail = () => {
 							block
 							disabled={
 								orderStatusToUse[currentOrder.idStatusOrder].state ==
-									'Cobrado' ||
+								'Cobrado' ||
 								orderStatusToUse[currentOrder.idStatusOrder].state ==
-									'Despachado' ||
+								'Despachado' ||
 								orderStatusToUse[currentOrder.idStatusOrder].state ==
-									'Anulado' ||
+								'Anulado' ||
 								orderStatusToUse[currentOrder.idStatusOrder].state == 'Pagado'
 							}
 							onClick={handleButtonClick}
@@ -378,20 +378,18 @@ const OrderDetail = () => {
 				</div>
 			</div>
 			<Modal open={openModal2} onCancel={closeModals} footer={false}>
-				<div className="flex flex-col gap-5">
+				<div className="flex flex-col justify-between h-full gap-5">
 					<h1>Agregar factura</h1>
 					<Form layout="vertical">
-						<Form.Item label="Numero de factura" name="model">
+						<Form.Item label="Número de factura" name="model">
 							<Input onChange={handleInputChange} />
 						</Form.Item>
-
-						<div className="flex flex-row gap-5">
-							<Button onClick={() => actualizaciónFactura(idOrderH)}>
-								Aceptar
-							</Button>
-							<Button close={() => closeModals(false)}>Cerrar</Button>
-						</div>
 					</Form>
+					<div className="flex justify-end gap-5">
+						<Button className="bg-blue-500" type="primary" onClick={() => actualizaciónFactura(idOrderH)}>
+							Guardar
+						</Button>
+					</div>
 				</div>
 			</Modal>
 		</DashboardLayout>
