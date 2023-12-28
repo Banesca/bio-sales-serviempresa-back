@@ -1,0 +1,6 @@
+projectKey=serviempresa-back
+serverUrl=http://31.220.22.227:9000
+serverVersion=10.3.0.82913
+dashboardUrl=http://31.220.22.227:9000/dashboard?id=serviempresa-back
+ceTaskId=AYyw9DMFaaaTDj_DsUXw
+ceTaskUrl=http://31.220.22.227:9000/api/ce/task?id=AYyw9DMFaaaTDj_DsUXw

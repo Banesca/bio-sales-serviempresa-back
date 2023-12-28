@@ -286,8 +286,13 @@ const Merchandising = () => {
 		console.log(key);
 	};
 
-	const imagesBefore = reportVisitDetail.body.filter(item => item.isOld === 1);
-	const imagesAfter = reportVisitDetail.body.filter(item => item.isOld === 2);
+	let imagesBefore = [];
+	let imagesAfter = [];
+
+	if (reportVisitDetail && reportVisitDetail.body) {
+		imagesBefore = reportVisitDetail.body.filter(item => item.isOld === 1);
+		imagesAfter = reportVisitDetail.body.filter(item => item.isOld === 2);
+	}
 
 	const textBefore = (
 		<Card>
@@ -308,7 +313,7 @@ const Merchandising = () => {
 			))}
 		</Card>
 	);
-	
+
 	const items = [
 		{
 			key: '1',

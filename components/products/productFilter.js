@@ -6,12 +6,15 @@ import { PROFILES } from '../shared/profiles';
 import SelectBusiness from '../business/selectBusiness';
 import { useAuthContext } from '../../context/useUserProfileProvider';
 import { useEffect, useState } from 'react';
+import { useBusinessProvider } from '../../hooks/useBusinessProvider';
+import { useRequest } from '../../hooks/useRequest';
 
 const ProductFilter = ({ setQuery, clean }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
 	const { userProfile } = useAuthContext();
-
+	const { selectedBusiness } = useBusinessProvider();
+	const { requestHandler } = useRequest();
 	const [form] = Form.useForm();
 
 	const onReset = () => {
@@ -29,6 +32,13 @@ const ProductFilter = ({ setQuery, clean }) => {
 			nameSubFamily: values.nameSubFamily || 0,
 			idBrandFk: values.idBrandFk || 0,
 			idLineFk: values.idLineFk || 0,
+			is5050: values.is5050 || '',
+		});
+		let id = selectedBusiness.idSucursal;
+		console.log('id', id);
+		const response = requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
+			nameProduct: values.nameProduct || '',
+			barCode: values.barCode || '',
 			is5050: values.is5050 || '',
 		});
 	};
@@ -66,7 +76,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 								<Input allowClear />
 							</Form.Item>
 						</Col>
-						
+
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
 								label="Código"
