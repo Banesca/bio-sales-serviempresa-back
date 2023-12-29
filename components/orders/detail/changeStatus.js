@@ -94,11 +94,12 @@ export default function ChangeOrderStatus({
 		setModal(initialModalState);
 	};
 
-	const perfil = async () => {};
+	const perfil = async () => { };
 	perfil();
 
 	return (
 		<>
+			
 			{status != 2 && (
 				<List.Item style={{ width: '100%' }}>
 					<h3 className="font-bold">Actualizar Estado</h3>
@@ -111,9 +112,6 @@ export default function ChangeOrderStatus({
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
-								{/* <Button onClick={() => handleOrder()} type="info">
-										Facturar
-									</Button> */}
 								<Button
 									onClick={() => handleOpenModal(statusNames.Pagado)}
 									type="primary"
@@ -131,18 +129,11 @@ export default function ChangeOrderStatus({
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
-								{/* <Button
-										onClick={() => handleOpenModal(statusNames.Retenido)}
-										type="primary"
-										danger
-									>
-										Retener
-									</Button> */}
 								<Button
-									onClick={() => handleOpenModal(statusNames.Despachado)}
-									type="warning"
+									onClick={() => handleOpenModal(statusNames.Cobrado)}
+									type="success"
 								>
-									<CarryOutOutlined /> Despachar
+									<CreditCardOutlined /> Cobrar
 								</Button>
 							</>
 						)}
@@ -182,6 +173,8 @@ export default function ChangeOrderStatus({
 					</Space>
 				</List.Item>
 			)}
+
+
 			<Modal
 				open={modal.visible}
 				title="Confirmación"

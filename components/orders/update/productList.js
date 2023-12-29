@@ -87,11 +87,21 @@ export default function ProductList({
 	};
 
 	const handleAddProduct = async (record) => {
+		if (record.stock <= 0) {
+			alert('No hay stock disponible para este producto');
+			console.log(record.maxProducVenta)
+			return;
+		}
+	
 		if (products) {
 			const { found, index } = productExist(record.idProduct);
 			if (found) {
 				let productList = [...orderProducts];
 				productList[index].weight += 1;
+				if (productList[index].weight > record.maxProducVenta) {
+					alert('No puedes agregar más de este producto, no hay suficiente stock');
+					return;
+				}
 				return await handleUpdateProduct({
 					idOrderB: productList[index].idOrderB,
 					weight: productList[index].weight,

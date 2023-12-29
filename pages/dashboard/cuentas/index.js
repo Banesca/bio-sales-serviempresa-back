@@ -102,6 +102,7 @@ const Cuentas = () => {
 			console.log(response);
 		}
 		handleCancel();
+		window.location.reload();
 	};
 
 
@@ -118,6 +119,7 @@ const Cuentas = () => {
 			console.log(response);
 		}
 		handleCancel();
+		window.location.reload();
 	};
 
 	const handleAbono2Change = (event) => {
@@ -324,15 +326,15 @@ const Cuentas = () => {
 						className="flex justify-center gap-1"
 						style={{ marginBottom: '10px' }}
 					>
-						<p style={{ fontWeight: 'bold' }}>Usuario:{nombre}</p>
+						<p style={{ fontWeight: 'bold' }}>Cliente: {nombre}</p>
 					</div>,
 					<div
 						className="flex justify-center gap-1"
 						style={{ marginBottom: '10px' }}
 					>
-						<p style={{ fontWeight: 'bold' }}>Abonos: {abono}</p>
-						<p style={{ fontWeight: 'bold' }}>Deuda: {deuda}</p>
-						<p style={{ fontWeight: 'bold' }}>Monto total: {montoTotal}</p>
+						<p style={{ fontWeight: 'bold' }}>Abonos:  {abono}</p>
+						<p style={{ fontWeight: 'bold' }}>Deuda:  {deuda}</p>
+						<p style={{ fontWeight: 'bold' }}>Monto total:  {montoTotal}</p>
 					</div>,
 
 					<Row

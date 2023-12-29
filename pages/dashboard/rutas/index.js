@@ -7,6 +7,7 @@ import {
 	Row,
 	Select,
 	Table,
+	Space
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
@@ -15,7 +16,7 @@ import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
 import { ip } from '/util/environment.js';
-import { NodeIndexOutlined } from '@ant-design/icons';
+import { NodeIndexOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 const Rutas = () => {
 	const { requestHandler } = useRequest();
@@ -23,6 +24,7 @@ const Rutas = () => {
 	const [reportProduct, setReportProduct] = useState([]);
 	const { filtered } = useProductFilter();
 	const [open2, setOpen2] = useState(false);
+	const [open3, setOpen3] = useState(false);
 	const [productsDetail, setProductsDetail] = useState([]);
 	const [detailsRutas, setDetailsRutas] = useState([]);
 
@@ -51,9 +53,14 @@ const Rutas = () => {
 			dataIndex: 'idReportVisit',
 			key: '6',
 			render: (index, record) => (
-				<Button onClick={() => showModal2(record)}>
-					<NodeIndexOutlined />
-				</Button>
+				<Space>
+					<Button onClick={() => showModal2(record)}>
+						<NodeIndexOutlined />
+					</Button>
+					<Button onClick={() => showModal3(record)}>
+						<UnorderedListOutlined />
+					</Button>
+				</Space>
 			),
 		},
 	];
@@ -83,6 +90,35 @@ const Rutas = () => {
 			render: (text, record) => <p>{record.weight * record.maxProducVenta}</p>,
 		}
 	];
+
+	const columns3 = [
+		{
+			title: 'Estado',
+			dataIndex: 'nameProduct',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Usuario',
+			dataIndex: 'weight',
+			key: 1,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Peso unitario',
+			dataIndex: 'maxProducVenta',
+			key: 2,
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Total',
+			dataIndex: 'idOrdersbypassing',
+			key: 3,
+			render: (text, record) => <p>{record.weight * record.maxProducVenta}</p>,
+		}
+	];
+
+
 	const dataSource = detailsRutas;
 	let totalWeight = 0;
 	let totalMaxProducVenta = 0;
@@ -105,10 +141,17 @@ const Rutas = () => {
 		handleOnChang(productos);
 	};
 
+	const showModal3 = (productos) => {
+		setOpen3(true);
+		setProductsDetail(productos);
+		handleOnChang(productos);
+	};
+
 	const handleOnChang = async (productos) => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
 		);
+		console.log(res);
 		if (res.value && res.value._value && res.value._value.data) {
 			const products = res.value._value.data.map(item => {
 				if (item.ordenes && item.ordenes[0]) {
@@ -118,6 +161,7 @@ const Rutas = () => {
 				}
 			}).flat();
 			setDetailsRutas(products);
+			console.log(detailsRutas);
 		} else {
 			console.log('res.value._value.data is undefined');
 		}
@@ -147,6 +191,9 @@ const Rutas = () => {
 	console.log(productsDetail);
 	const handleCancel = () => {
 		setOpen2(false);
+	};
+	const handleCancel2 = () => {
+		setOpen3(false);
 	};
 
 	return (
@@ -221,7 +268,24 @@ const Rutas = () => {
 					/>
 				</div>
 			</Modal>
-		</DashboardLayout>
+			<Modal
+				open={open3}
+				onCancel={handleCancel2}
+				width={1000}
+				footer={[
+					// eslint-disable-next-line react/jsx-key
+					<div className="flex justify-end gap-1">
+						<Button danger key="cancel" onClick={handleCancel2}>
+							Cancelar
+						</Button>
+					</div>,
+				]}
+			>
+				<Title title={'Estado de la Ruta'}></Title>
+				<Table columns={columns3}
+					dataSource={detailsRutas}></Table>
+			</Modal>
+		</DashboardLayout >
 	);
 };
 

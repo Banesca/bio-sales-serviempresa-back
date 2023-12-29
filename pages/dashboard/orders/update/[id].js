@@ -453,26 +453,31 @@ const UpdateOrderPage = () => {
 		let id = String(currentOrder.idOrderH);
 		console.log(id);
 		setLoading(true);
+		if (PaymentAddTipe === 4) {
+			const res2 = await requestHandler.post(
+				'/api/v2/order/update/currentacount/' + id,
+				{ isacountCourrient: true },
+			);
+		}
 		try {
 			const mpCash = await validateMP('Efectivo');
-			// ...rest of the validateMP calls
-
-			if (newTotal !== 0) {
+	
+			if (newTotal !== 0 && PaymentAddTipe !== 4) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
 				setLoading(false);
 				return;
 			}
-
-			if (!mpCash) {
+	
+			if (!mpCash && PaymentAddTipe !== 4) {
 				message.error('No seleccionó ningún método de pago');
 				setLoading(false);
 				return;
 			}
-
+	
 			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
-
+	
 			let data = [];
-
+	
 			const res = await requestHandler.put(
 				'/api/v2/order/close/' + id,
 				(data = {
@@ -509,6 +514,14 @@ const UpdateOrderPage = () => {
 					isacountCourrient: currentOrder?.isacountCourrient,
 				})
 			);
+	
+			if (newTotal === 0) {
+				const res2 = await requestHandler.post(
+					'/api/v2/order/update/currentacount/' + id,
+					{ isacountCourrient: false },
+				);
+			}
+	
 			console.log(res);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
@@ -610,7 +623,7 @@ const UpdateOrderPage = () => {
 	});
 
 	console.log(currentOrder?.body);
-
+	console.log(PaymentAddTipe);
 	return (
 		<DashboardLayout>
 			<div
@@ -643,12 +656,14 @@ const UpdateOrderPage = () => {
 							/>
 						</Button>
 					</div>
-					<h1 className="text-center font-semibold text-4xl w-[350px]">
-						Agregar productos
-					</h1>
-					<p style={{ fontWeight: 'bold', color: 'red' }}>
-						{currentOrder?.isacountCourrient === 1 ? 'Orden a crédito' : ''}
-					</p>
+					<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+						<h1 className="text-center font-semibold text-4xl w-[350px]">
+							Agregar productos
+						</h1>
+						<p style={{ fontWeight: 'bold', color: 'red', fontSize: '20px' }}>
+							{currentOrder?.isacountCourrient === 1 ? 'Orden a crédito' : ''}
+						</p>
+					</div>
 					<div className="flex gap-4">
 						<Button onClick={exportToExcel} className="bg-blue-500">
 							<PrinterOutlined /> Imprimir comprobante
@@ -677,14 +692,19 @@ const UpdateOrderPage = () => {
 						/>
 
 						<Typography className="flex justify-between">
-							<div className="w-[43%]">
-								<ProductList
-									products={filtered()}
-									orderId={id}
-									orderProducts={currentOrder?.body}
-									getOrderRequest={getOrderRequest}
-								/>
-							</div>
+							{currentOrder?.isacountCourrient !== 1 && (
+								<>
+									<div className="w-[43%]">
+										<ProductList
+											products={filtered()}
+											orderId={id}
+											orderProducts={currentOrder?.body}
+											getOrderRequest={getOrderRequest}
+										/>
+									</div>
+
+								</>
+							)}
 
 							<div className="w-[56%] flex flex-col gap-5">
 								<ProductsInOrder
@@ -692,7 +712,10 @@ const UpdateOrderPage = () => {
 									openDeleteModal={openDeleteModal}
 									setProductsQuantity={setProductsQuantity}
 									confirmProductQuantity={confirmProductQuantity}
+									isCreditOrder={currentOrder?.isacountCourrient === 1}
 								/>
+
+
 								<Card className="rounded-2x1 shadow-lg">
 									<List dataSource={currentOrder?.body}>
 										<List.Item>
