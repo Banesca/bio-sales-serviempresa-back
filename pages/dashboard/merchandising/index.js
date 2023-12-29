@@ -120,21 +120,15 @@ const Merchandising = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Estado',
-			dataIndex: 'statusProductClient',
-			key: 1,
-			render: (text) => <p>{text}</p>,
-		},
-		{
 			title: 'Producto',
 			dataIndex: 'nameProduct',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Precio',
-			dataIndex: 'priceSale',
-			key: 3,
+			title: 'Estado',
+			dataIndex: 'statusProductClient',
+			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
@@ -293,22 +287,24 @@ const Merchandising = () => {
 		imagesBefore = reportVisitDetail.body.filter(item => item.isOld === 1);
 		imagesAfter = reportVisitDetail.body.filter(item => item.isOld === 2);
 	}
-
+	
 	const textBefore = (
 		<Card>
 			{imagesBefore.map((item, index) => (
 				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
-					<img src={`${ip}:8078/visit/${item.image}`} />
+					<img src={encodeURI(`${ip}:8078/visit/${item.image}`)} />
 				</Card.Grid>
 			))}
 		</Card>
 	);
 
+	console.log(textBefore)
+
 	const textAfter = (
 		<Card>
 			{imagesAfter.map((item, index) => (
 				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
-					<img src={`${ip}:8078/visit/${item.image}`} />
+					<img src={encodeURI(`${ip}:8078/visit/${item.image}`)} />
 				</Card.Grid>
 			))}
 		</Card>

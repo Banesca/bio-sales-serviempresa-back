@@ -446,62 +446,76 @@ const UpdateOrderPage = () => {
 		}
 	}, [currentOrder, getOrderRequest]);
 
+
+
+
 	const handleReceiveOrder = async () => {
 		let id = String(currentOrder.idOrderH);
 		console.log(id);
 		setLoading(true);
 		try {
-			if (newTotal === 0) {
-				await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
-			} else {
+			const mpCash = await validateMP('Efectivo');
+			// ...rest of the validateMP calls
+
+			if (newTotal !== 0) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
+				setLoading(false);
+				return;
 			}
+
+			if (!mpCash) {
+				message.error('No seleccionó ningún método de pago');
+				setLoading(false);
+				return;
+			}
+
+			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
+
+			let data = [];
+
+			const res = await requestHandler.put(
+				'/api/v2/order/close/' + id,
+				(data = {
+					comments: 'PAGO',
+					mpCash: await validateMP('Efectivo'),
+					mpCreditCard: await validateMP('Credito'),
+					mpDebitCard: await validateMP('Debito'),
+					mpTranferBack: await validateMP('Transferencia'),
+					totalBot: total,
+					mpMpago: await validateMP('Mpago'),
+					idCurrencyFk: 1,
+					listPaymentMethod: 0,
+					isAfip: 0,
+					mpRappi: await validateMP('Rappi'),
+					mpGlovo: await validateMP('Glovo'),
+					mpUber: await validateMP('Uber'),
+					mpPedidosya: await validateMP('Pedidosya'),
+					mpJust: await validateMP('Just Eat'),
+					mpWabi: await validateMP('Wabi'),
+					mpOtro2: await validateMP('Otro2'),
+					mpPedidosyacash: await validateMP('Pedidos Ya Efectivo'),
+					mpPersonal: await validateMP('Personal'),
+					mpRapicash: await validateMP('Rapicash'),
+					mpPresent: await validateMP('Present'),
+					mpPaypal: await validateMP('Paypal'),
+					mpZelle: await validateMP('Zelle'),
+					mpBofa: await validateMP('Bofa'),
+					mpYumi: await validateMP('Yumi'),
+					waste: totalDeclarado,
+					isPrintBillin: newTotal,
+					tasa: actualTdc,
+					puntoVtaAfit: '',
+					comprobanteAfit: '',
+					isacountCourrient: currentOrder?.isacountCourrient,
+				})
+			);
+			console.log(res);
+			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
 			message.error('Error al recibir pedido');
 		} finally {
 			setLoading(false);
 		}
-
-		let data = [];
-
-		const res = await requestHandler.put(
-			'/api/v2/order/close/' + id,
-			(data = {
-				comments: 'PAGO',
-				mpCash: await validateMP('Efectivo'),
-				mpCreditCard: await validateMP('Credito'),
-				mpDebitCard: await validateMP('Debito'),
-				mpTranferBack: await validateMP('Transferencia'),
-				totalBot: total,
-				mpMpago: await validateMP('Mpago'),
-				idCurrencyFk: 1,
-				listPaymentMethod: 0,
-				isAfip: 0,
-				mpRappi: await validateMP('Rappi'),
-				mpGlovo: await validateMP('Glovo'),
-				mpUber: await validateMP('Uber'),
-				mpPedidosya: await validateMP('Pedidosya'),
-				mpJust: await validateMP('Just Eat'),
-				mpWabi: await validateMP('Wabi'),
-				mpOtro2: await validateMP('Otro2'),
-				mpPedidosyacash: await validateMP('Pedidos Ya Efectivo'),
-				mpPersonal: await validateMP('Personal'),
-				mpRapicash: await validateMP('Rapicash'),
-				mpPresent: await validateMP('Present'),
-				mpPaypal: await validateMP('Paypal'),
-				mpZelle: await validateMP('Zelle'),
-				mpBofa: await validateMP('Bofa'),
-				mpYumi: await validateMP('Yumi'),
-				waste: totalDeclarado,
-				isPrintBillin: newTotal,
-				tasa: actualTdc,
-				puntoVtaAfit: '',
-				comprobanteAfit: '',
-				isacountCourrient: currentOrder?.isacountCourrient,
-			})
-		);
-		console.log(res);
-		router.push(`/dashboard/orders/${id}`);
 	};
 
 	const validateMP = async (descriptPayMent) => {
@@ -595,7 +609,7 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder?.isacountCourrient);
+	console.log(currentOrder?.body);
 
 	return (
 		<DashboardLayout>
@@ -691,6 +705,7 @@ const UpdateOrderPage = () => {
 												onChange={(v) => setPaymentToAddTipe(v)}
 												style={{ width: '50%' }}
 												placeholder="Ingrese condicion de pago"
+												disabled={!currentOrder || !currentOrder.body || currentOrder.body.length === 0}
 											>
 												{PaymentTipe &&
 													PaymentTipe.map(
@@ -718,6 +733,7 @@ const UpdateOrderPage = () => {
 												style={{ width: '50%' }}
 												value={PaymentAdd}
 												onChange={handleAdd}
+												disabled={!currentOrder || !currentOrder.body || currentOrder.body.length === 0}
 											>
 												{Payment &&
 													Payment.map((Payment) => (
@@ -731,23 +747,23 @@ const UpdateOrderPage = () => {
 											</Select>
 										</List.Item>
 										<List.Item>
-											<div style={{ display: 'flex' }}>
+											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
-													<strong>TOTAL:</strong>
+													<strong>TOTAL:  </strong>
 												</p>
-												<p>${total}</p>
+												<p style={{ marginLeft: '10px' }}>${total}</p>
 											</div>
-											<div style={{ display: 'flex' }}>
+											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
-													<strong>DECLARADO:</strong>
+													<strong>DECLARADO:  </strong>
 												</p>
-												<p style={{ color: 'blue' }}>${totalDeclarado}</p>
+												<p style={{ marginLeft: '10px', color: 'blue' }}>${totalDeclarado}</p>
 											</div>
-											<div style={{ display: 'flex' }}>
+											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
-													<strong>RESTANTE:</strong>
+													<strong>RESTANTE:  </strong>
 												</p>
-												<p style={{ color: 'red' }}>${newTotal}</p>
+												<p style={{ marginLeft: '10px', color: 'red' }}>${newTotal}</p>
 											</div>
 										</List.Item>
 										<Table
@@ -842,15 +858,13 @@ const UpdateOrderPage = () => {
 						<List.Item>
 							<List.Item.Meta
 								title={item.nameProduct}
-								description={`Cantidad: ${item.weight} | Precio: $ ${
-									item.isPromo == 1
-										? item.marketPrice.toFixed(2)
-										: item.priceSale.toFixed(2)
-								} ${
-									item.idUnitMeasureSaleFk == UNIT_TYPE.KG
+								description={`Cantidad: ${item.weight} | Precio: $ ${item.isPromo == 1
+									? item.marketPrice.toFixed(2)
+									: item.priceSale.toFixed(2)
+									} ${item.idUnitMeasureSaleFk == UNIT_TYPE.KG
 										? `| Peso: ${item.unitweight}KG`
 										: ''
-								}`}
+									}`}
 							/>
 							<p>SubTotal: $ {calculateSubTotal(item)}</p>
 						</List.Item>

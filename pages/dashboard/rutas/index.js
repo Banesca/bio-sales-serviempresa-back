@@ -1,6 +1,5 @@
 import {
 	Button,
-	Card,
 	Col,
 	ConfigProvider,
 	Form,
@@ -8,7 +7,6 @@ import {
 	Row,
 	Select,
 	Table,
-	Input,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
@@ -68,13 +66,13 @@ const Rutas = () => {
 		},
 		{
 			title: 'Cantidad',
-			dataIndex: 'quantityProduct',
+			dataIndex: 'weight',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Peso unitario',
-			dataIndex: 'weight',
+			dataIndex: 'maxProducVenta',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
@@ -82,9 +80,20 @@ const Rutas = () => {
 			title: 'Total',
 			dataIndex: 'idOrdersbypassing',
 			key: 3,
-			render: (text) => <p>{text}</p>,
+			render: (text, record) => <p>{record.weight * record.maxProducVenta}</p>,
 		}
 	];
+	const dataSource = detailsRutas;
+	let totalWeight = 0;
+	let totalMaxProducVenta = 0;
+	let totalIdOrdersbypassing = 0;
+
+	dataSource.forEach(record => {
+		totalWeight += record.weight;
+		totalMaxProducVenta += record.maxProducVenta;
+		totalIdOrdersbypassing += record.weight * record.maxProducVenta;
+	});
+
 
 	useEffect(() => {
 		getUsers();
@@ -101,7 +110,13 @@ const Rutas = () => {
 			`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
 		);
 		if (res.value && res.value._value && res.value._value.data) {
-			const products = res.value._value.data.map(item => item.ordenes[0].products).flat();
+			const products = res.value._value.data.map(item => {
+				if (item.ordenes && item.ordenes[0]) {
+					return item.ordenes[0].products;
+				} else {
+					return [];
+				}
+			}).flat();
 			setDetailsRutas(products);
 		} else {
 			console.log('res.value._value.data is undefined');
@@ -190,7 +205,20 @@ const Rutas = () => {
 					<p>Chofer: {productsDetail.idChoferFk}</p>
 					<p>Id de la ruta: {productsDetail.idReportVisit}</p>
 					<p>Peso total</p>
-					<Table columns={columns2} dataSource={detailsRutas} />
+					<Table
+						columns={columns2}
+						dataSource={detailsRutas}
+						summary={pageData => {
+							return (
+								<Table.Summary.Row>
+									<Table.Summary.Cell>Total</Table.Summary.Cell>
+									<Table.Summary.Cell>{totalWeight}</Table.Summary.Cell>
+									<Table.Summary.Cell>{totalMaxProducVenta}</Table.Summary.Cell>
+									<Table.Summary.Cell>{totalIdOrdersbypassing}</Table.Summary.Cell>
+								</Table.Summary.Row>
+							);
+						}}
+					/>
 				</div>
 			</Modal>
 		</DashboardLayout>

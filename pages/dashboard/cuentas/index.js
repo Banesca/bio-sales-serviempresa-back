@@ -49,9 +49,9 @@ const Cuentas = () => {
 	const [phoneFG, setPhoneFG] = useState(0);
 	const columns = [
 		{ title: 'Nombre del cliente', dataIndex: 'nameclient', key: 'nameclient' },
-		{ title: 'abonos', dataIndex: 'abonos', key: 'abonos' },
-		{ title: 'cuentas', dataIndex: 'amount', key: 'amount' },
-		{ title: 'deuda', dataIndex: 'deuda', key: 'deuda' },
+		{ title: 'Abonos', dataIndex: 'abonos', key: 'abonos' },
+		{ title: 'Deuda', dataIndex: 'amount', key: 'amount' },
+		{ title: 'Total', dataIndex: 'deuda', key: 'deuda' },
 		{
 			title: 'Accion',
 			dataIndex: 'idReportVisit',
@@ -75,14 +75,7 @@ const Cuentas = () => {
 	const columns2 = [
 		{ title: 'Monto', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
-		{
-			title: 'Accion',
-			render: (index, record) => (
-				<Button onClick={() => showModal(record)}>
-					<EditOutlined />
-				</Button>
-			),
-		},
+		
 	];
 	const handleReturn = () => {
 		setOpen(false);
@@ -108,16 +101,23 @@ const Cuentas = () => {
 			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
 			console.log(response);
 		}
+		handleCancel();
 	};
+
+
 	const handlePagarClick = async () => {
 		let id = abonos[0].idOrder;
 		const walletBody = createWalletBody2(abono2, PaymentAbono, abonos);
+
+		const response = await requestHandler.post(`/api/v2/order/update/currentacount/${id}`, {
+			isacountCourrient: false
+		});
+		console.log(response);
 		if (walletBody) {
-			const response = await requestHandler.post(`/api/v2/order/update/currentacount/${id}`,{ 
-				walletBody,
-				isacountCourrient:false});
+			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
 			console.log(response);
 		}
+		handleCancel();
 	};
 
 	const handleAbono2Change = (event) => {
@@ -303,6 +303,11 @@ const Cuentas = () => {
 				]}
 				width={760}
 			>
+				<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+					<Button onClick={showModal} style={{ margin: '10px' }}>
+						Abonar/Pagar
+					</Button>
+				</div>
 				<Table columns={columns2} dataSource={abonos} />
 			</Modal>
 			<Modal
@@ -368,7 +373,7 @@ const Cuentas = () => {
 								<p>Método de {selectedCheckbox}:</p>
 								<List.Item>
 									<Select
-										style={{ width: '100%' }}
+										style={{ width: '130px' }}
 										onChange={(value) => setPaymentAbono(value)}
 									>
 										{Payment &&

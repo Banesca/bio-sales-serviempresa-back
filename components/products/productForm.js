@@ -803,8 +803,8 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Stack direction="row" spacing={1}>
-									{product.is5050 && JSON.parse(product.is5050).map((item, index) => (
-										<Chip key={index} label={item.word}/>
+									{product.is5050 && Array.isArray(JSON.parse(product.is5050)) && JSON.parse(product.is5050).map((item, index) => (
+										<Chip key={index} label={item.word} />
 									))}
 								</Stack>
 
