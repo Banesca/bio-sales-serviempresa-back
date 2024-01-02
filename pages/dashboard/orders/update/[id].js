@@ -446,8 +446,7 @@ const UpdateOrderPage = () => {
 		}
 	}, [currentOrder, getOrderRequest]);
 
-
-
+	
 
 	const handleReceiveOrder = async () => {
 		let id = String(currentOrder.idOrderH);

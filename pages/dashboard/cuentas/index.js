@@ -348,15 +348,15 @@ const Cuentas = () => {
 					>
 						<div>
 							<Checkbox
-								checked={selectedCheckbox === 'pagar'}
-								onChange={(e) => handleCheckChange('pagar', e.target.checked)}
+								checked={selectedCheckbox === 'Pago'}
+								onChange={(e) => handleCheckChange('Pago', e.target.checked)}
 							>
 								Pagar
 							</Checkbox>
 
 							<Checkbox
-								checked={selectedCheckbox === 'abonar'}
-								onChange={(e) => handleCheckChange('abonar', e.target.checked)}
+								checked={selectedCheckbox === 'Abono'}
+								onChange={(e) => handleCheckChange('Abono', e.target.checked)}
 							>
 								Abonar
 							</Checkbox>
