@@ -465,6 +465,7 @@ const UpdateOrderPage = () => {
 
 			if (newTotal !== 0 && PaymentAddTipe !== 4) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
+				await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
 				setLoading(false);
 				return;
 			}
@@ -475,7 +476,11 @@ const UpdateOrderPage = () => {
 				return;
 			}
 
-			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
+			if (newTotal === 0) {
+				await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
+			} else {
+				return;
+			}
 
 			let data = [];
 

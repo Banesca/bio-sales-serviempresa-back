@@ -228,8 +228,6 @@ const OrderDetail = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder);
-	console.log(currentOrder.idOrderH);
 	return (
 		<DashboardLayout>
 			<div
@@ -243,7 +241,7 @@ const OrderDetail = () => {
 			>
 				<div style={{ display: 'flex', width: '90%' }}>
 					<Title
-						title="Detalle de pédido"
+						title="Detalle de la orden"
 						path="/dashboard/orders"
 						goBack={1}
 					/>
@@ -313,7 +311,7 @@ const OrderDetail = () => {
 						/>
 
 						<List.Item>
-							<p style={{ fontWeight: 'bold' }}>Número de pedido:</p>
+							<p style={{ fontWeight: 'bold' }}>Número de Orden:</p>
 							<p>{currentOrder.numberOrden}</p>
 						</List.Item>
 						<List.Item>

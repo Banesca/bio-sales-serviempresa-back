@@ -59,7 +59,7 @@ export default function OrdersTable({ orders }) {
 
 	const columns = [
 		{
-			title: 'Pedido Nro.',
+			title: 'Orden Nro.',
 			dataIndex: 'numberOrden',
 		},
 		{

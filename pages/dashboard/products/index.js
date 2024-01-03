@@ -137,7 +137,7 @@ export default function Products() {
 	const { getProducts, deleteProduct, products } = useProducts();
 	const { clean, filtered, setProduct, setQuery, response } = useProductFilter();
 	const { selectedBusiness } = useBusinessProvider();
-
+	
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
@@ -198,6 +198,8 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
+	console.log(response?.data);
+
 	return (
 		<>
 			<DashboardLayout>
@@ -226,7 +228,7 @@ export default function Products() {
 							</Button>
 						)}
 					</Title>
-					<ProductFilter setQuery={setQuery} clean={clean} response={response} />
+					<ProductFilter setQuery={setQuery} clean={clean} />
 					
 					<ConfigProvider
 						renderEmpty={
@@ -235,7 +237,7 @@ export default function Products() {
 					>
 						<Table
 							columns={columns}
-							dataSource={filtered()}
+							dataSource={filtered(response)}
 							loading={loading}
 						/>
 					</ConfigProvider>
