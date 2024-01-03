@@ -135,7 +135,7 @@ export default function Products() {
 
 	const generalContext = useContext(GeneralContext);
 	const { getProducts, deleteProduct, products } = useProducts();
-	const { clean, filtered, setProduct, setQuery } = useProductFilter();
+	const { clean, filtered, setProduct, setQuery, response } = useProductFilter();
 	const { selectedBusiness } = useBusinessProvider();
 
 	const exportToExcel = () => {
@@ -226,7 +226,7 @@ export default function Products() {
 							</Button>
 						)}
 					</Title>
-					<ProductFilter setQuery={setQuery} clean={clean} />
+					<ProductFilter setQuery={setQuery} clean={clean} response={response} />
 					
 					<ConfigProvider
 						renderEmpty={

@@ -16,7 +16,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
 	const [form] = Form.useForm();
-
+	const [response, setResponse] = useState(null);
 	const onReset = () => {
 		clean();
 		form.resetFields();
@@ -37,10 +37,9 @@ const ProductFilter = ({ setQuery, clean }) => {
 		let id = selectedBusiness.idSucursal;
 		console.log('id', id);
 		const response = requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
-			nameProduct: values.nameProduct || '',
-			barCode: values.barCode || '',
-			is5050: values.is5050 || '',
+			search:values.is5050 || '',
 		});
+		setResponse(response);
 	};
 
 	const [log, setLog] = useState();

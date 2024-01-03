@@ -15,7 +15,7 @@ import { useProducts } from '../../../components/products/hooks/useProducts';
 import Title from '../../../components/shared/title';
 import * as XLSX from 'xlsx';
 import { CustomizeRenderEmpty } from '../../../components/common/customizeRenderEmpty';
-
+import { useRequest } from '../../../hooks/useRequest';
 
 export default function Products() {
 	const router = useRouter();
@@ -123,14 +123,14 @@ export default function Products() {
 			),
 		},
 	];
-	
+	const { requestHandler } = useRequest();
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
 		const workbook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 		XLSX.writeFile(workbook, 'Inventario.xlsx');
 	};
-	
+
 	useEffect(() => {
 		let list = productsInv;
 		addKeys(list);
@@ -153,21 +153,25 @@ export default function Products() {
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setObject(value);
+		console.log()
 	};
 
 	const handleUpdateStock = async () => {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			await updateProductInv(
-				object.idProduct,
-				lineBody,
-				lineBodys,
-				selectedBusiness.idSucursal
-			);
+			const res = await requestHandler.post('/api/v2/inventary/adjustment', {
+				idProductFk: object.idProduct,
+				quantity: lineBody.counter,
+				reference: lineBodys.reference,
+				idProductionCenter: 1,
+				wareHouse: ''
+			});
+			console.log(res)
 			message.success('Stock actualizado');
+			window.location.reload();
 		} catch (error) {
-			message.error('Error al cargar marcas');
+			message.error('Error al actualizar stock');
 		} finally {
 			setLoading(false);
 		}
@@ -206,7 +210,7 @@ export default function Products() {
 								Cargar stock
 							</Button>
 						</div>
-						
+
 					</Title>
 					<Filter setQuery={setQuery} clean={clean} />
 					<ConfigProvider
@@ -264,7 +268,7 @@ export default function Products() {
 								onChange={(e) =>
 									setLineBody((prev) => ({
 										...prev,
-										[e.target.counter]: e.target.value,
+										counter: e.target.value,
 									}))
 								}
 							/>
@@ -287,7 +291,7 @@ export default function Products() {
 								onChange={(e) =>
 									setLineBodys((prev) => ({
 										...prev,
-										[e.target.reference]: e.target.value,
+										reference: e.target.value,
 									}))
 								}
 							/>

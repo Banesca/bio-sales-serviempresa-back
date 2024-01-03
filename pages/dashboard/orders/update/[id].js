@@ -360,12 +360,14 @@ const UpdateOrderPage = () => {
 			render: (_, record) => (
 				<>
 					<div style={{ display: 'flex', gap: '8px' }}>
-						<Button
-							onClick={() => setIsCalculadora(true)}
-							className="bg-blue-500"
-						>
-							<EditOutlined />
-						</Button>
+						{record.name === 'Bolivares' && (
+							<Button
+								onClick={() => setIsCalculadora(true)}
+								className="bg-blue-500"
+							>
+								<EditOutlined />
+							</Button>
+						)}
 						{dataSource.length >= 1 && (
 							<Button
 								onClick={() => handleDelete(record.key)}
@@ -446,7 +448,7 @@ const UpdateOrderPage = () => {
 		}
 	}, [currentOrder, getOrderRequest]);
 
-	
+
 
 	const handleReceiveOrder = async () => {
 		let id = String(currentOrder.idOrderH);
@@ -460,23 +462,23 @@ const UpdateOrderPage = () => {
 		}
 		try {
 			const mpCash = await validateMP('Efectivo');
-	
+
 			if (newTotal !== 0 && PaymentAddTipe !== 4) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
 				setLoading(false);
 				return;
 			}
-	
+
 			if (!mpCash && PaymentAddTipe !== 4) {
 				message.error('No seleccionó ningún método de pago');
 				setLoading(false);
 				return;
 			}
-	
+
 			await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
-	
+
 			let data = [];
-	
+
 			const res = await requestHandler.put(
 				'/api/v2/order/close/' + id,
 				(data = {
@@ -513,14 +515,14 @@ const UpdateOrderPage = () => {
 					isacountCourrient: currentOrder?.isacountCourrient,
 				})
 			);
-	
+
 			if (newTotal === 0) {
 				const res2 = await requestHandler.post(
 					'/api/v2/order/update/currentacount/' + id,
 					{ isacountCourrient: false },
 				);
 			}
-	
+
 			console.log(res);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
@@ -766,6 +768,7 @@ const UpdateOrderPage = () => {
 															{Payment.pymentMethod}
 														</Select.Option>
 													))}
+												<Select.Option value="Bolivares">Bolivares</Select.Option>
 											</Select>
 										</List.Item>
 										<List.Item>
