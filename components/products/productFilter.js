@@ -37,7 +37,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 		let id = selectedBusiness.idSucursal;
 		console.log('id', id);
 		const response = requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
-			search:values.is5050 || '',
+			search: values.is5050 || '',
 		});
 		setResponse(response);
 	};
@@ -60,9 +60,9 @@ const ProductFilter = ({ setQuery, clean }) => {
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
 							<Form.Item
-								label="Nombre"
+								label="Busqueda"
 								className="p-2"
-								name="nameProduct"
+								name="is5050"
 								labelCol={{
 									md: { span: 8 },
 									sm: { span: 10 },
@@ -73,26 +73,41 @@ const ProductFilter = ({ setQuery, clean }) => {
 								}}
 							>
 								<Input allowClear />
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+							<Form.Item
+								label="Marca"
+								name="idBrandFk"
+								className="p-2"
+								labelCol={{
+									md: { span: 8 },
+									sm: { span: 10 },
+								}}
+								wrapperCol={{
+									md: { span: 16 },
+									sm: { span: 14 },
+								}}
+							>
+								<Select
+									showSearch
+									allowClear
+									filterOption={(input, option) => {
+										return (option?.children ?? '')
+											.toLocaleLowerCase()
+											.includes(input.toLocaleLowerCase());
+									}}
+								>
+									{brands &&
+										brands.map((c, i) => (
+											<Select.Option key={c.idBrand} value={c.idBrand}>
+												{c.name}
+											</Select.Option>
+										))}
+								</Select>
 							</Form.Item>
 						</Col>
 
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Código"
-								name="barCode"
-								className="p-2"
-								labelCol={{
-									md: { span: 8 },
-									sm: { span: 10 },
-								}}
-								wrapperCol={{
-									md: { span: 16 },
-									sm: { span: 14 },
-								}}
-							>
-								<Input allowClear />
-							</Form.Item>
-						</Col>
 					</Row>
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
@@ -199,55 +214,8 @@ const ProductFilter = ({ setQuery, clean }) => {
 								</Select>
 							</Form.Item>
 						</Col>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Palabras clave"
-								className="p-2"
-								name="is5050"
-								labelCol={{
-									md: { span: 8 },
-									sm: { span: 10 },
-								}}
-								wrapperCol={{
-									md: { span: 16 },
-									sm: { span: 14 },
-								}}
-							>
-								<Input allowClear />
-							</Form.Item>
-						</Col>
-						<Col xs={{ span: 24 }} sm={{ span: 12 }}>
-							<Form.Item
-								label="Marca"
-								name="idBrandFk"
-								className="p-2"
-								labelCol={{
-									md: { span: 8 },
-									sm: { span: 10 },
-								}}
-								wrapperCol={{
-									md: { span: 16 },
-									sm: { span: 14 },
-								}}
-							>
-								<Select
-									showSearch
-									allowClear
-									filterOption={(input, option) => {
-										return (option?.children ?? '')
-											.toLocaleLowerCase()
-											.includes(input.toLocaleLowerCase());
-									}}
-								>
-									{brands &&
-										brands.map((c, i) => (
-											<Select.Option key={c.idBrand} value={c.idBrand}>
-												{c.name}
-											</Select.Option>
-										))}
-								</Select>
-							</Form.Item>
-						</Col>
+
+
 					</Row>
 					<Row>
 						<Col

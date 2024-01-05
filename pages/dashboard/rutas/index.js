@@ -94,28 +94,29 @@ const Rutas = () => {
 	const columns3 = [
 		{
 			title: 'Estado',
-			dataIndex: 'nameProduct',
+			dataIndex: 'check',
 			key: 4,
-			render: (text) => <p>{text}</p>,
-		},
+			render: (text) => <p>{text === 1 ? 'Despachado' : 'No Despachado'}</p>,
+		  },
 		{
-			title: 'Usuario',
-			dataIndex: 'weight',
+			title: 'Cliente',
+			dataIndex: 'fullNameClient',
 			key: 1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Peso unitario',
-			dataIndex: 'maxProducVenta',
+			title: 'Direccion',
+			dataIndex: 'address',
 			key: 2,
 			render: (text) => <p>{text}</p>,
 		},
 		{
-			title: 'Total',
-			dataIndex: 'idOrdersbypassing',
+			title: 'Fecha de creacion',
+			dataIndex: 'created_at',
 			key: 3,
-			render: (text, record) => <p>{record.weight * record.maxProducVenta}</p>,
+			render: (text) => <p>{text}</p>,
 		}
+		
 	];
 
 
@@ -147,25 +148,34 @@ const Rutas = () => {
 		handleOnChang(productos);
 	};
 
-	const handleOnChang = async (productos) => {
-		const res = await requestHandler.get(
-			`/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
-		);
-		console.log(res);
-		if (res.value && res.value._value && res.value._value.data) {
-			const products = res.value._value.data.map(item => {
-				if (item.ordenes && item.ordenes[0]) {
-					return item.ordenes[0].products;
-				} else {
-					return [];
-				}
-			}).flat();
-			setDetailsRutas(products);
-			console.log(detailsRutas);
-		} else {
-			console.log('res.value._value.data is undefined');
-		}
-	};
+	// Define el estado para las órdenes
+const [orders, setOrders] = useState([]);
+
+const handleOnChang = async (productos) => {
+  const res = await requestHandler.get(
+    `/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
+  );
+  console.log(res);
+  if (res.value && res.value._value && res.value._value.data) {
+    const products = res.value._value.data.map(item => {
+      if (item.ordenes && item.ordenes[0]) {
+        return item.ordenes[0].products;
+      } else {
+        return [];
+      }
+    }).flat();
+    setDetailsRutas(products);
+    console.log(detailsRutas);
+
+    // Mapea res.value._value.data para obtener las órdenes
+    const orders = res.value._value.data.map(item => item.ordenes).flat();
+    // Establece el estado con las órdenes obtenidas
+    setOrders(orders);
+    console.log(orders);
+  } else {
+    console.log('res.value._value.data is undefined');
+  }
+};
 
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
@@ -283,7 +293,7 @@ const Rutas = () => {
 			>
 				<Title title={'Estado de la Ruta'}></Title>
 				<Table columns={columns3}
-					dataSource={detailsRutas}></Table>
+					dataSource={orders}></Table>
 			</Modal>
 		</DashboardLayout >
 	);

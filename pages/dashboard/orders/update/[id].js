@@ -466,6 +466,7 @@ const UpdateOrderPage = () => {
 			if (newTotal !== 0 && PaymentAddTipe !== 4) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
 				await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
+				router.push('/dashboard/orders');
 				setLoading(false);
 				return;
 			}
@@ -628,8 +629,7 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder?.body);
-	console.log(PaymentAddTipe);
+	
 	return (
 		<DashboardLayout>
 			<div
