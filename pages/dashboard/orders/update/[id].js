@@ -742,7 +742,7 @@ const UpdateOrderPage = () => {
 												value={PaymentAddTipe}
 												onChange={(v) => setPaymentToAddTipe(v)}
 												style={{ width: '50%' }}
-												placeholder="Ingrese condicion de pago"
+												placeholder="Ingrese condición de pago"
 												disabled={!currentOrder || !currentOrder.body || currentOrder.body.length === 0}
 											>
 												{PaymentTipe &&
