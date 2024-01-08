@@ -348,7 +348,7 @@ const OrderDetail = () => {
 							<p>{new Date(currentOrder.fechaEntrega).toLocaleDateString()}</p>
 						</List.Item>
 						<List.Item>
-							<p style={{ fontWeight: 'bold' }}>Numero de factura:</p>
+							<p style={{ fontWeight: 'bold' }}>Número de factura:</p>
 							<p>{currentOrder.facturaAfip}</p>
 						</List.Item>
 						<List.Item>
@@ -358,7 +358,7 @@ const OrderDetail = () => {
 
 						<List.Item>
 							<p style={{ fontWeight: 'bold', width: '100%' }}>
-								Observacion (opcional):
+								Observación (opcional):
 							</p>
 							<p style={{}}>{currentOrder.comments}</p>
 						</List.Item>

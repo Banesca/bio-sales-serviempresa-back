@@ -85,7 +85,7 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 						</Col>
 						<Col span={11}>
 							<Form.Item
-								label="Numero de pedido"
+								label="Número de orden"
 								style={{
 									padding: '0 .5rem',
 								}}

@@ -102,7 +102,7 @@ export default function OrdersPage() {
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
-				<Title title={'Ordenes'}>
+				<Title title={'Órdenes'}>
 					<Link href="orders/add">
 						<Button type="success" style={{ marginRight: '-2.3rem' }}>
 							<AppstoreAddOutlined/> Crear
