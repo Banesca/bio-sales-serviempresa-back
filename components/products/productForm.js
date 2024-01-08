@@ -210,14 +210,14 @@ const ProductForm = (props) => {
 		const words = chips.map(chip => chip);
 		console.log(words);
 		const currentIs5050 = JSON.parse(product.is5050 || '[]');
-		product.is5050 = JSON.stringify([...currentIs5050, ...words]); 
+		product.is5050 = JSON.stringify([...currentIs5050, ...words]);
 		const updatedProduct = {
 			...product,
 			idSucursalFk: selectedBusiness.idSucursal,
 		};
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
-	
+
 		setLoading(false);
 		if (!props.update) {
 			return onReset();
@@ -284,6 +284,14 @@ const ProductForm = (props) => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness, id]);
+
+
+	const handleDelete = (index) => {
+		let is5050Array = JSON.parse(product.is5050);
+		is5050Array.splice(index, 1);
+		setProduct({ ...product, is5050: JSON.stringify(is5050Array) });
+	};
+
 
 	useEffect(() => {
 		click ? onReset() : '';
@@ -806,7 +814,7 @@ const ProductForm = (props) => {
 							>
 								<Stack direction="row" spacing={1}>
 									{product.is5050 && Array.isArray(JSON.parse(product.is5050)) && JSON.parse(product.is5050).map((item, index) => (
-										<Chip key={index} label={item.word} />
+										<Chip key={index} label={item.word} onDelete={() => handleDelete(index)} />
 									))}
 								</Stack>
 

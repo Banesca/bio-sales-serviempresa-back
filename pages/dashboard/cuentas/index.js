@@ -75,7 +75,7 @@ const Cuentas = () => {
 	const columns2 = [
 		{ title: 'Monto', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
-		
+
 	];
 	const handleReturn = () => {
 		setOpen(false);
@@ -332,9 +332,9 @@ const Cuentas = () => {
 						className="flex justify-center gap-1"
 						style={{ marginBottom: '10px' }}
 					>
-						<p style={{ fontWeight: 'bold' }}>Abonos:  {abono}</p>
-						<p style={{ fontWeight: 'bold' }}>Deuda:  {deuda}</p>
-						<p style={{ fontWeight: 'bold' }}>Monto total:  {montoTotal}</p>
+						<p style={{ fontWeight: 'bold' }}>Abonos:  ${abono}</p>
+						<p style={{ fontWeight: 'bold' }}>Deuda:  ${deuda}</p>
+						<p style={{ fontWeight: 'bold' }}>Monto total: ${montoTotal}</p>
 					</div>,
 
 					<Row
@@ -372,7 +372,7 @@ const Cuentas = () => {
 									justifyContent: 'center',
 								}}
 							>
-								<p>Método de {selectedCheckbox}:</p>
+								<p>Método de {selectedCheckbox === 'Pago' ? 'pago' : 'abono'}:</p>
 								<List.Item>
 									<Select
 										style={{ width: '130px' }}
@@ -390,13 +390,13 @@ const Cuentas = () => {
 									</Select>
 								</List.Item>
 								<Form.Item
-									label={`Monto a ${selectedCheckbox}`}
+									label={`Monto a ${selectedCheckbox === 'Pago' ? 'pagar' : 'abonar'}`}
 									name="abono2"
 									style={{ width: '50%' }}
 								>
 									<Input onChange={handleAbono2Change} />
 								</Form.Item>
-								<Button onClick={selectedCheckbox === 'pagar' ? handlePagarClick : handleAbonarClick}>
+								<Button onClick={selectedCheckbox === 'Pago' ? handlePagarClick : handleAbonarClick}>
 									{selectedCheckbox ? selectedCheckbox.charAt(0).toUpperCase() + selectedCheckbox.slice(1) : ''}
 								</Button>
 							</div>
