@@ -360,7 +360,7 @@ const UpdateOrderPage = () => {
 			editable: true,
 		},
 		{
-			title: 'Accion',
+			title: 'Acción',
 			dataIndex: 'operation',
 			render: (_, record) => (
 				<>
