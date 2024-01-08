@@ -735,7 +735,7 @@ const UpdateOrderPage = () => {
 									<List dataSource={currentOrder?.body}>
 										<List.Item>
 											<p>
-												<strong>Condicion de pago</strong>
+												<strong>Condición de pago</strong>
 											</p>
 
 											<Select
