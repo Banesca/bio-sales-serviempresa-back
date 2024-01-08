@@ -31,7 +31,7 @@ import { useBrandContext } from '../../../../hooks/useBrandsProvider';
 import { statusNames } from '../../../../components/orders/detail/changeStatus';
 import { useTdc } from '../../../../components/tdc/useTdc';
 import {
-	EditOutlined,
+	CalculatorOutlined,
 	LeftOutlined,
 	PauseOutlined,
 	CloseOutlined,
@@ -253,16 +253,21 @@ const UpdateOrderPage = () => {
 		};
 		const save = async () => {
 			try {
-				const values = await form.validateFields();
-				toggleEdit();
-				handleSave({
-					...record,
-					...values,
-				});
+			  let values = await form.validateFields();
+		  
+			  if (dataIndex === 'monto' && (values.monto === '' || values.monto === null)) {
+				values.monto = '0';
+			  }
+		  
+			  toggleEdit();
+			  handleSave({
+				...record,
+				...values,
+			  });
 			} catch (errInfo) {
-				console.log('Save failed:', errInfo);
+			  console.log('Save failed:', errInfo);
 			}
-		};
+		  };
 		let childNode = children;
 		if (editable) {
 			childNode = editing ? (
@@ -344,7 +349,7 @@ const UpdateOrderPage = () => {
 
 	const defaultColumns = [
 		{
-			title: 'Metodo de pago',
+			title: 'Método de pago',
 			dataIndex: 'name',
 			key: 'name',
 		},
@@ -362,10 +367,10 @@ const UpdateOrderPage = () => {
 					<div style={{ display: 'flex', gap: '8px' }}>
 						{record.name === 'Bolivares' && (
 							<Button
-								onClick={() => setIsCalculadora(true)}
+								onClick={() => handleCalculate(record.monto, record.key)}
 								className="bg-blue-500"
 							>
-								<EditOutlined />
+								<CalculatorOutlined />
 							</Button>
 						)}
 						{dataSource.length >= 1 && (
@@ -402,7 +407,7 @@ const UpdateOrderPage = () => {
 
 	const defaultColumns2 = [
 		{
-			title: 'Metodo de pago',
+			title: 'Método de pago',
 			dataIndex: 'name',
 			key: 'name',
 		},
@@ -447,8 +452,6 @@ const UpdateOrderPage = () => {
 			console.log(currentOrder) */
 		}
 	}, [currentOrder, getOrderRequest]);
-
-
 
 	const handleReceiveOrder = async () => {
 		let id = String(currentOrder.idOrderH);
@@ -609,9 +612,15 @@ const UpdateOrderPage = () => {
 		return variable / actualTdc;
 	};
 
-	const handleCalculate = () => {
-		setResult(divideVariablePorTdc(inputValue));
-	};
+	const handleCalculate = (amount, recordKey) => {
+		const result = divideVariablePorTdc(amount);
+		console.log(result);
+	  
+		// Actualiza el estado de datos
+		setDataSource(dataSource.map(item => 
+		  item.key === recordKey ? { ...item, monto: result } : item
+		));
+	  };
 
 	const ExcelExport = [];
 
@@ -629,7 +638,7 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-	
+
 	return (
 		<DashboardLayout>
 			<div
@@ -754,11 +763,11 @@ const UpdateOrderPage = () => {
 
 										<List.Item>
 											<p>
-												<strong>Metodo de pago</strong>
+												<strong>Método de pago</strong>
 											</p>
 
 											<Select
-												placeholder="Ingrese metodos de pago"
+												placeholder="Ingrese métodos de pago"
 												style={{ width: '50%' }}
 												value={PaymentAdd}
 												onChange={handleAdd}
@@ -795,6 +804,7 @@ const UpdateOrderPage = () => {
 												</p>
 												<p style={{ marginLeft: '10px', color: 'red' }}>${newTotal}</p>
 											</div>
+											<p> <strong>Tasa actual: </strong>{actualTdc}</p>
 										</List.Item>
 										<Table
 											bordered
@@ -841,13 +851,13 @@ const UpdateOrderPage = () => {
 							type="primary"
 							onClick={handleRemoveProduct}
 						>
-							Anular
+							Eliminar
 						</Button>
 					</div>,
 				]}
 			>
 				<p>
-					¿Está seguro de que deseas anular?
+					¿Está seguro de que deseas eliminar?
 					{` ${currentProduct?.nameProduct}`}
 				</p>
 			</Modal>
@@ -917,14 +927,14 @@ const UpdateOrderPage = () => {
 					</List.Item>
 					<List.Item>
 						<p>
-							<strong>Metodo de pago</strong>
+							<strong>Método de pago</strong>
 						</p>
 						<p>
 							<Form>
 								<Form.Item className="w-32 my-auto">
 									<Select
 										disabled="true"
-										placeholder="Ingrese metodos de pago"
+										placeholder="Ingrese métodos de pago"
 										style={{ width: '100%' }}
 										value={PaymentAdd}
 										onChange={(v) => setPaymentToAdd(v)}
@@ -1010,34 +1020,7 @@ const UpdateOrderPage = () => {
 				<p>¿Está seguro de que deseas anular esta orden?</p>
 			</Modal>
 
-			<Modal
-				title="Calculadora de Bs a Dolares"
-				open={calculadora}
-				onCancel={() => setIsCalculadora(false)}
-				footer={[
-					<div className="flex justify-end gap-6" key="footer">
-						<Button key="cancel" onClick={() => setIsCalculadora(false)}>
-							Cancelar
-						</Button>
-						<Button
-							type="primary"
-							className="bg-blue-500"
-							onClick={handleCalculate}
-							disabled={!Number(inputValue)}
-						>
-							Calcular
-						</Button>
-					</div>,
-				]}
-			>
-				<input
-					style={{ width: '50%' }}
-					placeholder="Ingrese el monto a calcular"
-					value={inputValue}
-					onChange={(e) => setInputValue(e.target.value)}
-				/>
-				<p>El resultado es: {Number(result).toFixed(2)}$</p>
-			</Modal>
+		
 		</DashboardLayout>
 	);
 };
