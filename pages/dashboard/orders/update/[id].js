@@ -96,7 +96,7 @@ const UpdateOrderPage = () => {
 		try {
 			await getOrderById(id);
 		} catch (error) {
-			message.error('Error al cargar pedido');
+			message.error('Error al cargar orden');
 		} finally {
 			setLoading(false);
 		}
@@ -535,7 +535,7 @@ const UpdateOrderPage = () => {
 			console.log(res);
 			router.push(`/dashboard/orders/${id}`);
 		} catch (error) {
-			message.error('Error al recibir pedido');
+			message.error('Error al recibir orden');
 		} finally {
 			setLoading(false);
 		}
@@ -562,7 +562,7 @@ const UpdateOrderPage = () => {
 			await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
-			message.error('Error al pausar pedido');
+			message.error('Error al pausar la orden');
 		} finally {
 			setLoading(false);
 		}
@@ -574,7 +574,7 @@ const UpdateOrderPage = () => {
 			await changeStatus(statusNames.Anulado, currentOrder.idOrderH);
 			router.push('/dashboard/orders');
 		} catch (error) {
-			message.error('Error al anular pedido');
+			message.error('Error al anular la orden');
 		} finally {
 			setLoading(false);
 		}
