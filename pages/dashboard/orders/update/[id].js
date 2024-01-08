@@ -187,7 +187,10 @@ const UpdateOrderPage = () => {
 	}, [generalContext, id, selectedBusiness]);
 
 	const handleRemoveProduct = async (record) => {
+		if (!record) return;
+
 		setLoading(true);
+		console.log(record);
 		const idUser = localStorage.getItem('userId');
 		const res = await requestHandler.delete(
 			`/api/v2/order/product/delete/${record.idOrderB}/${idUser}`
@@ -197,6 +200,7 @@ const UpdateOrderPage = () => {
 		}
 		await getOrderRequest(id);
 		setLoading(false);
+		setDeleteOpen(false);
 		message.success('Producto removido');
 	};
 
@@ -253,21 +257,21 @@ const UpdateOrderPage = () => {
 		};
 		const save = async () => {
 			try {
-			  let values = await form.validateFields();
-		  
-			  if (dataIndex === 'monto' && (values.monto === '' || values.monto === null)) {
-				values.monto = '0';
-			  }
-		  
-			  toggleEdit();
-			  handleSave({
-				...record,
-				...values,
-			  });
+				let values = await form.validateFields();
+
+				if (dataIndex === 'monto' && (values.monto === '' || values.monto === null)) {
+					values.monto = '0';
+				}
+
+				toggleEdit();
+				handleSave({
+					...record,
+					...values,
+				});
 			} catch (errInfo) {
-			  console.log('Save failed:', errInfo);
+				console.log('Save failed:', errInfo);
 			}
-		  };
+		};
 		let childNode = children;
 		if (editable) {
 			childNode = editing ? (
@@ -615,12 +619,12 @@ const UpdateOrderPage = () => {
 	const handleCalculate = (amount, recordKey) => {
 		const result = divideVariablePorTdc(amount);
 		console.log(result);
-	  
+
 		// Actualiza el estado de datos
-		setDataSource(dataSource.map(item => 
-		  item.key === recordKey ? { ...item, monto: result } : item
+		setDataSource(dataSource.map(item =>
+			item.key === recordKey ? { ...item, monto: result } : item
 		));
-	  };
+	};
 
 	const ExcelExport = [];
 
@@ -849,7 +853,7 @@ const UpdateOrderPage = () => {
 							key="delete"
 							danger
 							type="primary"
-							onClick={handleRemoveProduct}
+							onClick={() => handleRemoveProduct(currentProduct)}
 						>
 							Eliminar
 						</Button>
@@ -1020,7 +1024,7 @@ const UpdateOrderPage = () => {
 				<p>¿Está seguro de que deseas anular esta orden?</p>
 			</Modal>
 
-		
+
 		</DashboardLayout>
 	);
 };
