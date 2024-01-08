@@ -396,7 +396,10 @@ const Cuentas = () => {
 								>
 									<Input onChange={handleAbono2Change} />
 								</Form.Item>
-								<Button onClick={selectedCheckbox === 'Pago' ? handlePagarClick : handleAbonarClick}>
+								<Button
+									onClick={selectedCheckbox === 'Pago' ? handlePagarClick : handleAbonarClick}
+									disabled={!selectedCheckbox}
+								>
 									{selectedCheckbox ? selectedCheckbox.charAt(0).toUpperCase() + selectedCheckbox.slice(1) : ''}
 								</Button>
 							</div>

@@ -16,7 +16,7 @@ import { useProductFilter } from '../../../components/products/useProductFilter'
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
-import { ip } from '/util/environment.js';
+import { ipBackOffice } from '/util/environment.js';
 import { FileImageOutlined } from '@ant-design/icons';
 import { GeneralContext } from '../../_app';
 
@@ -267,7 +267,6 @@ const Merchandising = () => {
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 		}
-		console.log(response);
 	};
 
 	const handleCancel = () => {
@@ -292,7 +291,7 @@ const Merchandising = () => {
 		<Card>
 			{imagesBefore.map((item, index) => (
 				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
-					<img src={encodeURI(`${ip}:8078/visit/${item.image}`)} />
+					<img src={(`${ipBackOffice}/visit/${item.image}`)} />
 				</Card.Grid>
 			))}
 		</Card>
@@ -304,7 +303,7 @@ const Merchandising = () => {
 		<Card>
 			{imagesAfter.map((item, index) => (
 				<Card.Grid key={index} style={{ width: '50%', textAlign: 'center' }}>
-					<img src={encodeURI(`${ip}:8078/visit/${item.image}`)} />
+					<img src={(`${ipBackOffice}/visit/${item.image}`)} />
 				</Card.Grid>
 			))}
 		</Card>

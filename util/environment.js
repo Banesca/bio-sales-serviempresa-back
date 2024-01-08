@@ -6,16 +6,16 @@ export const ServidorFacturacionSeniat = 'http://localhost:8080';
 export const urlSeniat = 'http://localhost';
 
 
-/****************************SERVIDOR DEMO***********************************/
-// export const ipBackOffice = 'http://tumenudelivery.com:9009'
+/****************************SERVIDOR PROD***********************************/
+// export const ipBackOffice = 'https://api.menusoftware.info:8078'
 // export const ip = 'http://api.menusoftware.info'; // 'http://72.167.55.26'  
 
 /******************************************************************************/
 
 
-/******************************SERVIDOR PRODUCTIVO****************************/
-export const ipBackOffice = 'https://api.menusoftware.info:9008';
-export const ip = 'https://api.menusoftware.info'; // 'http://72.167.55.26'  //
+/******************************SERVIDOR DEMO****************************/
+export const ipBackOffice = 'https://api.menusoftware.info:8002';
+export const ip = 'https://api.menusoftware.info';  //
 
 /******************************************************************************/
 
