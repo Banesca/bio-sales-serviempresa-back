@@ -22,7 +22,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 		form.resetFields();
 	};
 
-	const onSubmit = (values) => {
+	const onSubmit = async (values) => {
 		setQuery({
 			nameProduct: values.nameProduct || '',
 			barCode: values.barCode || '',
@@ -36,7 +36,7 @@ const ProductFilter = ({ setQuery, clean }) => {
 		});
 		let id = selectedBusiness.idSucursal;
 		console.log('id', id);
-		const response = requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
+		const response = await requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
 			search: values.is5050 || '',
 		});
 		setResponse(response);

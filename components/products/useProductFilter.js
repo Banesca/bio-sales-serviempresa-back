@@ -23,7 +23,7 @@ const FILTER_ACTIONS = {
 	GET_PRODUCTS: 'get',
 	SET_QUERY: 'query',
 };
-
+ 
 export function useProductFilter() {
 	const [productsFilterState, dispatch] = useReducer(reducer, {
 		filtered: () => [],

@@ -14,9 +14,9 @@ export const urlSeniat = 'http://localhost';
 
 
 /******************************SERVIDOR DEMO****************************/
-export const ipBackOffice = 'https://api.menusoftware.info:8002';
+export const ipBackOffice = 'https://api.menusoftware.info:9008';
 export const ip = 'https://api.menusoftware.info';  //
-
+export const apiImg = 'https://api.menusoftware.info:8002';
 /******************************************************************************/
 
 export const environment = {
