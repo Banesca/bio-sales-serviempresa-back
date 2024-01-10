@@ -5,8 +5,6 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal } from 'antd';
 import PayForm from '/components/pay/PayForm';
 import { useRequest } from '../../../hooks/useRequest';
-import { GeneralContext } from '../../_app';
-import { useBusinessProvider } from '../../../hooks/useBusinessProvider';
 
 const PayConditions = () => {
 	const [openModal, setOpenModal] = useState(false);

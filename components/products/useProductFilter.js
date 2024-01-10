@@ -22,8 +22,9 @@ const FILTER_ACTIONS = {
 	CLEAR: 'clear',
 	GET_PRODUCTS: 'get',
 	SET_QUERY: 'query',
+	UPDATE_FILTERED: 'update_filtered',
 };
- 
+
 export function useProductFilter() {
 	const [productsFilterState, dispatch] = useReducer(reducer, {
 		filtered: () => [],
@@ -106,7 +107,11 @@ export function useProductFilter() {
 					...state,
 					filtered: () => filterProducts(state),
 				};
-
+			case FILTER_ACTIONS.UPDATE_FILTERED:
+				return {
+					...state,
+					filtered: () => action.payload,
+				};
 			case FILTER_ACTIONS.SET_QUERY:
 				return {
 					...state,
@@ -126,9 +131,13 @@ export function useProductFilter() {
 		dispatch({ type: FILTER_ACTIONS.GET_PRODUCTS, payload: products });
 	};
 
+	const updateFiltered = (data) => {
+		dispatch({ type: FILTER_ACTIONS.UPDATE_FILTERED, payload: data });
+	};
+
 	const clean = () => {
 		dispatch({ type: FILTER_ACTIONS.CLEAR });
 	};
 
-	return { setQuery, setProduct, clean, filtered };
+	return { setQuery, setProduct, clean, updateFiltered, filtered };
 }

@@ -204,15 +204,15 @@ const ProductForm = (props) => {
 		},
 	};
 
-
 	const onSubmit = async () => {
 		setLoading(true);
 		const words = chips.map(chip => chip);
 		console.log(words);
 		const currentIs5050 = JSON.parse(product.is5050 || '[]');
-		product.is5050 = JSON.stringify([...currentIs5050, ...words]);
+		const newIs5050 = JSON.stringify([...currentIs5050, ...words]);
 		const updatedProduct = {
 			...product,
+			is5050: newIs5050,
 			idSucursalFk: selectedBusiness.idSucursal,
 		};
 		await props.handleRequest(updatedProduct, file);

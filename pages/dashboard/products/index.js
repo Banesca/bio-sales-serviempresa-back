@@ -130,13 +130,15 @@ export default function Products() {
 			),
 		},
 	];
+
 	const { userProfile } = useAuthContext();
 	const { loading, setLoading } = useLoadingContext();
-
+	const { selectedBusiness } = useBusinessProvider();
 	const generalContext = useContext(GeneralContext);
 	const { getProducts, deleteProduct, products } = useProducts();
-	const { clean, filtered, setProduct, setQuery, response } = useProductFilter();
-	const { selectedBusiness } = useBusinessProvider();
+	const { clean, filtered, setProduct, setQuery, updateFiltered } = useProductFilter();
+	const [datafiltrada, setdatafiltrada] = useState([]);
+
 
 	const exportToExcel = () => {
 		const worksheet = XLSX.utils.json_to_sheet(filtered());
@@ -198,13 +200,13 @@ export default function Products() {
 		setDeleteModalOpen(false);
 	};
 
-	const [filteredData, setFilteredData] = useState([]);
 
-	useEffect(() => {
-		setFilteredData(filtered(response?.data));
-	}, [response]);
+	const handleData = (data) => {
+		const apiData = data.value._value.data;
+		setdatafiltrada(apiData);
+		updateFiltered(apiData);
+	};
 
-	console.log(response?.data);
 
 	return (
 		<>
@@ -234,16 +236,16 @@ export default function Products() {
 							</Button>
 						)}
 					</Title>
-					<ProductFilter setQuery={setQuery} clean={clean} />
+					<ProductFilter setQuery={setQuery} clean={clean} onData={handleData} />
 
 					<ConfigProvider
 						renderEmpty={
-							filtered(response?.data)?.length !== 0 || true ? CustomizeRenderEmpty : ''
+							filtered()?.length !== 0 || true ? CustomizeRenderEmpty : ''
 						}
 					>
 						<Table
 							columns={columns}
-							dataSource={filtered(filteredData)}
+							dataSource={filtered()}
 							loading={loading}
 						/>
 					</ConfigProvider>

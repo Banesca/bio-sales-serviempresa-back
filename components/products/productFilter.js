@@ -8,15 +8,17 @@ import { useAuthContext } from '../../context/useUserProfileProvider';
 import { useEffect, useState } from 'react';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { useRequest } from '../../hooks/useRequest';
+import { useProductFilter } from './useProductFilter';
 
-const ProductFilter = ({ setQuery, clean }) => {
+const ProductFilter = ({ setQuery, clean, onData }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
 	const { userProfile } = useAuthContext();
 	const { selectedBusiness } = useBusinessProvider();
 	const { requestHandler } = useRequest();
 	const [form] = Form.useForm();
-	const [response, setResponse] = useState(null);
+	
+
 	const onReset = () => {
 		clean();
 		form.resetFields();
@@ -35,17 +37,20 @@ const ProductFilter = ({ setQuery, clean }) => {
 			is5050: values.is5050 || '',
 		});
 		let id = selectedBusiness.idSucursal;
-		console.log('id', id);
-		const response = await requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`, {
+		const res = await requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`,{
 			search: values.is5050 || '',
 		});
-		setResponse(response);
+		
+		onData(res);
+		
 	};
+	
 
 	const [log, setLog] = useState();
-
+	
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
+		
 	}, []);
 
 	return (
