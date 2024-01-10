@@ -139,9 +139,9 @@ const Cuentas = () => {
 		let id = resp.idClientFk;
 		console.log(id);
 		setAbono(resp.abonos);
-		setDeuda(resp.deuda);
+		setDeuda(resp.amount);
 		setNombre(resp.nameclient);
-		setMontoTotal(resp.amount);
+		setMontoTotal(resp.deuda);
 		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
 		console.log(res);
 		if (!res.isLeft()) {
