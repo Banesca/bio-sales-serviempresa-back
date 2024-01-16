@@ -84,6 +84,7 @@ const UpdateOrderPage = () => {
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
 	const [count, setCount] = useState(1);
+	const [isIgtf, setIsIgtf] = useState(false);
 	const [newTotal, setNewTotal] = useState(0);
 	const [totalDeclarado, setTotalDecla] = useState();
 	const [client, setClient] = useState({});
@@ -362,6 +363,12 @@ const UpdateOrderPage = () => {
 			dataIndex: 'monto',
 			key: 'monto',
 			editable: true,
+			render: (text, record) => (
+				<>
+					{text}
+					{record.name === 'mpCash' && isIgtf && <span> (IGTF)</span>}
+				</>
+			),
 		},
 		{
 			title: 'Acción',
@@ -454,6 +461,7 @@ const UpdateOrderPage = () => {
 			calculateTotalRequest(currentOrder.idOrderH);
 			/* getDebtsbyClient(currentOrder);
 			console.log(currentOrder) */
+			getClients(currentOrder)
 		}
 	}, [currentOrder, getOrderRequest]);
 
@@ -551,6 +559,10 @@ const UpdateOrderPage = () => {
 		if (result.length !== 0) {
 			if (descriptPayMent === 'mpCash') {
 				result = result.length > 0 ? result[0].monto : 0;
+				
+				if (isIgtf) {
+					result += result * 0.03;
+				}
 			} else {
 				result = result.length > 0 ? result[0].monto : 0;
 			}
@@ -559,6 +571,23 @@ const UpdateOrderPage = () => {
 		}
 		return result;
 	};
+	
+	const getClients = async (id) => {
+		console.log(id);
+		const res = await requestHandler.get(`/api/v2/client/get/${id.idProfileFk}`);
+		
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		console.log(res);
+		const value = res.value.getValue();
+		console.log(value);
+	
+		
+		setIsIgtf(value.data.isigtf === 'true');
+	};
+
+
 
 	const handlePauseOrder = async () => {
 		setLoading(true);
@@ -576,6 +605,7 @@ const UpdateOrderPage = () => {
 		setLoading(true);
 		try {
 			await changeStatus(statusNames.Anulado, currentOrder.idOrderH);
+			console.log(res2);
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al anular la orden');
@@ -610,8 +640,6 @@ const UpdateOrderPage = () => {
 		XLSX.writeFile(workbook, 'Comprobante.xlsx');
 	};
 
-	console.log(actualTdc);
-
 	const divideVariablePorTdc = (variable) => {
 		return variable / actualTdc;
 	};
@@ -642,7 +670,7 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-
+	console.log(currentOrder);
 	return (
 		<DashboardLayout>
 			<div
@@ -693,9 +721,6 @@ const UpdateOrderPage = () => {
 							danger
 						>
 							<CloseOutlined /> Anular
-						</Button>
-						<Button onClick={() => setIsPauseOrderModal(true)} type="info">
-							<PauseOutlined /> Pausar
 						</Button>
 					</div>
 				</div>

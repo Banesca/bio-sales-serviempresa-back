@@ -208,7 +208,10 @@ const ProductForm = (props) => {
 		setLoading(true);
 		const words = chips.map(chip => chip);
 		console.log(words);
-		const currentIs5050 = JSON.parse(product.is5050 || '[]');
+		let currentIs5050 = JSON.parse(product.is5050 || '[]');
+		if (!Array.isArray(currentIs5050)) {
+			currentIs5050 = [];
+		}
 		const newIs5050 = JSON.stringify([...currentIs5050, ...words]);
 		const updatedProduct = {
 			...product,
@@ -217,7 +220,7 @@ const ProductForm = (props) => {
 		};
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
-
+	
 		setLoading(false);
 		if (!props.update) {
 			return onReset();

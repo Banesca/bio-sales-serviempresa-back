@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Input, InputNumber } from 'antd';
 import { Select } from 'antd';
 import { Form } from 'antd';
 import { Button, Modal } from 'antd';
@@ -7,6 +7,7 @@ import { useCategoryContext } from '../../hooks/useCategoriesProvider';
 import { message } from 'antd';
 import { useRequest } from '../../hooks/useRequest';
 import { useBusinessProvider } from '../../hooks/useBusinessProvider';
+
 
 export default function SubCategoryModals({
 	isCreateModalOpen,
@@ -42,6 +43,7 @@ export default function SubCategoryModals({
 	const [subCategoryName, setSubCategoryName] = useState('');
 	const [createCategory, setCreateCategory] = useState(null);
 	const [createForm] = Form.useForm();
+	const [orderNumber, setOrderNumber] = useState(0);
 
 	useEffect(() => {
 		setModals({
@@ -70,12 +72,13 @@ export default function SubCategoryModals({
 			setLoading(false);
 		}
 	};
+
 	const addSubCategoryRequest = async () => {
 		setLoading(true);
 		try {
 			const data = new FormData();
 			data.append('nameSubFamily', subCategoryName);
-			data.append('order', 0);
+			data.append('order', orderNumber);
 			data.append('image', null);
 			data.append('idSucursalFk', selectedBusiness?.idSucursal);
 			data.append('idProductFamilyFk', createCategory);
@@ -108,8 +111,8 @@ export default function SubCategoryModals({
 				return message.error(`La subcategoría ${subCategoryName} ya existe`);
 			}
 			setIsCreateModalOpen(false);
-			createForm.resetFields();
-			await addSubCategoryRequest();
+			await addSubCategoryRequest(orderNumber); // Llama a addSubCategoryRequest antes de resetear los campos
+			createForm.resetFields(); // Resetea los campos después de llamar a addSubCategoryRequest
 			setLoading(false);
 		} catch (error) {
 			setIsCreateModalOpen(false);
@@ -132,7 +135,8 @@ export default function SubCategoryModals({
 				lineBody.name,
 				currentBrands.idStatus,
 				currentBrands.idProductSubFamily,
-				selectedBusiness.idSucursal
+				selectedBusiness.idSucursal,
+				lineBody.order
 			);
 			message.success('Subcategoria actualizada');
 		} catch (error) {
@@ -212,6 +216,22 @@ export default function SubCategoryModals({
 								))}
 						</Select>
 					</Form.Item>
+					<Form.Item
+						label="Orden"
+						name="order"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un número de orden',
+							},
+						]}
+					>
+						<InputNumber
+							min={0}
+							onChange={(value) => setOrderNumber(value)}
+						/>
+					</Form.Item>
 				</Form>
 			</Modal>
 			<Modal
@@ -264,6 +284,7 @@ export default function SubCategoryModals({
 					initialValues={{
 						name: currentBrands?.nameSubFamily,
 						idSubFamilyFk: currentBrands?.idProductFamilyFk,
+						order: currentBrands?.order, // Asegúrate de que currentBrands tiene una propiedad 'order'
 					}}
 				>
 					<Form.Item
@@ -319,6 +340,28 @@ export default function SubCategoryModals({
 									</Select.Option>
 								))}
 						</Select>
+					</Form.Item>
+					<Form.Item
+						label="Orden"
+						name="order"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa un número de orden',
+							},
+						]}
+					>
+						<InputNumber
+							min={0}
+							value={lineBody.order} // Asegúrate de que lineBody tiene una propiedad 'order'
+							onChange={(value) =>
+								setLineBody((prev) => ({
+									...prev,
+									order: value,
+								}))
+							}
+						/>
 					</Form.Item>
 				</Form>
 			</Modal>

@@ -1,4 +1,4 @@
-import { Button, Col, Row, Select,InputNumber } from 'antd';
+import { Button, Col, Row, Select, InputNumber } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -23,6 +23,8 @@ export default function EditClient() {
 	const { id } = router.query;
 	const { clients } = useClients();
 	const [click, setClick] = useState(false);
+	const [isIgtf, setIsIgtf] = useState(client?.isigtf);
+
 
 	const onReset = () => {
 		form.resetFields();
@@ -45,9 +47,6 @@ export default function EditClient() {
 		{ label: 'Si', value: 'true' },
 		{ label: 'No', value: 'false' },
 	];
-	const handleSelectChange = (event) => {
-		console.log(event);
-	};
 
 	const getClientRequest = async () => {
 		setLoading(true);
@@ -60,14 +59,16 @@ export default function EditClient() {
 			setLoading(false);
 		}
 	};
+
+	const handleSelectChange = (value) => {
+		setIsIgtf(value);
+	};
+
 	const validator = (data) => {
 		return {
 			val: Object.values(
 				clients.map((client) => {
-					if (
-						client.phone == data.phoneClient ||
-						client.numberDocument == data.rif
-					) {
+					if (client.phone == data.phoneClient) {
 						return true;
 					}
 				})
@@ -75,24 +76,13 @@ export default function EditClient() {
 			prob: () => {
 				let calc = Object.values(
 					clients.map((client) => {
-						if (
-							client.phone == data.phoneClient &&
-							client.numberDocument == data.rif
-						) {
-							return 1;
-						} else if (client.phone == data.phoneClient) {
+						if (client.phone == data.phoneClient) {
 							return 2;
-						} else if (client.numberDocument == data.rif) {
-							return 3;
 						}
 					})
 				);
-				if (calc.includes(1) || (calc.includes(2) && calc.includes(3))) {
-					return 'El número de teléfono y el Rif ya están en uso';
-				} else if (calc.includes(2)) {
+				if (calc.includes(2)) {
 					return 'El número de telefono ya esta en uso';
-				} else if (calc.includes(3)) {
-					return 'El número de Rif ya esta en uso';
 				}
 			},
 		};
@@ -125,6 +115,7 @@ export default function EditClient() {
 					idClient: client.idClient,
 					limitcredit: data.limitcredit,
 					dispatchaddress: data.dispatchaddress,
+					isigtf: isIgtf
 				});
 				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
@@ -264,7 +255,7 @@ export default function EditClient() {
 									name="limitcredit"
 								>
 									<InputNumber
-									style={{width:'100%'}}
+										style={{ width: '100%' }}
 										formatter={(value) =>
 											`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 										}

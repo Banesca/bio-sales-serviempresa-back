@@ -95,6 +95,7 @@ export default function CategoryContainer() {
 		idStatusFk: '',
 		idProductFamily: '',
 	});
+	
 	const addCategoryRequest = async (value) => {
 		try {
 			setLoading(true);
@@ -192,10 +193,6 @@ export default function CategoryContainer() {
 		try {
 			await createForm.validateFields(['name']);
 			const invalidName = await validateCategoryName(categoryName);
-			/* if (invalidName) {
-				setLoading(false);
-				return message.error(`La categoría ${categoryName} ya existe`);
-			} */
 			handleCloseCreateModal();
 			await addCategoryRequest(categoryName);
 		} catch (error) {

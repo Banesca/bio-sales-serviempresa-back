@@ -17,7 +17,7 @@ export default function AddClient() {
 	const { requestHandler } = useRequest();
 	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
-
+	const { listClients, deleteClient } = useClients();
 	const [form] = Form.useForm();
 
 	const IGTF = [
@@ -42,10 +42,7 @@ export default function AddClient() {
 		return {
 			val: Object.values(
 				clients.map((client) => {
-					if (
-						client.phone == data.phoneClient ||
-						client.numberDocument == data.rif
-					) {
+					if (client.phone == data.phoneClient) {
 						return true;
 					}
 				})
@@ -53,24 +50,13 @@ export default function AddClient() {
 			prob: () => {
 				let calc = Object.values(
 					clients.map((client) => {
-						if (
-							client.phone == data.phoneClient &&
-							client.numberDocument == data.rif
-						) {
-							return 1;
-						} else if (client.phone == data.phoneClient) {
+						if (client.phone == data.phoneClient) {
 							return 2;
-						} else if (client.numberDocument == data.rif) {
-							return 3;
 						}
 					})
 				);
-				if (calc.includes(1) || (calc.includes(2) && calc.includes(3))) {
-					return 'El número de teléfono y el RIF ya están en uso';
-				} else if (calc.includes(2)) {
+				if (calc.includes(2)) {
 					return 'El número de telefono ya esta en uso';
-				} else if (calc.includes(3)) {
-					return 'El número de Rif ya esta en uso';
 				}
 			},
 		};
@@ -78,6 +64,17 @@ export default function AddClient() {
 
 	const generalContext = useContext(GeneralContext);
 
+
+	const getClientsRequest = async () => {
+		setLoading(true);
+		try {
+			await listClients();
+		} catch (error) {
+			message.error('Ha ocurrido un error');
+		} finally {
+			setLoading(false);
+		}
+	};
 	
 
 	const handleSubmit = async (values) => {

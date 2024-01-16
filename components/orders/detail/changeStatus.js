@@ -69,6 +69,8 @@ export default function ChangeOrderStatus({
 			}));
 		},
 		5: () => {
+			const res2 =  requestHandler.get('/api/v2/order/reverse/masive/' +orderId);
+			console.log(res2);
 			setModal((prev) => ({
 				...prev,
 				visible: true,
@@ -87,6 +89,7 @@ export default function ChangeOrderStatus({
 	};
 
 	const handleOpenModal = (status) => {
+
 		actions[status]();
 	};
 

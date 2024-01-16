@@ -31,6 +31,12 @@ export default function SubCategoriesContainer() {
 			render: (text) => text,
 		},
 		{
+			title: 'Orden',
+			dataIndex: 'ordenSubFamily',
+			key: 1,
+			render: (text) => text,
+		},
+		{
 			title: 'Acciones',
 			width: '20px',
 			key: 2,

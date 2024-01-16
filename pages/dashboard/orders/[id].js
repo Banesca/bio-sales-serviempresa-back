@@ -28,6 +28,9 @@ import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import { useTdc } from '../../../components/tdc/useTdc';
 import { useRequest } from '../../../hooks/useRequest';
+import { apiImg, ipBackOffice } from '../../../util/environment';
+
+
 
 const OrderDetail = () => {
 	const router = useRouter();
@@ -35,6 +38,7 @@ const OrderDetail = () => {
 	const { id } = router?.query;
 	const [log, setLog] = useState();
 	const { actualTdc, updateTdc } = useTdc();
+	const [modalIsOpen, setModalIsOpen] = useState(false);
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
@@ -54,7 +58,6 @@ const OrderDetail = () => {
 		} finally {
 			setLoading(false);
 		}
-		console.log(currentOrder);
 	};
 
 	const getStatus = () => {
@@ -94,7 +97,7 @@ const OrderDetail = () => {
 	/* console.log(currentOrder.isPrintBillin);//newtotal
 	console.log(currentOrder.waste); */ //totaldeclardo
 
-	console.log(actualTdc);
+
 
 	const attributes = [
 		'mpCash',
@@ -152,7 +155,10 @@ const OrderDetail = () => {
 		try {
 			await changeStatus(status, id);
 			message.success('Pedido actualizado');
-			status;
+			if (status === 'Anulado') {
+				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' +id);
+				console.log(res2);
+			}
 		} catch (error) {
 			message.error('Error al actualizar pedido');
 		} finally {
@@ -227,6 +233,7 @@ const OrderDetail = () => {
 		};
 		ExcelExport.push(productData);
 	});
+
 
 	return (
 		<DashboardLayout>
@@ -351,9 +358,10 @@ const OrderDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Número de factura:</p>
 							<p>{currentOrder.facturaAfip}</p>
 						</List.Item>
+
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
-							<p>{currentOrder.Urlbank}</p>
+							<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} width="150" onClick={() => setModalIsOpen(true)} />
 						</List.Item>
 
 						<List.Item>
@@ -389,6 +397,15 @@ const OrderDetail = () => {
 						</Button>
 					</div>
 				</div>
+			</Modal>
+
+			<Modal
+				open={modalIsOpen}
+				footer={false}
+				onCancel={() => setModalIsOpen(false)}
+				width={760}
+			>
+				<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} style={{ width: '100%', marginTop:'20px' }} />
 			</Modal>
 		</DashboardLayout>
 	);

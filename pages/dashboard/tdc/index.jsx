@@ -5,7 +5,7 @@ import { useTdc } from '../../../components/tdc/useTdc';
 
 export default function Tdc() {
 	const { actualTdc, updateTdc, form, loading } = useTdc();
-	
+
 
 	return (
 		<DashboardLayout>
@@ -37,6 +37,14 @@ export default function Tdc() {
 											initialValue={actualTdc}
 											rules={[
 												{ required: true, message: 'La tasa es requerida' },
+												() => ({
+													validator(_, value) {
+														if (!value.includes(',')) {
+															return Promise.resolve();
+														}
+														return Promise.reject(new Error('No se permiten comas'));
+													},
+												}),
 											]}
 											name="param"
 										>

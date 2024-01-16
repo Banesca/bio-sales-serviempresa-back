@@ -142,15 +142,16 @@ export function CategoriesProvider({ children }) {
 	const editSubCategories = async (
 		idProductFamily,
 		nameSubFamily,
-		idStatus,
 		idProductSubFamily,
-		id
+		id,
+		order
 	) => {
 		const res = await requestHandler.put('/api/v2/subfamily/update/lite', {
 			idProductFamilyFk: idProductFamily,
 			nameSubFamily: nameSubFamily,
 			idStatusFk: 1,
 			idProductSubFamily: idProductSubFamily,
+			order: order,
 		});
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
