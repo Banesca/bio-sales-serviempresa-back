@@ -105,6 +105,7 @@ export default function AddClient() {
 					idPaymenConditions: data.idPaymenConditions,
 					limitcredit: data.limitcredit,
 				});
+				console.log(res)
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
 			} else {

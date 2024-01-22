@@ -33,7 +33,8 @@ export default function SubCategoryModals({
 
 	const [lineBody, setLineBody] = useState({
 		name: '',
-		idSubFamilyFk: '',
+		idSubFamilyFk:'',
+		order:0
 	});
 
 	const [modals, setModals] = useState({
@@ -131,22 +132,39 @@ export default function SubCategoryModals({
 			setLoading(true);
 			setIsEditModalOpen(false);
 			await editSubCategories(
-				lineBody.createCategory,
-				lineBody.name,
-				currentBrands.idStatus,
+				lineBody.idSubFamilyFk ? lineBody.idSubFamilyFk : currentBrands.idProductFamily,
+				lineBody.name ? lineBody.name: currentBrands.nameSubFamily,
 				currentBrands.idProductSubFamily,
 				selectedBusiness.idSucursal,
-				lineBody.order
+				lineBody.order,
 			);
+			
+			
+			/*console.log(lineBody.name)
+			console.log(lineBody.idSubFamilyFk)
+			console.log(selectedBusiness.idSucursal)
+			console.log(currentBrands.idProductSubFamily)
+			console.log(currentBrands.idStatus)
+			console.log(currentBrands)
+			console.log(lineBody.order)
+*/
 			message.success('Subcategoria actualizada');
 		} catch (error) {
 			setLoading(false);
 			message.error('Error al actualizar subcategoria');
 		} finally {
 			setLoading(false);
-			createFormTwo.resetFields();
+
 		}
 	};
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setLineBody(prevState => ({
+		  ...prevState,
+		  [name]: value
+		}));
+	  };
 
 	return (
 		<>
@@ -300,14 +318,14 @@ export default function SubCategoryModals({
 					>
 						<Input
 							allowClear
-							value={lineBody}
+							value={lineBody?.name}
 							name="name"
-							onChange={(e) =>
+							onChange={(e) => {
 								setLineBody((prev) => ({
 									...prev,
 									[e.target.name]: e.target.value,
-								}))
-							}
+								}));
+							}}
 						/>
 					</Form.Item>
 					<Form.Item
@@ -322,7 +340,7 @@ export default function SubCategoryModals({
 						]}
 					>
 						<Select
-							value={lineBody.idSubFamilyFk}
+							value={lineBody?.idSubFamilyFk}
 							onChange={(value) =>
 								setLineBody((prev) => ({
 									...prev,

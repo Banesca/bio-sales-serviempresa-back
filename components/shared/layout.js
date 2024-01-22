@@ -40,6 +40,7 @@ function getItem(label, key, icon, children, type) {
 	};
 }
 
+
 const routes = [
 	'/dashboard/products',
 	'/dashboard/categories',
@@ -60,8 +61,6 @@ const routes = [
 	'/dashboard/sucursal',
 	'/dashboard/cuentas',
 	'/login',
-	
-	
 ];
 
 const itemsMenu = [
@@ -87,7 +86,20 @@ const itemsMenu = [
 	
 	getItem('Cerrar sesión', '19', <LogoutOutlined />),
 ];
+
+const itemsMenu6 = [
+	
+	getItem('Ordenes', '10', <FaShoppingCart />),
+	getItem('Cuentas por cobrar', '18',<ExceptionOutlined />),
+	getItem('Cerrar sesión', '19', <LogoutOutlined />),
+];
+
+
+
 export default function DashboardLayout({ children }) {
+
+	
+
 	const [collapsed, setCollapsed] = useState(false);
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
@@ -115,6 +127,8 @@ export default function DashboardLayout({ children }) {
 	const [loading, setLoading] = useState(false);
 	const [actualKey, setActualKey] = useState();
 	const [currentBusiness, setCurrentBusiness] = useState();
+	const [userId,setUserId]= useState(null)
+
 
 	useEffect(() => {
 		setActualKey(router.pathname);
@@ -122,6 +136,7 @@ export default function DashboardLayout({ children }) {
 
 	useEffect(() => {
 		setCurrentBusiness(localStorage.getItem('bs'));
+		setUserId(localStorage?.getItem('userProfile'))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [children]);
 
@@ -133,9 +148,12 @@ export default function DashboardLayout({ children }) {
 			localStorage.clear();
 		}
 		localStorage.setItem('key', routes[e.key]);
+
 		setLoading(true);
 		router.push(routes[parseInt(e.key - 1)]);
+		
 	};
+
 
 	return (
 		<>
@@ -170,7 +188,7 @@ export default function DashboardLayout({ children }) {
 								mode="inline"
 								theme="dark"
 								inlineCollapsed={collapsed}
-								items={itemsMenu}
+								items={userId==6 ? itemsMenu6 : itemsMenu}
 								onClick={handleNavigation}
 								className="h-full bg-[#012258] text-white"
 							/>

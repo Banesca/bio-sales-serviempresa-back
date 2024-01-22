@@ -78,6 +78,7 @@ const UpdateOrderPage = () => {
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [currentProduct, setCurrentProduct] = useState();
 	const [total, setTotal] = useState(0);
+	const [amountIgtf, setAmountIgtf] = useState(0);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [calculadora, setIsCalculadora] = useState(false);
@@ -171,6 +172,7 @@ const UpdateOrderPage = () => {
 		}
 		const value = res.value.getValue();
 		setTotal(value.message[0].TOTAL);
+		console.log(value)
 	};
 
 	useEffect(() => {
@@ -191,7 +193,7 @@ const UpdateOrderPage = () => {
 		if (!record) return;
 
 		setLoading(true);
-		console.log(record);
+		
 		const idUser = localStorage.getItem('userId');
 		const res = await requestHandler.delete(
 			`/api/v2/order/product/delete/${record.idOrderB}/${idUser}`
@@ -211,7 +213,7 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = (selectOption) => {
-		console.log(selectOption);
+	
 		setPaymentToAdd();
 		const newData = {
 			key: count,
@@ -304,7 +306,8 @@ const UpdateOrderPage = () => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
 		const item = newData[index];
-		console.log(dataSource);
+
+		
 		newData.splice(index, 1, {
 			...item,
 			...row,
@@ -316,8 +319,10 @@ const UpdateOrderPage = () => {
 				suma += Number(objeto.monto);
 				console.log(suma);
 			});
+
 			return suma;
 		};
+
 
 		const sumaTotal = calcularSumaTotal();
 
@@ -352,6 +357,19 @@ const UpdateOrderPage = () => {
 		setNewTotal(result);
 	};
 
+
+	useEffect(()=>{
+
+		let arrayFiltrado = dataSource?.filter(function(elemento) {
+			return elemento.name==='Efectivo';
+		});
+
+		let suma= arrayFiltrado.reduce(function(acumulador, valorActual) {
+			return acumulador + parseFloat(valorActual.monto*0.03);
+		}, 0);
+		setAmountIgtf(Math.round(suma * 1000)/1000)
+	},[dataSource])
+
 	const defaultColumns = [
 		{
 			title: 'Método de pago',
@@ -366,7 +384,10 @@ const UpdateOrderPage = () => {
 			render: (text, record) => (
 				<>
 					{text}
-					{record.name === 'mpCash' && isIgtf && <span> (IGTF)</span>}
+					{record.name === 'Efectivo' && isIgtf && record.monto>0 && <span className='font-semibold text-red-500'> +({record.monto*0.03} IGTF) </span>
+
+					
+					}
 				</>
 			),
 		},
@@ -556,12 +577,16 @@ const UpdateOrderPage = () => {
 	const validateMP = async (descriptPayMent) => {
 		let result;
 		result = dataSource.filter((event) => event.name === descriptPayMent);
+		console.log(result);
+		console.log(descriptPayMent);
 		if (result.length !== 0) {
-			if (descriptPayMent === 'mpCash') {
+			if (descriptPayMent === 'Efectivo') {
 				result = result.length > 0 ? result[0].monto : 0;
 				
 				if (isIgtf) {
 					result += result * 0.03;
+					console.log(result);
+					
 				}
 			} else {
 				result = result.length > 0 ? result[0].monto : 0;
@@ -573,18 +598,18 @@ const UpdateOrderPage = () => {
 	};
 	
 	const getClients = async (id) => {
-		console.log(id);
+
 		const res = await requestHandler.get(`/api/v2/client/get/${id.idProfileFk}`);
 		
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
-		console.log(res);
 		const value = res.value.getValue();
-		console.log(value);
+
 	
 		
 		setIsIgtf(value.data.isigtf === 'true');
+
 	};
 
 
@@ -670,7 +695,6 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
-	console.log(currentOrder);
 	return (
 		<DashboardLayout>
 			<div
@@ -819,7 +843,7 @@ const UpdateOrderPage = () => {
 												<p>
 													<strong>TOTAL:  </strong>
 												</p>
-												<p style={{ marginLeft: '10px' }}>${total}</p>
+												<p style={{ marginLeft: '10px' }}>${parseFloat(total)+amountIgtf}</p>
 											</div>
 											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
-import { FileImageOutlined, EditOutlined } from '@ant-design/icons';
+import { AuditOutlined } from '@ant-design/icons';
 import {
 	Button,
 	Form,
@@ -62,7 +62,7 @@ const Cuentas = () => {
 					style={{ justifyContent: 'center', display: 'flex' }}
 				>
 					<Button onClick={() => showModal2(record)}>
-						<FileImageOutlined />
+						<AuditOutlined />
 					</Button>
 				</Space>
 			),

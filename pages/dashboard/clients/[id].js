@@ -220,7 +220,7 @@ const ClientDetail = () => {
 		console.log(phoneNumber);
 		let id = phoneNumber;
 		try {
-			const res = await requestHandler.post(`/api/v2/wallet/get/",${phoneNumber}"/1000`);
+			const res = await requestHandler.post(`/api/v2/wallet/get/0412-1231231/1000`);
 		
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();

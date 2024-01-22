@@ -98,7 +98,9 @@ export default function ProductList({
 			if (found) {
 				let productList = [...orderProducts];
 				productList[index].weight += 1;
-				if (productList[index].weight > record.maxProducVenta) {
+				console.log(productList);
+				console.log(record);
+				if (productList[index].weight > record) {
 					alert('No puedes agregar más de este producto, no hay suficiente stock');
 					return;
 				}

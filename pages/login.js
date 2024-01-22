@@ -46,6 +46,7 @@ export default function Login() {
 
 	const getUserBusiness = async (id) => {
 		const res = await requestHandler.get(`/api/v2/user/branch/${id}`);
+		console.log(id)
 		if (res.isLeft()) {
 			return;
 		}
@@ -77,9 +78,10 @@ export default function Login() {
 		const value = res.value.getValue().data[0];
 		localStorage.setItem('accessToken', value.token);
 		console.log(value.idProfileFk);
-		if (value.idProfileFk !== 1) {
+		console.log(value);
+		if (value.idProfileFk !== 1 || value.idProfileFk !== 6) {
 			const businessByUser = await getUserBusiness(value.idUser);
-			if (businessByUser.length < 1 || value.idProfileFk !== 1) {
+			if (businessByUser.length < 1 || value.idProfileFk !== 1 || value.idProfileFk !== 6) {
 				handleLoginError('Acceso denegado');
 				setLoading(false);
 				return;
@@ -105,7 +107,7 @@ export default function Login() {
 		businessContext.handleSetSelectedBusiness(value.branch);
 		setLoading(false);
 		handleLoginSuccess();
-		router.push('/dashboard/products');
+		value.idProfileFk===6 ? router.push('/dashboard/orders') : router.push('/dashboard/products');
 	};
 
 	const generalContext = useContext(GeneralContext);

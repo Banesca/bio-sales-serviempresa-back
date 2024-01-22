@@ -4,6 +4,7 @@ export const PROFILE_LIST = [
 	{ name: 'Despachador', id: 3 },
 	{ name: 'Vendedor', id: 4 },
 	{ name: 'Merchandise', id: 5 },
+	{ name: 'Cobrador', id: 6 },
 ];
 
 export const PROFILES = {
@@ -11,5 +12,6 @@ export const PROFILES = {
 	ADMIN: 2,
 	SELLER: 3,
 	BILLER: 4,
-	MERCHANDISER: 5
+	MERCHANDISER: 5,
+	COLLECTOR: 6
 };

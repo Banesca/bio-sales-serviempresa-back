@@ -136,6 +136,7 @@ export function CategoriesProvider({ children }) {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue().data;
+		console.log(value)
 		dispatch({ type: ACTIONS.SET_CURRENT_SUB_CATEGORIES, payload: value });
 	};
 
@@ -146,16 +147,19 @@ export function CategoriesProvider({ children }) {
 		id,
 		order
 	) => {
-		const res = await requestHandler.put('/api/v2/subfamily/update/lite', {
-			idProductFamilyFk: idProductFamily,
-			nameSubFamily: nameSubFamily,
-			idStatusFk: 1,
-			idProductSubFamily: idProductSubFamily,
-			order: order,
-		});
+		const data= new FormData()
+		data.append('idProductFamilyFk', idProductFamily);
+		data.append('nameSubFamily',nameSubFamily);
+		data.append('idProductSubFamily', idProductSubFamily);
+		data.append('idSucursalFk', id);
+		data.append('order', order); 
+
+		const res = await requestHandler.put('/api/v2/subfamily/update', data, id);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
+		console.log(res)
+		console.log(data)
 		await getSubCategories(id);
 	};
 

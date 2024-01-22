@@ -2,6 +2,7 @@ import { Modal } from 'antd';
 import { Button, Space } from 'antd';
 import { List } from 'antd';
 import { useState } from 'react';
+import { useRequest } from '../../../hooks/useRequest';
 import { orderStatusToUse } from '../../../pages/dashboard/orders';
 import {
 	AppstoreAddOutlined,
@@ -32,7 +33,7 @@ export default function ChangeOrderStatus({
 		action: '',
 		status: 0,
 	};
-
+	const { requestHandler } = useRequest();
 	const [modal, setModal] = useState(initialModalState);
 
 	const actions = {
