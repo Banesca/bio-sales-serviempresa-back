@@ -1,4 +1,5 @@
 import { Button, Modal } from 'antd';
+import { Col, Form, Row,Select } from 'antd';
 import { useContext, useEffect, useState, useMemo } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import { GeneralContext } from '../../_app';
@@ -14,6 +15,7 @@ import Title from '../../../components/shared/title';
 import {
 	AppstoreAddOutlined
 } from '@ant-design/icons';
+import { Tab, Tabs } from '@mui/material';
 
 
 export const orderStatusToUse = {
@@ -27,6 +29,7 @@ export const orderStatusToUse = {
 
 export default function OrdersPage() {
 	const { orders, getOrders } = useOrders();
+	const [stateOrder,setStateOrder] = useState(3);
 	const generalContext = useContext(GeneralContext);
 	const { loading, setLoading } = useLoadingContext();
 	const { selectedBusiness } = useBusinessProvider();
@@ -72,8 +75,12 @@ export default function OrdersPage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
+
+
 	const ordersList = useMemo(() => {
-		let list = orders;
+		const result = orders.filter((order) => order.idStatusOrder === stateOrder);
+
+		let list = result;
 		if (query.idStatusOrder) {
 			if (list) {
 				list = list.filter((o) => o.idStatusOrder == query.idStatusOrder);
@@ -97,22 +104,48 @@ export default function OrdersPage() {
 		return list;
 	}, [query, orders]);
 
-	
+useEffect(()=>{ },[stateOrder,ordersList])
 	
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
 				<Title title={'Órdenes'}>
+				<Form.Item
+								label="Estado"
+								name="idStatusOrder"
+								style={{
+									paddingRight: '1rem',
+									width:'25%'
+								}}
+							>
+								<Select value={stateOrder}
+							onChange={(value) =>
+								setStateOrder((prev) => ({
+									...prev,
+									stateOrder: value,
+								}))
+							}>
+									{Object.entries(orderStatusToUse).map((o) => {
+										return (
+											<Select.Option key={o[0]} value={o[0]}>
+												{o[1].state}
+											</Select.Option>
+										);
+									})}
+								</Select>
+							</Form.Item>
 					<Link href="orders/add">
-						<Button type="success" style={{ marginRight: '-2.3rem' }}>
+					<Button type="success" style={{ marginRight: '-2.6rem' }}>
 							<AppstoreAddOutlined/> Crear
 						</Button>
 					</Link>
+
 				</Title>
 				<OrdersFilters
 					setQuery={setQuery}
 					getOrdersRequest={getOrdersRequest}
 				/>
+
 				<OrdersTable orders={ordersList} />
 			</div>
 			<Modal

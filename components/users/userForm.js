@@ -348,6 +348,7 @@ const UserForm = ({
 						name="pin"
 						rules={[
 							{
+								required:true,
 								min: 8,
 								message: 'Escribe una contraseña de minimo 8 caracteres',
 							},
@@ -379,7 +380,7 @@ const UserForm = ({
 									return Promise.reject(
 										new Error('Las dos contraseñas no son iguales')
 									);
-								},
+								},required:true,
 							}),
 						]}
 					>

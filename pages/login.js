@@ -79,7 +79,7 @@ export default function Login() {
 		localStorage.setItem('accessToken', value.token);
 		console.log(value.idProfileFk);
 		console.log(value);
-		if (value.idProfileFk !== 1 || value.idProfileFk !== 6) {
+		if (value.idProfileFk !== 1 && value.idProfileFk !==6) {
 			const businessByUser = await getUserBusiness(value.idUser);
 			if (businessByUser.length < 1 || value.idProfileFk !== 1 || value.idProfileFk !== 6) {
 				handleLoginError('Acceso denegado');

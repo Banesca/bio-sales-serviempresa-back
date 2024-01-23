@@ -41,8 +41,10 @@ const ProductForm = (props) => {
 		lines,
 		getLines,
 	} = useCategoryContext();
-	const [product2, setProduct2] = useState(null);
+	const [products, setProducts] = useState(null);
+	const [obsequio, setObsequio] = useState(null);
 	const [file, setFile] = useState(null);
+	const [promos, setPromos] = useState(null);
 	const [fileList, setFileList] = useState([]);
 	const [isValidImgSize, setIsValidImgSize] = useState();
 	const { getProductById, updateProduct, currentProduct } = useProducts();
@@ -51,6 +53,7 @@ const ProductForm = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [chips, setChips] = useState([]);
 	const [chips2, setChips2] = useState([]);
+	const [units, setUnits] = useState([]);
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
 		barCode: props.product.barCode || '',
@@ -71,6 +74,11 @@ const ProductForm = (props) => {
 		efectivo: props.product.efectivo || '',
 		maxProducVenta: props.product.maxProducVenta || '',
 		is5050: props.product.is5050 || '',
+		StateObsequio: props.product.Obsequio,
+		Obsequio: props.product.Obsequio || '',
+		Paymode: props.product.Paymode || '',
+		Cantidad: props.product.Cantidad || '',
+		MedidaAdicional:props.product.MedidaAdicional  || ''
 	};
 
 	const generalContext = useContext(GeneralContext);
@@ -100,6 +108,10 @@ const ProductForm = (props) => {
 			efectivo: '',
 			maxProducVenta: '',
 			is5050: '',
+			Obsequio:'',
+			Paymode:'',
+			Cantidad:'',
+			MedidaAdicional:''
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
@@ -114,6 +126,7 @@ const ProductForm = (props) => {
 			return;
 		}
 		const value = response.value.getValue().data;
+		setProducts(value);
 		if (props.update) {
 			for (let i = 0; i < value?.length; i++) {
 				if (product.barCode !== value[i].barCode) {
@@ -126,6 +139,43 @@ const ProductForm = (props) => {
 			}
 		}
 		setC(code);
+	};
+
+	const getUnit= async ()=>{
+		const response = await requestHandler.get(
+			`/api/v2/utils/unitmeasure`
+		);
+
+		
+		const value = response.value.getValue().response;
+		console.log(value)
+		setUnits(value)
+	}
+
+	const getObsequio = async (response) => {
+
+		console.log(response)
+		console.log(currentProduct)
+		console.log(response.Obsequio)
+
+		let currentIs5051 = JSON.parse(product.Obsequio || '[]');
+		if (!Array.isArray(currentIs5051)) {
+			currentIs5051 = [];
+		}
+		const newIs5051 = JSON.stringify([...currentIs5051, ...response.Obsequio]);
+
+	//alert(newIs5051)
+		/*const value = await requestHandler.post(
+			`/api/v2/add/adicional/product/category`,
+			{
+				idAdicionalCategoryFk: newIs5051, //Listado de productos
+  				  idProductFk: currentProduct.idProduct,  //Id del prodducto que sera recibido
+				min: "any",
+  				max: "any",  
+				order: "any"
+			}
+		);*/
+
 	};
 
 	const fileProgress = (fileInput) => {
@@ -206,13 +256,16 @@ const ProductForm = (props) => {
 
 	const onSubmit = async () => {
 		setLoading(true);
-		const words = chips.map(chip => chip);
+		const words = chips.map((chip) => chip);
 		console.log(words);
 		let currentIs5050 = JSON.parse(product.is5050 || '[]');
+		console.log(currentIs5050);
+		console.log(product.is5050);
 		if (!Array.isArray(currentIs5050)) {
 			currentIs5050 = [];
 		}
 		const newIs5050 = JSON.stringify([...currentIs5050, ...words]);
+		console.log(newIs5050);
 		const updatedProduct = {
 			...product,
 			is5050: newIs5050,
@@ -220,7 +273,7 @@ const ProductForm = (props) => {
 		};
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
-	
+		getObsequio(product)
 		setLoading(false);
 		if (!props.update) {
 			return onReset();
@@ -247,12 +300,20 @@ const ProductForm = (props) => {
 		setProduct({ ...product, isPromo: value ? '1' : '0' });
 	};
 
+	const handleSwitchChange2 = (value) => {
+		console.log(value);
+		setObsequio(value ? '1' : '0');
+		console.log(obsequio);
+		console.log(products);
+	};
+
 	const categoryListRequest = async (business = 1) => {
 		setLoading(true);
 		try {
 			await getCategories(business);
 			await getSubCategories(business);
 			await getLines(business);
+			await getUnit()
 		} catch (error) {
 			message.error('Error al cargar las categorias');
 		}
@@ -266,7 +327,6 @@ const ProductForm = (props) => {
 			message.error('Error al cargar las marcas');
 		}
 	};
-
 
 	useEffect(() => {
 		getProductRequest(id);
@@ -288,13 +348,11 @@ const ProductForm = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness, id]);
 
-
 	const handleDelete = (index) => {
 		let is5050Array = JSON.parse(product.is5050);
 		is5050Array.splice(index, 1);
 		setProduct({ ...product, is5050: JSON.stringify(is5050Array) });
 	};
-
 
 	useEffect(() => {
 		click ? onReset() : '';
@@ -312,9 +370,17 @@ const ProductForm = (props) => {
 			event.preventDefault();
 		}
 	};
+	const AddList = ()=>{
+		promos
+	}
+
 	useEffect(() => {
 		// Este código se ejecutará cada vez que `product.is5050` cambie
 	}, [product.is5050]);
+
+	useEffect(() => {
+		getUnit()
+	}, []);
 
 	return (
 		<div className="flex flex-col">
@@ -350,6 +416,9 @@ const ProductForm = (props) => {
 						efectivo: product.efectivo,
 						maxProducVenta: product.maxProducVenta,
 						is5050: JSON.stringify(chips),
+						Obsequio:products?.ProductId,
+						MedidaAdicional:products?.MedidaAdicional
+
 					}}
 					onFinish={onSubmit}
 					autoComplete="off"
@@ -402,7 +471,7 @@ const ProductForm = (props) => {
 										required: true,
 										message: 'Ingresa un código',
 									},
-									({ }) => ({
+									({}) => ({
 										validator(_, value) {
 											if (!value || !c?.includes(value)) {
 												return Promise.resolve();
@@ -770,6 +839,70 @@ const ProductForm = (props) => {
 								style={{
 									padding: '0 .5rem',
 								}}
+								label="Unidad de Medida Adicional"
+								name="MedidaAdicional"
+
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Select
+									value={product.MedidaAdicional}
+									onChange={(v) =>
+										setProduct({
+											...product,
+											MedidaAdicional: v,
+										})
+									}
+								>
+									{units?.map((u) => (
+										<Select.Option key={u.idUnitMeasureFk} value={u.idUnitMeasureFk}>
+											{u.unitMeasure}
+										</Select.Option>
+									))}
+								</Select>
+							</Form.Item>
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+						{product.MedidaAdicional && (
+								<Form.Item
+									style={{
+										padding: '0 .5rem',
+									}}
+									label="Unidades/Caja"
+									name="isheavy"
+									value={product.isheavy}
+									labelCol={{
+										md: { span: 10 },
+										sm: { span: 6 },
+									}}
+									wrapperCol={{
+										md: { span: 14 },
+										sm: { span: 18 },
+									}}
+								>
+									<Input
+										value={product.isheavy}
+										onChange={(e) =>
+											setProduct({
+												...product,
+												isheavy: e.target.value,
+											})
+										}
+									/>
+								</Form.Item>
+							)}
+							</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+						<Form.Item
+								style={{
+									padding: '0 .5rem',
+								}}
 								label="Medida"
 								name="idUnitMeasureSaleFk"
 								rules={[
@@ -804,37 +937,8 @@ const ProductForm = (props) => {
 									))}
 								</Select>
 							</Form.Item>
-							<Form.Item
-								label="Palabras clave"
-								labelCol={{
-									md: { span: 10 },
-									sm: { span: 6 },
-								}}
-								wrapperCol={{
-									md: { span: 14 },
-									sm: { span: 18 },
-								}}
-							>
-								<Stack direction="row" spacing={1}>
-									{product.is5050 && Array.isArray(JSON.parse(product.is5050)) && JSON.parse(product.is5050).map((item, index) => (
-										<Chip key={index} label={item.word} onDelete={() => handleDelete(index)} />
-									))}
-								</Stack>
-
-
-								<Stack direction="row" spacing={1}>
-									{chips.map((chip, index) => (
-										<div key={index}>{chip.word}</div>
-									))}
-								</Stack>
-								<Input
-									style={{ marginTop: '1rem' }}
-									value={inputValue}
-									onChange={(e) => setInputValue(e.target.value)}
-									onKeyPress={handleKeyPress}
-								/>
-							</Form.Item>
 						</Col>
+
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							{product.idUnitMeasureSaleFk == 3 && (
 								<Form.Item
@@ -871,34 +975,46 @@ const ProductForm = (props) => {
 									/>
 								</Form.Item>
 							)}
-							{product.idUnitMeasureSaleFk == 17 && (
-								<Form.Item
-									style={{
-										padding: '0 .5rem',
-									}}
-									label="Unidades/Caja"
-									name="isheavy"
-									value={product.isheavy}
-									labelCol={{
-										md: { span: 10 },
-										sm: { span: 6 },
-									}}
-									wrapperCol={{
-										md: { span: 14 },
-										sm: { span: 18 },
-									}}
-								>
-									<Input
-										value={product.isheavy}
-										onChange={(e) =>
-											setProduct({
-												...product,
-												isheavy: e.target.value,
-											})
-										}
-									/>
-								</Form.Item>
-							)}
+
+						</Col>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+							
+
+							<Form.Item
+								label="Palabras clave"
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Stack direction="row" spacing={1}>
+									{product.is5050 &&
+										Array.isArray(JSON.parse(product.is5050)) &&
+										JSON.parse(product.is5050).map((item, index) => (
+											<Chip
+												key={index}
+												label={item.word}
+												onDelete={() => handleDelete(index)}
+											/>
+										))}
+								</Stack>
+
+								<Stack direction="row" spacing={1}>
+									{chips.map((chip, index) => (
+										<div key={index}>{chip.word}</div>
+									))}
+								</Stack>
+								<Input
+									style={{ marginTop: '1rem' }}
+									value={inputValue}
+									onChange={(e) => setInputValue(e.target.value)}
+									onKeyPress={handleKeyPress}
+								/>
+							</Form.Item>
 						</Col>
 					</Row>
 
@@ -932,6 +1048,164 @@ const ProductForm = (props) => {
 								/>
 							</Form.Item>
 						</Col>
+					</Row>
+					<Row>
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+							<Form.Item
+								name="Obsequio"
+								label="Obsequio"
+								style={{
+									padding: '0 .5rem',
+								}}
+								labelCol={{
+									md: { span: 10 },
+									sm: { span: 6 },
+								}}
+								wrapperCol={{
+									md: { span: 14 },
+									sm: { span: 18 },
+								}}
+							>
+								<Switch
+									className="bg-gray-300"
+									checked={obsequio == 1}
+									onChange={handleSwitchChange2}
+								/>
+							</Form.Item>
+						</Col>
+						{obsequio == '1' && (
+							<>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+									<Form.Item
+										style={{
+											padding: '0 .5rem',
+										}}
+										label="Productos"
+										name="IdProduct"
+										rules={[
+											{
+												required: true,
+												message: 'Elige un Producto',
+											},
+										]}
+										labelCol={{
+											md: { span: 10 },
+											sm: { span: 6 },
+										}}
+										wrapperCol={{
+											md: { span: 14 },
+											sm: { span: 18 },
+										}}
+									>
+									
+										<Select
+											value={products.Obsequio}
+											onChange={(v) =>
+												setProduct({
+													...product,
+													Obsequio: v,
+												})
+											}
+										>
+											{products &&
+												products.map((c, i) => (
+													<Select.Option key={c.idProduct} value={c.idProduct}>
+														{c.nameProduct}
+													</Select.Option>
+												))}
+										</Select>
+
+									</Form.Item>
+								</Col>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:12 }}>
+									<Form.Item
+										label="Forma de Pago"
+										style={{
+											padding: '0 .5rem',
+										}}
+										name="Paymode"
+										rules={[
+											{
+												required: obsequio == 1,
+												message: 'Ingresa una modalidad de pago',
+											},
+										]}
+										labelCol={{
+											md: { span: 10 },
+											sm: { span: 6 },
+										}}
+										wrapperCol={{
+											md: { span: 14 },
+											sm: { span: 18 },
+										}}
+									>
+										<Select
+											value={product.Paymode}
+											onChange={(v) =>
+												setProduct({
+													...product,
+													Paymode: v,
+												})
+											}
+										>
+											<Select.Option value={'Contado'}>
+												Contado
+											</Select.Option>
+											<Select.Option value={'Credito'}>
+												Credito
+											</Select.Option>
+											)
+										</Select>
+									</Form.Item>
+								</Col>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+									<Form.Item
+										label="Cantidad"
+										style={{
+											padding: '0 .5rem',
+										}}
+										name="Cantidad"
+										rules={[
+											{
+												required: obsequio == 1,
+												message: 'Ingresa una Cantidad',
+											},
+										]}
+										labelCol={{
+											md: { span: 10 },
+											sm: { span: 6 },
+										}}
+										wrapperCol={{
+											md: { span: 14 },
+											sm: { span: 18 },
+										}}
+									>
+											<Input
+										type="number"
+										value={product.Cantidad}
+										onChange={(e) =>
+											setProduct({
+												...product,
+												Cantidad: e.target.value,
+											})
+										}
+									/>
+									</Form.Item>
+								</Col>
+								<Col
+							sm={{ span: 10, offset: 4 }}
+							xs={{ span: 10, offset: 4 }}
+							lg={{ span: 7, offset: 17  }}
+							md={{ span: 7, offset: 17  }}
+						>
+								<Form.Item>
+								<Button block onClick={AddList} type="success">
+									Agregar
+								</Button>
+							</Form.Item>
+							</Col>
+							</>
+						)}
 					</Row>
 					<Row>
 						<Col

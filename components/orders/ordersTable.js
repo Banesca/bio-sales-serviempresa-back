@@ -17,6 +17,7 @@ export default function OrdersTable({ orders }) {
 	const router = useRouter();
 
 	const { loading, setLoading } = useLoadingContext();
+	const { ordersPay, setOrdersPay } = useState();
 
 	const handleSeeDetail = (order, record) => {
 		setLoading(true);
@@ -54,6 +55,7 @@ export default function OrdersTable({ orders }) {
 
 	useEffect(() => {
 		getUserRequest();
+		console.log(columns)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -211,13 +213,14 @@ export default function OrdersTable({ orders }) {
 		},
 	];
 
-	console.log(orders);
+
 
 	return (
 		<ConfigProvider
 			renderEmpty={orders?.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
 			<Table columns={columns} dataSource={orders} loading={loading} />
+			
 		</ConfigProvider>
 	);
 }

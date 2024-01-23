@@ -50,6 +50,10 @@ const setData = (data) => {
 		isheavy: data.isheavy,
 		maxProducVenta: data.maxProducVenta,
 		is5050: data.is5050,
+		Obsequio: data.Obsequio,
+		Paymode: data.Paymode,
+		Cantidad: data.Cantidad,
+		MedidaAdicional:data.MedidaAdicional
 	};
 
 	return body;
