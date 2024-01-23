@@ -605,9 +605,6 @@ const UpdateOrderPage = () => {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue();
-
-	
-		
 		setIsIgtf(value.data.isigtf === 'true');
 
 	};

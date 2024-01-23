@@ -81,6 +81,8 @@ const OrderDetail = () => {
 		}
 		return color;
 	};
+
+
 	const defaultColumns2 = [
 		{
 			title: 'Metodo de pago',
@@ -94,40 +96,36 @@ const OrderDetail = () => {
 		},
 	];
 
-	/* console.log(currentOrder.isPrintBillin);//newtotal
-	console.log(currentOrder.waste); */ //totaldeclardo
 
+	const attributes = {
+		mpCash: 'Efectivo',
+		mpCreditCard: 'Crédito',
+		mpDebitCard: 'Débito',
+		mpTranferBack: 'Transferencia',
+		mpMpago: 'Mercado Pago',
+		mpRappi: 'Rappi',
+		mpGlovo: 'Glovo',
+		mpUber: 'Uber',
+		mpPedidosya: 'Pedidos Ya',
+		mpJust: 'Just',
+		'mpWabi+': 'Wabi+',
+		mpOtro2: 'Otro 2',
+		mpPedidosyacash: 'Pedidos Ya Cash',
+		mpPersonal: 'Personal',
+		mpRapicash: 'Rappi Cash',
+		mpPresent: 'Presente',
+		mpPaypal: 'Paypal',
+		mpZelle: 'Zelle',
+		mpBofa: 'Bank of America',
+		mpYumi: 'Yumi',
+	};
 
-
-	const attributes = [
-		'mpCash',
-		'mpCreditCard',
-		'mpDebitCard',
-		'mpTranferBack',
-		'mpMpago',
-		'mpRappi',
-		'mpGlovo',
-		'mpUber',
-		'mpPedidosya',
-		'mpJust',
-		'mpWabi',
-		'mpOtro2',
-		'mpPedidosyacash',
-		'mpPersonal',
-		'mpRapicash',
-		'mpPresent',
-		'mpPaypal',
-		'mpZelle',
-		'mpBofa',
-		'mpYumi',
-	];
-
-	const mpObjects = attributes
-		.map((key) => ({
-			name: key,
-			monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0,
-		}))
-		.filter((obj) => obj.monto > 0);
+	const mpObjects = Object.keys(attributes)
+    .map((key) => ({
+        name: attributes[key],
+        monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0,
+    }))
+    .filter((obj) => obj.monto > 0);
 
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
@@ -156,7 +154,7 @@ const OrderDetail = () => {
 			await changeStatus(status, id);
 			message.success('Pedido actualizado');
 			if (status === 'Anulado') {
-				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' +id);
+				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' + id);
 				console.log(res2);
 			}
 		} catch (error) {
@@ -405,7 +403,7 @@ const OrderDetail = () => {
 				onCancel={() => setModalIsOpen(false)}
 				width={760}
 			>
-				<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} style={{ width: '100%', marginTop:'20px' }} />
+				<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} style={{ width: '100%', marginTop: '20px' }} />
 			</Modal>
 		</DashboardLayout>
 	);
