@@ -10,8 +10,9 @@ import {
 	Row,
 	Col,
 	Input,
+	Typography
 } from 'antd';
-import { ExportOutlined } from '@ant-design/icons';
+import { ConsoleSqlOutlined, ExportOutlined } from '@ant-design/icons';
 import Loading from '../../../components/shared/loading';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -82,7 +83,6 @@ const OrderDetail = () => {
 		return color;
 	};
 
-
 	const defaultColumns2 = [
 		{
 			title: 'Metodo de pago',
@@ -95,7 +95,6 @@ const OrderDetail = () => {
 			key: 'monto',
 		},
 	];
-
 
 	const attributes = {
 		mpCash: 'Efectivo',
@@ -120,13 +119,71 @@ const OrderDetail = () => {
 		mpYumi: 'Yumi',
 	};
 
-	const mpObjects = Object.keys(attributes)
-    .map((key) => ({
-        name: attributes[key],
-        monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0,
-    }))
-    .filter((obj) => obj.monto > 0);
 
+	let selectedBusiness;
+	let idSucursal;
+	if (typeof window !== 'undefined') {
+		selectedBusiness = localStorage.getItem('selectedBusiness');
+		if (selectedBusiness) {
+			selectedBusiness = JSON.parse(selectedBusiness);
+			idSucursal = selectedBusiness.idSucursal;
+		} else {
+			console.error('selectedBusiness is not defined in localStorage');
+		}
+	} else {
+		console.error('localStorage is not available');
+	}
+
+
+	console.log(currentOrder?.idClientfk);
+	let idClientfk = currentOrder;
+	console.log(idClientfk.idClientFk);
+
+	const bodyRegister = {
+		title: "Confirmación orden numero: " + currentOrder?.idOrderH,
+		idUserAddFk: idClientfk.idClientFk,
+		isEntry: 0,
+		spending: 1,
+		idBranchFk: idSucursal,
+		idCurrencyFk: 1,
+		mpCash: 0,
+		mpCreditCard: 0,
+		mpDebitCard: 0,
+		mpTranferBack: 0,
+		mpMpago: 0,
+		mpRappi: 0,
+		mpGlovo: 0,
+		mpUber: 0,
+		mpPedidosya: 0,
+		mpJust: 0,
+		mpWabi: 0,
+		mpOtro2: 0,
+		mpPedidosyacash: 0,
+		mpPersonal: 0,
+		mpRapicash: 0,
+		mpPresent: 0,
+		mpPaypal: 0,
+		mpZelle: 0,
+		mpBofa: 0,
+		mpYumi: 0,
+		idBoxFk: 1,
+		isCloseBox: false,
+	};
+
+	const mpObjects = Object.keys(attributes)
+		.map((key) => ({
+			name: attributes[key],
+			monto: currentOrder && currentOrder[key] ? currentOrder[key] : 0,
+		}))
+		.filter((obj) => obj.monto > 0);
+	Object.keys(attributes).forEach((key) => {
+		if (bodyRegister.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
+			bodyRegister[key] = currentOrder[key];
+		}
+	});
+
+	console.log(bodyRegister);
+	
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
 		if (element) {
@@ -186,6 +243,15 @@ const OrderDetail = () => {
 		);
 	}
 
+
+
+
+	const handleConfirm = () => {
+		console.log(bodyRegister);
+		const res = requestHandler.post('/api/v2/tracking/add', bodyRegister);
+		console.log(res);
+	}
+
 	const openTrucks = () => {
 		setOpenModal2(true);
 	};
@@ -196,7 +262,6 @@ const OrderDetail = () => {
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
 	};
-	let idOrderH = currentOrder.idOrderH;
 
 	const actualizaciónFactura = () => {
 		console.log(idOrderH);
@@ -374,6 +439,23 @@ const OrderDetail = () => {
 						total={currentOrder.totalBot}
 					/>
 					<Table
+						title={() => (
+							<div style={{ display: 'flex', alignItems: 'center' }}>
+								<div style={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+									<Typography
+										style={{
+											fontSize: '2rem',
+											fontWeight: 'bold',
+										}}
+									>
+										Metodos de pago
+									</Typography>
+								</div>
+								<Button type="success" onClick={handleConfirm}>
+									Confirmar Pago
+								</Button>
+							</div>
+						)}
 						style={{ width: '100%' }}
 						bordered
 						columns={defaultColumns2}

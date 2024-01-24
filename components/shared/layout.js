@@ -60,6 +60,7 @@ const routes = [
 	'/dashboard/tdc',
 	'/dashboard/sucursal',
 	'/dashboard/cuentas',
+	'/dashboard/caja',
 	'/login',
 ];
 
@@ -79,12 +80,13 @@ const itemsMenu = [
 	getItem('Condiciones de pago', '8', <BankOutlined />),
 	getItem('Tasa de cambio', '16', <DollarOutlined />),
 	getItem('Cuentas por cobrar', '18',<ExceptionOutlined />),
+	getItem('Caja', '19', <DollarCircleFilled />),
 	getItem('Camiones', '13', <FaTruck />),
 	getItem('Rutas', '14', <NodeIndexOutlined />),
 	getItem('Merchandising', '9', <GiftFilled />),
 	getItem('Notificaciones', '15', <BellFilled />),
 	
-	getItem('Cerrar sesión', '19', <LogoutOutlined />),
+	getItem('Cerrar sesión', '20', <LogoutOutlined />),
 ];
 
 const itemsMenu6 = [
