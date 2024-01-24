@@ -17,7 +17,7 @@ import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import { useRequest } from '../../../hooks/useRequest';
 import { apiImg } from '/util/environment.js';
-import { FileImageOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FileImageOutlined } from '@ant-design/icons';
 import { GeneralContext } from '../../_app';
 
 const Merchandising = () => {
@@ -110,6 +110,16 @@ const Merchandising = () => {
 				</Button>
 			),
 		},
+		{
+			title: 'Eliminar',
+			dataIndex: 'idReportVisit',
+			key: '6',
+			render: (index, record) => (
+				<Button onClick={() => HandleDelete(record.idReportVisit)}>
+					<DeleteOutlined />
+				</Button>
+			),
+		},
 	];
 
 	const columns3 = [
@@ -199,6 +209,16 @@ const Merchandising = () => {
 		setOpen(true);
 		setReportVisitDetail(reporte);
 		console.log(reporte);
+	};
+
+	const HandleDelete = async (id) => {
+		const res = await requestHandler.delete(
+			`/api/v2/reportvisit/delete/${id}`
+		);
+		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+		window.location.reload();
 	};
 
 	const showModal2 = (productos) => {

@@ -13,6 +13,7 @@ const PRODUCT_INITIAL_STATE = {
 	idAdicionalCategoryFk: '0',
 	idRestaurantFk: 1,
 	is5050: '0',
+	Obsequio: '0',
 	efectivo: '0',
 	linkPago: '0',
 	minStock: '0',
@@ -20,11 +21,15 @@ const PRODUCT_INITIAL_STATE = {
 	maxProducVenta: '0',
 	maxAditionals: '0',
 	minAditionals: '0',
-	percentageOfProfit: '0',
+	nameKitchen: '0',
+	nameKitchen: '0',
 	nameKitchen: '',
 	tax: '',
 	starts: '5',
+	adicionals:'',
 };
+
+
 
 const setData = (data) => {
 	const body = {
@@ -50,10 +55,9 @@ const setData = (data) => {
 		isheavy: data.isheavy,
 		maxProducVenta: data.maxProducVenta,
 		is5050: data.is5050,
-		Obsequio: data.Obsequio,
-		Paymode: data.Paymode,
-		Cantidad: data.Cantidad,
-		MedidaAdicional:data.MedidaAdicional
+		nameKitchen:data.nameKitchen,
+		adicionals:data.adicionals,
+		idUnitMeasurePurchaseFk:data.idUnitMeasurePurchaseFk
 	};
 
 	return body;
@@ -134,7 +138,8 @@ export function useProducts() {
 		}
 		const formData = setFormData(body, file);
 		const res = await requestHandler.post(
-			'/api/v2/product/add/sales',
+			//'/api/v2/product/add/sales',
+			'/api/v2/product/add',
 			formData
 		);
 		if (res.isLeft()) {
@@ -156,7 +161,8 @@ export function useProducts() {
 		const body = setData(data);
 		const formData = setFormData(body, file, true);
 		const res = await requestHandler.put(
-			'/api/v2/product/update/sales',
+			//'/api/v2/product/update/sales',
+			"/api/v2/product/update",
 			formData
 		);
 		if (res.isLeft()) {
