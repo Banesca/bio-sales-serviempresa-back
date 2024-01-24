@@ -29,7 +29,6 @@ export const UpdateProduct = () => {
 		}
 	};
 
-	console.log(currentProduct);
 
 	const updateProductRequest = async (data, file) => {
 		setLoading(true);

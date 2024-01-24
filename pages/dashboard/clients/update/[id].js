@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import useClients from '../../../../components/clients/hooks/useClients';
 import { useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -24,6 +26,9 @@ export default function EditClient() {
 	const { clients } = useClients();
 	const [click, setClick] = useState(false);
 	const [isIgtf, setIsIgtf] = useState(client?.isigtf);
+	const [isExpiredDate, setIsExpiredDate] = useState(client?.expirationDay);
+	const [startDate, setStartDate] = useState(new Date());
+	const [minDate, setMinDate] = useState(new Date(), 1);
 
 
 	const onReset = () => {
@@ -63,6 +68,15 @@ export default function EditClient() {
 	const handleSelectChange = (value) => {
 		setIsIgtf(value);
 	};
+
+	const handleDateChange = (date,dateString) => {
+		console.log
+		setIsExpiredDate(dateString)
+	};
+
+	useEffect(() =>{
+		console.log(client)
+	},[isExpiredDate])
 
 	const validator = (data) => {
 		return {
@@ -115,7 +129,8 @@ export default function EditClient() {
 					idClient: client.idClient,
 					limitcredit: data.limitcredit,
 					dispatchaddress: data.dispatchaddress,
-					isigtf: isIgtf
+					isigtf: isIgtf,
+					expirationDay:isExpiredDate	
 				});
 				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
@@ -171,6 +186,7 @@ export default function EditClient() {
 							dispatchaddress: client?.dispatchaddress,
 							limitcredit: client?.limitcredit,
 							isigtf: client?.isigtf,
+							expirationDay: client?.expirationDay,
 						}}
 						layout="vertical"
 						autoComplete="off"
@@ -285,6 +301,17 @@ export default function EditClient() {
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="isigtf">
 									<Select options={IGTF} onChange={handleSelectChange} />
+								</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item label="Fecha De Expiracion" style={{ marginLeft: 6 }}  name='expirationDay'>
+								<DatePicker className='bootstrap-datepicker'
+							selected={startDate}
+							dateFormat="dd/MM/yyyy"
+							onChange={(date) => setStartDate(date)}
+
+							minDate={minDate}
+						/>
 								</Form.Item>
 							</Col>
 						</Row>

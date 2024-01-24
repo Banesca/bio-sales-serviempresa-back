@@ -10,6 +10,7 @@ import {
 	Row,
 	message,
 	Card,
+	Table,
 } from 'antd';
 import {
 	ArrowLeftOutlined,
@@ -53,6 +54,13 @@ const ProductForm = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [chips, setChips] = useState([]);
 	const [chips2, setChips2] = useState([]);
+	const [arregloObsequios, setArregloObsequios] = useState({
+		id: '',
+		productPromo:'',
+		cantidad:'',
+		condicion:'',
+		Paymode:''
+	});
 	const [units, setUnits] = useState([]);
 	const initialState = {
 		nameProduct: props.product.nameProduct || '',
@@ -74,11 +82,9 @@ const ProductForm = (props) => {
 		efectivo: props.product.efectivo || '',
 		maxProducVenta: props.product.maxProducVenta || '',
 		is5050: props.product.is5050 || '',
-		StateObsequio: props.product.Obsequio,
-		Obsequio: props.product.Obsequio || '',
-		Paymode: props.product.Paymode || '',
-		Cantidad: props.product.Cantidad || '',
-		MedidaAdicional:props.product.MedidaAdicional  || ''
+		nameKitchen: props.product.nameKitchen || '',
+		idUnitMeasurePurchaseFk:props.product.idUnitMeasurePurchaseFk  || '',
+		adicionals:props.product.adicionals || ''
 	};
 
 	const generalContext = useContext(GeneralContext);
@@ -108,14 +114,39 @@ const ProductForm = (props) => {
 			efectivo: '',
 			maxProducVenta: '',
 			is5050: '',
-			Obsequio:'',
-			Paymode:'',
-			Cantidad:'',
-			MedidaAdicional:''
+			nameKitchen:'',
+			idUnitMeasurePurchaseFk:'',
+			adicionals:''
 		});
 		form.resetFields();
 		click ? setClick(false) : setClick(true);
 	};
+
+	const AddObsequio=()=>{
+
+	}
+
+	const columns = [
+		{
+			title: 'Producto',
+			dataIndex: 'numberOrden',
+			render: (text) => <p>{text}</p>,
+		},
+		{
+			title: 'Forma de Pago',
+			dataIndex: 'facturaAfip',
+		},
+		{
+			title: 'Cantidad',
+			dataIndex: 'facturaAfip',
+		},
+		{
+			title: 'Condicion',
+			dataIndex: 'facturaAfip',
+		},
+		
+	];
+
 
 	const codeListRequest = async (business = 1) => {
 		let code = [];
@@ -127,6 +158,7 @@ const ProductForm = (props) => {
 		}
 		const value = response.value.getValue().data;
 		setProducts(value);
+		console.log(products)
 		if (props.update) {
 			for (let i = 0; i < value?.length; i++) {
 				if (product.barCode !== value[i].barCode) {
@@ -148,33 +180,18 @@ const ProductForm = (props) => {
 
 		
 		const value = response.value.getValue().response;
-		console.log(value)
 		setUnits(value)
 	}
 
 	const getObsequio = async (response) => {
 
 		console.log(response)
-		console.log(currentProduct)
+
 		console.log(response.Obsequio)
-
-		let currentIs5051 = JSON.parse(product.Obsequio || '[]');
-		if (!Array.isArray(currentIs5051)) {
-			currentIs5051 = [];
-		}
-		const newIs5051 = JSON.stringify([...currentIs5051, ...response.Obsequio]);
-
+		/*let currentIs5051 = 
+		currentIs5051
+*/
 	//alert(newIs5051)
-		/*const value = await requestHandler.post(
-			`/api/v2/add/adicional/product/category`,
-			{
-				idAdicionalCategoryFk: newIs5051, //Listado de productos
-  				  idProductFk: currentProduct.idProduct,  //Id del prodducto que sera recibido
-				min: "any",
-  				max: "any",  
-				order: "any"
-			}
-		);*/
 
 	};
 
@@ -257,30 +274,58 @@ const ProductForm = (props) => {
 	const onSubmit = async () => {
 		setLoading(true);
 		const words = chips.map((chip) => chip);
-		console.log(words);
-		let currentIs5050 = JSON.parse(product.is5050 || '[]');
-		console.log(currentIs5050);
-		console.log(product.is5050);
-		if (!Array.isArray(currentIs5050)) {
-			currentIs5050 = [];
+		const words2 = chips2.map((chip) => chip);
+		const adicionales = {
+		  idProductAdicionals: arregloObsequios.id,
+		  idProductFk: arregloObsequios.id,
+		  idProductAdicionalFk: arregloObsequios.productPromo
 		}
+		console.log(adicionales)
+		let Arreglo=[]
+		Arreglo.push({adicionales:adicionales})
+		console.log
+		let currentIs5050 = [];
+		try {
+		  currentIs5050 = JSON.parse(product.is5050);
+		} catch (error) {
+		  console.error('Error parsing product.is5050:', error);
+		}
+		let AdicionalString = [];
+		try {
+			AdicionalString = JSON.parse(Arreglo);
+		} catch (error) {
+		  console.error('Error parsing adicionales:', error);
+		}
+	  
+		let CurrentpercentageOfProfit = [];
+		try {
+		  CurrentpercentageOfProfit = JSON.parse(product.nameKitchen);
+		} catch (error) {
+		  console.error('Error parsing product.nameKitchen:', error);
+		}
+		console.log(AdicionalString)
 		const newIs5050 = JSON.stringify([...currentIs5050, ...words]);
-		console.log(newIs5050);
+		const productObsequio = JSON.stringify([CurrentpercentageOfProfit, ...words2]);
+		const ObsequioLista = JSON.stringify([AdicionalString]);
+	  console.log(ObsequioLista);
 		const updatedProduct = {
-			...product,
-			is5050: newIs5050,
-			idSucursalFk: selectedBusiness.idSucursal,
+		  ...product,
+		  adicionals: productObsequio,
+		  is5050: newIs5050,
+		  nameKitchen: productObsequio,
+		  idSucursalFk: selectedBusiness.idSucursal,
 		};
+		
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
+		
 		getObsequio(product)
 		setLoading(false);
 		if (!props.update) {
-			return onReset();
+		  return onReset();
 		}
 		window.location.reload();
-	};
-
+	  };
 	const getProductRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -296,6 +341,47 @@ const ProductForm = (props) => {
 		return <div>Cargando...</div>;
 	}
 
+	
+
+	const addProms= async () =>{
+		/*const res = await requestHandler.post(
+			`/api/v2/add/adicional/product/category`,
+			{
+				idAdicionalCategoryFk: arregloObsequios.productPromo, //Listado de productos
+  				  idProductFk: arregloObsequios.id,  //Id del prodducto que sera recibido
+				min: arregloObsequios.condicion,
+  				max: arregloObsequios.cantidad,  
+				order: arregloObsequios.Paymode
+			}
+		);		if (res.isLeft()) {
+			throw res.value.getErrorValue();
+		}
+*/
+	}
+
+	useEffect(()=>{		
+		setArregloObsequios({
+		...arregloObsequios,
+		id: currentProduct?.idProduct,
+	})
+	console.log(currentProduct)
+},[products])
+
+
+useEffect(()=>{
+	
+		setChips2([{obsequios:arregloObsequios}]);
+	
+	console.log(chips2)
+},[arregloObsequios])
+
+
+
+
+
+
+
+
 	const handleSwitchChange = (value) => {
 		setProduct({ ...product, isPromo: value ? '1' : '0' });
 	};
@@ -303,8 +389,7 @@ const ProductForm = (props) => {
 	const handleSwitchChange2 = (value) => {
 		console.log(value);
 		setObsequio(value ? '1' : '0');
-		console.log(obsequio);
-		console.log(products);
+
 	};
 
 	const categoryListRequest = async (business = 1) => {
@@ -415,9 +500,9 @@ const ProductForm = (props) => {
 						observation: product.observation,
 						efectivo: product.efectivo,
 						maxProducVenta: product.maxProducVenta,
-						is5050: JSON.stringify(chips),
-						Obsequio:products?.ProductId,
-						MedidaAdicional:products?.MedidaAdicional
+
+						nameKitchen:JSON.stringify(chips2),
+						idUnitMeasurePurchaseFk:product.idUnitMeasurePurchaseFk
 
 					}}
 					onFinish={onSubmit}
@@ -840,7 +925,7 @@ const ProductForm = (props) => {
 									padding: '0 .5rem',
 								}}
 								label="Unidad de Medida Adicional"
-								name="MedidaAdicional"
+								name="idUnitMeasurePurchaseFk"
 
 								labelCol={{
 									md: { span: 10 },
@@ -852,11 +937,11 @@ const ProductForm = (props) => {
 								}}
 							>
 								<Select
-									value={product.MedidaAdicional}
+									value={product.idUnitMeasurePurchaseFk}
 									onChange={(v) =>
 										setProduct({
 											...product,
-											MedidaAdicional: v,
+											idUnitMeasurePurchaseFk: v,
 										})
 									}
 								>
@@ -869,7 +954,7 @@ const ProductForm = (props) => {
 							</Form.Item>
 						</Col>
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-						{product.MedidaAdicional && (
+						{product.idUnitMeasurePurchaseFk && (
 								<Form.Item
 									style={{
 										padding: '0 .5rem',
@@ -926,7 +1011,6 @@ const ProductForm = (props) => {
 										setProduct({
 											...product,
 											idUnitMeasureSaleFk: v,
-											idUnitMeasurePurchaseFk: v,
 										})
 									}
 								>
@@ -1068,7 +1152,7 @@ const ProductForm = (props) => {
 							>
 								<Switch
 									className="bg-gray-300"
-									checked={obsequio == 1}
+									checked={obsequio == 1 }
 									onChange={handleSwitchChange2}
 								/>
 							</Form.Item>
@@ -1099,11 +1183,11 @@ const ProductForm = (props) => {
 									>
 									
 										<Select
-											value={products.Obsequio}
+											value={arregloObsequios.productPromo}
 											onChange={(v) =>
-												setProduct({
-													...product,
-													Obsequio: v,
+												setArregloObsequios({
+													...arregloObsequios,
+													productPromo: v,
 												})
 											}
 										>
@@ -1140,10 +1224,10 @@ const ProductForm = (props) => {
 										}}
 									>
 										<Select
-											value={product.Paymode}
+											value={arregloObsequios.Paymode}
 											onChange={(v) =>
-												setProduct({
-													...product,
+												setArregloObsequios({
+													...arregloObsequios,
 													Paymode: v,
 												})
 											}
@@ -1182,14 +1266,61 @@ const ProductForm = (props) => {
 									>
 											<Input
 										type="number"
-										value={product.Cantidad}
+										value={arregloObsequios.cantidad}
 										onChange={(e) =>
-											setProduct({
-												...product,
-												Cantidad: e.target.value,
+											setArregloObsequios({
+												...arregloObsequios,
+												cantidad: e.target.value,
 											})
 										}
 									/>
+									</Form.Item>
+								</Col>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:12 }}>
+									<Form.Item
+										label="Condicion"
+										style={{
+											padding: '0 .5rem',
+										}}
+										name="Condicion"
+										rules={[
+											{
+												required: obsequio == 1,
+												message: 'Ingresa una Condicion',
+											},
+										]}
+										labelCol={{
+											md: { span: 10 },
+											sm: { span: 6 },
+										}}
+										wrapperCol={{
+											md: { span: 14 },
+											sm: { span: 18 },
+										}}
+									>
+										<Select
+											value={arregloObsequios.condicion}
+											onChange={(v) =>
+												setArregloObsequios({
+													...arregloObsequios,
+													condicion: v,
+												})
+											}
+										>
+											<Select.Option value={'Mayor que'}>
+												Mayor que
+											</Select.Option>
+											<Select.Option value={'Mayor e igual que'}>
+												Mayor e igual que
+											</Select.Option>
+											<Select.Option value={'Menor que'}>
+												Menor que
+											</Select.Option>
+											<Select.Option value={'Menor e igual que'}>
+												Menor e igual que
+											</Select.Option>
+											)
+										</Select>
 									</Form.Item>
 								</Col>
 								<Col
@@ -1199,10 +1330,13 @@ const ProductForm = (props) => {
 							md={{ span: 7, offset: 17  }}
 						>
 								<Form.Item>
-								<Button block onClick={AddList} type="success">
-									Agregar
+								<Button block onClick={addProms} type="success">
+									Agregar Obsequio
 								</Button>
 							</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:20,offset:4 }}  >
+							<Table   columns={columns}/>
 							</Col>
 							</>
 						)}
