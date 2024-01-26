@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
-import { Table } from 'antd';
+import { Table,	Space, Button,	message } from 'antd';
+import {
+	DeleteOutlined
+} from '@ant-design/icons';
 import { useRequest } from '../../../hooks/useRequest';
 import moment from 'moment';
 const Caja = () => {
@@ -17,8 +20,35 @@ const Caja = () => {
 
     }, []);
 
+    
+	const handleOpenDeleteModal= async (id)=>{
+		console.log(id)
+
+        const res = await requestHandler.delete(`/api/v2/tracking/delete/${id}`);
+        if (res.isLeft()) {
+            message.error('No se pudo completar la operacion')
+			return;
+		} else{
+            message.success('Operacion realizada con exito')
+        }
+
+        console.log(res)
+	}
+
+    
+    useEffect(() => {
+        getMotion()
+
+    }, [handleOpenDeleteModal]);
 
     const columns = [
+        {
+            title: 'Estado',
+            dataIndex: 'spending',
+            render: (text, index) => ( 
+                <span style={{ backgroundColor: text===1 ? '#DB9686' : '#92EC80' ,  color: text===1 ? '#9B2910' : '#00861C'  } } className='p-2 text-sm rounded-md font-medium' >{text===1 ? 'Confirmado' : 'No Confirmado'}</span>
+            )
+        },
         {
             title: 'Title',
             dataIndex: 'title',
@@ -28,6 +58,17 @@ const Caja = () => {
             title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
+        },
+        {
+            title: 'Eliminar',
+            dataIndex: 'idTracking',
+            render: (text, index) => ( 
+                <Space>
+                    <Button type="primary" danger onClick={() => handleOpenDeleteModal(text)}>
+                        <DeleteOutlined />
+                    </Button>
+                </Space>
+            )
         },
     ];
 
@@ -58,6 +99,8 @@ const Caja = () => {
         idBoxFk: idBox
     };
 
+    
+
     const getMotion = async () => {
         try {
             const res = await requestHandler.post('/api/v2/tracking/list', body);
@@ -68,6 +111,8 @@ const Caja = () => {
                     key: index,
                     title: item.title,
                     amount: item.amount,
+                    idTracking: item.idTracking,
+                    spending: item.spending,
                 })));
 
                 setTotalIngresos(res.value._value.totalIngresos);
@@ -90,9 +135,11 @@ const Caja = () => {
                 </Title>
             </div>
             <div>
-                <h2>Total Ingresos: {totalIngresos}</h2>
-                <h2>Total Ganancia: {totalGanancia}</h2>
-                <h2>Total Egresos: {totalEgresos}</h2>
+                <div className='w-full bg-white shadow mb-3 rounded-md py-4 flex justify-around'>
+                    <h2 className='text-blue-700 fs-5 text-lg	font-medium'>Total Ingresos: {totalIngresos}</h2>
+                    <h2 className='text-green-500 fs-5 text-lg	font-medium'>Total Ganancia: {totalGanancia}</h2>
+                    <h2 className='text-red-500 fs-5 text-lg	font-medium'>Total Egresos: {totalEgresos}</h2>
+                </div>
                 <Table columns={columns} dataSource={data} />
             </div>
         </DashboardLayout>

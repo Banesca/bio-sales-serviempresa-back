@@ -39,12 +39,7 @@ export default function ProductsInOrder({
                                 <p>{number}</p>
                             ) : (
                                 <>
-                                    <Input
-                                        type="number"
-                                        style={{ width: '90px' }}
-                                        value={order?.body[index].weight}
-                                        onChange={(e) => setProductsQuantity(e.target.value, index)}
-                                    />
+                                    <span className='px-2'>{order?.body[index].weight}</span>
                                     <Button
                                         type="primary"
                                         className="bg-blue-500"

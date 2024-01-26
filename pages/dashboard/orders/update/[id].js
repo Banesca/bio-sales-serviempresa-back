@@ -89,6 +89,9 @@ const UpdateOrderPage = () => {
 	const [newTotal, setNewTotal] = useState(0);
 	const [totalDeclarado, setTotalDecla] = useState();
 	const [client, setClient] = useState({});
+	const [debts, setDebts] = useState(0);
+	const [amountlimit, setAmountlimit] = useState(0);
+	const [stopCredit, setStopCredit] = useState(false);
 	const EditableContext = React.createContext(null);
 	const { actualTdc, updateTdc } = useTdc();
 	const [inputValue, setInputValue] = useState('');
@@ -173,6 +176,7 @@ const UpdateOrderPage = () => {
 		const value = res.value.getValue();
 		setTotal(value.message[0].TOTAL);
 		console.log(value)
+		console.log(id)
 	};
 
 	useEffect(() => {
@@ -457,31 +461,34 @@ const UpdateOrderPage = () => {
 		},
 	};
 
-	/* const getDebtsbyClient = async (id) => {
+	 const getDebtsbyClient = async (id) => {
 		setLoading(true);
 		console.log(id);
 		try {
 			const res = await requestHandler.get(
-				`/api/v2/wallet/get/` + id.idUser + `/1000`
+				`/api/v2/wallet/get/` + id.phoneClient + `/1000`
 			);
 			console.log(res);
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
 			}
-			const value = res.value.getValue().data;
-			setdebts(value);
+			const value = res.value.getValue().deuda;
+			console.log(res.value.getValue().deuda);
+			const deuda=parseInt(value)
+			setDebts(deuda);
 		} catch (error) {
 			message.error('Ha ocurrido un error'); 
+			console.log()
 		} finally {
 			setLoading(false);
 		}
-	}; */
+	}; 
 
 	useEffect(() => {
 		if (currentOrder) {
 			calculateTotalRequest(currentOrder.idOrderH);
-			/* getDebtsbyClient(currentOrder);
-			console.log(currentOrder) */
+			 getDebtsbyClient(currentOrder);
+			console.log(currentOrder) 
 			getClients(currentOrder)
 		}
 	}, [currentOrder, getOrderRequest]);
@@ -606,7 +613,8 @@ const UpdateOrderPage = () => {
 		}
 		const value = res.value.getValue();
 		setIsIgtf(value.data.isigtf === 'true');
-
+		console.log(value.data.limitcredit)
+		setAmountlimit(parseInt(value.data.limitcredit))
 	};
 
 
@@ -692,6 +700,32 @@ const UpdateOrderPage = () => {
 		ExcelExport.push(productData);
 	});
 
+const ValidateAmount=()=>{
+	if(PaymentAddTipe===1 && debts+total>amountlimit){
+	message.error('La transaccion sobrepasa su limite de credito')
+	setStopCredit(true)
+	setPaymentToAddTipe([])
+	} 	 else if(stopCredit && debts+total<amountlimit){
+		setStopCredit(false)
+	 }
+}
+
+const handleChange=(e)=>{
+	console.log(e)
+	 setPaymentToAddTipe(e)
+
+}
+
+useEffect(() => {
+	ValidateAmount()
+	console.log(PaymentTipe)
+	console.log(PaymentAddTipe)
+	if(PaymentAddTipe!==1 && debts+total<amountlimit){
+		setStopCredit(false)
+	 }
+	
+}, [currentOrder, PaymentAddTipe,total]);
+	
 	return (
 		<DashboardLayout>
 			<div
@@ -790,16 +824,21 @@ const UpdateOrderPage = () => {
 
 											<Select
 												value={PaymentAddTipe}
-												onChange={(v) => setPaymentToAddTipe(v)}
+												onChange={handleChange}
 												style={{ width: '50%' }}
 												placeholder="Ingrese condición de pago"
 												disabled={!currentOrder || !currentOrder.body || currentOrder.body.length === 0}
 											>
-												{PaymentTipe &&
+												{stopCredit ? <Select.Option
+																	key={PaymentTipe[1].idPaymenConditions}
+																	value={PaymentTipe[1].idPaymenConditions}
+																>
+																	{PaymentTipe[1].note}
+																</Select.Option> :  PaymentTipe &&
 													PaymentTipe.map(
 														(PaymentTipe) =>
 															(currentOrder?.isacountCourrient !== 1 ||
-																PaymentTipe.note !== 'CREDITO') && (
+																PaymentTipe.note !== 'CREDITO' || !stopCredit) && (
 																<Select.Option
 																	key={PaymentTipe.idPaymenConditions}
 																	value={PaymentTipe.idPaymenConditions}

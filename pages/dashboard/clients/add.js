@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 import useClients from '../../../components/clients/hooks/useClients';
 import { useContext, useEffect, useState } from 'react';
 import { GeneralContext } from '../../_app';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -18,6 +20,8 @@ export default function AddClient() {
 	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 	const { listClients, deleteClient } = useClients();
+	const [startDate, setStartDate] = useState(new Date());
+	const [minDate, setMinDate] = useState(new Date(), 1);
 	const [form] = Form.useForm();
 
 	const IGTF = [
@@ -104,6 +108,8 @@ export default function AddClient() {
 					isigtf: data.isigtf,
 					idPaymenConditions: data.idPaymenConditions,
 					limitcredit: data.limitcredit,
+					expirationDay:data.expirationDay,
+
 				});
 				console.log(res)
 				message.success('Cliente agregado');
@@ -243,6 +249,11 @@ export default function AddClient() {
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item label="IGTF" style={{ marginLeft: 6 }} name="isigtf">
 									<Select options={IGTF} onChange={handleSelectChange} />
+								</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item label="Fecha De Expiracion" style={{ marginLeft: 6}}   name='expirationDay'>
+								<Input type="number" />
 								</Form.Item>
 							</Col>
 						</Row>
