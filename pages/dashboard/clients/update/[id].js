@@ -70,7 +70,7 @@ export default function EditClient() {
 	const getAddressRequest = async () => {
 		setLoading(true);
 		try {
-			const res = await requestHandler.get(`/api/v2/address/byclient/${client.id}`);
+			const res = await requestHandler.get(`/api/v2/client/address/byclient/${id}`);
 			const value = res.value.getValue();
 			setAddress(value.data)
 			setLoading(false);
