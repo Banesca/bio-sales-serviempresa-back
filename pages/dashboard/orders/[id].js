@@ -135,13 +135,13 @@ const OrderDetail = () => {
 	}
 
 
-	console.log(currentOrder?.idClientfk);
+	
 	let idClientfk = currentOrder;
-	console.log(idClientfk.idClientFk);
+	
 
 	const bodyRegister = {
 		title: "Confirmación orden numero: " + currentOrder?.idOrderH,
-		idUserAddFk: idClientfk.idClientFk,
+		idUserAddFk: idClientfk?.idClientFk,
 		isEntry: 0,
 		spending: 1,
 		idBranchFk: idSucursal,
