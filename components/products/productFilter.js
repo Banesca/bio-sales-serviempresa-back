@@ -144,7 +144,7 @@ const ProductFilter = ({ setQuery, clean, onData }) => {
 												key={c.idProductFamily}
 												value={c.idProductFamily}
 											>
-												{c.name}
+												{i.name}
 											</Select.Option>
 										))}
 								</Select>

@@ -124,21 +124,22 @@ const Sucursal = () => {
 			setSucursales(value);
 		}
 		setOpenModal(false);
+		window.location.reload()
 	};
 
 	const updateSucursal = async () => {
 		const response = await requestHandler.put('/api/v2/mapas/update', {
-			nameSucursal: formState.nombre,
+			nameSucursal:  formState.nombre!=='' ? formState.nombre : nombreSucursal,
 			timeStore: "0",
 			timeDelivery: formState.rif,
 			liWs: formState.numero,
 			isOpen: "0",
 			numberBank: "0",
-			address: formState.direccion,
+			address: formState.address!=='' ? formState.address : direccion,
 			clienteid: "0",
 			secretid: "0",
-			nameAppExternal: formState.razon,
-			deliveryStore: formState.rif,
+			nameAppExternal: formState.razon!=='' ? formState.razon : razon,
+			deliveryStore: formState.rif!=='' ? formState.rif : rif,
 			delieveryExternal: "0",
 			squedule: "0",
 			isChash: "0",
@@ -158,7 +159,9 @@ const Sucursal = () => {
 			const value = response.value._value.response;
 			setSucursales(value);
 		}
+		window.location.reload()
 		setOpenModal(false);
+
 	};
 
 	let body = {
