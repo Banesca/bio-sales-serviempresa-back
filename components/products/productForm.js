@@ -11,9 +11,11 @@ import {
 	message,
 	Card,
 	Table,
+	Space,
 } from 'antd';
 import {
 	ArrowLeftOutlined,
+	DeleteOutlined,
 	LeftOutlined,
 	UploadOutlined,
 } from '@ant-design/icons';
@@ -43,6 +45,14 @@ const ProductForm = (props) => {
 		getLines,
 	} = useCategoryContext();
 	const [products, setProducts] = useState(null);
+	const [listRegalos, setListRegalos] = useState([]);
+	const [listRegalos2, setListRegalos2] = useState([]);
+	const [listRegalos3, setListRegalos3] = useState([]);
+	const [deleteListRegalos, setDeleteListRegalos] = useState(null);
+	const [deleteadicional, setDeleteadicional] = useState([]);
+	const [prelistAdicional, setPrelistAdicional] = useState(null);
+	const [listTable, setListTable] = useState(null);
+	const [deleteList, setDeleteList] = useState([]);
 	const [obsequio, setObsequio] = useState(null);
 	const [file, setFile] = useState(null);
 	const [promos, setPromos] = useState(null);
@@ -56,6 +66,7 @@ const ProductForm = (props) => {
 	const [chips2, setChips2] = useState([]);
 	const [arregloObsequios, setArregloObsequios] = useState({
 		id: '',
+		
 		productPromo:'',
 		cantidad:'',
 		condicion:'',
@@ -82,7 +93,7 @@ const ProductForm = (props) => {
 		efectivo: props.product.efectivo || '',
 		maxProducVenta: props.product.maxProducVenta || '',
 		is5050: props.product.is5050 || '',
-		nameKitchen: props.product.nameKitchen || '',
+		listpromo: props.product.listpromo || '',
 		idUnitMeasurePurchaseFk:props.product.idUnitMeasurePurchaseFk  || '',
 		adicionals:props.product.adicionals || ''
 	};
@@ -114,7 +125,7 @@ const ProductForm = (props) => {
 			efectivo: '',
 			maxProducVenta: '',
 			is5050: '',
-			nameKitchen:'',
+			listpromo:'',
 			idUnitMeasurePurchaseFk:'',
 			adicionals:''
 		});
@@ -129,22 +140,40 @@ const ProductForm = (props) => {
 	const columns = [
 		{
 			title: 'Producto',
-			dataIndex: 'numberOrden',
+			dataIndex: 'id',
+			key:1,
 			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Forma de Pago',
-			dataIndex: 'facturaAfip',
+			dataIndex: 'Paymode',
+			key: 2,
+			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Cantidad',
-			dataIndex: 'facturaAfip',
+			dataIndex: 'cantidad',
+			key: 3,
+			render: (text) => <p>{text}</p>,
 		},
 		{
 			title: 'Condicion',
-			dataIndex: 'facturaAfip',
+			dataIndex: 'condicion',
+			key: 4,
+			render: (text) => <p>{text}</p>,
 		},
-		
+		{
+			title: 'Acciones',
+			dataIndex: 'productPromo',
+			key: 5,
+			render: (text, index) => ( 
+			<Space>
+				<Button type="primary" danger onClick={() => handleOpenDeleteModal(text)}>
+					<DeleteOutlined />
+				</Button>
+			</Space>
+		)
+		},
 	];
 
 
@@ -183,18 +212,24 @@ const ProductForm = (props) => {
 		setUnits(value)
 	}
 
-	const getObsequio = async (response) => {
+	const handleOpenDeleteModal=(id)=>{
+		console.log(id)
+		let filteredArray = deleteListRegalos ? deleteListRegalos.filter(item => item.productPromo !== id )  : listRegalos.filter(item => item.productPromo !== id);
+		let filteredArray3 = deleteListRegalos ? deleteListRegalos.filter(item => item.productPromo !== id )  : listRegalos3.filter(item => item.productPromo !== id);
+		let filteredArray2 = deleteadicional ? deleteadicional.filter(item => item.idProduct !== id) : product.adicionals.filter(item => item.idProduct !== id);
+		setListRegalos(filteredArray)
+		setListRegalos3(filteredArray3)
+		setDeleteList(filteredArray2)
+		
+		/*console.log(filteredArray2)
+		console.log(filteredArray.length)
+		console.log(filteredArray2.length)
+		console.log(filteredArray)
+		console.log(product?.adicionals)*/
+	}
 
-		console.log(response)
-
-		console.log(response.Obsequio)
-		/*let currentIs5051 = 
-		currentIs5051
-*/
-	//alert(newIs5051)
-
-	};
-
+	
+	
 	const fileProgress = (fileInput) => {
 		return new Promise((resolve, reject) => {
 			const img = new window.Image();
@@ -275,51 +310,86 @@ const ProductForm = (props) => {
 		setLoading(true);
 		const words = chips.map((chip) => chip);
 		const words2 = chips2.map((chip) => chip);
-		const adicionales = {
-		  idProductAdicionals: arregloObsequios.id,
-		  idProductFk: arregloObsequios.id,
-		  idProductAdicionalFk: arregloObsequios.productPromo
-		}
-		console.log(adicionales)
+		let lastStep=''
+		let step2=''
+		let newIs5050=''
 		let Arreglo=[]
-		Arreglo.push({adicionales:adicionales})
-		console.log
 		let currentIs5050 = [];
+		let CurrentpercentageOfProfit = [];
+		let CurrentpercentageOfProfit2 = [];
+		const adicionales = {idProductAdicionalFk: arregloObsequios.productPromo}
+		Arreglo.push(adicionales)
+		let productObsequio =null
+		let ObsequioLista =null
 		try {
 		  currentIs5050 = JSON.parse(product.is5050);
 		} catch (error) {
 		  console.error('Error parsing product.is5050:', error);
 		}
-		let AdicionalString = [];
+
+		if (Array.isArray(currentIs5050)) {
+			 newIs5050 = JSON.stringify(currentIs5050.concat(words));
+		  } else {
+			newIs5050 = words;
+		  }
+
 		try {
-			AdicionalString = JSON.parse(Arreglo);
+		  CurrentpercentageOfProfit = JSON.parse(product.listpromo);
 		} catch (error) {
-		  console.error('Error parsing adicionales:', error);
+		  console.error('Error parsing product.listpromo:', error);
 		}
+
+
+		try {
+		  CurrentpercentageOfProfit2 = JSON.parse(product.adicionals);
+		} catch (error) {
+		  console.error('Error parsing product.listpromo:', error);
+		}
+
+		
+
+		console.log(deleteListRegalos)
+		console.log(listRegalos)
+		//console.log(CurrentpercentageOfProfit2)
+		//console.log(currentIs5050)
+		//console.log(words2)
+		//console.log(words2.length)
+		//CurrentpercentageOfProfit.push(words2)
+
+
+	  //console.log(ObsequioLista);
+
+		
+		if(listRegalos2.length> 1){
+			productObsequio = JSON.stringify(listRegalos);
+			ObsequioLista = adicionales ?  JSON.stringify(product.adicionals.concat(Arreglo)) : JSON.stringify(product.adicionals);	
+			console.log('aqui 1')
+		} else {
+			productObsequio = JSON.stringify(listRegalos3);
+			ObsequioLista = adicionales ?  JSON.stringify(product.adicionals.concat(Arreglo)) : JSON.stringify(product.adicionals);	
+			console.log('aqui 2')
+		}
+
+		
 	  
-		let CurrentpercentageOfProfit = [];
-		try {
-		  CurrentpercentageOfProfit = JSON.parse(product.nameKitchen);
-		} catch (error) {
-		  console.error('Error parsing product.nameKitchen:', error);
-		}
-		console.log(AdicionalString)
-		const newIs5050 = JSON.stringify([...currentIs5050, ...words]);
-		const productObsequio = JSON.stringify([CurrentpercentageOfProfit, ...words2]);
-		const ObsequioLista = JSON.stringify([AdicionalString]);
-	  console.log(ObsequioLista);
+	    
+	  
+
+	  console.log(productObsequio)
+	  console.log(ObsequioLista)
+	 // console.log(productObsequio);
 		const updatedProduct = {
 		  ...product,
-		  adicionals: productObsequio,
-		  is5050: newIs5050,
-		  nameKitchen: productObsequio,
+		  adicionals: ObsequioLista,
+		  is5050:newIs5050 ,
+		  listpromo: productObsequio,
 		  idSucursalFk: selectedBusiness.idSucursal,
 		};
 		
 		await props.handleRequest(updatedProduct, file);
 		setProduct(updatedProduct);
 		
-		getObsequio(product)
+
 		setLoading(false);
 		if (!props.update) {
 		  return onReset();
@@ -341,45 +411,91 @@ const ProductForm = (props) => {
 		return <div>Cargando...</div>;
 	}
 
-	
-
-	const addProms= async () =>{
-		/*const res = await requestHandler.post(
-			`/api/v2/add/adicional/product/category`,
-			{
-				idAdicionalCategoryFk: arregloObsequios.productPromo, //Listado de productos
-  				  idProductFk: arregloObsequios.id,  //Id del prodducto que sera recibido
-				min: arregloObsequios.condicion,
-  				max: arregloObsequios.cantidad,  
-				order: arregloObsequios.Paymode
-			}
-		);		if (res.isLeft()) {
-			throw res.value.getErrorValue();
+	useEffect(()=>{
+		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!=='' && arregloObsequios.Paymode!=='' && listRegalos2.length<1){
+			setListRegalos3(listRegalos3.concat(arregloObsequios))
 		}
-*/
-	}
+		console.log(listRegalos3)
+	},[arregloObsequios])
+
+	const addProms= () =>{
+		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!=='' && arregloObsequios.Paymode!==''){
+			setListRegalos(listRegalos?.concat(arregloObsequios))
+			setListRegalos2(listRegalos?.concat(arregloObsequios))
+		//let arr=prelistAdicional?.concat(listRegalos)
+		console.log(prelistAdicional)
+		//console.log(arr)
+	} else {
+		console.log('no')
+	}}
 
 	useEffect(()=>{		
 		setArregloObsequios({
 		...arregloObsequios,
-		id: currentProduct?.idProduct,
 	})
-	console.log(currentProduct)
+	//console.log(currentProduct)
+	
 },[products])
 
 
 useEffect(()=>{
-	
-		setChips2([{obsequios:arregloObsequios}]);
-	
-	console.log(chips2)
+
+		setChips2([arregloObsequios]);
+		const productos=products?.find(product=>product.idProduct===arregloObsequios?.productPromo)
+		arregloObsequios.id=productos?.nameProduct
+
+		console.log(currentProduct)
+		/*
+		console.log(arregloObsequios);
+		console.log(typeof(product.listpromo)) 
+		console.log(listRegalos) 
+		console.log(chips2)*/
 },[arregloObsequios])
 
 
 
 
 
+useEffect(()=>{
+	//product.listpromo==='' ? null :  setListRegalos(JSON?.parse(product?.listpromo)) 
+	//product.adicionals==='' ? null :  setDeleteList(JSON?.parse(product?.adicionals)) 
+	/*console.log(product.listpromo)
+	console.log(product.adicionals)
+	console.log(listRegalos)
+	console.log(deleteList)*/
 
+		console.log(listRegalos)
+		//console.log(arr)
+
+		console.log(deleteListRegalos)
+		
+},[listRegalos])
+
+
+
+
+
+useEffect(() => {
+    if (product.listpromo !== '') {
+        try {
+            const parsedListPromo = JSON.parse(product.listpromo);
+            setListRegalos(parsedListPromo);
+            setListRegalos3(parsedListPromo);
+        } catch (error) {
+            console.error('Error parsing listpromo:', error);
+			setListRegalos([])
+			setListRegalos3([])
+        }
+    }
+	if (product.adicionals !== '') {
+        try {
+            const parsedListPromo = JSON.parse(product.adicionals);
+            setDeleteList(parsedListPromo);
+        } catch (error) {
+            console.error('Error parsing adicionals:', error);
+        }
+    }
+}, []);
 
 
 	const handleSwitchChange = (value) => {
@@ -455,9 +571,6 @@ useEffect(()=>{
 			event.preventDefault();
 		}
 	};
-	const AddList = ()=>{
-		promos
-	}
 
 	useEffect(() => {
 		// Este código se ejecutará cada vez que `product.is5050` cambie
@@ -501,7 +614,7 @@ useEffect(()=>{
 						efectivo: product.efectivo,
 						maxProducVenta: product.maxProducVenta,
 
-						nameKitchen:JSON.stringify(chips2),
+						listpromo:JSON.stringify(chips2),
 						idUnitMeasurePurchaseFk:product.idUnitMeasurePurchaseFk
 
 					}}
@@ -509,6 +622,45 @@ useEffect(()=>{
 					autoComplete="off"
 					form={form}
 				>
+									<Row>
+						<Col
+							sm={{ span: 10, offset: 0 }}
+							xs={{ span: 10, offset: 0 }}
+							lg={{ span: 5, offset: 19 }}
+							md={{ span: 7, offset: 5 }}
+						>
+							<Form.Item
+								style={{ marginTop: '1rem' }}
+								rules={[
+									{
+										required: true,
+										message: 'Sube una imagen',
+									},
+								]}
+							>
+								{currentProduct && currentProduct.urlImagenProduct && (
+									<img
+										style={{
+											maxWidth: '150px',
+											height: 'auto',
+											marginBottom: '10px',
+										}}
+										src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
+									/>
+								)}
+								<Upload
+									name="avatar"
+									className="avatar-uploader"
+									listType="picture"
+									fileList={fileList}
+									accept=".png,.jpg"
+									{...uploadProps}
+								>
+									<Button icon={<UploadOutlined />}>Subir imagen</Button>
+								</Upload>
+							</Form.Item>
+						</Col>
+					</Row>
 					<Row>
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
@@ -1137,7 +1289,7 @@ useEffect(()=>{
 						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 							<Form.Item
 								name="Obsequio"
-								label="Obsequio"
+								label="Agregar Obsequio"
 								style={{
 									padding: '0 .5rem',
 								}}
@@ -1157,12 +1309,15 @@ useEffect(()=>{
 								/>
 							</Form.Item>
 						</Col>
+						</Row>
+						<Row>
 						{obsequio == '1' && (
 							<>
 								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 									<Form.Item
 										style={{
 											padding: '0 .5rem',
+											color: 'white',
 										}}
 										label="Productos"
 										name="IdProduct"
@@ -1187,7 +1342,7 @@ useEffect(()=>{
 											onChange={(v) =>
 												setArregloObsequios({
 													...arregloObsequios,
-													productPromo: v,
+													productPromo: v
 												})
 											}
 										>
@@ -1204,9 +1359,6 @@ useEffect(()=>{
 								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:12 }}>
 									<Form.Item
 										label="Forma de Pago"
-										style={{
-											padding: '0 .5rem',
-										}}
 										name="Paymode"
 										rules={[
 											{
@@ -1215,11 +1367,11 @@ useEffect(()=>{
 											},
 										]}
 										labelCol={{
-											md: { span: 10 },
+											md: { span: 6 },
 											sm: { span: 6 },
 										}}
 										wrapperCol={{
-											md: { span: 14 },
+											md: { span: 16 },
 											sm: { span: 18 },
 										}}
 									>
@@ -1240,40 +1392,6 @@ useEffect(()=>{
 											</Select.Option>
 											)
 										</Select>
-									</Form.Item>
-								</Col>
-								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-									<Form.Item
-										label="Cantidad"
-										style={{
-											padding: '0 .5rem',
-										}}
-										name="Cantidad"
-										rules={[
-											{
-												required: obsequio == 1,
-												message: 'Ingresa una Cantidad',
-											},
-										]}
-										labelCol={{
-											md: { span: 10 },
-											sm: { span: 6 },
-										}}
-										wrapperCol={{
-											md: { span: 14 },
-											sm: { span: 18 },
-										}}
-									>
-											<Input
-										type="number"
-										value={arregloObsequios.cantidad}
-										onChange={(e) =>
-											setArregloObsequios({
-												...arregloObsequios,
-												cantidad: e.target.value,
-											})
-										}
-									/>
 									</Form.Item>
 								</Col>
 								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:12 }}>
@@ -1323,63 +1441,63 @@ useEffect(()=>{
 										</Select>
 									</Form.Item>
 								</Col>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+									<Form.Item
+										label="Cantidad"
+										style={{
+											padding: '0 .5rem',
+										}}
+										name="Cantidad"
+										rules={[
+											{
+												required: obsequio == 1,
+												message: 'Ingresa una Cantidad',
+											},
+										]}
+										labelCol={{
+											md: { span: 10 },
+											sm: { span: 6 },
+										}}
+										wrapperCol={{
+											md: { span: 14 },
+											sm: { span: 18 },
+										}}
+									>
+											<Input
+										type="number"
+										value={arregloObsequios.cantidad}
+										onChange={(e) =>
+											setArregloObsequios({
+												...arregloObsequios,
+												cantidad: e.target.value,
+											})
+										}
+									/>
+									</Form.Item>
+								</Col>
 								<Col
-							sm={{ span: 10, offset: 4 }}
-							xs={{ span: 10, offset: 4 }}
-							lg={{ span: 7, offset: 17  }}
-							md={{ span: 7, offset: 17  }}
+							sm={{ span: 10 }}
+							xs={{ span: 10 }}
+							lg={{ span: 5 }}
+							md={{ span: 5 }}
 						>
 								<Form.Item>
 								<Button block onClick={addProms} type="success">
 									Agregar Obsequio
-								</Button>
+								</Button>  
 							</Form.Item>
 							</Col>
-							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:20,offset:4 }}  >
-							<Table   columns={columns}/>
-							</Col>
+							
+
 							</>
 						)}
+						{listRegalos?.length>0  ?
+						<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:20,offset:4 }}  >
+							<Table columns={columns} dataSource={listRegalos}/>
+						</Col> : <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span:20,offset:4 }} ></Col>
+						}
 					</Row>
-					<Row>
-						<Col
-							sm={{ span: 10, offset: 0 }}
-							xs={{ span: 10, offset: 0 }}
-							lg={{ span: 7, offset: 5 }}
-							md={{ span: 7, offset: 5 }}
-						>
-							<Form.Item
-								style={{ marginTop: '1rem' }}
-								rules={[
-									{
-										required: true,
-										message: 'Sube una imagen',
-									},
-								]}
-							>
-								{currentProduct && currentProduct.urlImagenProduct && (
-									<img
-										style={{
-											maxWidth: '150px',
-											height: 'auto',
-											marginBottom: '10px',
-										}}
-										src={`${ip}:${generalContext?.api_port}/product/${currentProduct.urlImagenProduct}`}
-									/>
-								)}
-								<Upload
-									name="avatar"
-									className="avatar-uploader"
-									listType="picture"
-									fileList={fileList}
-									accept=".png,.jpg"
-									{...uploadProps}
-								>
-									<Button icon={<UploadOutlined />}>Subir imagen</Button>
-								</Upload>
-							</Form.Item>
-						</Col>
-					</Row>
+
 					<Row>
 						<Col
 							sm={{ span: 10, offset: 0 }}

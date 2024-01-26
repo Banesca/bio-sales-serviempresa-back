@@ -66,6 +66,8 @@ export default function ProductList({
 
 	const handleAddProductToOrder = async (body) => {
 		setLoading(true);
+		console.log(body)
+		console.log(orderId)
 		try {
 			let priceProductOrder =
 				body.isPromo == 1 ? body.marketPrice : body.priceSale;
@@ -87,6 +89,7 @@ export default function ProductList({
 	};
 
 	const handleAddProduct = async (record) => {
+		console.log(record)
 		if (record.stock <= 0) {
 			alert('No hay stock disponible para este producto');
 			console.log(record.maxProducVenta)

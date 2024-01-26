@@ -27,6 +27,7 @@ const PRODUCT_INITIAL_STATE = {
 	tax: '',
 	starts: '5',
 	adicionals:'',
+	listpromo:'',
 };
 
 
@@ -55,7 +56,7 @@ const setData = (data) => {
 		isheavy: data.isheavy,
 		maxProducVenta: data.maxProducVenta,
 		is5050: data.is5050,
-		nameKitchen:data.nameKitchen,
+		listpromo:data.listpromo,
 		adicionals:data.adicionals,
 		idUnitMeasurePurchaseFk:data.idUnitMeasurePurchaseFk
 	};
@@ -108,6 +109,7 @@ export function useProducts() {
 		}
 		const value = response.value.getValue().data;
 		setProductsInv(value);
+		console.log(value)
 	};
 
 	const validateBarCode = async (barCode, idSucursalFk) => {
@@ -138,8 +140,8 @@ export function useProducts() {
 		}
 		const formData = setFormData(body, file);
 		const res = await requestHandler.post(
-			//'/api/v2/product/add/sales',
-			'/api/v2/product/add',
+			'/api/v2/product/add/sales',
+
 			formData
 		);
 		if (res.isLeft()) {
@@ -161,8 +163,7 @@ export function useProducts() {
 		const body = setData(data);
 		const formData = setFormData(body, file, true);
 		const res = await requestHandler.put(
-			//'/api/v2/product/update/sales',
-			"/api/v2/product/update",
+			'/api/v2/product/update/sales',
 			formData
 		);
 		if (res.isLeft()) {

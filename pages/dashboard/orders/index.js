@@ -30,6 +30,9 @@ export const orderStatusToUse = {
 export default function OrdersPage() {
 	const { orders, getOrders } = useOrders();
 	const [stateOrder,setStateOrder] = useState(3);
+	const [stateOrder2,setStateOrder2] = useState([]);
+	const [initOrders,setInitOrders] = useState([]);
+	const [saveOrders,setSaveOrders] = useState([]);
 	const generalContext = useContext(GeneralContext);
 	const { loading, setLoading } = useLoadingContext();
 	const { selectedBusiness } = useBusinessProvider();
@@ -75,11 +78,14 @@ export default function OrdersPage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [generalContext, selectedBusiness]);
 
-
+const handleChange=(e)=>{
+	setStateOrder2(saveOrders.filter(o=>o.idStatusOrder==e))
+}
 
 	const ordersList = useMemo(() => {
-		const result = orders.filter((order) => order.idStatusOrder === stateOrder);
-
+		const result = orders.filter(o=>o.idStatusOrder===stateOrder)
+		setSaveOrders(orders)
+setInitOrders(result);
 		let list = result;
 		if (query.idStatusOrder) {
 			if (list) {
@@ -101,11 +107,41 @@ export default function OrdersPage() {
 				list = list.filter((o) => o.numberOrden == query.numberOrden);
 			}
 		}
-		return list;
+		setInitOrders(list)
 	}, [query, orders]);
 
-useEffect(()=>{ },[stateOrder,ordersList])
-	
+
+	useEffect(()=>{
+		
+		const result = orders
+	console.log(saveOrders)
+		let list = result;
+		if (query.idStatusOrder) {
+			if (list) {
+				list = list.filter((o) => o.idStatusOrder == query.idStatusOrder);
+			}
+		}
+		if (query.fullNameClient) {
+			if (list) {
+				list = list.filter((o) => o.fullNameClient == query.fullNameClient);
+			}
+		}
+		if (query.fullname) {
+			if (list) {
+				list = list.filter((o) => o.fullname == query.fullname);
+			}
+		}
+		if (query.numberOrden) {
+			if (list) {
+				list = list.filter((o) => o.numberOrden == query.numberOrden);
+			}
+		}
+		//console.log(list)
+		//setStateOrder2(list)
+	},[stateOrder])
+
+
+
 	return (
 		<DashboardLayout>
 			<div className="m-4 p-4">
@@ -120,10 +156,8 @@ useEffect(()=>{ },[stateOrder,ordersList])
 							>
 								<Select value={stateOrder}
 							onChange={(value) =>
-								setStateOrder((prev) => ({
-									...prev,
-									stateOrder: value,
-								}))
+								handleChange(value
+								)
 							}>
 									{Object.entries(orderStatusToUse).map((o) => {
 										return (
@@ -146,7 +180,7 @@ useEffect(()=>{ },[stateOrder,ordersList])
 					getOrdersRequest={getOrdersRequest}
 				/>
 
-				<OrdersTable orders={ordersList} />
+				<OrdersTable orders={stateOrder2.length>1 ? stateOrder2 : initOrders} />
 			</div>
 			<Modal
 				title={'Detail'}
