@@ -1,4 +1,4 @@
-import { Button, Col, Row, Select, InputNumber } from 'antd';
+import { Button, Col, Row, Select, InputNumber, Table, Space } from 'antd';
 import DashboardLayout from '../../../../components/shared/layout';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -13,6 +13,7 @@ import useClients from '../../../../components/clients/hooks/useClients';
 import { useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { DeleteOutlined } from '@ant-design/icons';
 
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
@@ -26,11 +27,38 @@ export default function EditClient() {
 	const { clients } = useClients();
 	const [click, setClick] = useState(false);
 	const [address, setAddress] = useState([]);
+	const [direccionAdicional, setDireccionAdicional] = useState('');
 	const [isIgtf, setIsIgtf] = useState(client?.isigtf);
 	const [isExpiredDate, setIsExpiredDate] = useState(client?.expirationDay);
 	const [startDate, setStartDate] = useState(new Date());
 	const [minDate, setMinDate] = useState(new Date(), 1);
+	const [bottom, setBottom] = useState('bottomLeft');
+	const columns=[
 
+		{
+			title: 'Direcciones',
+			dataIndex: 'title',
+			key: 0,
+			render: (text) => <p>{text}</p>,
+		},		
+		{
+			title: 'Acciones',
+			align: 'center',
+			dataIndex: 'idListAddress',
+			key: 2,
+			render: (text, index) => (
+				<>
+					<Space size="middle" className="w-full mx-0 my-auto flex justify-center">
+						<Button                                     type="primary"
+                                    danger onClick={() => DeleteAddressRequest(text)}>
+							<DeleteOutlined />
+						</Button>
+					</Space>
+				</>
+			),
+		},
+
+	]
 
 	const onReset = () => {
 		form.resetFields();
@@ -71,11 +99,44 @@ export default function EditClient() {
 		setLoading(true);
 		try {
 			const res = await requestHandler.get(`/api/v2/client/address/byclient/${id}`);
-			const value = res.value.getValue();
-			setAddress(value.data)
+			const value = res.value.getValue().response;
+			setAddress(value)
+			console.log(value)
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
+		}
+	};
+
+	/*/add/address POST {
+		title, idClientFk
+		}*/
+
+	const AddAddressRequest = async () => {
+		setLoading(true);
+		try {
+			await requestHandler.post(`/api/v2/client/add/address/`,{
+				title:direccionAdicional,
+				idClientFk:id
+			});
+			
+			message.success('Direccion añadida')
+			getAddressRequest()
+		} catch (error) {
+			setLoading(false);
+			message.error('no se pudo guardar la direccion')
+		}
+	};
+
+	const DeleteAddressRequest = async (id) => {
+		setLoading(true);
+		try {
+			await requestHandler.delete(`/api/v2/client/remove/address/${id}`);
+			message.success('Direccion eliminada')
+			getAddressRequest()
+		} catch (error) {
+			setLoading(false);
+			message.error('no se pudo eliminar la direccion')
 		}
 	};
 
@@ -83,16 +144,20 @@ export default function EditClient() {
 		setIsIgtf(value);
 	};
 
-	const handleDateChange = (date,dateString) => {
-		console.log(date)
-		setIsExpiredDate(dateString)
-	};
+
+
+
 
 	useEffect(() =>{
-		console.log(client)
-		console.log(isExpiredDate)
+
 		console.log(address)
-	},[isExpiredDate])
+	},[])
+
+	useEffect(() =>{
+
+		console.log(address)
+	},[address])
+
 
 	const validator = (data) => {
 		return {
@@ -161,6 +226,8 @@ export default function EditClient() {
 		}
 	};
 
+
+	
 	if (Object.entries(client).length === 0) {
 		getClientRequest();
 		getAddressRequest()
@@ -245,6 +312,7 @@ export default function EditClient() {
 								</Form.Item>
 							</Col>
 						</Row>
+
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
@@ -325,6 +393,33 @@ export default function EditClient() {
 								<Form.Item label="Fecha De Expiracion" style={{ marginLeft: 6}}   name='expirationDay'>
 								<Input type="number" />
 								</Form.Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Form.Item
+									label="Dirección Adicional"
+									style={{ marginRight: 6 }}
+									name="Dirección Adicional"
+								>
+									<Input type="text" value={direccionAdicional} onChange={(e)=>setDireccionAdicional(e.target.value)} />
+								</Form.Item>
+							</Col>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+							<Button
+							onClick={AddAddressRequest}
+							type="success" block
+							style={{ marginTop: 30,marginLeft: 2  }}
+						>
+							Agregar
+						</Button>
+							</Col>
+							</Row>
+							<Row>
+							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+								<Table columns={columns} dataSource={address}         pagination={{
+          position: ['bottomLeft']
+        }}/>
 							</Col>
 						</Row>
 						<Row>

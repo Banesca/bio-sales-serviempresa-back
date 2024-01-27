@@ -13,14 +13,18 @@ import { CategoriesProvider } from '../hooks/useCategoriesProvider';
 import { BrandsProvider } from '../hooks/useBrandsProvider';
 import { LoadingProvider } from '../hooks/useLoadingProvider';
 import { ProfileProvider } from '../context/useUserProfileProvider';
+import useClients from '../components/clients/hooks/useClients';
+import { useRequest } from '../hooks/useRequest';
+
 
 export const GeneralContext = createContext();
 
 function MyApp({ Component, pageProps }) {
 	const [generalData, setGeneralData] = useState({});
 	const [loading, setLoading] = useState(true);
+	const { clients, listClients, deleteClient } = useClients();
 	const router = useRouter();
-
+	const { requestHandler } = useRequest();
 	/* async function setBusiness(business = 'serviempresa') {
 		try {
 			const response = await axios.get(
@@ -55,7 +59,27 @@ function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		setBusiness();
 		setLoading(false);
+		console.log(generalData)
+
 	}, []);
+
+	useEffect(() => {
+	console.log(generalData)
+		//getSucursales()
+	}, [generalData]);
+
+	/*const getSucursales = async () => {
+		const res = await requestHandler.get(`/api/v2/reportvisit/list/1/:100`);
+		console.log(res);
+	};*/
+
+	/*useEffect(() => {
+		setBusiness();
+		setLoading(false);
+		console.log('hola mundo')
+	}, []);
+
+*/
 
 	useEffect(() => {
 		const path = router.pathname;
