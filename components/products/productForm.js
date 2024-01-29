@@ -66,7 +66,7 @@ const ProductForm = (props) => {
 	const [chips2, setChips2] = useState([]);
 	const [arregloObsequios, setArregloObsequios] = useState({
 		id: '',
-		
+		cantidadAregalar:'',
 		productPromo:'',
 		cantidad:'',
 		condicion:'',
@@ -162,6 +162,13 @@ const ProductForm = (props) => {
 			key: 4,
 			render: (text) => <p>{text}</p>,
 		},
+		{
+			title: 'Cantidad a regalar',
+			dataIndex: 'cantidadAregalar',
+			key: 4,
+			render: (text) => <p>{text}</p>,
+		},
+		
 		{
 			title: 'Acciones',
 			dataIndex: 'productPromo',
@@ -412,14 +419,14 @@ const ProductForm = (props) => {
 	}
 
 	useEffect(()=>{
-		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!=='' && arregloObsequios.Paymode!=='' && listRegalos2.length<1){
+		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!==''  && arregloObsequios.cantidadAregalar!=='' && arregloObsequios.Paymode!=='' && listRegalos2.length<1){
 			setListRegalos3(listRegalos3.concat(arregloObsequios))
 		}
 		console.log(listRegalos3)
 	},[arregloObsequios])
 
 	const addProms= () =>{
-		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!=='' && arregloObsequios.Paymode!==''){
+		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.cantidadAregalar!=='' && arregloObsequios.condicion!=='' && arregloObsequios.Paymode!==''){
 			setListRegalos(listRegalos?.concat(arregloObsequios))
 			setListRegalos2(listRegalos?.concat(arregloObsequios))
 		//let arr=prelistAdicional?.concat(listRegalos)
@@ -1390,6 +1397,9 @@ useEffect(() => {
 											<Select.Option value={'Credito'}>
 												Credito
 											</Select.Option>
+											<Select.Option value={'Ambas'}>
+												Ambas
+											</Select.Option>
 											)
 										</Select>
 									</Form.Item>
@@ -1441,13 +1451,47 @@ useEffect(() => {
 										</Select>
 									</Form.Item>
 								</Col>
-								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }}>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 									<Form.Item
 										label="Cantidad"
 										style={{
 											padding: '0 .5rem',
 										}}
 										name="Cantidad"
+										rules={[
+											{
+												required: obsequio == 1,
+												message: 'Ingresa una Cantidad',
+											},
+										]}
+										labelCol={{
+											md: { span: 6},
+											sm: { span: 12 },
+										}}
+										wrapperCol={{
+											md: { span: 16 },
+											sm: { span: 18 },
+										}}
+									>
+											<Input
+										type="number"
+										value={arregloObsequios.cantidad}
+										onChange={(e) =>
+											setArregloObsequios({
+												...arregloObsequios,
+												cantidad: e.target.value,
+											})
+										}
+									/>
+									</Form.Item>
+								</Col>
+								<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
+									<Form.Item
+										label="Cantidad a regalar"
+										style={{
+											padding: '0 .5rem',
+										}}
+										name="cantidadAregalar"
 										rules={[
 											{
 												required: obsequio == 1,
@@ -1465,11 +1509,12 @@ useEffect(() => {
 									>
 											<Input
 										type="number"
-										value={arregloObsequios.cantidad}
+										min={0}
+										value={arregloObsequios.cantidadAregalar}
 										onChange={(e) =>
 											setArregloObsequios({
 												...arregloObsequios,
-												cantidad: e.target.value,
+												cantidadAregalar: e.target.value,
 											})
 										}
 									/>
@@ -1478,8 +1523,8 @@ useEffect(() => {
 								<Col
 							sm={{ span: 10 }}
 							xs={{ span: 10 }}
-							lg={{ span: 5 }}
-							md={{ span: 5 }}
+							lg={{ span: 8,  offset:3}}
+							md={{ span: 8, offset:3 }}
 						>
 								<Form.Item>
 								<Button block onClick={addProms} type="success">

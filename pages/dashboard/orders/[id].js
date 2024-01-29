@@ -36,6 +36,7 @@ import { apiImg, ipBackOffice } from '../../../util/environment';
 const OrderDetail = () => {
 	const router = useRouter();
 	const [openModal2, setOpenModal2] = useState(false);
+	const [openModal3, setOpenModal3] = useState(false);
 	const { id } = router?.query;
 	const [log, setLog] = useState();
 	const { actualTdc, updateTdc } = useTdc();
@@ -50,6 +51,8 @@ const OrderDetail = () => {
 	const [dataSource, setDataSource] = useState([]);
 	const generalContext = useContext(GeneralContext);
 	const [model, setModel] = useState('');
+	const [model2, setModel2] = useState('');
+	const [model3, setModel3] = useState('');
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -228,12 +231,28 @@ const OrderDetail = () => {
 	const handleInputChange = (e) => {
 		setModel(e.target.value);
 	};
+
+	const handleInputChange2 = (e) => {
+		setModel2(e.target.value);
+	};
 	useEffect(() => {
 		setLoading(true);
 		if (Object.keys(generalContext).length && id) {
 			getOrderRequest(id);
 		}
 	}, [generalContext, id]);
+
+	useEffect(() => {
+console.log(currentOrder)
+	}, []);
+
+	useEffect(() => {
+		console.log(currentOrder)
+		console.log(currentOrder?.numbernotecredit )
+		console.log(currentOrder?.facturaAfip )
+			}, [currentOrder]);
+		
+
 
 	if (loading || !currentOrder) {
 		return (
@@ -259,17 +278,71 @@ const OrderDetail = () => {
 		setOpenModal2(false);
 	};
 
+	const closeModals2 = () => {
+		setOpenModal3(false);
+	};
+
+
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
 	};
 
-	const actualizaciónFactura = () => {
+	const handleEditNote = () => {
+		setOpenModal3(true);
+	};
+
+
+	const actualizaciónFactura = (idOrderH) => {
+		console.log(idOrderH);
+		try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
+		console.log(res);
+		message.success('Factura actualizada');}catch (error){console.log(error);
+
+		}finally{
+
+			window.location.reload();
+		}
+		
+	};
+
+	/*POST 
+
+{
+numbernotecredit,
+idOrderH
+}
+
+/order/set/numbernotecredit */
+
+	const actualizaciónNota = (idOrderH) => {
 		console.log(idOrderH);
 
-		const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
-		console.log(res);
-		message.success('Factura actualizada');
+		try {
+			const res = requestHandler.post(`/api/v2/order/set/numbernotecredit`,{
+				numbernotecredit:idOrderH,
+				idOrderH:id,
+			} );
+			if(res.status===200){
+				//window.location.reload();
+				console.log(res.status==200);
+			}
+			console.log(res);
+			message.success('Nota de credito creada');
+			
+
+		}catch (error){console.log(error);
+			message.error('Error en la creacion');
+		}finally{
+			setTimeout(function(){
+				location.reload();
+			 }, 3000);
+
+		}
+
+		
+	
 	};
+
 
 	const commonData = {
 		'Numero del pedido': currentOrder.numberOrden,
@@ -332,6 +405,7 @@ const OrderDetail = () => {
 							type="success"
 							onClick={() => openTrucks()}
 							block
+							disabled={currentOrder?.facturaAfip}
 							style={{ width: '100%' }}
 						>
 							Agregar factura
@@ -354,6 +428,17 @@ const OrderDetail = () => {
 							onClick={handleButtonClick}
 						>
 							Pagar
+						</Button>
+					</div>
+					<div style={{ display: 'flex', width: 'fit-content', marginLeft: '10px' }}>
+						<Button
+							htmlType="submit"
+							type="success"
+							block
+							disabled={!currentOrder?.facturaAfip ||  currentOrder?.numbernotecredit!==null}
+							onClick={handleEditNote}
+						>
+							Agregar Nota de Credito
 						</Button>
 					</div>
 				</div>
@@ -421,6 +506,10 @@ const OrderDetail = () => {
 							<p style={{ fontWeight: 'bold' }}>Número de factura:</p>
 							<p>{currentOrder.facturaAfip}</p>
 						</List.Item>
+						<List.Item>
+							<p style={{ fontWeight: 'bold' }}>Nota de credito:</p>
+							<p>{currentOrder?.numbernotecredit}</p>
+						</List.Item>
 
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
@@ -472,7 +561,23 @@ const OrderDetail = () => {
 						</Form.Item>
 					</Form>
 					<div className="flex justify-end gap-5">
-						<Button className="bg-blue-500" type="primary" onClick={() => actualizaciónFactura(idOrderH)}>
+						<Button className="bg-blue-500" type="primary" onClick={() => actualizaciónFactura(model)}>
+							Guardar
+						</Button>
+					</div>
+				</div>
+			</Modal>
+
+			<Modal open={openModal3} onCancel={closeModals2} footer={false}>
+				<div className="flex flex-col justify-between h-full gap-5">
+					<h1>Agregar Nota de credito</h1>
+					<Form layout="vertical">
+						<Form.Item label="Nota de credito" name="model2">
+							<Input onChange={handleInputChange2} />
+						</Form.Item>
+					</Form>
+					<div className="flex justify-end gap-5">
+						<Button className="bg-blue-500" type="primary" onClick={() => actualizaciónNota(model2)}>
 							Guardar
 						</Button>
 					</div>

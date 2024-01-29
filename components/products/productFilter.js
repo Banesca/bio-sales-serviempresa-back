@@ -50,8 +50,13 @@ const ProductFilter = ({ setQuery, clean, onData }) => {
 	
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
-		
+		console.log(categories)
 	}, []);
+
+		
+	useEffect(() => {
+		console.log(categories)
+	}, [selectedBusiness]);
 
 	return (
 		<Collapse className="bg-gray-100 my-5 shadow-md">
@@ -130,13 +135,7 @@ const ProductFilter = ({ setQuery, clean, onData }) => {
 								}}
 							>
 								<Select
-									showSearch
-									allowClear
-									filterOption={(input, option) => {
-										return (option?.children ?? '')
-											.toLocaleLowerCase()
-											.includes(input.toLocaleLowerCase());
-									}}
+									
 								>
 									{categories &&
 										categories.map((c, i) => (
@@ -144,7 +143,7 @@ const ProductFilter = ({ setQuery, clean, onData }) => {
 												key={c.idProductFamily}
 												value={c.idProductFamily}
 											>
-												{i.name}
+												{c.name}
 											</Select.Option>
 										))}
 								</Select>

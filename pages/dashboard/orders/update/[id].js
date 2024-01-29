@@ -491,6 +491,7 @@ const UpdateOrderPage = () => {
 			console.log(currentOrder) 
 			getClients(currentOrder)
 		}
+		console.log(currentOrder?.comments) 
 	}, [currentOrder, getOrderRequest]);
 
 	const handleReceiveOrder = async () => {

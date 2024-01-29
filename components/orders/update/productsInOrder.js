@@ -53,6 +53,15 @@ export default function ProductsInOrder({
                     ),
                 },
                 {
+                    title: 'Observacion',
+                    dataIndex: 'comments',
+                    width: '150px',
+                    key: 6,
+                    render: (text) => (
+                        <p>{text}</p>
+                    ),
+                },
+                {
                     title: 'Precio',
                     dataIndex: 'priceSale',
                     width: '100px',
@@ -61,6 +70,7 @@ export default function ProductsInOrder({
                         <p>$ {record.isPromo == '1' ? record.marketPrice : text}</p>
                     ),
                 },
+
                 {
                     title: 'Acciones',
                     width: '100px',
@@ -117,7 +127,7 @@ export default function ProductsInOrder({
                 dataSource={productList}
                 className="ordens"
                 pagination={{
-                    pageSize: 6,
+                    pageSize: 8,
                 }}
                 scroll={{
                     y: 290,
