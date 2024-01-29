@@ -93,7 +93,7 @@ const itemsMenu6 = [
 	
 	getItem('Ordenes', '10', <FaShoppingCart />),
 	getItem('Cuentas por cobrar', '18',<ExceptionOutlined />),
-	getItem('Cerrar sesión', '19', <LogoutOutlined />),
+	getItem('Cerrar sesión', '20', <LogoutOutlined />),
 ];
 
 
