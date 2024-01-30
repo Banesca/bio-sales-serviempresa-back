@@ -250,6 +250,7 @@ console.log(currentOrder)
 		console.log(currentOrder)
 		console.log(currentOrder?.numbernotecredit )
 		console.log(currentOrder?.facturaAfip )
+		console.log(currentOrder?.imageBank1 )
 			}, [currentOrder]);
 		
 
