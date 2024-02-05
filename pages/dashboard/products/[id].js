@@ -186,7 +186,7 @@ const Product = () => {
 					<List.Item>
 						<p style={{ fontWeight: 'bold' }}>Marca</p>
 						<p>
-							{currentBrand.length == undefined
+							{currentBrand?.length == undefined
 								? 'Indefinida'
 								: currentBrand?.name}
 						</p>

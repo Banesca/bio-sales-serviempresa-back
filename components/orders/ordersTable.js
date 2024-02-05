@@ -182,6 +182,7 @@ export default function OrdersTable({ orders }) {
 						order.idStatusOrder == 2 ||
 						order.idStatusOrder == 3 ||
 						order.idStatusOrder == 6 ||
+						order.idStatusOrder == 1 && order.isacountCourrient == 1 ||
 						order.idStatusOrder == 4 ? (
 							<Button
 								type="primary"
@@ -199,6 +200,7 @@ export default function OrdersTable({ orders }) {
 					  order.idStatusOrder == 2 ||
 					  order.idStatusOrder == 6 ||
 					  order.idStatusOrder == 3 ||
+					  order.idStatusOrder == 1 && order.isacountCourrient == 1 ||
 					  order.idStatusOrder == 4 ? (
 						<Button type="primary" onClick={() => handleSeeDetail(order)}>
 							<EyeTwoTone />

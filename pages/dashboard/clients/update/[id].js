@@ -24,7 +24,7 @@ export default function EditClient() {
 	const [client, setClient] = useState({});
 	const router = useRouter();
 	const { id } = router.query;
-	const { clients } = useClients();
+	const { clients, listClients} = useClients();
 	const [click, setClick] = useState(false);
 	const [address, setAddress] = useState([]);
 	const [direccionAdicional, setDireccionAdicional] = useState('');
@@ -76,6 +76,8 @@ export default function EditClient() {
 	useEffect(() => {
 		click ? onReset() : '';
 	}, [click]);
+
+
 
 	const IGTF = [
 		{ label: 'Si', value: 'true' },
@@ -149,12 +151,23 @@ export default function EditClient() {
 
 
 	useEffect(() =>{
-
-		console.log(address)
+		
+		console.log(clients)
 	},[])
 
 	useEffect(() =>{
 
+		console.log(clients)
+	},[])
+
+	useEffect(() =>{
+
+		console.log(clients)
+	},[client])
+
+
+	useEffect(() =>{
+		console.log(clients)
 		console.log(address)
 	},[address])
 
@@ -164,6 +177,7 @@ export default function EditClient() {
 			val: Object.values(
 				clients.map((client) => {
 					if (client.phone == data.phoneClient) {
+						console.log('entro aqui')
 						return true;
 					}
 				})
@@ -172,6 +186,7 @@ export default function EditClient() {
 				let calc = Object.values(
 					clients.map((client) => {
 						if (client.phone == data.phoneClient) {
+							console.log('entro aqui-2')
 							return 2;
 						}
 					})
@@ -180,6 +195,28 @@ export default function EditClient() {
 					return 'El número de telefono ya esta en uso';
 				}
 			},
+			val2: Object.values(
+				clients.map((client) => {
+					if (client.numberDocument == data.rif) {
+						console.log('entro aqui')
+						return true;
+					}
+				})
+			).includes(true),
+			prob: () => {
+				let calc = Object.values(
+					clients.map((client) => {
+						if (client.numberDocument == data.rif) {
+							console.log('entro aqui-2')
+							return 2;
+						}
+					})
+				);
+				if (calc.includes(2)) {
+					return 'El número de rif ya esta en uso';
+				}
+			},
+			
 		};
 	};
 
@@ -195,10 +232,10 @@ export default function EditClient() {
 
 	const updateClient = async (data) => {
 		setLoading(true);
-
+		validator(data)
 		await getClientRequest();
 		try {
-			if (!validator(data).val) {
+			if (!validator(data).val || !validator(data).val2 ) {
 				const res = await requestHandler.put('/api/v2/client/update', {
 					nameClient: data.fullNameClient,
 					phone: data.phoneClient,
@@ -231,6 +268,7 @@ export default function EditClient() {
 	if (Object.entries(client).length === 0) {
 		getClientRequest();
 		getAddressRequest()
+		listClients()
 		return <Loading isLoading={true} />;
 	}
 

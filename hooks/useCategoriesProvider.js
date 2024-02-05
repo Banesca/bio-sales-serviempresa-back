@@ -74,6 +74,7 @@ export function CategoriesProvider({ children }) {
 			throw res.value.getErrorValue();
 		}
 		const categories = res.value.getValue().response;
+		console.log(categories)
 		dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
 	};
 
@@ -96,12 +97,15 @@ export function CategoriesProvider({ children }) {
 		await getCategories(businessId);
 	};
 
-	const editCategories = async (name, idS, idP, id) => {
-		const res = await requestHandler.put('/api/v2/family/update/lite', {
-			name,
-			idStatusFk: idS,
-			idProductFamily: idP,
-		});
+	const editCategories = async (name, idS, idP, id,order) => {
+		const data= new FormData()
+		data.append('idProductFamily', idP);
+		data.append('nameSubFamily',name);
+		data.append('idStatusFk', idS);
+		data.append('order', order); 
+
+
+		const res = await requestHandler.put('/api/v2/family/update', data, idP);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

@@ -181,6 +181,7 @@ const ImportClients = () => {
 
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
+		console.log(rows)
 		for (const row of rows) {
 			const obj = {
 				nameClient: row.razon_social,
@@ -224,6 +225,7 @@ const ImportClients = () => {
 			let data = XLSX.utils.sheet_to_json(workSheet);
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
+			console.log(uploadData);
 			setData(uploadData);
 		};
 	};
@@ -425,6 +427,7 @@ const ImportClients = () => {
 					onOk={handleSend}
 					okText="Importar"
 					okType="warning"
+					
 					cancelText="Cancelar"
 				>
 					<p>

@@ -173,6 +173,37 @@ const OrderDetail = () => {
 		isCloseBox: false,
 	};
 
+	const bodyRegisterAnul = {
+		title: "Anulacion orden numero: " + currentOrder?.idOrderH,
+		idUserAddFk: idClientfk?.idClientFk,
+		isEntry: 0,
+		spending: 0,
+		idBranchFk: idSucursal,
+		idCurrencyFk: 1,
+		mpCash: 0,
+		mpCreditCard: 0,
+		mpDebitCard: 0,
+		mpTranferBack: 0,
+		mpMpago: 0,
+		mpRappi: 0,
+		mpGlovo: 0,
+		mpUber: 0,
+		mpPedidosya: 0,
+		mpJust: 0,
+		mpWabi: 0,
+		mpOtro2: 0,
+		mpPedidosyacash: 0,
+		mpPersonal: 0,
+		mpRapicash: 0,
+		mpPresent: 0,
+		mpPaypal: 0,
+		mpZelle: 0,
+		mpBofa: 0,
+		mpYumi: 0,
+		idBoxFk: 1,
+		isCloseBox: false,
+	};
+
 	const mpObjects = Object.keys(attributes)
 		.map((key) => ({
 			name: attributes[key],
@@ -294,8 +325,11 @@ console.log(currentOrder)
 
 
 	const actualizaciónFactura = (idOrderH) => {
-		console.log(idOrderH);
-		try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
+
+		const regex = /^[0-9]+$/;
+		if (regex.test(model)) {
+		  // inputValue is valid
+		  try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
 		console.log(res);
 		message.success('Factura actualizada');}catch (error){console.log(error);
 
@@ -303,6 +337,13 @@ console.log(currentOrder)
 
 			window.location.reload();
 		}
+		
+		} else {
+		  // inputValue is invalid
+		  message.error('solo se permiten numeros')
+		}
+
+		console.log(idOrderH);
 		
 	};
 
@@ -318,27 +359,35 @@ idOrderH
 	const actualizaciónNota = (idOrderH) => {
 		console.log(idOrderH);
 
-		try {
-			const res = requestHandler.post(`/api/v2/order/set/numbernotecredit`,{
-				numbernotecredit:idOrderH,
-				idOrderH:id,
-			} );
-			if(res.status===200){
-				//window.location.reload();
-				console.log(res.status==200);
+		const regex = /^[0-9]+$/;
+		if (regex.test(idOrderH)) {
+			try {
+				const res = requestHandler.post(`/api/v2/order/set/numbernotecredit`,{
+					numbernotecredit:idOrderH,
+					idOrderH:id,
+				} );
+				if(res.status===200){
+					//window.location.reload();
+					console.log(res.status==200);
+				}
+				console.log(res);
+				message.success('Nota de credito creada');
+				
+	
+			}catch (error){console.log(error);
+				message.error('Error en la creacion');
+			}finally{
+				setTimeout(function(){
+					location.reload();
+				 }, 3000);
+	
 			}
-			console.log(res);
-			message.success('Nota de credito creada');
-			
-
-		}catch (error){console.log(error);
-			message.error('Error en la creacion');
-		}finally{
-			setTimeout(function(){
-				location.reload();
-			 }, 3000);
-
-		}
+		} else {
+			// inputValue is invalid
+			message.error('solo se permiten numeros')
+		  }
+  
+		
 
 		
 	
@@ -558,7 +607,7 @@ idOrderH
 					<h1>Agregar factura</h1>
 					<Form layout="vertical">
 						<Form.Item label="Número de factura" name="model">
-							<Input onChange={handleInputChange} />
+							<Input type='number' pattern="/^[0-9]+$/" onChange={handleInputChange} />
 						</Form.Item>
 					</Form>
 					<div className="flex justify-end gap-5">

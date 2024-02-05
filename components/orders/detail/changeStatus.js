@@ -37,7 +37,7 @@ export default function ChangeOrderStatus({
 	const [modal, setModal] = useState(initialModalState);
 
 	const actions = {
-		1: () => {
+		1:  () => {
 			setModal((prev) => ({
 				...prev,
 				visible: true,
@@ -69,9 +69,10 @@ export default function ChangeOrderStatus({
 				status: statusNames.Despachado,
 			}));
 		},
-		5: () => {
-			const res2 =  requestHandler.get('/api/v2/order/reverse/masive/' +orderId);
+		5: async () => {
+			const res2 =  await requestHandler.get('/api/v2/order/reverse/masive/' +orderId);
 			console.log(res2);
+			console.log(res2.value)
 			setModal((prev) => ({
 				...prev,
 				visible: true,
@@ -104,7 +105,7 @@ export default function ChangeOrderStatus({
 	return (
 		<>
 			
-			{status != 2 && (
+			{(
 				<List.Item style={{ width: '100%' }}>
 					<h3 className="font-bold">Actualizar Estado</h3>
 					<Space>
@@ -123,6 +124,17 @@ export default function ChangeOrderStatus({
 								>
 									<PrinterOutlined /> Facturar
 								</Button>
+							</>
+						)}
+						{status == 2 && (
+							<>
+								<Button
+									onClick={() => handleOpenModal(statusNames.Anulado)}
+									danger
+								>
+									<CloseCircleOutlined /> Anular pedido
+								</Button>
+
 							</>
 						)}
 						{status == 3 && (

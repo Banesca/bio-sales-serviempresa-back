@@ -19,7 +19,7 @@ export default function AddClient() {
 	const { requestHandler } = useRequest();
 	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
-	const { listClients, deleteClient } = useClients();
+	const { clients,listClients, deleteClient } = useClients();
 	const [startDate, setStartDate] = useState(new Date());
 	const [minDate, setMinDate] = useState(new Date(), 1);
 	const [form] = Form.useForm();
@@ -38,8 +38,6 @@ export default function AddClient() {
 	};
 
 	const router = useRouter();
-	const { clients } = useClients();
-
 	
 
 	const validator = (data) => {
@@ -63,8 +61,39 @@ export default function AddClient() {
 					return 'El número de telefono ya esta en uso';
 				}
 			},
+			val2: Object.values(
+				clients.map((client) => {
+					if (client.numberDocument == data.rif) {
+						console.log('entro aqui')
+						return true;
+					}
+				})
+			).includes(true),
+			prob: () => {
+				let calc = Object.values(
+					clients.map((client) => {
+						if (client.numberDocument == data.rif) {
+							console.log('entro aqui-2')
+							return 2;
+						}
+					})
+				);
+				if (calc.includes(2)) {
+					return 'El número de rif ya esta en uso';
+				}
+			},
 		};
 	};
+
+	
+
+	useEffect(() =>{
+		listClients();
+		
+	},[])
+
+
+
 
 	const generalContext = useContext(GeneralContext);
 
@@ -93,9 +122,9 @@ export default function AddClient() {
 
 	const createClient = async (data, err) => {
 		setLoading(true);
-		await getClientsRequest();
+		
 		try {
-			if (!validator(data).val) {
+			if (!validator(data).val || !validator(data).val2) {
 				const res = await requestHandler.post('/api/v2/client/add', {
 					nameClient: data.fullNameClient,
 					phone: data.phoneClient,

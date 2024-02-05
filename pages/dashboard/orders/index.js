@@ -82,6 +82,10 @@ const handleChange=(e)=>{
 	setStateOrder2(saveOrders.filter(o=>o.idStatusOrder==e))
 }
 
+useEffect(()=>{
+	console.log(saveOrders)
+})
+
 	const ordersList = useMemo(() => {
 		const result = orders.filter(o=>o.idStatusOrder===stateOrder)
 		setSaveOrders(orders)

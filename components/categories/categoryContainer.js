@@ -39,9 +39,15 @@ export default function CategoryContainer() {
 			render: (text) => text,
 		},
 		{
+			title: 'Orden',
+			dataIndex: 'order',
+			key: 2,
+			render: (text) => text,
+		},
+		{
 			title: 'Acciones',
 			align: 'center',
-			key: 2,
+			key: 3,
 			width: '200px',
 			render: (_, item) => (
 				<Space
@@ -94,6 +100,7 @@ export default function CategoryContainer() {
 		name: '',
 		idStatusFk: '',
 		idProductFamily: '',
+		order: 0,
 	});
 	
 	const addCategoryRequest = async (value) => {
@@ -160,7 +167,8 @@ export default function CategoryContainer() {
 				lineBody.name,
 				lineBody.idStatusFk,
 				lineBody.idProductFamily,
-				selectedBusiness.idSucursal
+				selectedBusiness.idSucursal,
+				2,
 			);
 			createForm.resetFields();
 			message.success('Categoría actualizada');
@@ -221,6 +229,7 @@ export default function CategoryContainer() {
 	// End Search
 
 	const handleForceupdateMethod = useForceUpdate();
+	useEffect(()=>{console.log(categories)})
 
 	return (
 		<>
@@ -334,8 +343,7 @@ export default function CategoryContainer() {
 					</div>
 				]}
 			>
-				<div>{lineBody?.name}</div>
-				<Form form={createFormTwo} initialValues={{ name: lineBody?.name }}>
+				<Form form={createFormTwo} initialValues={{ name: lineBody?.name, order:lineBody?.order }}>
 					<Form.Item
 						label="Categoría"
 						name="name"
@@ -351,6 +359,31 @@ export default function CategoryContainer() {
 							allowClear
 							value={lineBody?.name}
 							name="name"
+
+							onChange={(e) => {
+								setLineBody((prev) => ({
+									...prev,
+									[e.target.name]: e.target.value,
+								}));
+							}}
+						/>
+					</Form.Item>
+					<Form.Item
+						label="order"
+						name="order"
+						required
+						rules={[
+							{
+								required: true,
+								message: 'Ingresa una nueva categoría',
+							},
+						]}
+					>
+						<Input
+							allowClear
+							value={lineBody?.order}
+							name="order"
+							type='number'
 							onChange={(e) => {
 								setLineBody((prev) => ({
 									...prev,

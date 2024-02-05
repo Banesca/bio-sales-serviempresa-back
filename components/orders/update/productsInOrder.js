@@ -1,8 +1,8 @@
-import { DeleteOutlined,CheckOutlined } from '@ant-design/icons';
+import { DeleteOutlined,CheckOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, ConfigProvider, Input, Table } from 'antd';
 import { Space } from 'antd';
 import { useLoadingContext } from '../../../hooks/useLoadingProvider';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { addKeys } from '../../../util/setKeys';
 import { message } from 'antd';
 import { CustomizeRenderEmpty } from '../../common/customizeRenderEmpty';
@@ -14,16 +14,22 @@ export default function ProductsInOrder({
     confirmProductQuantity,
     isCreditOrder,
 }) {
+
+    const handleOpen = () =>{
+        message.info(order?.comments)
+    }
+
+
     const orderColumns = [
         {
             title: (
-                <div className='text-white' style={{FontSize:'15px'}}>Orden Nro.  {order?.numberOrden}</div>
+                <div className='text-white flex justify-center items-center w-full gap-3' style={{FontSize:'15px'}}>Orden Nro.  {order?.numberOrden} {order?.comments ? <button className='bg-slate-50 border-0 flex justify-center items-center rounded-md px-2 py-1.5' onClick={handleOpen}> <EyeTwoTone twoToneColor="#012258" /></button> : null}  </div>
             ),
             children: [
                 {
                     title: 'Nombre',
                     dataIndex: 'nameProduct',
-                    width: '120px',
+                    width: '220px',
                     key: 1,
                     render: (text) => <p>{text}</p>,
                 },
@@ -53,18 +59,9 @@ export default function ProductsInOrder({
                     ),
                 },
                 {
-                    title: 'Observacion',
-                    dataIndex: 'comments',
-                    width: '150px',
-                    key: 6,
-                    render: (text) => (
-                        <p>{text}</p>
-                    ),
-                },
-                {
                     title: 'Precio',
                     dataIndex: 'priceSale',
-                    width: '100px',
+
                     key: 2,
                     render: (text, record) => (
                         <p>$ {record.isPromo == '1' ? record.marketPrice : text}</p>
@@ -73,7 +70,7 @@ export default function ProductsInOrder({
 
                 {
                     title: 'Acciones',
-                    width: '100px',
+
                     key: 3,
                     render: (record) => (
                         !isCreditOrder && (
@@ -93,6 +90,7 @@ export default function ProductsInOrder({
         },
     ];
 
+
     const { setLoading } = useLoadingContext();
 
     const handleUpdateProduct = async (record) => {
@@ -109,11 +107,16 @@ export default function ProductsInOrder({
 
     const productList = useMemo(() => {
         const list = order?.body;
+        
         addKeys(list);
         return list;
     }, [order]);
 
     const { loading } = useLoadingContext();
+
+    useEffect(() =>{
+        console.log(order?.body)
+    },[])
 
     return (
         <ConfigProvider

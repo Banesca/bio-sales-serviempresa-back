@@ -506,7 +506,7 @@ const UpdateOrderPage = () => {
 		}
 		try {
 			const mpCash = await validateMP('Efectivo');
-
+/*
 			if (newTotal !== 0 && PaymentAddTipe !== 4) {
 				message.error('Aun queda un monto pediente de: ' + newTotal);
 				await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
@@ -519,7 +519,7 @@ const UpdateOrderPage = () => {
 				message.error('No seleccionó ningún método de pago');
 				setLoading(false);
 				return;
-			}
+			}*/
 
 			if (newTotal === 0) {
 				await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
@@ -651,12 +651,12 @@ const UpdateOrderPage = () => {
 			subTotal =
 				item.weight *
 				(item.unitweight *
-					(item.isPromo == '1' ? item.marketPrice : item.priceSale));
+					(item.isPromo == '1' ? item.marketPrice.toFixed(2) : item.priceSale.toFixed(2)));
 		} else {
 			subTotal =
-				item.weight * (item.isPromo == '1' ? item.marketPrice : item.priceSale);
+				item.weight * (item.isPromo == '1' ? item.marketPrice.toFixed(2) : item.priceSale.toFixed(2));
 		}
-		return subTotal;
+		return subTotal.toFixed(2);
 	};
 
 	const handleReturn = () => {
@@ -780,6 +780,7 @@ useEffect(() => {
 						</Button>
 					</div>
 				</div>
+
 				<Row className="h-screen w-full">
 					<Col span={24}>
 						<ProductFilter
@@ -806,7 +807,7 @@ useEffect(() => {
 								</>
 							)}
 
-							<div className="w-[56%] flex flex-col gap-5">
+							<div className="w-[52%] flex flex-col gap-5">
 								<ProductsInOrder
 									order={currentOrder}
 									openDeleteModal={openDeleteModal}
@@ -1015,34 +1016,7 @@ useEffect(() => {
 							<p>${total}</p>
 						</div>
 					</List.Item>
-					<List.Item>
-						<p>
-							<strong>Método de pago</strong>
-						</p>
-						<p>
-							<Form>
-								<Form.Item className="w-32 my-auto">
-									<Select
-										disabled="true"
-										placeholder="Ingrese métodos de pago"
-										style={{ width: '100%' }}
-										value={PaymentAdd}
-										onChange={(v) => setPaymentToAdd(v)}
-									>
-										{Payment &&
-											Payment.map((Payment) => (
-												<Select.Option
-													key={Payment.idPymentMethod}
-													value={Payment.idPymentMethod}
-												>
-													{Payment.pymentMethod}
-												</Select.Option>
-											))}
-									</Select>
-								</Form.Item>
-							</Form>
-						</p>
-					</List.Item>
+	
 					<List.Item style={{ display: 'flex', justifyContent: 'center' }}>
 						<Table
 							style={{ width: '100%' }}
