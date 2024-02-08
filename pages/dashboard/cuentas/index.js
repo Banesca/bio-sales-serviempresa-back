@@ -75,6 +75,7 @@ const Cuentas = () => {
 	const columns2 = [
 		{ title: 'Monto', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
+		{ title: 'Fecha', dataIndex: 'created_at', key: 'created_at', render:(text)=>(<p>{text?.substring(0,10)}</p>) },
 
 	];
 	const handleReturn = () => {
@@ -138,15 +139,18 @@ const Cuentas = () => {
 	const handleOnChang3 = async (resp) => {
 		let id = resp.idClientFk;
 		console.log(id);
+		console.log(resp)
 		setAbono(resp.abonos);
 		setDeuda(resp.amount);
 		setNombre(resp.nameclient);
 		setMontoTotal(resp.deuda);
-		const res = await requestHandler.get(`/api/v2/wallet/get/` + id + `/1000`);
+	
+		const res = await requestHandler.get(`/api/v2/wallet/get/full/${id}/1000`);
 		console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.data;
+			console.log(value)
 			setAbonos(value);
 		}
 		console.log(abonos);

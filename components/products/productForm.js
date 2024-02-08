@@ -216,6 +216,7 @@ const ProductForm = (props) => {
 
 		
 		const value = response.value.getValue().response;
+		console.log(value)
 		setUnits(value)
 	}
 

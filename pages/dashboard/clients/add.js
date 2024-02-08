@@ -17,7 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default function AddClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest();
-	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
+	const regexpTlp = /^(0414|0424|0412|0416|0426)[0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 	const { clients,listClients, deleteClient } = useClients();
 	const [startDate, setStartDate] = useState(new Date());

@@ -69,6 +69,7 @@ const UpdateOrderPage = () => {
 	const { brands, getBrands } = useBrandContext();
 	const { loading, setLoading } = useLoadingContext();
 	const [Payment, setPayment] = useState();
+	const [PaymentAdd2, setPaymentAdd2] = useState(null);
 	const [PaymentAdd, setPaymentToAdd] = useState([]);
 	const [PaymentTipe, setPaymentTipe] = useState();
 	const [PaymentAddTipe, setPaymentToAddTipe] = useState([]);
@@ -79,16 +80,19 @@ const UpdateOrderPage = () => {
 	const [currentProduct, setCurrentProduct] = useState();
 	const [total, setTotal] = useState(0);
 	const [amountIgtf, setAmountIgtf] = useState(0);
+	const [IGTFS, setIGTFS] = useState(false);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [calculadora, setIsCalculadora] = useState(false);
 	const [pauseOrderModal, setIsPauseOrderModal] = useState(false);
 	const [dataSource, setDataSource] = useState([]);
+	const [wallet3, setWallet3] = useState([]);
 	const [count, setCount] = useState(1);
 	const [isIgtf, setIsIgtf] = useState(false);
 	const [newTotal, setNewTotal] = useState(0);
-	const [totalDeclarado, setTotalDecla] = useState();
+	const [totalDeclarado, setTotalDecla] = useState(0);
 	const [client, setClient] = useState({});
+	const [clients, setClients] = useState({});
 	const [debts, setDebts] = useState(0);
 	const [amountlimit, setAmountlimit] = useState(0);
 	const [stopCredit, setStopCredit] = useState(false);
@@ -216,24 +220,46 @@ const UpdateOrderPage = () => {
 		setDeleteOpen(true);
 	};
 
+	const getClientsRequest = async () => {
+		setLoading(true);
+		const res = await requestHandler.get('/api/v2/client/list');
+		if (res.isLeft()) {
+			setLoading(false);
+			return;
+		}
+		let clientsList = res.value.getValue().response;
+		clientsList = clientsList.filter((b) => b.idStatusFk !== '3');
+		console.log(clientsList);
+		clientsList = clientsList.find((c) => c.phone ===currentOrder?.phoneClient)
+		console.log(clientsList);
+		setClients(clientsList);
+		setLoading(false);
+	};
+
 	const handleAdd = (selectOption) => {
 	
 		setPaymentToAdd();
-		const newData = {
+		setPaymentAdd2(selectOption)
+
+		let newData = {
 			key: count,
 			name: selectOption,
-			monto: '0',
+			monto: 0,
+			igtf:false
 		};
+		console.log(newData)
 		setDataSource([...dataSource, newData]);
 		setCount(count + 1);
+		setPaymentAdd2(null)
+
 	};
 
 	const EditableRow = ({ index, ...props }) => {
 		const [form] = Form.useForm();
 		return (
 			<Form form={form} component={false}>
-				<EditableContext.Provider value={form}>
-					<tr {...props} />
+				<EditableContext.Provider value={form} type='number'>
+					<tr {...props}  />
 				</EditableContext.Provider>
 			</Form>
 		);
@@ -288,7 +314,7 @@ const UpdateOrderPage = () => {
 					}}
 					name={dataIndex}
 				>
-					<Input ref={inputRef} onPressEnter={save} onBlur={save} />
+					<Input ref={inputRef} onPressEnter={save} onBlur={save} type='number' min={0} pattern='/^\d*\.?\d*$/' placeholder='hola'/>
 				</Form.Item>
 			) : (
 				<div
@@ -322,6 +348,11 @@ const UpdateOrderPage = () => {
 			newData.forEach((objeto) => {
 				suma += Number(objeto.monto);
 				console.log(suma);
+				if(!IGTFS && objeto.name==='Efectivo'){
+					setIGTFS(true)  
+					setAmountIgtf(amountIgtf+(objeto.monto*0.03))
+				}
+
 			});
 
 			return suma;
@@ -329,20 +360,58 @@ const UpdateOrderPage = () => {
 
 
 		const sumaTotal = calcularSumaTotal();
-
-		let result = total - sumaTotal;
-		result = parseFloat(result.toFixed(2));
+		console.log(total)
+		const TotalInt=parseFloat(total)
+		console.log(amountIgtf)
+		let result = TotalInt + amountIgtf - sumaTotal;
+		result = parseFloat(result);
+		console.log(result);
 		if (result < 0) {
 			alert('El resultado no puede ser menor que 0');
 		} else {
 			setDataSource(newData);
-			setTotalDecla(sumaTotal);
-			setNewTotal(result);
+			setTotalDecla(sumaTotal.toFixed(3));
+			setNewTotal(result.toFixed(3));
 		}
 	};
 
+useEffect(()=>{
+
+	const results=dataSource.filter(e=>e.name ==='Efectivo')
+	if(dataSource.length> 0 && results?.length===1){
+		let result=parseFloat(newTotal)+amountIgtf
+		setNewTotal(result.toFixed(3));
+	}else if(IGTFS && results?.length===0){
+		console.log(amountIgtf)
+		setNewTotal(newTotal-amountIgtf);
+		setTotal(total)
+	}
+	console.log(amountIgtf)
+},[IGTFS])
+
+
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
+		let igtf=dataSource.filter((item) => item.name === 'Efectivo');
+		let min=igtf.length > 0 ? igtf?.reduce((claveMasBaja, claveActual) =>{return claveActual < claveMasBaja ? claveActual : claveMasBaja;}) : []
+		
+		if(key===min.key && min.name==='Efectivo' ){
+			igtf=newData.filter((item) => item.name === 'Efectivo');
+			console.log(igtf)
+			if(igtf.length> 1){
+				min=igtf?.reduce((claveMasBaja, claveActual) =>{return claveActual < claveMasBaja ? claveActual : claveMasBaja;})
+				min.length < 1 ? setAmountIgtf(amountIgtf) : setAmountIgtf(min.monto*0.03)
+			} else{
+				setIGTFS(false) //
+				setNewTotal(newTotal-amountIgtf)
+				setAmountIgtf(0)
+			}
+			 console.log(min)
+		}
+		
+		console.log(newData);
+		console.log(min);
+		console.log(igtf);
 		setDataSource(newData);
 
 		const calcularSumaTotal = () => {
@@ -350,29 +419,26 @@ const UpdateOrderPage = () => {
 			newData.forEach((objeto) => {
 				suma += Number(objeto.monto);
 				console.log(suma);
+				
 			});
 			return suma;
 		};
 
+
+
+		const TotalInt=parseFloat(total)
+		
 		let sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
-		let result = total - sumaTotal;
-		result = parseFloat(result.toFixed(2));
+		let result = TotalInt - sumaTotal;
+		result = parseFloat(result.toFixed(3));
 		setNewTotal(result);
 	};
 
 
-	useEffect(()=>{
 
-		let arrayFiltrado = dataSource?.filter(function(elemento) {
-			return elemento.name==='Efectivo';
-		});
+	
 
-		let suma= arrayFiltrado.reduce(function(acumulador, valorActual) {
-			return acumulador + parseFloat(valorActual.monto*0.03);
-		}, 0);
-		setAmountIgtf(Math.round(suma * 1000)/1000)
-	},[dataSource])
 
 	const defaultColumns = [
 		{
@@ -388,10 +454,6 @@ const UpdateOrderPage = () => {
 			render: (text, record) => (
 				<>
 					{text}
-					{record.name === 'Efectivo' && isIgtf && record.monto>0 && <span className='font-semibold text-red-500'> +({record.monto*0.03} IGTF) </span>
-
-					
-					}
 				</>
 			),
 		},
@@ -461,12 +523,21 @@ const UpdateOrderPage = () => {
 		},
 	};
 
+	useEffect(()=>{
+		getDebtsbyClient (currentOrder)
+		console.log(clients)
+	},[clients])
+
 	 const getDebtsbyClient = async (id) => {
 		setLoading(true);
 		console.log(id);
+
+		let ids= id?.idClientFk !== null ? id?.idClientFk : clients.idClient
+		console.log(ids)
+
 		try {
 			const res = await requestHandler.get(
-				`/api/v2/wallet/get/` + id.phoneClient + `/1000`
+				`/api/v2/wallet/get/full/` + ids + `/1000`
 			);
 			console.log(res);
 			if (res.isLeft()) {
@@ -490,96 +561,145 @@ const UpdateOrderPage = () => {
 			 getDebtsbyClient(currentOrder);
 			console.log(currentOrder) 
 			getClients(currentOrder)
+			getClientsRequest()
 		}
+		console.log(clients)
 		console.log(currentOrder?.comments) 
-	}, [currentOrder, getOrderRequest]);
+	}, []);
+
+	const handleNewWallet = () => {
+		const walletBody = {
+		  title: `Deuda orden: #${currentOrder?.idOrderH}`,
+		  amount: total,
+		  nameclient: currentOrder?.fullNameClient,
+		  idUserAddFk: Number(localStorage.getItem("idUser")),
+		  isEntry: 0,
+		  idClientFk: currentOrder?.idClientFk!== null ? currentOrder?.idClientFk : clients.idClient ,
+		  idBranchFk: localStorage.getItem('idBranchFk'),
+		  idCurrencyFk: 99,
+		  idPaymentMethodFk: null,
+		  idOrder: currentOrder?.idOrderH,
+		};
+	
+		setWallet3(walletBody)
+	}
+	useEffect(() => {
+		if (currentOrder) {
+			calculateTotalRequest(currentOrder.idOrderH);
+			 getDebtsbyClient(currentOrder);
+			console.log(currentOrder) 
+			getClients(currentOrder)
+			getClientsRequest()
+		}
+		console.log(clients)
+		console.log(currentOrder) 
+	}, [currentOrder]);
+
+	useEffect(() => {
+		handleNewWallet()
+	}, [currentOrder]);
+
+	useEffect(() => {
+		handleNewWallet()
+		console.log(wallet3)
+	}, [clients]);
+
+	const addWallet = async ()=>{
+		const res=await requestHandler.post(`/api/v2/wallet/add`,wallet3) 
+		if (res.isLeft()) {
+			message.error('no se pudo actualizar la wallet')
+			throw res.value.getErrorValue();
+		}
+	}
 
 	const handleReceiveOrder = async () => {
 		let id = String(currentOrder.idOrderH);
+		console.log(currentOrder)
+		console.log(PaymentAddTipe)
 		console.log(id);
 		setLoading(true);
-		if (PaymentAddTipe === 4) {
+		if (PaymentAddTipe === 1) {
 			const res2 = await requestHandler.post(
 				'/api/v2/order/update/currentacount/' + id,
 				{ isacountCourrient: true },
 			);
-		}
+
+			
+			try{
+				await addWallet()
+				message.success('Orden actualizada')
+			}catch{
+				message.error('no se pudo actualizar la orden')
+			}finally{
+				router.push(`/dashboard/orders/${id}`);
+			}
+
+		} else{
+
+	
 		try {
 			const mpCash = await validateMP('Efectivo');
-/*
-			if (newTotal !== 0 && PaymentAddTipe !== 4) {
-				message.error('Aun queda un monto pediente de: ' + newTotal);
-				await changeStatus(statusNames['Por pagar'], currentOrder.idOrderH);
-				router.push('/dashboard/orders');
-				setLoading(false);
-				return;
-			}
+			
+				let data = [];
 
-			if (!mpCash && PaymentAddTipe !== 4) {
-				message.error('No seleccionó ningún método de pago');
-				setLoading(false);
-				return;
-			}*/
-
-			if (newTotal === 0) {
-				await changeStatus(statusNames.Pagado, currentOrder.idOrderH);
-			} else {
-				return;
-			}
-
-			let data = [];
-
-			const res = await requestHandler.put(
-				'/api/v2/order/close/' + id,
-				(data = {
-					comments: 'PAGO',
-					mpCash: await validateMP('Efectivo'),
-					mpCreditCard: await validateMP('Credito'),
-					mpDebitCard: await validateMP('Debito'),
-					mpTranferBack: await validateMP('Transferencia'),
-					totalBot: total,
-					mpMpago: await validateMP('Mpago'),
-					idCurrencyFk: 1,
-					listPaymentMethod: 0,
-					isAfip: 0,
-					mpRappi: await validateMP('Rappi'),
-					mpGlovo: await validateMP('Glovo'),
-					mpUber: await validateMP('Uber'),
-					mpPedidosya: await validateMP('Pedidosya'),
-					mpJust: await validateMP('Just Eat'),
-					mpWabi: await validateMP('Wabi'),
-					mpOtro2: await validateMP('Otro2'),
-					mpPedidosyacash: await validateMP('Pedidos Ya Efectivo'),
-					mpPersonal: await validateMP('Personal'),
-					mpRapicash: await validateMP('Rapicash'),
-					mpPresent: await validateMP('Present'),
-					mpPaypal: await validateMP('Paypal'),
-					mpZelle: await validateMP('Zelle'),
-					mpBofa: await validateMP('Bofa'),
-					mpYumi: await validateMP('Yumi'),
-					waste: totalDeclarado,
-					isPrintBillin: newTotal,
-					tasa: actualTdc,
-					puntoVtaAfit: '',
-					comprobanteAfit: '',
-					isacountCourrient: currentOrder?.isacountCourrient,
-				})
-			);
-
-			if (newTotal === 0) {
-				const res2 = await requestHandler.post(
-					'/api/v2/order/update/currentacount/' + id,
-					{ isacountCourrient: false },
+				const res = await requestHandler.put(
+					'/api/v2/order/close/' + id,
+					(data = {
+						comments: 'PAGO',
+						mpCash: await validateMP('Efectivo'),
+						mpCreditCard: await validateMP('Credito'),
+						mpDebitCard: await validateMP('Debito'),
+						mpTranferBack: await validateMP('Transferencia'),
+						totalBot: total+amountIgtf,
+						mpMpago: await validateMP('Mpago'),
+						idCurrencyFk: 1,
+						listPaymentMethod: 0,
+						isAfip: 0,
+						mpRappi: await validateMP('Rappi'),
+						mpGlovo: await validateMP('Glovo'),
+						mpUber: await validateMP('Uber'),
+						mpPedidosya: await validateMP('Pedidosya'),
+						mpJust: await validateMP('Just Eat'),
+						mpWabi: await validateMP('Wabi'),
+						mpOtro2: await validateMP('Otro2'),
+						mpPedidosyacash: await validateMP('Pedidos Ya Efectivo'),
+						mpPersonal: await validateMP('Personal'),
+						mpRapicash: await validateMP('Rapicash'),
+						mpPresent: await validateMP('Present'),
+						mpPaypal: await validateMP('Paypal'),
+						mpZelle: await validateMP('Zelle'),
+						mpBofa: await validateMP('Bofa'),
+						mpYumi: await validateMP('Yumi'),
+						waste: totalDeclarado,
+						isPrintBillin: newTotal,
+						tasa: actualTdc,
+						puntoVtaAfit: '',
+						comprobanteAfit: '',
+						isacountCourrient: currentOrder?.isacountCourrient,
+					})
 				);
+	
+				if (newTotal === 0 && PaymentAddTipe !==1) {
+					const res2 = await requestHandler.post(
+						'/api/v2/order/update/currentacount/' + id,
+						{ isacountCourrient: false },
+					);
+					console.log(res);
+					console.log('aqui entre');
+					router.push(`/dashboard/orders/${id}`);
+				}			else	if (newTotal - totalDeclarado !== 0) {
+					message.error('la suma de las formas de pago es diferente a 0')
+				}
+	
+
 			}
 
-			console.log(res);
-			router.push(`/dashboard/orders/${id}`);
-		} catch (error) {
+			
+		catch (error) {
 			message.error('Error al recibir orden');
 		} finally {
 			setLoading(false);
-		}
+		}	}
 	};
 
 	const validateMP = async (descriptPayMent) => {
@@ -594,7 +714,7 @@ const UpdateOrderPage = () => {
 				if (isIgtf) {
 					result += result * 0.03;
 					console.log(result);
-					
+					message.success('tiene IGTF')
 				}
 			} else {
 				result = result.length > 0 ? result[0].monto : 0;
@@ -606,17 +726,21 @@ const UpdateOrderPage = () => {
 	};
 	
 	const getClients = async (id) => {
-
-		const res = await requestHandler.get(`/api/v2/client/get/${id.idProfileFk}`);
+		//${currentOrder.idClient}
+		const res = await requestHandler.get(`/api/v2/client/get/1`);
 		
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue();
 		setIsIgtf(value.data.isigtf === 'true');
-		console.log(value.data.limitcredit)
+		console.log(value)
 		setAmountlimit(parseInt(value.data.limitcredit))
 	};
+
+
+
+	
 
 
 
@@ -713,8 +837,9 @@ const ValidateAmount=()=>{
 
 const handleChange=(e)=>{
 	console.log(e)
-	 setPaymentToAddTipe(e)
 
+	 setPaymentToAddTipe(e)
+	e===1 ? setDataSource([]) : null
 }
 
 useEffect(() => {
@@ -860,9 +985,9 @@ useEffect(() => {
 											<Select
 												placeholder="Ingrese métodos de pago"
 												style={{ width: '50%' }}
-												value={PaymentAdd}
+												value={PaymentAdd2}
 												onChange={handleAdd}
-												disabled={!currentOrder || !currentOrder.body || currentOrder.body.length === 0}
+												disabled={!currentOrder || PaymentAddTipe===1 || !currentOrder.body || currentOrder.body.length === 0}
 											>
 												{Payment &&
 													Payment.map((Payment) => (
@@ -881,7 +1006,7 @@ useEffect(() => {
 												<p>
 													<strong>TOTAL:  </strong>
 												</p>
-												<p style={{ marginLeft: '10px' }}>${parseFloat(total)+amountIgtf}</p>
+												<p style={{ marginLeft: '10px' }}>${((parseFloat(total))+amountIgtf).toFixed(3)}</p>
 											</div>
 											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
@@ -895,6 +1020,12 @@ useEffect(() => {
 												</p>
 												<p style={{ marginLeft: '10px', color: 'red' }}>${newTotal}</p>
 											</div>
+											{amountIgtf>0 ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+												<p>
+													<strong>IGTF:</strong>
+												</p>
+												<p style={{ marginLeft: '10px', color: 'red' }}>${amountIgtf}</p>
+											</div> : null}
 											<p> <strong>Tasa actual: </strong>{actualTdc}</p>
 										</List.Item>
 										<Table
@@ -1013,7 +1144,8 @@ useEffect(() => {
 							<p>
 								<strong>TOTAL:</strong>
 							</p>
-							<p>${total}</p>
+							<p>${parseFloat(total)+amountIgtf}</p>
+
 						</div>
 					</List.Item>
 	

@@ -18,7 +18,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 export default function EditClient() {
 	const { loading, setLoading } = useLoadingContext();
 	const { requestHandler } = useRequest();
-	const regexpTlp = /^(0414|0424|0412|0416|0426)[-][0-9]{7}$/g;
+	const regexpTlp = /^(0414|0424|0412|0416|0426)[0-9]{7}$/g;
 	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 	const [form] = Form.useForm();
 	const [client, setClient] = useState({});
@@ -175,8 +175,8 @@ export default function EditClient() {
 	const validator = (data) => {
 		return {
 			val: Object.values(
-				clients.map((client) => {
-					if (client.phone == data.phoneClient) {
+				clients.map((cliente) => {
+					if (cliente.phone == data.phoneClient && client.phone != data.phoneClient) {
 						console.log('entro aqui')
 						return true;
 					}
@@ -184,8 +184,8 @@ export default function EditClient() {
 			).includes(true),
 			prob: () => {
 				let calc = Object.values(
-					clients.map((client) => {
-						if (client.phone == data.phoneClient) {
+					clients.map((cliente) => {
+						if (cliente.phone == data.phoneClient && client.phone != data.phoneClient) {
 							console.log('entro aqui-2')
 							return 2;
 						}
@@ -196,8 +196,8 @@ export default function EditClient() {
 				}
 			},
 			val2: Object.values(
-				clients.map((client) => {
-					if (client.numberDocument == data.rif) {
+				clients.map((cliente) => {
+					if (cliente.numberDocument == data.rif && client.numberDocument != data.rif) {
 						console.log('entro aqui')
 						return true;
 					}
@@ -205,8 +205,8 @@ export default function EditClient() {
 			).includes(true),
 			prob: () => {
 				let calc = Object.values(
-					clients.map((client) => {
-						if (client.numberDocument == data.rif) {
+					clients.map((cliente) => {
+						if (cliente.numberDocument == data.rif && client.numberDocument != data.rif) {
 							console.log('entro aqui-2')
 							return 2;
 						}
@@ -214,10 +214,14 @@ export default function EditClient() {
 				);
 				if (calc.includes(2)) {
 					return 'El número de rif ya esta en uso';
+				} else{
+					
+					return true
 				}
 			},
-			
+
 		};
+
 	};
 
 	const handleSubmit = async (values) => {

@@ -36,10 +36,7 @@ const Caja = () => {
 	}
 
     
-    useEffect(() => {
-        getMotion()
 
-    }, [handleOpenDeleteModal]);
 
     const columns = [
         {
@@ -90,6 +87,11 @@ const Caja = () => {
     var dateT = dT.getFullYear() + "-" + (dT.getMonth() < 10 ? ('0' + (Number(dT.getMonth()) + Number(1))) : (Number(dT.getMonth()) + Number(1))) + '-' + dT.getDate();
     var dateI = moment(dateT).format('YYYY-MM-DD');
 
+    useEffect(() => {
+        getMotion()
+
+    }, [idSucursal]);
+
 
     const body = {
         dateStart: dateI,
@@ -105,7 +107,7 @@ const Caja = () => {
         try {
             const res = await requestHandler.post('/api/v2/tracking/list', body);
             console.log(res);
-
+            console.log(res.value._value.data)
             if (res && res.value && res.value._value && res.value._value.data) {
                 setData(res.value._value.data.map((item, index) => ({
                     key: index,

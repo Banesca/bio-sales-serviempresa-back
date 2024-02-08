@@ -51,6 +51,7 @@ const AddOrderForm = (props) => {
 			idStatusFK: 1,
 			observacion: data.comments,
 		});
+
 	};
 
 	const onSubmit = async (values) => {
@@ -63,6 +64,7 @@ const AddOrderForm = (props) => {
 			deliveryEnLocal: false,
 			deliveryEnTienda: false,
 			deliveryExterno: false,
+			idClientFk:isNewClient ? null : clients[values.selectClient]?.idClient,
 			fullNameClient: isNewClient
 				? values.fullNameClient
 				: clients[values.selectClient]?.nameClient,
