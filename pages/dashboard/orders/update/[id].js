@@ -565,9 +565,11 @@ useEffect(()=>{
 		}
 		console.log(clients)
 		console.log(currentOrder?.comments) 
+		console.log(localStorage.getItem('selectedBusiness')) 
 	}, []);
 
 	const handleNewWallet = () => {
+		
 		const walletBody = {
 		  title: `Deuda orden: #${currentOrder?.idOrderH}`,
 		  amount: total,
@@ -575,7 +577,7 @@ useEffect(()=>{
 		  idUserAddFk: Number(localStorage.getItem("idUser")),
 		  isEntry: 0,
 		  idClientFk: currentOrder?.idClientFk!== null ? currentOrder?.idClientFk : clients.idClient ,
-		  idBranchFk: localStorage.getItem('idBranchFk'),
+		  idBranchFk: selectedBusiness?.idSucursal,
 		  idCurrencyFk: 99,
 		  idPaymentMethodFk: null,
 		  idOrder: currentOrder?.idOrderH,
@@ -602,6 +604,7 @@ useEffect(()=>{
 	useEffect(() => {
 		handleNewWallet()
 		console.log(wallet3)
+		console.log(selectedBusiness)
 	}, [clients]);
 
 	const addWallet = async ()=>{
@@ -623,13 +626,13 @@ useEffect(()=>{
 				'/api/v2/order/update/currentacount/' + id,
 				{ isacountCourrient: true },
 			);
-
+			
 			
 			try{
 				await addWallet()
 				message.success('Orden actualizada')
 			}catch{
-				message.error('no se pudo actualizar la orden')
+				message.error('no se pudo actualizar la orden22')
 			}finally{
 				router.push(`/dashboard/orders/${id}`);
 			}

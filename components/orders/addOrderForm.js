@@ -47,7 +47,9 @@ const AddOrderForm = (props) => {
 			nameClient: data.fullNameClient,
 			phone: data.phoneClient,
 			numberDocument: data.rif,
+			dispatchaddress: data.dispatchaddress,
 			address: data.address,
+			limitcredit: data.limitcredit,
 			idStatusFK: 1,
 			observacion: data.comments,
 		});
@@ -232,6 +234,38 @@ const AddOrderForm = (props) => {
 											},
 										]}
 										name="rif"
+									>
+										<Input type="text" />
+									</Form.Item>
+								</Col>
+							</Row>
+							<Row>
+								<Col span={12}>
+									<Form.Item
+										labelCol={{ span: 12 }}
+										label="Limite de credito"
+										rules={[
+											{
+												required: isNewClient,
+												message: 'Ingresa el limite de credito',
+											},
+										]}
+										name="limitcredit"
+									>
+										<Input type="number" />
+									</Form.Item>
+								</Col>
+								<Col span={12}>
+									<Form.Item
+										labelCol={{ span: 8 }}
+										label="Despacho"
+										rules={[
+											{
+												required: isNewClient,
+												message: 'Ingresa el area de despacho del cliente',
+											},
+										]}
+										name="dispatchaddress"
 									>
 										<Input type="text" />
 									</Form.Item>

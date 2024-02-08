@@ -76,6 +76,7 @@ const Cuentas = () => {
 		{ title: 'Monto', dataIndex: 'amount', key: 'amount' },
 		{ title: 'Descripcion', dataIndex: 'title', key: 'title' },
 		{ title: 'Fecha', dataIndex: 'created_at', key: 'created_at', render:(text)=>(<p>{text?.substring(0,10)}</p>) },
+		{ title: 'Numero Factura', dataIndex: 'facturaAfip', key: 'facturaAfip', render:(text)=>(<p>{text}</p>) },
 
 	];
 	const handleReturn = () => {
