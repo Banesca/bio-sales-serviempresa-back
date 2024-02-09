@@ -168,7 +168,7 @@ const Merchandising = () => {
 							height: 'auto',
 							marginBottom: '10px',
 						}}
-						src={`${ip}:${generalContext?.api_port}/product/${record.urlImagenProduct}`}
+						src={`${generalContext.api_url}:${generalContext.api_port}/product/${record.urlImagenProduct}`}
 					/>
 				) : null,
 		},
@@ -231,6 +231,10 @@ const Merchandising = () => {
 		getUsers();
 		getClients();
 	}, []);
+
+	useEffect(() => {
+		console.log(generalContext)
+	});
 
 	const getUsers = async () => {
 		const res = await requestHandler.get('/api/v2/user/only/enable');
