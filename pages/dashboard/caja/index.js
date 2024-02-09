@@ -50,7 +50,7 @@ const Caja = () => {
             render: (text, record) => ( 
 
                 
-                <span style={{ backgroundColor: text===0 && record.isEntry===0 ? '#DB9686' : text==1 && record.isEntry==0 ? '#92EC80' : '#FFF' ,  color:  text===0 && record.isEntry===0 ? '#92EC80' : text==1 && record.isEntry==0 ? '#DB9686' : '#FFF'   } } className='p-2 text-sm rounded-md font-medium' >{text===0 && record.isEntry===0 ?  'Anulación' : text==1 && record.isEntry==0 ? 'Confirmado' : 'Ingreso'}</span>
+                <span style={{ backgroundColor: text===0 && record.isEntry===0 ? '#fa9a9a' : text==1 && record.isEntry==0 ? '#b3e8f2' : '#8eebbb' ,  color:  text===0 && record.isEntry===0 ? '#aa472c' : text==1 && record.isEntry==0 ? '#285395' : '#228e4d'   } } className='p-2 text-sm rounded-md font-medium' >{text===0 && record.isEntry===0 ?  'Anulación' : text==1 && record.isEntry==0 ? 'Confirmado' : 'Ingreso'}</span>
             )
         },
         {
@@ -156,9 +156,9 @@ useEffect(()=>{
             </div>
             <div>
                 <div className='w-full bg-white shadow mb-3 rounded-md py-4 flex justify-around'>
-                    <h2 className='text-blue-700 fs-5 text-lg	font-medium'>Ingresos: {totalIngresos}</h2>
-                    <h2 className='text-red-500 fs-5 text-lg	font-medium'>Egresos: {totalEgresos}</h2>
-                    <h2 className='text-green-500 fs-5 text-lg	font-medium'>Total: {totalGanancia}</h2>
+                    <h2 className='text-[#228e4d] fs-5 text-lg	font-medium'>Ingresos: {totalIngresos}</h2>
+                    <h2 className='text-[#aa472c] fs-5 text-lg	font-medium'>Egresos: {totalEgresos}</h2>
+                    <h2 className='text-[#285395] fs-5 text-lg	font-medium'>Total: {totalGanancia}</h2>
 
                 </div>
                 <Table columns={columns} dataSource={data} />
