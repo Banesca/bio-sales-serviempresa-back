@@ -407,7 +407,8 @@ console.log(currentOrder)
 
 		}finally{
 
-			window.location.reload();
+			setTimeout(()=>{window.location.reload();},5000)
+
 		}
 		
 		} else {

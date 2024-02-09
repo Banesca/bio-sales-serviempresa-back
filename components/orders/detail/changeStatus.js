@@ -137,13 +137,7 @@ export default function ChangeOrderStatus({
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
-								<Button
-									onClick={() => handleOpenModal(statusNames.Pagado)}
-									type="primary"
-									className="bg-blue-500"
-								>
-									<PrinterOutlined /> Facturar
-								</Button>
+								
 							</>
 						)}
 						{status == 2 && (
