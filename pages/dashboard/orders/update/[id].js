@@ -682,7 +682,7 @@ useEffect(()=>{
 					})
 				);
 	
-				if (newTotal === 0 && PaymentAddTipe !==1) {
+				if (parseInt(newTotal) === 0 && PaymentAddTipe !==1) {
 					const res2 = await requestHandler.post(
 						'/api/v2/order/update/currentacount/' + id,
 						{ isacountCourrient: false },
@@ -690,10 +690,7 @@ useEffect(()=>{
 					console.log(res);
 					console.log('aqui entre');
 					router.push(`/dashboard/orders/${id}`);
-				}			else	if (newTotal - totalDeclarado !== 0) {
-					message.error('la suma de las formas de pago es diferente a 0')
-				}
-	
+				}	
 
 			}
 

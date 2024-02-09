@@ -163,12 +163,13 @@ export default function CategoryContainer() {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
+			console.log(lineBody)
 			await editCategories(
 				lineBody.name,
 				lineBody.idStatusFk,
 				lineBody.idProductFamily,
 				selectedBusiness.idSucursal,
-				2,
+				lineBody.order,
 			);
 			createForm.resetFields();
 			message.success('Categoría actualizada');

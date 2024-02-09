@@ -361,6 +361,15 @@ console.log(currentOrder)
 	const handleConfirm = async () => {
 		console.log(bodyRegister);
 		const res = await requestHandler.post('/api/v2/tracking/add', bodyRegister);
+		setLoading(true)
+		try {
+			message.success('Confirmación exitosa!')
+		}catch {
+			message.error('Error al confirmar los pagos')
+		}
+		finally{
+			setLoading(false)
+		}
 		console.log(res);
 	}
 
@@ -717,6 +726,7 @@ idOrderH
 			>
 				<img src={sourceImage} className='w-80 h-80 mt-12'/>
 			</Modal>
+			
 		</DashboardLayout>
 	);
 };
