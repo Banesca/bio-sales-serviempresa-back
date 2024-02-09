@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import { useRequest } from '../../../hooks/useRequest';
 import moment from 'moment';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
 const Caja = () => {
 
     const { requestHandler } = useRequest();
@@ -14,12 +15,15 @@ const Caja = () => {
     const [totalIngresos, setTotalIngresos] = useState(0);
     const [totalGanancia, setTotalGanancia] = useState(0);
     const [totalEgresos, setTotalEgresos] = useState(0);
+    const [variable, setVariable] = useState(false);
+    const user=useAuthContext();
 
     useEffect(() => {
         getMotion()
-
+        console.log(user)
     }, []);
 
+    
     
 	const handleOpenDeleteModal= async (id)=>{
 		console.log(id)
@@ -30,23 +34,23 @@ const Caja = () => {
 			return;
 		} else{
             message.success('Operacion realizada con exito')
+            setVariable( variable === true ? false : true)
         }
 
         console.log(res)
 	}
 
     
-    useEffect(() => {
-        getMotion()
 
-    }, [handleOpenDeleteModal]);
 
     const columns = [
         {
             title: 'Estado',
             dataIndex: 'spending',
-            render: (text, index) => ( 
-                <span style={{ backgroundColor: text===1 ? '#DB9686' : '#92EC80' ,  color: text===1 ? '#9B2910' : '#00861C'  } } className='p-2 text-sm rounded-md font-medium' >{text===1 ? 'Confirmado' : 'No Confirmado'}</span>
+            render: (text, record) => ( 
+
+                
+                <span style={{ backgroundColor: text===0 && record.isEntry===0 ? '#fa9a9a' : text==1 && record.isEntry==0 ? '#b3e8f2' : '#8eebbb' ,  color:  text===0 && record.isEntry===0 ? '#aa472c' : text==1 && record.isEntry==0 ? '#285395' : '#228e4d'   } } className='p-2 text-sm rounded-md font-medium' >{text===0 && record.isEntry===0 ?  'Anulación' : text==1 && record.isEntry==0 ? 'Confirmado' : 'Ingreso'}</span>
             )
         },
         {
@@ -64,7 +68,7 @@ const Caja = () => {
             dataIndex: 'idTracking',
             render: (text, index) => ( 
                 <Space>
-                    <Button type="primary" danger onClick={() => handleOpenDeleteModal(text)}>
+                    <Button type="primary" disabled={user.userProfile!=='1'} danger onClick={() => handleOpenDeleteModal(text)}>
                         <DeleteOutlined />
                     </Button>
                 </Space>
@@ -90,6 +94,11 @@ const Caja = () => {
     var dateT = dT.getFullYear() + "-" + (dT.getMonth() < 10 ? ('0' + (Number(dT.getMonth()) + Number(1))) : (Number(dT.getMonth()) + Number(1))) + '-' + dT.getDate();
     var dateI = moment(dateT).format('YYYY-MM-DD');
 
+    useEffect(() => {
+        getMotion()
+        console.log(user)
+    }, [idSucursal]);
+
 
     const body = {
         dateStart: dateI,
@@ -105,7 +114,8 @@ const Caja = () => {
         try {
             const res = await requestHandler.post('/api/v2/tracking/list', body);
             console.log(res);
-
+            console.log(res.value._value.data)
+            console.log(res.value._value.totalEgresos)
             if (res && res.value && res.value._value && res.value._value.data) {
                 setData(res.value._value.data.map((item, index) => ({
                     key: index,
@@ -113,8 +123,9 @@ const Caja = () => {
                     amount: item.amount,
                     idTracking: item.idTracking,
                     spending: item.spending,
+                    isEntry:item.isEntry,
                 })));
-
+                console.log()
                 setTotalIngresos(res.value._value.totalIngresos);
                 setTotalGanancia(res.value._value.totalGanancia);
                 setTotalEgresos(res.value._value.totalEgresos);
@@ -126,6 +137,15 @@ const Caja = () => {
         }
     };
 
+useEffect(()=>{
+    getMotion()
+},[])
+
+useEffect(()=>{
+    getMotion()
+},[variable])
+
+
 
 
     return (
@@ -136,9 +156,10 @@ const Caja = () => {
             </div>
             <div>
                 <div className='w-full bg-white shadow mb-3 rounded-md py-4 flex justify-around'>
-                    <h2 className='text-blue-700 fs-5 text-lg	font-medium'>Total Ingresos: {totalIngresos}</h2>
-                    <h2 className='text-green-500 fs-5 text-lg	font-medium'>Total Ganancia: {totalGanancia}</h2>
-                    <h2 className='text-red-500 fs-5 text-lg	font-medium'>Total Egresos: {totalEgresos}</h2>
+                    <h2 className='text-[#228e4d] fs-5 text-lg	font-medium'>Ingresos: {totalIngresos}</h2>
+                    <h2 className='text-[#aa472c] fs-5 text-lg	font-medium'>Egresos: {totalEgresos}</h2>
+                    <h2 className='text-[#285395] fs-5 text-lg	font-medium'>Total: {totalGanancia}</h2>
+
                 </div>
                 <Table columns={columns} dataSource={data} />
             </div>

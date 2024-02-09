@@ -52,6 +52,7 @@ const OrderDetail = () => {
 	const generalContext = useContext(GeneralContext);
 	const [model, setModel] = useState('');
 	const [model2, setModel2] = useState('');
+	const [sourceImage, setSourceImage] = useState('');
 	const [model3, setModel3] = useState('');
 	const getOrderRequest = async (id) => {
 		setLoading(true);
@@ -63,6 +64,11 @@ const OrderDetail = () => {
 			setLoading(false);
 		}
 	};
+
+	const getFoto=(a,b) => {
+		setModalIsOpen(a)
+		setSourceImage(b)
+	}
 
 	const getStatus = () => {
 		let status = currentOrder.idStatusOrder;
@@ -137,14 +143,16 @@ const OrderDetail = () => {
 		console.error('localStorage is not available');
 	}
 
+	useEffect(()=>{console.log(log)},[])
 
+	useEffect(()=>{console.log(log)},[log])
 	
 	let idClientfk = currentOrder;
 	
 
 	const bodyRegister = {
 		title: "Confirmación orden numero: " + currentOrder?.idOrderH,
-		idUserAddFk: idClientfk?.idClientFk,
+		idUserAddFk: log,
 		isEntry: 0,
 		spending: 1,
 		idBranchFk: idSucursal,
@@ -175,7 +183,8 @@ const OrderDetail = () => {
 
 	const bodyRegisterAnul = {
 		title: "Anulacion orden numero: " + currentOrder?.idOrderH,
-		idUserAddFk: idClientfk?.idClientFk,
+		amount:0,
+		idUserAddFk:log,
 		isEntry: 0,
 		spending: 0,
 		idBranchFk: idSucursal,
@@ -214,10 +223,37 @@ const OrderDetail = () => {
 		if (bodyRegister.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
 			bodyRegister[key] = currentOrder[key];
 		}
+
+		console.log('pase por aca')
 	});
+/*
+	const mpObjects2 = Object.keys(attributes)
+	.map((key) => ({
+		name: attributes[key],
+		monto: currentOrder && currentOrder[key] ? currentOrder[key]*-1 : 0,
+	}))
+	.filter((obj) => obj.monto !== 0);
+	Object.keys(attributes).forEach((key) => {
+	if (bodyRegisterAnul.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
+		if (key.startsWith('mp') && currentOrder[key] != 0) {
+            const hola= bodyRegisterAnul[key] = currentOrder[key] * -1;
+        } else {
+            bodyRegisterAnul[key] = currentOrder[key];
+        }
+	}
+	console.log('pase por aca2')
+
+});*/
 
 	console.log(bodyRegister);
 	
+	useEffect(()=>{
+
+
+		
+		console.log(mpObjects.length)
+	},[bodyRegister])
+
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
 		if (element) {
@@ -239,6 +275,30 @@ const OrderDetail = () => {
 		}
 	};
 
+/*
+	
+	const handleAnul = async () => {
+		console.log(bodyRegister);
+		console.log(bodyRegisterAnul);
+		Object.keys(attributes).forEach(async (key) => {
+			if (bodyRegisterAnul.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
+				if (key.startsWith('mp') && currentOrder[key] != 0) {
+					bodyRegisterAnul[key] = currentOrder[key] * -1;
+					bodyRegisterAnul['amount'] = currentOrder[key]* -1;
+					bodyRegisterAnul['title'] = `Anulacion -${attributes[key]}-Orden: ${currentOrder.idOrderH}`;
+
+					await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
+				} else {
+					bodyRegisterAnul[key] = currentOrder[key];
+				}if (bodyRegisterAnul[key] != 0) {
+					console.log(bodyRegisterAnul)					
+				}
+			}
+		});
+
+		message.success('realizado con exito')
+	}*/
+
 	const handleChangeStatus = async (status) => {
 		setLoading(true);
 		try {
@@ -247,6 +307,7 @@ const OrderDetail = () => {
 			if (status === 'Anulado') {
 				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' + id);
 				console.log(res2);
+				message.success('Pedido actualizado2');
 			}
 		} catch (error) {
 			message.error('Error al actualizar pedido');
@@ -297,11 +358,22 @@ console.log(currentOrder)
 
 
 
-	const handleConfirm = () => {
+	const handleConfirm = async () => {
 		console.log(bodyRegister);
-		const res = requestHandler.post('/api/v2/tracking/add', bodyRegister);
+		const res = await requestHandler.post('/api/v2/tracking/add', bodyRegister);
+		setLoading(true)
+		try {
+			message.success('Confirmación exitosa!')
+		}catch {
+			message.error('Error al confirmar los pagos')
+		}
+		finally{
+			setLoading(false)
+		}
 		console.log(res);
 	}
+
+
 
 	const openTrucks = () => {
 		setOpenModal2(true);
@@ -513,6 +585,9 @@ idOrderH
 							handleOrder={handleOrder}
 							orderId={id}
 							handleChangeStatus={handleChangeStatus}
+							attributes={attributes}
+							currentOrder={currentOrder}
+							bodyRegisterAnul={bodyRegisterAnul}
 						/>
 
 						<List.Item>
@@ -560,10 +635,18 @@ idOrderH
 							<p style={{ fontWeight: 'bold' }}>Nota de credito:</p>
 							<p>{currentOrder?.numbernotecredit}</p>
 						</List.Item>
-
+						
 						<List.Item>
 							<p style={{ fontWeight: 'bold' }}>Comprobante de pago:</p>
-							<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} width="150" onClick={() => setModalIsOpen(true)} />
+							{<div className='flex w-100 gap-1'>
+							{currentOrder?.imageBank1 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank1}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank1}`)} /> : null}
+							{currentOrder?.imageBank2 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank2}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank2}`)} /> : null}
+							{currentOrder?.imageBank3 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank3}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank3}`)} /> : null}
+							{currentOrder?.imageBank4 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank4}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank4}`)} /> : null}
+							{currentOrder?.imageBank5 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank5}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank5}`)} /> : null}
+							{currentOrder?.imageBank5 ? <img src={(`${apiImg}/bank/${currentOrder?.imageBank6}`)} className='w-16 rounded-md h-12 cursor-pointer' onClick={() => getFoto(true,`${apiImg}/bank/${currentOrder?.imageBank6}`)} /> : null}
+							</div>
+							}
 						</List.Item>
 
 						<List.Item>
@@ -639,9 +722,11 @@ idOrderH
 				footer={false}
 				onCancel={() => setModalIsOpen(false)}
 				width={760}
+				className='flex justify-center'
 			>
-				<img src={(`${apiImg}/bank/${currentOrder.imageBank}`)} style={{ width: '100%', marginTop: '20px' }} />
+				<img src={sourceImage} className='w-80 h-80 mt-12'/>
 			</Modal>
+			
 		</DashboardLayout>
 	);
 };

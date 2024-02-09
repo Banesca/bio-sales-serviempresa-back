@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { Button, Space } from 'antd';
 import { List } from 'antd';
 import { useState } from 'react';
@@ -27,6 +27,9 @@ export default function ChangeOrderStatus({
 	orderId,
 	handleChangeStatus,
 	handleOrder,
+	bodyRegisterAnul,
+	attributes,
+	currentOrder
 }) {
 	const initialModalState = {
 		visible: false,
@@ -35,6 +38,23 @@ export default function ChangeOrderStatus({
 	};
 	const { requestHandler } = useRequest();
 	const [modal, setModal] = useState(initialModalState);
+
+	const handleAnul = async (bodyRegisterAnul,attributes,currentOrder) => {
+
+		Object.keys(attributes).forEach(async (key) => {
+			if (bodyRegisterAnul.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
+				if (key.startsWith('mp') && currentOrder[key] != 0) {
+					bodyRegisterAnul[key] = currentOrder[key] * -1;
+					bodyRegisterAnul['amount'] = currentOrder[key]* -1;
+					bodyRegisterAnul['title'] = `Anulacion -${attributes[key]}-Orden: ${currentOrder.idOrderH}`;
+
+					await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
+				} else {
+					bodyRegisterAnul[key] = currentOrder[key];
+				}
+			}
+		});
+	}
 
 	const actions = {
 		1:  () => {
@@ -71,8 +91,8 @@ export default function ChangeOrderStatus({
 		},
 		5: async () => {
 			const res2 =  await requestHandler.get('/api/v2/order/reverse/masive/' +orderId);
-			console.log(res2);
-			console.log(res2.value)
+			handleAnul(bodyRegisterAnul,attributes,currentOrder)
+
 			setModal((prev) => ({
 				...prev,
 				visible: true,
