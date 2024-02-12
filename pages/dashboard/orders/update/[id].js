@@ -525,6 +525,7 @@ useEffect(()=>{
 
 	useEffect(()=>{
 		getDebtsbyClient (currentOrder)
+		getClients(clients)
 		console.log(clients)
 	},[clients])
 
@@ -560,10 +561,11 @@ useEffect(()=>{
 			calculateTotalRequest(currentOrder.idOrderH);
 			 getDebtsbyClient(currentOrder);
 			console.log(currentOrder) 
-			getClients(currentOrder)
+
 			getClientsRequest()
 		}
 		console.log(clients)
+
 		console.log(currentOrder?.comments) 
 		console.log(localStorage.getItem('selectedBusiness')) 
 	}, []);
@@ -590,7 +592,6 @@ useEffect(()=>{
 			calculateTotalRequest(currentOrder.idOrderH);
 			 getDebtsbyClient(currentOrder);
 			console.log(currentOrder) 
-			getClients(currentOrder)
 			getClientsRequest()
 		}
 		console.log(clients)
@@ -727,15 +728,16 @@ useEffect(()=>{
 	
 	const getClients = async (id) => {
 		//${currentOrder.idClient}
-		const res = await requestHandler.get(`/api/v2/client/get/1`);
+		console.log(id)
+		const res = await requestHandler.get(`/api/v2/client/get/${id.idClient}`);
 		
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue();
-		setIsIgtf(value.data.isigtf === 'true');
+		setIsIgtf(value?.data?.isigtf === 'true');
 		console.log(value)
-		setAmountlimit(parseInt(value.data.limitcredit))
+		setAmountlimit(parseInt(value.data?.limitcredit))
 	};
 
 
@@ -826,6 +828,7 @@ useEffect(()=>{
 	});
 
 const ValidateAmount=()=>{
+	console.log(amountlimit)
 	if(PaymentAddTipe===1 && debts+total>amountlimit){
 	message.error('La transaccion sobrepasa su limite de credito')
 	setStopCredit(true)
