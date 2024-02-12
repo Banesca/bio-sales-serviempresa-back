@@ -13,7 +13,8 @@ const AddOrderForm = (props) => {
 	const [loading, setLoading] = useState(false);
 
 	const [clients, setClients] = useState([]);
-
+	const regexpTlp = /^(0414|0424|0412|0416|0426)[0-9]{7}$/g;
+	const regexpRif = /^([VEJPGvejpg]{1})-([0-9]{8})-([0-9]{1}$)/g;
 	const [isNewClient, setIsNewClient] = useState(false);
 
 	const generalContext = useContext(GeneralContext);
@@ -199,11 +200,14 @@ const AddOrderForm = (props) => {
 											{
 												required: isNewClient,
 												message: 'Ingresa un numero de teléfono',
+											},{
+												pattern: regexpTlp,
+												message: 'Ingresa un numero de teléfono valido',
 											},
 										]}
 										name="phoneClient"
 									>
-										<Input type="number" />
+										<Input type="text" />
 									</Form.Item>
 								</Col>
 							</Row>
@@ -231,6 +235,9 @@ const AddOrderForm = (props) => {
 											{
 												required: isNewClient,
 												message: 'Ingresa el rif del cliente',
+											},{
+												pattern: regexpRif,
+												message: 'Ingresa un Rif valido',
 											},
 										]}
 										name="rif"
