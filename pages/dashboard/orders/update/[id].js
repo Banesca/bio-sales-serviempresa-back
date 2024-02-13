@@ -314,7 +314,7 @@ const UpdateOrderPage = () => {
 					}}
 					name={dataIndex}
 				>
-					<Input ref={inputRef} onPressEnter={save} onBlur={save} type='number' min={0} pattern='/^\d*\.?\d*$/' placeholder='hola'/>
+					<Input ref={inputRef} onPressEnter={save} onBlur={save} type='number' min={0} pattern='/^\d*\.?\d*$/' placeholder='Ingrese un monto'/>
 				</Form.Item>
 			) : (
 				<div
