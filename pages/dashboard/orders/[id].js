@@ -671,7 +671,7 @@ idOrderH
 											fontWeight: 'bold',
 										}}
 									>
-										Metodos de pago
+										Métodos de pago
 									</Typography>
 								</div>
 								<Button type="success" onClick={handleConfirm}>
