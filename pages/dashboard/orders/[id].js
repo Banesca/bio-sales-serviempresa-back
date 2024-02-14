@@ -106,26 +106,19 @@ const OrderDetail = () => {
 	];
 
 	const attributes = {
-		mpCash: 'Efectivo',
+		mpCash: 'Efectivo ($)',
 		mpCreditCard: 'Crédito',
 		mpDebitCard: 'Débito',
 		mpTranferBack: 'Transferencia',
 		mpMpago: 'Pago Móvil',
-		mpRappi: 'Rappi',
-		mpGlovo: 'Glovo',
-		mpUber: 'Uber',
-		mpPedidosya: 'Pedidos Ya',
-		mpJust: 'Just',
-		'mpWabi+': 'Wabi+',
-		mpOtro2: 'Otro 2',
-		mpPedidosyacash: 'Pedidos Ya Cash',
-		mpPersonal: 'Personal',
-		mpRapicash: 'Rappi Cash',
-		mpPresent: 'Presente',
+		mpUber: 'BioPago',
+		mpPedidosya: 'Binance',
+		mpJust: 'Efectivo (Bs)',
+		mpWabi: 'Efectivo (Euro)',
+		mpOtro2: 'Punto de venta',
+		mpPersonal: 'Banco internacionales',
 		mpPaypal: 'Paypal',
 		mpZelle: 'Zelle',
-		mpBofa: 'Bank of America',
-		mpYumi: 'Yumi',
 	};
 
 
