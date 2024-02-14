@@ -110,7 +110,7 @@ const OrderDetail = () => {
 		mpCreditCard: 'Crédito',
 		mpDebitCard: 'Débito',
 		mpTranferBack: 'Transferencia',
-		mpMpago: 'Mercado Pago',
+		mpMpago: 'Pago Móvil',
 		mpRappi: 'Rappi',
 		mpGlovo: 'Glovo',
 		mpUber: 'Uber',
