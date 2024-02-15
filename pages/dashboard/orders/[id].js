@@ -720,10 +720,10 @@ idOrderH
 				open={modalIsOpen}
 				footer={false}
 				onCancel={() => setModalIsOpen(false)}
-				width={760}
+				width={860}
 				className='flex justify-center'
 			>
-				<img src={sourceImage} className='w-80 h-80 mt-12'/>
+				<img src={sourceImage} className='w-[760px] h-[500px] mt-6'/>
 			</Modal>
 			
 		</DashboardLayout>
