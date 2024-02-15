@@ -250,11 +250,11 @@ const OrderDetail = () => {
 	const captureElement = async (elementId) => {
 		const element = document.getElementById(elementId);
 		if (element) {
-			const img = document.createElement('img');
+			/*const img = document.createElement('img');
 			img.src = '/Images/LOGO.png';
 			img.style.maxWidth = '150px';
 			img.style.maxHeight = '150px';
-			element.insertBefore(img, element.firstChild);
+			element.insertBefore(img, element.firstChild);*/
 			const canvas = await html2canvas(element);
 			const imgData = canvas.toDataURL('image/png');
 			const link = document.createElement('a');
@@ -320,6 +320,35 @@ const OrderDetail = () => {
 	const handleInputChange2 = (e) => {
 		setModel2(e.target.value);
 	};
+
+	const actualizaciónFactura = (idOrderH) => {
+
+		const regex = /^[0-9]+$/;
+		if (regex.test(model)) {
+		  // inputValue is valid
+		  try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
+		console.log(res);
+		message.success('Factura actualizada');
+	
+		}catch (error){console.log(error);
+
+		}finally{
+			setTimeout(()=>{
+				getOrderRequest(id);
+				setOpenModal2(false)
+			},1000)
+		}
+		
+		} else {
+		  // inputValue is invalid
+		  message.error('solo se permiten numeros')
+		}
+
+		console.log(idOrderH);
+		
+	};
+
+
 	useEffect(() => {
 		setLoading(true);
 		if (Object.keys(generalContext).length && id) {
@@ -327,9 +356,7 @@ const OrderDetail = () => {
 		}
 	}, [generalContext, id]);
 
-	useEffect(() => {
-console.log(currentOrder)
-	}, []);
+
 
 	useEffect(() => {
 		console.log(currentOrder)
@@ -389,29 +416,7 @@ console.log(currentOrder)
 	};
 
 
-	const actualizaciónFactura = (idOrderH) => {
 
-		const regex = /^[0-9]+$/;
-		if (regex.test(model)) {
-		  // inputValue is valid
-		  try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
-		console.log(res);
-		message.success('Factura actualizada');}catch (error){console.log(error);
-
-		}finally{
-
-			setTimeout(()=>{window.location.reload();},5000)
-
-		}
-		
-		} else {
-		  // inputValue is invalid
-		  message.error('solo se permiten numeros')
-		}
-
-		console.log(idOrderH);
-		
-	};
 
 	/*POST 
 

@@ -16,6 +16,7 @@ import {
 	AppstoreAddOutlined
 } from '@ant-design/icons';
 import { Tab, Tabs } from '@mui/material';
+import { useAuthContext } from '../../../context/useUserProfileProvider';
 
 
 export const orderStatusToUse = {
@@ -64,7 +65,7 @@ export default function OrdersPage() {
 			setLoading(false);
 		}
 	};
-
+	const { userProfile } = useAuthContext();
 	useEffect(() => {
 		setLoading(true);
 		if (
@@ -84,12 +85,20 @@ const handleChange=(e)=>{
 
 useEffect(()=>{
 	console.log(saveOrders)
-})
+	console.log(initOrders)
+},[userProfile,orders])
 
-	const ordersList = useMemo(() => {
-		const result = orders.filter(o=>o.idStatusOrder===stateOrder)
+useEffect(()=>{
+	const result = orders?.filter(o=>o.idStatusOrder===stateOrder)
+	setInitOrders(result);
+},[userProfile])
+
+
+useEffect(()=>{
+		setTimeout(()=>{
+			const result = orders?.filter(o=>o.idStatusOrder===stateOrder)
 		setSaveOrders(orders)
-setInitOrders(result);
+		setInitOrders(result);
 		let list = result;
 		if (query.idStatusOrder) {
 			if (list) {
@@ -111,8 +120,10 @@ setInitOrders(result);
 				list = list.filter((o) => o.numberOrden == query.numberOrden);
 			}
 		}
-		setInitOrders(list)
-	}, [query, orders]);
+		console.log(list)},2000)
+		console.log(userProfile)
+		//setInitOrders(list)
+	}, [orders])
 
 
 	useEffect(()=>{

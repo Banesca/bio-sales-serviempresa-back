@@ -18,6 +18,8 @@ export default function OrdersTable({ orders }) {
 
 	const { loading, setLoading } = useLoadingContext();
 	const { ordersPay, setOrdersPay } = useState();
+	const [ column, setColumns] = useState();
+	const { userProfile } = useAuthContext();
 
 	const handleSeeDetail = (order, record) => {
 		setLoading(true);
@@ -41,7 +43,7 @@ export default function OrdersTable({ orders }) {
 				return u;
 			}
 			setUsers(u);
-			setProfile(PROFILE_LIST.filter((p) => p.id === u.idProfileFk)[0]);
+			
 			if (u.idProfileFk === 3) {
 				await getSellerClientsRequest(u.idUser);
 			}
@@ -51,11 +53,12 @@ export default function OrdersTable({ orders }) {
 		}
 	};
 
-	const { userProfile } = useAuthContext();
+
 
 	useEffect(() => {
 		getUserRequest();
 		console.log(columns)
+		console.log(userProfile)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -217,11 +220,15 @@ export default function OrdersTable({ orders }) {
 
 
 
+	useEffect(()=>{
+		setColumns(columns)
+	},[userProfile])
+
 	return (
 		<ConfigProvider
 			renderEmpty={orders?.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
-			<Table columns={columns} dataSource={orders} loading={loading} />
+			<Table columns={column} dataSource={orders} loading={loading} />
 			
 		</ConfigProvider>
 	);

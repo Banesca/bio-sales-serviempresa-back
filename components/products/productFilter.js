@@ -41,7 +41,8 @@ const ProductFilter = ({ setQuery, clean, filtered }) => {
 			search: values.is5050 || '',
 		});
 		if(res.isRight){
-			console.log(res.value.getValue())
+			console.log(res.value.getValue().data)
+			//filtered()
 			//filtered=res.value.getValue().[0]
 		}
 		
