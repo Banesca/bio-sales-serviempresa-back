@@ -599,6 +599,10 @@ useEffect(()=>{
 	}, [currentOrder]);
 
 	useEffect(() => {
+			calculateTotalRequest(currentOrder?.idOrderH);
+	}, [currentOrder?.body, setProductsQuantity]);
+
+	useEffect(() => {
 		handleNewWallet()
 	}, [currentOrder]);
 
@@ -911,19 +915,19 @@ useEffect(() => {
 
 				<Row className="h-screen w-full">
 					<Col span={24}>
-						<ProductFilter
+						{/*<ProductFilter
 							brands={brands}
 							setQuery={setQuery}
 							categories={categories}
 							subCategories={subCategories}
 							lines={lines}
 							clean={clean}
-						/>
+						/>*/}
 
 						<Typography className="flex justify-between">
 							{currentOrder?.isacountCourrient !== 1 && (
 								<>
-									<div className="w-[43%]">
+									<div className="w-[43%] mt-3">
 										<ProductList
 											products={filtered()}
 											orderId={id}
@@ -935,7 +939,7 @@ useEffect(() => {
 								</>
 							)}
 
-							<div className="w-[52%] flex flex-col gap-5">
+							<div className="w-[52%] flex flex-col gap-5 mt-3">
 								<ProductsInOrder
 									order={currentOrder}
 									openDeleteModal={openDeleteModal}

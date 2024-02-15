@@ -10,7 +10,7 @@ import { useBusinessProvider } from '../../hooks/useBusinessProvider';
 import { useRequest } from '../../hooks/useRequest';
 import { useProductFilter } from './useProductFilter';
 
-const ProductFilter = ({ setQuery, clean, onData }) => {
+const ProductFilter = ({ setQuery, clean, filtered }) => {
 	const { categories, subCategories, lines } = useCategoryContext();
 	const { brands } = useBrandContext();
 	const { userProfile } = useAuthContext();
@@ -40,8 +40,10 @@ const ProductFilter = ({ setQuery, clean, onData }) => {
 		const res = await requestHandler.post(`/api/v2/product/list/litereference/0/0/${id}/100/0`,{
 			search: values.is5050 || '',
 		});
-		
-		onData(res);
+		if(res.isRight){
+			console.log(res.value.getValue())
+			//filtered=res.value.getValue().[0]
+		}
 		
 	};
 	
