@@ -730,4 +730,6 @@ idOrderH
 	);
 };
 
+//Efectivo $,euro,zelle,bancos internacionales
+
 export default OrderDetail;

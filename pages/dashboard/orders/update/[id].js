@@ -81,6 +81,7 @@ const UpdateOrderPage = () => {
 	const [total, setTotal] = useState(0);
 	const [amountIgtf, setAmountIgtf] = useState(0);
 	const [IGTFS, setIGTFS] = useState(false);
+	const [isIGTFS, setisIGTFS] = useState(false);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
 	const [cancelOrderModal, setIsCancelOrderModal] = useState(false);
 	const [calculadora, setIsCalculadora] = useState(false);
@@ -130,6 +131,7 @@ const UpdateOrderPage = () => {
 			throw res.value.getErrorValue();
 		}
 		setPayment(res.value.getValue().response);
+		console.log(res.value.getValue().response)
 		console.log(Payment);
 	};
 
@@ -160,6 +162,7 @@ const UpdateOrderPage = () => {
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
+
 		setPaymentTipe(res.value.getValue().response);
 	};
 
@@ -237,15 +240,18 @@ const UpdateOrderPage = () => {
 	};
 
 	const handleAdd = (selectOption) => {
-	
+		let resultados=0
 		setPaymentToAdd();
 		setPaymentAdd2(selectOption)
-
+		if(selectOption==='Efectivo' || selectOption==='Otro' || selectOption==='Zelle' || selectOption==='Paypal'){
+			resultados=confirm('tiene igtf')
+			console.log(resultados)
+		}
 		let newData = {
 			key: count,
 			name: selectOption,
 			monto: 0,
-			igtf:false
+			igtf:resultados
 		};
 		console.log(newData)
 		setDataSource([...dataSource, newData]);
@@ -342,14 +348,15 @@ const UpdateOrderPage = () => {
 			...item,
 			...row,
 		});
-
+		console.log(item)
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			newData.forEach((objeto) => {
 				suma += Number(objeto.monto);
 				console.log(suma);
-				if(!IGTFS && objeto.name==='Efectivo'){
-					setIGTFS(true)  
+				console.log(objeto);
+				if(objeto.key===item.key && objeto.igtf===true){
+					console.log(objeto)
 					setAmountIgtf(amountIgtf+(objeto.monto*0.03))
 				}
 
@@ -377,7 +384,7 @@ const UpdateOrderPage = () => {
 
 useEffect(()=>{
 
-	const results=dataSource.filter(e=>e.name ==='Efectivo')
+	/*const results=dataSource.filter(e=>e.name ==='Efectivo')
 	if(dataSource.length> 0 && results?.length===1){
 		let result=parseFloat(newTotal)+amountIgtf
 		setNewTotal(result.toFixed(3));
@@ -385,41 +392,44 @@ useEffect(()=>{
 		console.log(amountIgtf)
 		setNewTotal(newTotal-amountIgtf);
 		setTotal(total)
-	}
+	}*/
 	console.log(amountIgtf)
 },[IGTFS])
 
 
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
-		let igtf=dataSource.filter((item) => item.name === 'Efectivo');
-		let min=igtf.length > 0 ? igtf?.reduce((claveMasBaja, claveActual) =>{return claveActual < claveMasBaja ? claveActual : claveMasBaja;}) : []
-		
-		if(key===min.key && min.name==='Efectivo' ){
-			igtf=newData.filter((item) => item.name === 'Efectivo');
-			console.log(igtf)
-			if(igtf.length> 1){
-				min=igtf?.reduce((claveMasBaja, claveActual) =>{return claveActual < claveMasBaja ? claveActual : claveMasBaja;})
-				min.length < 1 ? setAmountIgtf(amountIgtf) : setAmountIgtf(min.monto*0.03)
-			} else{
-				setIGTFS(false) //
-				setNewTotal(newTotal-amountIgtf)
-				setAmountIgtf(0)
-			}
-			 console.log(min)
-		}
-		
-		console.log(newData);
-		console.log(min);
-		console.log(igtf);
-		setDataSource(newData);
+		console.log(key)
+		console.log(dataSource)
 
-		const calcularSumaTotal = () => {
+		const calcularSumaTotalIGTF = () => {
+			setAmountIgtf(0)
 			let suma = 0;
 			newData.forEach((objeto) => {
 				suma += Number(objeto.monto);
 				console.log(suma);
-				
+				if(objeto.igtf===true){
+					console.log(objeto)
+					setAmountIgtf(amountIgtf+(objeto.monto*0.03))
+				}
+			});
+			return suma;
+		};
+		
+		console.log(newData);
+		//console.log(min);
+		//console.log(igtf);
+		setDataSource(newData);
+
+		const calcularSumaTotal = () => {
+			let suma = 0;
+			dataSource.forEach((objeto) => {
+				objeto.key!==key ? suma += Number(objeto.monto) : null
+				console.log(suma);
+				if(objeto.igtf===true && objeto.key===key){
+					console.log(objeto)
+					setAmountIgtf(amountIgtf-(objeto.monto*0.03))
+				}
 			});
 			return suma;
 		};
@@ -1002,7 +1012,7 @@ useEffect(() => {
 															key={Payment.idPymentMethod}
 															value={Payment.pymentMethod}
 														>
-															{Payment.pymentMethod}
+															{Payment.pymentMethod==='Otro' ? 'Efectivo Euro' : Payment.pymentMethod}
 														</Select.Option>
 													))}
 												<Select.Option value="Bolivares">Bolivares</Select.Option>
@@ -1031,7 +1041,7 @@ useEffect(() => {
 												<p>
 													<strong>IGTF:</strong>
 												</p>
-												<p style={{ marginLeft: '10px', color: 'red' }}>${amountIgtf}</p>
+												<p style={{ marginLeft: '10px', color: 'red' }}>${amountIgtf.toFixed(3)}</p>
 											</div> : null}
 											<p> <strong>Tasa actual: </strong>{actualTdc}</p>
 										</List.Item>
