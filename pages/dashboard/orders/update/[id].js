@@ -79,7 +79,10 @@ const UpdateOrderPage = () => {
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [currentProduct, setCurrentProduct] = useState();
 	const [total, setTotal] = useState(0);
+	const [count2, setCount2] = useState(0);
+	const [count3, setCount3] = useState(0);
 	const [amountIgtf, setAmountIgtf] = useState(0);
+	const [amountIgtf2, setAmountIgtf2] = useState(0);
 	const [IGTFS, setIGTFS] = useState(false);
 	const [isIGTFS, setisIGTFS] = useState(false);
 	const [closeOrderModal, setIsCloseOrderModal] = useState(false);
@@ -342,7 +345,10 @@ const UpdateOrderPage = () => {
 		const newData = [...dataSource];
 		const index = newData.findIndex((item) => row.key === item.key);
 		const item = newData[index];
-
+		const TotalInt=parseFloat(total)
+		let newResult=TotalInt-amountIgtf
+		setAmountIgtf(0)
+		setAmountIgtf2(0)
 		
 		newData.splice(index, 1, {
 			...item,
@@ -357,7 +363,11 @@ const UpdateOrderPage = () => {
 				console.log(objeto);
 				if(objeto.key===item.key && objeto.igtf===true){
 					console.log(objeto)
-					setAmountIgtf(amountIgtf+(objeto.monto*0.03))
+					setAmountIgtf(amountIgtf+Number(objeto.monto*0.03))
+					setAmountIgtf2(amountIgtf2+Number(objeto.monto*0.03))
+					console.log(amountIgtf)
+					setCount3(count2)
+					setCount2(count2+1)
 				}
 
 			});
@@ -368,9 +378,9 @@ const UpdateOrderPage = () => {
 
 		const sumaTotal = calcularSumaTotal();
 		console.log(total)
-		const TotalInt=parseFloat(total)
+
 		console.log(amountIgtf)
-		let result = TotalInt + amountIgtf - sumaTotal;
+		let result = newResult + amountIgtf2 - sumaTotal;
 		result = parseFloat(result);
 		console.log(result);
 		if (result < 0) {
@@ -384,37 +394,40 @@ const UpdateOrderPage = () => {
 
 useEffect(()=>{
 
-	/*const results=dataSource.filter(e=>e.name ==='Efectivo')
-	if(dataSource.length> 0 && results?.length===1){
-		let result=parseFloat(newTotal)+amountIgtf
-		setNewTotal(result.toFixed(3));
-	}else if(IGTFS && results?.length===0){
-		console.log(amountIgtf)
-		setNewTotal(newTotal-amountIgtf);
-		setTotal(total)
-	}*/
-	console.log(amountIgtf)
-},[IGTFS])
+	let nuevo=0
+			if(count3<count2){
+				 nuevo=Number(amountIgtf)
+				 console.log(nuevo)
+				setNewTotal(Number(newTotal)+nuevo);
+				setAmountIgtf(0)
+			}else if(count3>count2){
+				console.log(amountIgtf)
+				console.log(count3)
+				console.log(count2)
+				nuevo=Number(amountIgtf)
+				setNewTotal(Number(newTotal)+nuevo);
+				setTotal(Number(newTotal)+Number(totalDeclarado))
+				setAmountIgtf(0)
+				setAmountIgtf2(amountIgtf)
+			}
+
+
+},[count2])
 
 
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
 		console.log(key)
 		console.log(dataSource)
+		
+		const TotalInt=parseFloat(total)
+		let newResult=TotalInt-amountIgtf
+		console.log(TotalInt)
+		console.log(newResult)
+		console.log(amountIgtf)
+		setAmountIgtf(0)
+		setAmountIgtf2(0)
 
-		const calcularSumaTotalIGTF = () => {
-			setAmountIgtf(0)
-			let suma = 0;
-			newData.forEach((objeto) => {
-				suma += Number(objeto.monto);
-				console.log(suma);
-				if(objeto.igtf===true){
-					console.log(objeto)
-					setAmountIgtf(amountIgtf+(objeto.monto*0.03))
-				}
-			});
-			return suma;
-		};
 		
 		console.log(newData);
 		//console.log(min);
@@ -423,24 +436,35 @@ useEffect(()=>{
 
 		const calcularSumaTotal = () => {
 			let suma = 0;
-			dataSource.forEach((objeto) => {
-				objeto.key!==key ? suma += Number(objeto.monto) : null
+			
+			newData.forEach((objeto) => {
+			
+				suma += Number(objeto.monto)
+				let suma2=0
 				console.log(suma);
-				if(objeto.igtf===true && objeto.key===key){
+				if(objeto.igtf===true){
 					console.log(objeto)
-					setAmountIgtf(amountIgtf-(objeto.monto*0.03))
+					suma2 += Number(objeto.monto*0.03)
+					setAmountIgtf2(amountIgtf2 +suma2)
+					setAmountIgtf(amountIgtf +suma2)
+					setCount3(count2)
+				setCount2(count2-1)
 				}
+				//setAmountIgtf2(amountIgtf2 +suma2)
+				//setAmountIgtf(amountIgtf +suma2)
+				
 			});
 			return suma;
 		};
 
 
 
-		const TotalInt=parseFloat(total)
 		
 		let sumaTotal = calcularSumaTotal();
 		setTotalDecla(sumaTotal);
-		let result = TotalInt - sumaTotal;
+		
+		let result = newResult+amountIgtf - sumaTotal;
+		console.log(result)
 		result = parseFloat(result.toFixed(3));
 		setNewTotal(result);
 	};
@@ -668,7 +692,7 @@ useEffect(()=>{
 						mpCreditCard: await validateMP('Credito'),
 						mpDebitCard: await validateMP('Debito'),
 						mpTranferBack: await validateMP('Transferencia'),
-						totalBot: total+amountIgtf,
+						totalBot: total+amountIgtf2,
 						mpMpago: await validateMP('Mpago'),
 						idCurrencyFk: 1,
 						listPaymentMethod: 0,
@@ -743,7 +767,7 @@ useEffect(()=>{
 	const getClients = async (id) => {
 		//${currentOrder.idClient}
 		console.log(id)
-		const res = await requestHandler.get(`/api/v2/client/get/${id.idClient}`);
+		const res = await requestHandler.get(`/api/v2/client/get/${id?.idClient}`);
 		
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
@@ -1023,7 +1047,7 @@ useEffect(() => {
 												<p>
 													<strong>TOTAL:  </strong>
 												</p>
-												<p style={{ marginLeft: '10px' }}>${((parseFloat(total))+amountIgtf).toFixed(3)}</p>
+												<p style={{ marginLeft: '10px' }}>${((parseFloat(total)+amountIgtf2)).toFixed(3)}</p>
 											</div>
 											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
@@ -1037,11 +1061,11 @@ useEffect(() => {
 												</p>
 												<p style={{ marginLeft: '10px', color: 'red' }}>${newTotal}</p>
 											</div>
-											{amountIgtf>0 ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+											{count2!==0 && amountIgtf2>0 ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
 													<strong>IGTF:</strong>
 												</p>
-												<p style={{ marginLeft: '10px', color: 'red' }}>${amountIgtf.toFixed(3)}</p>
+												<p style={{ marginLeft: '10px', color: 'red' }}>${amountIgtf2.toFixed(3)}</p>
 											</div> : null}
 											<p> <strong>Tasa actual: </strong>{actualTdc}</p>
 										</List.Item>
@@ -1161,7 +1185,7 @@ useEffect(() => {
 							<p>
 								<strong>TOTAL:</strong>
 							</p>
-							<p>${parseFloat(total)+amountIgtf}</p>
+							<p>${parseFloat(total)+amountIgtf2}</p>
 
 						</div>
 					</List.Item>
