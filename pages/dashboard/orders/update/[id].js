@@ -81,6 +81,8 @@ const UpdateOrderPage = () => {
 	const [total, setTotal] = useState(0);
 	const [count2, setCount2] = useState(0);
 	const [count3, setCount3] = useState(0);
+	const [count4, setCount4] = useState(0);
+	const [count5, setCount5] = useState(0);
 	const [amountIgtf, setAmountIgtf] = useState(0);
 	const [amountIgtf2, setAmountIgtf2] = useState(0);
 	const [IGTFS, setIGTFS] = useState(false);
@@ -347,8 +349,7 @@ const UpdateOrderPage = () => {
 		const item = newData[index];
 		const TotalInt=parseFloat(total)
 		let newResult=TotalInt-amountIgtf
-		setAmountIgtf(0)
-		setAmountIgtf2(0)
+
 		
 		newData.splice(index, 1, {
 			...item,
@@ -362,12 +363,15 @@ const UpdateOrderPage = () => {
 				console.log(suma);
 				console.log(objeto);
 				if(objeto.key===item.key && objeto.igtf===true){
+					setAmountIgtf(0)
+					setAmountIgtf2(0)
 					console.log(objeto)
 					setAmountIgtf(amountIgtf+Number(objeto.monto*0.03))
 					setAmountIgtf2(amountIgtf2+Number(objeto.monto*0.03))
 					console.log(amountIgtf)
 					setCount3(count2)
 					setCount2(count2+1)
+					setCount4(count4+1)
 				}
 
 			});
@@ -392,31 +396,48 @@ const UpdateOrderPage = () => {
 		}
 	};
 
-useEffect(()=>{
 
+
+useEffect(()=>{
+	console.log('acaba de entrar')
 	let nuevo=0
+	console.log(count3)
+	console.log(count2)
+	console.log(dataSource)
+
+	 if(dataSource.length===0) { 
+		setAmountIgtf(0) 
+		setAmountIgtf2(0)}
+
 			if(count3<count2){
 				 nuevo=Number(amountIgtf)
+				 console.log('entro aqui 2')
 				 console.log(nuevo)
 				setNewTotal(Number(newTotal)+nuevo);
 				setAmountIgtf(0)
 			}else if(count3>count2){
 				console.log(amountIgtf)
 				console.log(count3)
+				console.log('entro aqui 3')
 				console.log(count2)
 				nuevo=Number(amountIgtf)
 				setNewTotal(Number(newTotal)+nuevo);
 				setTotal(Number(newTotal)+Number(totalDeclarado))
 				setAmountIgtf(0)
 				setAmountIgtf2(amountIgtf)
+			}else{
+				setAmountIgtf(0)
+				setAmountIgtf2(amountIgtf)
 			}
 
-
+			console.log(amountIgtf2)
 },[count2])
+
 
 
 	const handleDelete = (key) => {
 		const newData = dataSource.filter((item) => item.key !== key);
+		const newData2 = dataSource.filter((item) => item.key === key);
 		console.log(key)
 		console.log(dataSource)
 		
@@ -425,15 +446,14 @@ useEffect(()=>{
 		console.log(TotalInt)
 		console.log(newResult)
 		console.log(amountIgtf)
-		setAmountIgtf(0)
-		setAmountIgtf2(0)
-
 		
-		console.log(newData);
+		if(newData2[0].igtf===true){
+			console.log(newData);
 		//console.log(min);
 		//console.log(igtf);
 		setDataSource(newData);
-
+		setAmountIgtf(0)
+		setAmountIgtf2(0)
 		const calcularSumaTotal = () => {
 			let suma = 0;
 			
@@ -448,6 +468,7 @@ useEffect(()=>{
 					setAmountIgtf2(amountIgtf2 +suma2)
 					setAmountIgtf(amountIgtf +suma2)
 					setCount3(count2)
+					setCount4(count4+1)
 				setCount2(count2-1)
 				}
 				//setAmountIgtf2(amountIgtf2 +suma2)
@@ -467,6 +488,51 @@ useEffect(()=>{
 		console.log(result)
 		result = parseFloat(result.toFixed(3));
 		setNewTotal(result);
+		} else{
+			console.log(newData);
+			//console.log(min);
+			//console.log(igtf);
+			setDataSource(newData);
+			setAmountIgtf(0)
+			setAmountIgtf2(0)
+			console.log(amountIgtf)
+			console.log(amountIgtf2)
+			const calcularSumaTotal = () => {
+				let suma = 0;
+				
+				newData.forEach((objeto) => {
+				
+					suma += Number(objeto.monto)
+					let suma2=0
+					console.log(suma);
+					if(objeto.igtf===true){
+						console.log(objeto)
+						suma2 += Number(objeto.monto*0.03)
+						setAmountIgtf2(amountIgtf +suma2)
+						setAmountIgtf(amountIgtf +suma2)
+						setCount4(count4+1)
+					}
+					//setAmountIgtf2(amountIgtf2 +suma2)
+					//setAmountIgtf(amountIgtf +suma2)
+					
+				});
+				return suma;
+			};
+	
+	
+	
+			
+			let sumaTotal = calcularSumaTotal();
+			setTotalDecla(sumaTotal);
+			
+			let result = newResult+amountIgtf - sumaTotal;
+			console.log(result)
+			result = parseFloat(result.toFixed(3));
+			setNewTotal(result);
+		}
+
+		
+		
 	};
 
 
@@ -1053,13 +1119,13 @@ useEffect(() => {
 												<p>
 													<strong>DECLARADO:  </strong>
 												</p>
-												<p style={{ marginLeft: '10px', color: 'blue' }}>${totalDeclarado}</p>
+												<p style={{ marginLeft: '10px', color: 'blue' }}>${Number(totalDeclarado)?.toFixed(3)}</p>
 											</div>
 											<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>
 													<strong>RESTANTE:  </strong>
 												</p>
-												<p style={{ marginLeft: '10px', color: 'red' }}>${newTotal}</p>
+												<p style={{ marginLeft: '10px', color: 'red' }}>${Number(newTotal)?.toFixed(3)}</p>
 											</div>
 											{count2!==0 && amountIgtf2>0 ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 												<p>

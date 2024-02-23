@@ -33,10 +33,12 @@ const Merchandising = () => {
 	const [reportInventario, setReportInventario] = useState([]);
 	const [suggestedProductsList, setSuggestedProductsList] = useState('');
 	const [reportVisitDetail, setReportVisitDetail] = useState([]);
+	const [clientsDirection, setClientsDirection] = useState([]);
 	const [productsDetail, setProductsDetail] = useState([]);
 	const { filtered } = useProductFilter();
 	const [modalText, setModalText] = useState();
 	const generalContext = useContext(GeneralContext);
+
 
 	const columns = [
 		{
@@ -101,6 +103,12 @@ const Merchandising = () => {
 			render: (text) => <p>{text}</p>,
 		},
 		{
+			title: 'Dirección',
+			dataIndex: 'title',
+			key: 5,
+			render: (text) => <p>{text}</p>,
+		},
+		{
 			title: 'Evidencia',
 			dataIndex: 'idReportVisit',
 			key: '6',
@@ -153,6 +161,14 @@ const Merchandising = () => {
 			key: 5,
 			render: (text) => <p>{text}</p>,
 		},
+		{
+			title: 'Dirección',
+			dataIndex: 'title',
+			key: 5,
+			render: (text) => <p>{text}</p>,
+		},
+
+		
 	];
 
 	const columns4 = [
@@ -259,6 +275,8 @@ const Merchandising = () => {
 			setUserSelected(merchandise[0]);
 		}
 	};
+
+
 
 	const handleOnChang2 = async (value) => {
 		let id = value;
