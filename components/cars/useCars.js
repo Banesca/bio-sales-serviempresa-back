@@ -142,6 +142,7 @@ export default function useCars() {
 	const [onEdit, setOnEdit] = useState(false);
 
 	const saveDrivers = async (data) => {
+		console.log(data)
 		setLoading(true);
 		try {
 			let res = !onEdit
@@ -159,6 +160,7 @@ export default function useCars() {
 	};
 
 	const saveTrucks = async (data) => {
+		console.log(data)
 		try {
 			let res = !onEdit
 				? await requestHandler.post('/api/v2/drivers/add', data)

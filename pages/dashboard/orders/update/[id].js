@@ -1150,7 +1150,7 @@ useEffect(() => {
 													onClick={() => setIsCloseOrderModal(true)}
 													type="primary"
 													className="bg-blue-500"
-													disabled={!currentOrder?.body}
+													disabled={!currentOrder?.body || (PaymentTipe !== 1 && total>totalDeclarado)}
 												>
 													Enviar
 												</Button>
@@ -1215,6 +1215,7 @@ useEffect(() => {
 							type="primary"
 							className="bg-blue-500"
 							onClick={() => handleReceiveOrder()}
+							
 						>
 							Enviar
 						</Button>

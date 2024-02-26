@@ -238,7 +238,7 @@ const ImportProducts = () => {
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
 			console.log(data);
-			const uploadData = await convertExcelDataToAPI(data);
+			const uploadData =  convertExcelDataToAPI(data);
 			console.log(uploadData);
 			addKeys(uploadData);
 			setData(uploadData);
@@ -435,17 +435,19 @@ const ImportProducts = () => {
 				<Modal
 					title="Advertencia"
 					open={warningModal}
-					onCancel={() => setWarningModal(false)}
-					onOk={handleSend}
-					okText="Importar"
-					okType="warning"
-					cancelText="Cancelar"
+					footer={[
+						<div style={{display:'flex'}}>
+    						<Button type='success' onClick={handleSend}>Importar</Button>,
+  							<Button type='warning'  onClick={() => setWarningModal(false)}>Cancelar</Button>
+						</div>
+  					]}
 				>
 					<p>
 						Algunos de los productos que intentas exportar ya estan en
 						existencia. Si continuas los datos de estos productos se
 						sobreescribiran con los previos, <br /> <br /> ¿Deseas continuar?
 					</p>
+					
 				</Modal>
 				<Modal
 					title="Notificación"
