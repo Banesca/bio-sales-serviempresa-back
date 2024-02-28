@@ -90,9 +90,7 @@ export default function ChangeOrderStatus({
 			}));
 		},
 		5: async () => {
-			const res2 =  await requestHandler.get('/api/v2/order/reverse/masive/' +orderId);
-			handleAnul(bodyRegisterAnul,attributes,currentOrder)
-
+			const res2 =  await requestHandler.get('/api/v2/order/reverse/masive/' + orderId);
 			setModal((prev) => ({
 				...prev,
 				visible: true,
@@ -186,17 +184,12 @@ export default function ChangeOrderStatus({
 						{status == 5 && (
 							<>
 								<Button
-									onClick={() => handleOpenModal(statusNames.Anulado)}
+									onClick={() => handleOpenModal(statusNames.Eliminado)}
 									danger
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
-								<Button
-									onClick={() => handleOpenModal(statusNames['Procesado'])}
-									type="warning"
-								>
-									<AuditOutlined /> Procesar
-								</Button>
+								
 							</>
 						)}
 						{status == 6 && <></>}

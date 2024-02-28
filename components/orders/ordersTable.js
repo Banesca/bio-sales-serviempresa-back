@@ -149,8 +149,8 @@ export default function OrdersTable({ orders }) {
 							? 'text-yellow-500'
 							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
 							? 'text-red-500'
-							: orderStatusToUse[record.idStatusOrder].state == 'Retenido'
-							? 'text-red-500'
+							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
+							? 'text-red-700'
 							: ''
 					} ${
 						orderStatusToUse[record.idStatusOrder].state == 'Por pagar'
@@ -163,8 +163,8 @@ export default function OrdersTable({ orders }) {
 							? 'bg-yellow-200'
 							: orderStatusToUse[record.idStatusOrder].state == 'Anulado'
 							? 'bg-red-200'
-							: orderStatusToUse[record.idStatusOrder].state == 'Retenido'
-							? 'bg-red-200'
+							: orderStatusToUse[record.idStatusOrder].state == 'Eliminado'
+							? 'bg-red-400'
 							: ''
 					} px-2 py-1 rounded-xl`}
 				>

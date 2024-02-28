@@ -74,12 +74,23 @@ export default function ProductList({
 			if (body.idUnitMeasureSaleFk == UNIT_TYPE.KG) {
 				priceProductOrder *= body.unitweight;
 			}
-			await addProduct({
+			const res=await addProduct({
 				idOrderHFk: orderId,
 				idProductFk: body.idProduct,
 				idUserAddFk: localStorage.getItem('userId'),
 				priceProductOrder,
 			});
+			if(body.isPromo == 1){
+				const res2=await requestHandler.post('/api/v2/order/product/setnewprice',{
+					idOrderB: res.data.data[0],
+					priceProductOrder: body.marketPrice
+				  })
+				  console.log(res2)
+			}
+
+			/* /api/v2/order/product/setweightmayor/priceorder*/
+			console.log(res.data.data[0])
+			
 			message.success('Producto agregado');
 		} catch (error) {
 			message.error('Error al agregar producto');
@@ -107,10 +118,19 @@ export default function ProductList({
 					alert('No puedes agregar más de este producto, no hay suficiente stock');
 					return;
 				}
-				return await handleUpdateProduct({
+				const res=await handleUpdateProduct({
 					idOrderB: productList[index].idOrderB,
 					weight: productList[index].weight,
 				});
+				console.log(res)
+				if(productList[index].isPromo == 1){
+					const res2=await requestHandler.post('/api/v2/order/product/setnewprice',{
+						idOrderB: productList[index].idOrderB,
+						priceProductOrder: productList[index].marketPrice
+					  })
+					  console.log(res2)
+				}
+				return;
 			}
 		}
 		await handleAddProductToOrder(record);
@@ -146,7 +166,7 @@ export default function ProductList({
 		<ConfigProvider
 			renderEmpty={products.length !== 0 || true ? CustomizeRenderEmpty : ''}
 		>
-			<Table
+			<Table 
 				dataSource={products}
 				columns={AddColumns}
 				loading={loading}

@@ -107,7 +107,7 @@ export default function useCars() {
 	//listar choferes
 	const listDrivers = async () => {
 		try {
-			const res = await requestHandler.get('/api/v2/userdrivers/list');
+			const res = await requestHandler.get('/api/v2/userdrivers/listUsersDriversFull');
 
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();
@@ -120,7 +120,7 @@ export default function useCars() {
 	//listar camiones
 	const listTrucks = async () => {
 		try {
-			const res = await requestHandler.get('/api/v2/drivers/list');
+			const res = await requestHandler.get('/api/v2/userdrivers/listDriversFull');
 
 			if (res.isLeft()) {
 				throw res.value.getErrorValue();

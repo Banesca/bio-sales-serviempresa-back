@@ -861,12 +861,26 @@ useEffect(()=>{
 			setLoading(false);
 		}
 	};
+	const handleChangeStatus = async (status) => {
+		setLoading(true);
+		try {
+			await changeStatus(statusNames.Anulado, currentOrder.idOrderH);
+				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' + id);
+				console.log(res2);
+				message.success('Pedido actualizado');
+				router.push('/dashboard/orders')
+		} catch (error) {
+			message.error('Error al actualizar pedido');
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handleCancelOrder = async () => {
 		setLoading(true);
 		try {
 			await changeStatus(statusNames.Anulado, currentOrder.idOrderH);
-			console.log(res2);
+			
 			router.push('/dashboard/orders');
 		} catch (error) {
 			message.error('Error al anular la orden');
@@ -1027,7 +1041,7 @@ useEffect(() => {
 						<Typography className="flex justify-between">
 							{currentOrder?.isacountCourrient !== 1 && (
 								<>
-									<div className="w-[43%] mt-3">
+									<div className="w-[52%] mt-3">
 										<ProductList
 											products={filtered()}
 											orderId={id}
@@ -1039,7 +1053,7 @@ useEffect(() => {
 								</>
 							)}
 
-							<div className="w-[52%] flex flex-col gap-5 mt-3">
+							<div className="w-[47%] flex flex-col gap-5 mt-3">
 								<ProductsInOrder
 									order={currentOrder}
 									openDeleteModal={openDeleteModal}
@@ -1150,7 +1164,7 @@ useEffect(() => {
 													onClick={() => setIsCloseOrderModal(true)}
 													type="primary"
 													className="bg-blue-500"
-													disabled={!currentOrder?.body || (PaymentTipe !== 1 && total>totalDeclarado)}
+													disabled={!currentOrder?.body || (PaymentAddTipe !== 1 && total>totalDeclarado)}
 												>
 													Enviar
 												</Button>
@@ -1303,7 +1317,7 @@ useEffect(() => {
 				title="Confirmación"
 				open={cancelOrderModal}
 				onCancel={() => setIsCancelOrderModal(false)}
-				onOk={handleCancelOrder}
+				onOk={()=>handleChangeStatus('Anulado')}
 				footer={[
 					// eslint-disable-next-line react/jsx-key
 					<div className="flex justify-end gap-6">
@@ -1314,7 +1328,7 @@ useEffect(() => {
 							key="delete"
 							danger
 							type="primary"
-							onClick={handleCancelOrder}
+							onClick={()=>handleChangeStatus('Anulado')}
 						>
 							Anular
 						</Button>

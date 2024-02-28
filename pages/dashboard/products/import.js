@@ -314,12 +314,6 @@ const ImportProducts = () => {
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
 		console.log(formatData);
-		for (let product in data) {
-			for (let c in code) {
-				if (product.barCode == c.barCode) {
-					setWarningModal(true);
-					break;
-				} else {
 					setLoading(true);
 					const res = await requestHandler.post(
 						'/api/v2/product/add/masive/sales',
@@ -337,9 +331,6 @@ const ImportProducts = () => {
 					setRejectedCategories([]);
 					setFileList([]);
 					setLoading(false);
-				}
-			}
-		}
 	};
 
 	const handleSend = async () => {

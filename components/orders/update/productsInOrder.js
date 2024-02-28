@@ -60,11 +60,11 @@ export default function ProductsInOrder({
                 },
                 {
                     title: 'Precio',
-                    dataIndex: 'priceSale',
+                    dataIndex: 'priceProductOrder',
 
                     key: 2,
                     render: (text, record) => (
-                        <p>$ {record.isPromo == '1' ? record.marketPrice : text}</p>
+                        <p>$ {record.priceProductOrder}</p>
                     ),
                 },
 

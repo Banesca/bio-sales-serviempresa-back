@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashboardLayout from '../../../components/shared/layout';
 import Title from '../../../components/shared/title';
 import {
@@ -62,6 +62,9 @@ const Cars = () => {
 		);
 	};
 
+useEffect(() => {formDrive.resetFields()},[saveDrivers])
+useEffect(() => {formTruck.resetFields()},[saveTrucks])
+
 	const rules = [{ required: true, message: 'El campo es requerido' }];
 
 	return (
@@ -112,7 +115,9 @@ const Cars = () => {
 			<Modal open={openModal} onCancel={closeModals} footer={false}>
 				<div className="flex flex-col gap-5">
 					<h1>{!onEdit ? 'Agrega un chofer' : 'Editar chofer'}</h1>
-					<Form layout="vertical" form={formDrive} onFinish={saveDrivers}>
+					<Form layout="vertical" form={formDrive} onFinish={ 
+						 saveDrivers
+						}>
 						<Row gutter={24}>
 							<Col span={12}>
 								<Form.Item

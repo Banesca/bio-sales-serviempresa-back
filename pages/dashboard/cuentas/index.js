@@ -38,6 +38,7 @@ const Cuentas = () => {
 	const [descripcion, setDescripcion] = useState([]);
 	const [abono, setAbono] = useState([]);
 	const [montoTotal, setMontoTotal] = useState([]);
+	const [igtf, setIGTF] = useState(false);
 	const [deuda, setDeuda] = useState([]);
 	const [totalAbonos, setTotal] = useState([]);
 	const [PaymentAdd, setPaymentToAdd] = useState([]);
@@ -79,6 +80,8 @@ const Cuentas = () => {
 		{ title: 'Numero Factura', dataIndex: 'facturaAfip', key: 'facturaAfip', render:(text)=>(<p>{text}</p>) },
 
 	];
+
+
 	const handleReturn = () => {
 		setOpen(false);
 		setOpen2(true);
@@ -98,10 +101,17 @@ const Cuentas = () => {
 	const handleAbonarClick = async () => {
 		console.log(abonos);
 		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
+		const walletBody2 = createWalletBody5(abono2, PaymentAbono, abonos);
+		const bodyRegisterAnul = createWalletBody3(abono2, PaymentAbono, abonos)
 		console.log(walletBody);
 		if (walletBody) {
 			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
 			console.log(response);
+			if(igtf){
+				const response2=await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
+				const response = await requestHandler.post('/api/v2/wallet/add', walletBody2);
+				console.log(response2);
+			}
 		}
 		handleCancel();
 		window.location.reload();
@@ -111,14 +121,20 @@ const Cuentas = () => {
 	const handlePagarClick = async () => {
 		let id = abonos[0].idOrder;
 		const walletBody = createWalletBody2(abono2, PaymentAbono, abonos);
-
+		const walletBody2 = createWalletBody5(abono2, PaymentAbono, abonos);
+		const bodyRegisterAnul = createWalletBody4(abono2, PaymentAbono, abonos)
 		const response = await requestHandler.post(`/api/v2/order/update/currentacount/${id}`, {
 			isacountCourrient: false
 		});
 		console.log(response);
 		if (walletBody) {
 			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
-			console.log(response);
+			if(igtf){
+				const response2=await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
+				const response = await requestHandler.post('/api/v2/wallet/add', walletBody2);
+				console.log(response2);
+			}
+			
 		}
 		handleCancel();
 		window.location.reload();
@@ -160,9 +176,12 @@ const Cuentas = () => {
 	function createWalletBody(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
 		console.log(firstAbono);
+		console.log(firstAbono.amount);
+		console.log(PaymentAbono);
+		console.log(firstAbono);
 		const walletBody = {
 			title: 'Abono en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
-			amount: abono2,
+			amount: abono2 ,
 			nameclient: firstAbono.nameclient,
 			idUserAddFk: firstAbono.idUserAddFk,
 			isEntry: 1,
@@ -176,9 +195,32 @@ const Cuentas = () => {
 		return walletBody;
 	}
 
+	function createWalletBody5(abono2, PaymentAbono, abonos) {
+		const firstAbono = abonos[0];
+		console.log(firstAbono);
+		console.log(firstAbono.amount);
+		console.log(PaymentAbono);
+		console.log(firstAbono);
+		const walletBody = {
+			title: 'Deuda creada por IGTF de ' + abono2*0.03 + ` Deuda pedido: #${firstAbono.title}`,
+			amount: abono2*0.03 ,
+			nameclient: firstAbono.nameclient,
+			idUserAddFk: firstAbono.idUserAddFk,
+			isEntry: 0,
+			idClientFk: firstAbono.idClientFk,
+			idBranchFk: firstAbono.idBranchFk,
+			idCurrencyFk: 99,
+			idPaymentMethodFk: PaymentAbono,
+			idOrder: firstAbono.idOrder,
+		};
+		console.log(walletBody);
+		return walletBody;
+	}
 	function createWalletBody2(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
 		console.log(firstAbono);
+		console.log(firstAbono.amount);
+		console.log(PaymentAbono);
 		const walletBody = {
 			title: 'Pago en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
 			amount: abono2,
@@ -194,6 +236,90 @@ const Cuentas = () => {
 		console.log(walletBody);
 		return walletBody;
 	}
+
+	
+	function createWalletBody3(abono2, PaymentAbono, abonos) {
+		const firstAbono = abonos[0];
+		console.log(firstAbono);
+		console.log(firstAbono.amount);
+		console.log(PaymentAbono);
+		console.log(firstAbono);
+		const bodyRegisterAnul = {
+			title: 'IGTF de ' + abono2*0.03 + ` por abono en ${PaymentAbono}, Deuda pedido: #${firstAbono.title}`,
+			amount:abono2*0.03,
+			idUserAddFk:1,
+			isEntry: 0,
+			spending: 1,
+			idBranchFk: selectedBusiness.idSucursal,
+			idCurrencyFk: 1,
+			mpCash: 0,
+			mpCreditCard: 0,
+			mpDebitCard: 0,
+			mpTranferBack: 0,
+			mpMpago: 0,
+			mpRappi: 0,
+			mpGlovo: 0,
+			mpUber: 0,
+			mpPedidosya: 0,
+			mpJust: 0,
+			mpWabi: 0,
+			mpOtro2: 0,
+			mpPedidosyacash: 0,
+			mpPersonal: 0,
+			mpRapicash: 0,
+			mpPresent: 0,
+			mpPaypal: 0,
+			mpZelle: 0,
+			mpBofa: 0,
+			mpYumi: 0,
+			idBoxFk: 1,
+			isCloseBox: false,
+		};
+		console.log(bodyRegisterAnul);
+		return bodyRegisterAnul;
+	}
+
+	function createWalletBody4(abono2, PaymentAbono, abonos) {
+		const firstAbono = abonos[0];
+		console.log(firstAbono);
+		console.log(firstAbono.amount);
+		console.log(PaymentAbono);
+		console.log(firstAbono);
+		const bodyRegisterAnul = {
+			title: 'IGTF de ' + abono2*0.03 + `por pago en ${PaymentAbono}, Deuda pedido: #${firstAbono.title}`,
+			amount:abono2*0.03,
+			isEntry: 0,
+			spending: 1,
+			idUserAddFk:1,
+			idBranchFk: selectedBusiness.idSucursal,
+			idCurrencyFk: 1,
+			mpCash: 0,
+			mpCreditCard: 0,
+			mpDebitCard: 0,
+			mpTranferBack: 0,
+			mpMpago: 0,
+			mpRappi: 0,
+			mpGlovo: 0,
+			mpUber: 0,
+			mpPedidosya: 0,
+			mpJust: 0,
+			mpWabi: 0,
+			mpOtro2: 0,
+			mpPedidosyacash: 0,
+			mpPersonal: 0,
+			mpRapicash: 0,
+			mpPresent: 0,
+			mpPaypal: 0,
+			mpZelle: 0,
+			mpBofa: 0,
+			mpYumi: 0,
+			idBoxFk: 1,
+			isCloseBox: false,
+		};
+		console.log(bodyRegisterAnul);
+		return bodyRegisterAnul;
+	}
+
 
 	useEffect(() => {
 		getAccountsReceivable();
@@ -253,6 +379,20 @@ const Cuentas = () => {
 			setClients(clientsList);
 		} */
 	};
+
+	const changeValue=(e)=>{
+		console.log(e)
+
+		if(e==='Efectivo' || e==='Otro' || e==='Zelle'){
+			const res=window.confirm('tiene igtf?')
+			console.log(res)
+			setIGTF(res)
+		}
+		setPaymentAbono(e)
+		//
+	}
+
+	
 
 	const handleCancel2 = () => {
 		setOpen2(false);
@@ -381,7 +521,7 @@ const Cuentas = () => {
 								<List.Item>
 									<Select
 										style={{ width: '130px' }}
-										onChange={(value) => setPaymentAbono(value)}
+										onChange={(value) => changeValue(value)}
 									>
 										{Payment &&
 											Payment.map((Payment) => (

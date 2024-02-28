@@ -24,10 +24,19 @@ export function useProductOrders() {
 			priceProductOrder,
 			quantityProduct: 1,
 		});
-		if (res.isLeft()) {
-			throw res.value.getErrorValue();
+		console.log(res)
+
+		const body = {
+			data:res.value._value,
+			idOrderHFk: idOrderHFk
+
 		}
-		await getOrderById(idOrderHFk);
+
+		if (res.isRight()) {
+			return body
+		}
+		
+		 
 	};
 
 	return {
