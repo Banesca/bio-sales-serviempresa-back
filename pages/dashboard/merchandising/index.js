@@ -224,7 +224,7 @@ const Merchandising = () => {
 	const showModal = (reporte) => {
 		setOpen(true);
 		setReportVisitDetail(reporte);
-		console.log(reporte);
+		//console.log(reporte);
 	};
 
 	const HandleDelete = async (id) => {
@@ -249,7 +249,7 @@ const Merchandising = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(generalContext)
+		//console.log(generalContext)
 	});
 
 	const getUsers = async () => {
@@ -266,7 +266,7 @@ const Merchandising = () => {
 		const res = await requestHandler.get(
 			`/api/v2/reportvisit/list/${value}/10`
 		);
-		console.log(res);
+		//console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -281,7 +281,7 @@ const Merchandising = () => {
 	const handleOnChang2 = async (value) => {
 		let id = value;
 		const res = await requestHandler.get(`/api/v2/utilh/list/byuser/${value}`);
-		console.log(res);
+		//console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -293,7 +293,7 @@ const Merchandising = () => {
 
 	const handleOnChang3 = async (value) => {
 		const res = await requestHandler.get(`/api/v2/utilb/list/${value}`);
-		console.log(res);
+		//console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
@@ -305,7 +305,7 @@ const Merchandising = () => {
 		const response = await requestHandler.get(
 			`/api/v2/productclient/list/${idClient}`
 		);
-		console.log(response);
+		//console.log(response);
 		if (!response.isLeft()) {
 			setSuggestedProductsList(response.value.getValue().response);
 		}
@@ -318,7 +318,7 @@ const Merchandising = () => {
 		setOpen2(false);
 	};
 	const onChange = (key) => {
-		console.log(key);
+		//console.log(key);
 	};
 
 	let imagesBefore = [];
@@ -339,7 +339,7 @@ const Merchandising = () => {
 		</Card>
 	);
 
-	console.log(textBefore)
+	//console.log(textBefore)
 
 	const textAfter = (
 		<Card>

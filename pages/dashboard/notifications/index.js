@@ -55,7 +55,7 @@ const Notifications = () => {
 			}
 			const value = response.value.getValue().sucursales;
 			setNotification(value);
-			console.log(value)
+			//console.log(value)
 			setLoading(false);
 		} catch (error) {
 			console.error(error);

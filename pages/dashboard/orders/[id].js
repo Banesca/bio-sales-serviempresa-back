@@ -136,9 +136,7 @@ const OrderDetail = () => {
 		console.error('localStorage is not available');
 	}
 
-	useEffect(()=>{console.log(log)},[])
 
-	useEffect(()=>{console.log(log)},[log])
 	
 	let idClientfk = currentOrder;
 	
@@ -217,7 +215,7 @@ const OrderDetail = () => {
 			bodyRegister[key] = currentOrder[key];
 		}
 
-		console.log('pase por aca')
+		//console.log('pase por aca')
 	});
 /*
 	const mpObjects2 = Object.keys(attributes)
@@ -234,17 +232,17 @@ const OrderDetail = () => {
             bodyRegisterAnul[key] = currentOrder[key];
         }
 	}
-	console.log('pase por aca2')
+	//console.log('pase por aca2')
 
 });*/
 
-	console.log(bodyRegister);
+	//console.log(bodyRegister);
 	
 	useEffect(()=>{
 
 
 		
-		console.log(mpObjects.length)
+		//console.log(mpObjects.length)
 	},[bodyRegister])
 
 	const captureElement = async (elementId) => {
@@ -271,8 +269,8 @@ const OrderDetail = () => {
 /*
 	
 	const handleAnul = async () => {
-		console.log(bodyRegister);
-		console.log(bodyRegisterAnul);
+		//console.log(bodyRegister);
+		//console.log(bodyRegisterAnul);
 		Object.keys(attributes).forEach(async (key) => {
 			if (bodyRegisterAnul.hasOwnProperty(key) && currentOrder && currentOrder[key]) {
 				if (key.startsWith('mp') && currentOrder[key] != 0) {
@@ -284,7 +282,7 @@ const OrderDetail = () => {
 				} else {
 					bodyRegisterAnul[key] = currentOrder[key];
 				}if (bodyRegisterAnul[key] != 0) {
-					console.log(bodyRegisterAnul)					
+					//console.log(bodyRegisterAnul)					
 				}
 			}
 		});
@@ -299,7 +297,7 @@ const OrderDetail = () => {
 			message.success('Pedido actualizado');
 			if (status === 'Anulado') {
 				const res2 = await requestHandler.get('/api/v2/order/reverse/masive/' + id);
-				console.log(res2);
+				//console.log(res2);
 				message.success('Pedido actualizado2');
 			}
 		} catch (error) {
@@ -327,10 +325,10 @@ const OrderDetail = () => {
 		if (regex.test(model)) {
 		  // inputValue is valid
 		  try {const res = requestHandler.put(`/api/v2/order/update/seniat/${id}`, { factura: model });
-		console.log(res);
+		//console.log(res);
 		message.success('Factura actualizada');
 	
-		}catch (error){console.log(error);
+		}catch (error){//console.log(error);
 
 		}finally{
 			setTimeout(()=>{
@@ -344,7 +342,7 @@ const OrderDetail = () => {
 		  message.error('solo se permiten numeros')
 		}
 
-		console.log(idOrderH);
+		//console.log(idOrderH);
 		
 	};
 
@@ -359,10 +357,10 @@ const OrderDetail = () => {
 
 
 	useEffect(() => {
-		console.log(currentOrder)
-		console.log(currentOrder?.numbernotecredit )
-		console.log(currentOrder?.facturaAfip )
-		console.log(currentOrder?.imageBank1 )
+		//console.log(currentOrder)
+		//console.log(currentOrder?.numbernotecredit )
+		//console.log(currentOrder?.facturaAfip )
+		//console.log(currentOrder?.imageBank1 )
 			}, [currentOrder]);
 		
 
@@ -379,7 +377,7 @@ const OrderDetail = () => {
 
 
 	const handleConfirm = async () => {
-		console.log(bodyRegister);
+		//console.log(bodyRegister);
 		const res = await requestHandler.post('/api/v2/tracking/add', bodyRegister);
 		setLoading(true)
 		try {
@@ -390,7 +388,7 @@ const OrderDetail = () => {
 		finally{
 			setLoading(false)
 		}
-		console.log(res);
+		//console.log(res);
 	}
 
 
@@ -428,7 +426,7 @@ idOrderH
 /order/set/numbernotecredit */
 
 	const actualizaciónNota = (idOrderH) => {
-		console.log(idOrderH);
+		//console.log(idOrderH);
 
 		const regex = /^[0-9]+$/;
 		if (regex.test(idOrderH)) {
@@ -439,13 +437,13 @@ idOrderH
 				} );
 				if(res.status===200){
 					//window.location.reload();
-					console.log(res.status==200);
+					//console.log(res.status==200);
 				}
-				console.log(res);
+				//console.log(res);
 				message.success('Nota de credito creada');
 				
 	
-			}catch (error){console.log(error);
+			}catch (error){//console.log(error);
 				message.error('Error en la creacion');
 			}finally{
 				setTimeout(function(){

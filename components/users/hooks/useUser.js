@@ -38,7 +38,7 @@ export function useUser() {
 			return res.value.getErrorValue();
 		}
 		setSellerClients(res.value.getValue().data);
-		console.log(res.value.getValue().data);
+		//console.log(res.value.getValue().data);
 	};
 	
 	const upPass = async (id, data) => {
@@ -114,7 +114,7 @@ export function useUser() {
 		delete newData.file;
 		
 		const res = await requestHandler.post('/api/v2/user/add/sales', newData);
-		console.log({res})
+		//console.log({res})
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}

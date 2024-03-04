@@ -74,7 +74,7 @@ export function CategoriesProvider({ children }) {
 			throw res.value.getErrorValue();
 		}
 		const categories = res.value.getValue().response;
-		console.log(categories)
+		//console.log(categories)
 		dispatch({ type: ACTIONS.SET_CATEGORIES, payload: categories });
 	};
 
@@ -140,7 +140,7 @@ export function CategoriesProvider({ children }) {
 			throw res.value.getErrorValue();
 		}
 		const value = res.value.getValue().data;
-		console.log(value)
+		//console.log(value)
 		dispatch({ type: ACTIONS.SET_CURRENT_SUB_CATEGORIES, payload: value });
 	};
 
@@ -162,8 +162,8 @@ export function CategoriesProvider({ children }) {
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
 		}
-		console.log(res)
-		console.log(data)
+		//console.log(res)
+		//console.log(data)
 		await getSubCategories(id);
 	};
 

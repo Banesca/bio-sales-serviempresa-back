@@ -99,18 +99,18 @@ const Cuentas = () => {
 	};
 
 	const handleAbonarClick = async () => {
-		console.log(abonos);
+		//console.log(abonos);
 		const walletBody = createWalletBody(abono2, PaymentAbono, abonos);
 		const walletBody2 = createWalletBody5(abono2, PaymentAbono, abonos);
 		const bodyRegisterAnul = createWalletBody3(abono2, PaymentAbono, abonos)
-		console.log(walletBody);
+		//console.log(walletBody);
 		if (walletBody) {
 			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
-			console.log(response);
+			//console.log(response);
 			if(igtf){
 				const response2=await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
 				const response = await requestHandler.post('/api/v2/wallet/add', walletBody2);
-				console.log(response2);
+				//console.log(response2);
 			}
 		}
 		handleCancel();
@@ -126,13 +126,13 @@ const Cuentas = () => {
 		const response = await requestHandler.post(`/api/v2/order/update/currentacount/${id}`, {
 			isacountCourrient: false
 		});
-		console.log(response);
+		//console.log(response);
 		if (walletBody) {
 			const response = await requestHandler.post('/api/v2/wallet/add', walletBody);
 			if(igtf){
 				const response2=await requestHandler.post('/api/v2/tracking/add', bodyRegisterAnul);
 				const response = await requestHandler.post('/api/v2/wallet/add', walletBody2);
-				console.log(response2);
+				//console.log(response2);
 			}
 			
 		}
@@ -150,35 +150,35 @@ const Cuentas = () => {
 			throw res.value.getErrorValue();
 		}
 		setPayment(res.value.getValue().response);
-		console.log(Payment);
+		//console.log(Payment);
 	};
 
 	const handleOnChang3 = async (resp) => {
 		let id = resp.idClientFk;
-		console.log(id);
-		console.log(resp)
+		//console.log(id);
+		//console.log(resp)
 		setAbono(resp.abonos);
 		setDeuda(resp.amount);
 		setNombre(resp.nameclient);
 		setMontoTotal(resp.deuda);
 	
 		const res = await requestHandler.get(`/api/v2/wallet/get/full/${id}/1000`);
-		console.log(res);
+		//console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.data;
-			console.log(value)
+			//console.log(value)
 			setAbonos(value);
 		}
-		console.log(abonos);
+		//console.log(abonos);
 	};
 
 	function createWalletBody(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-		console.log(firstAbono);
-		console.log(firstAbono.amount);
-		console.log(PaymentAbono);
-		console.log(firstAbono);
+		//console.log(firstAbono);
+		//console.log(firstAbono.amount);
+		//console.log(PaymentAbono);
+		//console.log(firstAbono);
 		const walletBody = {
 			title: 'Abono en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
 			amount: abono2 ,
@@ -191,16 +191,16 @@ const Cuentas = () => {
 			idPaymentMethodFk: PaymentAbono,
 			idOrder: firstAbono.idOrder,
 		};
-		console.log(walletBody);
+		//console.log(walletBody);
 		return walletBody;
 	}
 
 	function createWalletBody5(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-		console.log(firstAbono);
-		console.log(firstAbono.amount);
-		console.log(PaymentAbono);
-		console.log(firstAbono);
+		//console.log(firstAbono);
+		//console.log(firstAbono.amount);
+		//console.log(PaymentAbono);
+		//console.log(firstAbono);
 		const walletBody = {
 			title: 'Deuda creada por IGTF de ' + abono2*0.03 + ` Deuda pedido: #${firstAbono.title}`,
 			amount: abono2*0.03 ,
@@ -213,14 +213,14 @@ const Cuentas = () => {
 			idPaymentMethodFk: PaymentAbono,
 			idOrder: firstAbono.idOrder,
 		};
-		console.log(walletBody);
+		//console.log(walletBody);
 		return walletBody;
 	}
 	function createWalletBody2(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-		console.log(firstAbono);
-		console.log(firstAbono.amount);
-		console.log(PaymentAbono);
+		//console.log(firstAbono);
+		//console.log(firstAbono.amount);
+		//console.log(PaymentAbono);
 		const walletBody = {
 			title: 'Pago en $ ' + abono2 + ` Deuda pedido: #${firstAbono.title}`,
 			amount: abono2,
@@ -233,17 +233,17 @@ const Cuentas = () => {
 			idPaymentMethodFk: PaymentAbono,
 			idOrder: firstAbono.idOrder,
 		};
-		console.log(walletBody);
+		//console.log(walletBody);
 		return walletBody;
 	}
 
 	
 	function createWalletBody3(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-		console.log(firstAbono);
-		console.log(firstAbono.amount);
-		console.log(PaymentAbono);
-		console.log(firstAbono);
+		//console.log(firstAbono);
+		//console.log(firstAbono.amount);
+		//console.log(PaymentAbono);
+		//console.log(firstAbono);
 		const bodyRegisterAnul = {
 			title: 'IGTF de ' + abono2*0.03 + ` por abono en ${PaymentAbono}, Deuda pedido: #${firstAbono.title}`,
 			amount:abono2*0.03,
@@ -275,16 +275,16 @@ const Cuentas = () => {
 			idBoxFk: 1,
 			isCloseBox: false,
 		};
-		console.log(bodyRegisterAnul);
+		//console.log(bodyRegisterAnul);
 		return bodyRegisterAnul;
 	}
 
 	function createWalletBody4(abono2, PaymentAbono, abonos) {
 		const firstAbono = abonos[0];
-		console.log(firstAbono);
-		console.log(firstAbono.amount);
-		console.log(PaymentAbono);
-		console.log(firstAbono);
+		//console.log(firstAbono);
+		//console.log(firstAbono.amount);
+		//console.log(PaymentAbono);
+		//console.log(firstAbono);
 		const bodyRegisterAnul = {
 			title: 'IGTF de ' + abono2*0.03 + `por pago en ${PaymentAbono}, Deuda pedido: #${firstAbono.title}`,
 			amount:abono2*0.03,
@@ -316,7 +316,7 @@ const Cuentas = () => {
 			idBoxFk: 1,
 			isCloseBox: false,
 		};
-		console.log(bodyRegisterAnul);
+		//console.log(bodyRegisterAnul);
 		return bodyRegisterAnul;
 	}
 
@@ -340,13 +340,13 @@ const Cuentas = () => {
 	}, [generalContext, selectedBusiness]);
 
 	const getAccountsReceivable = async () => {
-		console.log(selectedBusiness.idSucursal);
+		//console.log(selectedBusiness.idSucursal);
 		let id = selectedBusiness.idSucursal;
 		try {
 			const response = await requestHandler.get(
 				`/api/v2/wallet/list/client/deuda/${id}`
 			);
-			console.log(response.value);
+			//console.log(response.value);
 
 			if (
 				response.value._value &&
@@ -361,7 +361,7 @@ const Cuentas = () => {
 					idClientFk: obj.data.idClientFk,
 				}));
 
-				console.log(arrayForTable);
+				//console.log(arrayForTable);
 				setAccountsReceivable(arrayForTable);
 			} else {
 				console.error('Unexpected response from API:', response.value);
@@ -381,11 +381,11 @@ const Cuentas = () => {
 	};
 
 	const changeValue=(e)=>{
-		console.log(e)
+		//console.log(e)
 
 		if(e==='Efectivo' || e==='Otro' || e==='Zelle'){
 			const res=window.confirm('tiene igtf?')
-			console.log(res)
+			//console.log(res)
 			setIGTF(res)
 		}
 		setPaymentAbono(e)

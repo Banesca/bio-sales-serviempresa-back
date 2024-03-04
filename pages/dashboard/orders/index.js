@@ -83,10 +83,6 @@ const handleChange=(e)=>{
 	setStateOrder2(saveOrders.filter(o=>o.idStatusOrder==e))
 }
 
-useEffect(()=>{
-	console.log(saveOrders)
-	console.log(initOrders)
-},[userProfile,orders])
 
 useEffect(()=>{
 	const result = orders?.filter(o=>o.idStatusOrder===stateOrder)
@@ -120,8 +116,9 @@ useEffect(()=>{
 				list = list.filter((o) => o.numberOrden == query.numberOrden);
 			}
 		}
-		console.log(list)},2000)
-		console.log(userProfile)
+		//console.log(list)
+	},2000)
+		//console.log(userProfile)
 		//setInitOrders(list)
 	}, [orders])
 
@@ -129,7 +126,7 @@ useEffect(()=>{
 	useEffect(()=>{
 		
 		const result = orders
-	console.log(saveOrders)
+	//console.log(saveOrders)
 		let list = result;
 		if (query.idStatusOrder) {
 			if (list) {
@@ -151,7 +148,7 @@ useEffect(()=>{
 				list = list.filter((o) => o.numberOrden == query.numberOrden);
 			}
 		}
-		//console.log(list)
+		////console.log(list)
 		//setStateOrder2(list)
 	},[stateOrder])
 

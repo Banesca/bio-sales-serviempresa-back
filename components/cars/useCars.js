@@ -142,7 +142,7 @@ export default function useCars() {
 	const [onEdit, setOnEdit] = useState(false);
 
 	const saveDrivers = async (data) => {
-		console.log(data)
+		//console.log(data)
 		setLoading(true);
 		try {
 			let res = !onEdit
@@ -160,7 +160,7 @@ export default function useCars() {
 	};
 
 	const saveTrucks = async (data) => {
-		console.log(data)
+		//console.log(data)
 		try {
 			let res = !onEdit
 				? await requestHandler.post('/api/v2/drivers/add', data)
@@ -193,7 +193,7 @@ export default function useCars() {
 	};
 	// abrir camión
 	const openTrucks = (truck) => {
-		console.log({ truck });
+		//console.log({ truck });
 
 		setOnEdit(true);
 		setOpenModal2(true);

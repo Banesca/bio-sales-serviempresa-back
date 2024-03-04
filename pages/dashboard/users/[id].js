@@ -82,7 +82,7 @@ const UserDetail = () => {
 		}
 		const value = res.value.getValue().data;
 		setsellerClientsAdd(value);
-		console.log(sellerClientsAdd);
+		//console.log(sellerClientsAdd);
 	};
 
 	const getClientsRequest = async () => {

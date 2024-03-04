@@ -59,14 +59,14 @@ const Sucursal = () => {
 	};
 	const showModal2 = (record) => {
 		setOpenModal2(true);
-		console.log(record);
+		//console.log(record);
 		setNombreSursal(record.sucursal);
 		setNumero(record.liWs);
 		setRazon(record.nameAppExternal);
 		setRif(record.timeDelivery)
 		setDireccion(record.address);
 		setId(record.idSucursal);
-		console.log(idSucu);
+		//console.log(idSucu);
 	};
 
 	const [formState, setFormState] = useState({
@@ -85,7 +85,7 @@ const Sucursal = () => {
 	};
 
 	useEffect(() => {
-		console.log(formState);
+		//console.log(formState);
 	}, [formState]);
 
 	const cancelModal = (event) => {
@@ -114,7 +114,7 @@ const Sucursal = () => {
 	};
 
 	const addSucursal = async () => {
-		console.log(body);
+		//console.log(body);
 		const response = await requestHandler.post('/api/v2/mapas/add', {
 			location: body,
 			nameSucursal: formState.nombre,

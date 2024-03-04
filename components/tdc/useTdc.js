@@ -27,7 +27,7 @@ export const useTdc = () => {
 			setTdc(tdc);
 			form.setFieldValue('param', tdc.param);
 		} catch (error) {
-			console.log({ error });
+			//console.log({ error });
 			message.error('No fue posible cargar la tasa de cambio');
 		}
 		return tdc;
@@ -46,7 +46,7 @@ export const useTdc = () => {
 		} catch (error) {
 			message.error('No fue posible guardar la tasa de cambio');
 			setLoading(false);
-			console.log(error);
+			//console.log(error);
 		}
 	};
 

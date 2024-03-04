@@ -150,7 +150,7 @@ const UserDetail = () => {
 	}, [generalContext]);
 
 	const handleSelect = (value) => {
-		console.log(value);
+		//console.log(value);
 		if (value.value == 'Detallado de productos vendidos') {
 			setProductsSelling(true);
 		} else {

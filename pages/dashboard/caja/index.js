@@ -20,13 +20,13 @@ const Caja = () => {
 
     useEffect(() => {
         getMotion()
-        console.log(user)
+        //console.log(user)
     }, []);
 
     
     
 	const handleOpenDeleteModal= async (id)=>{
-		console.log(id)
+		//console.log(id)
 
         const res = await requestHandler.delete(`/api/v2/tracking/delete/${id}`);
         if (res.isLeft()) {
@@ -37,7 +37,7 @@ const Caja = () => {
             setVariable( variable === true ? false : true)
         }
 
-        console.log(res)
+        //console.log(res)
 	}
 
     
@@ -96,7 +96,7 @@ const Caja = () => {
 
     useEffect(() => {
         getMotion()
-        console.log(user)
+        //console.log(user)
     }, [idSucursal]);
 
 
@@ -113,9 +113,9 @@ const Caja = () => {
     const getMotion = async () => {
         try {
             const res = await requestHandler.post('/api/v2/tracking/list', body);
-            console.log(res);
-            console.log(res.value._value.data)
-            console.log(res.value._value.totalEgresos)
+            //console.log(res);
+            //console.log(res.value._value.data)
+            //console.log(res.value._value.totalEgresos)
             if (res && res.value && res.value._value && res.value._value.data) {
                 setData(res.value._value.data.map((item, index) => ({
                     key: index,
@@ -125,7 +125,7 @@ const Caja = () => {
                     spending: item.spending,
                     isEntry:item.isEntry,
                 })));
-                console.log()
+                //console.log()
                 setTotalIngresos(res.value._value.totalIngresos);
                 setTotalGanancia(res.value._value.totalGanancia);
                 setTotalEgresos(res.value._value.totalEgresos);

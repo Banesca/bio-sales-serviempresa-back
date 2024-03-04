@@ -12,7 +12,7 @@ export default function useClients() {
 			throw res.value.getErrorValue();
 		}
 		setClients(res.value.getValue().response);
-		console.log(res.value.getValue().response);
+		//console.log(res.value.getValue().response);
 	};
 
 	const deleteClient = async (idClient) => {
@@ -21,7 +21,7 @@ export default function useClients() {
 		);
 		if (res.isLeft()) {
 			throw res.value.getErrorValue();
-			console.log(res.value.getValue().response);
+			//console.log(res.value.getValue().response);
 		}
 		await listClients();
 	};

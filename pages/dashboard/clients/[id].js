@@ -217,7 +217,7 @@ const ClientDetail = () => {
 
 	const getDebtsbyClient = async (phoneNumber) => {
 		setLoading(true);
-		console.log(phoneNumber);
+		//console.log(phoneNumber);
 		let id = phoneNumber;
 		try {
 			const res = await requestHandler.post(`/api/v2/wallet/get/0412-1231231/1000`);
@@ -226,7 +226,7 @@ const ClientDetail = () => {
 				throw res.value.getErrorValue();
 			}
 			const value = res.value.getValue().data;
-			console.log(value);
+			//console.log(value);
 			setdebts(value);
 		} catch (error) {
 			message.error('Ha ocurrido un error');

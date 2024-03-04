@@ -41,7 +41,7 @@ const ProductFilter = ({ setQuery, clean, filtered }) => {
 			search: values.is5050 || '',
 		});
 		if(res.isRight){
-			console.log(res.value.getValue().data)
+			//console.log(res.value.getValue().data)
 			//filtered()
 			//filtered=res.value.getValue().[0]
 		}
@@ -53,12 +53,12 @@ const ProductFilter = ({ setQuery, clean, filtered }) => {
 	
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
-		console.log(categories)
+		//console.log(categories)
 	}, []);
 
 		
 	useEffect(() => {
-		console.log(categories)
+		//console.log(categories)
 	}, [selectedBusiness]);
 
 	return (

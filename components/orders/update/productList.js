@@ -66,8 +66,8 @@ export default function ProductList({
 
 	const handleAddProductToOrder = async (body) => {
 		setLoading(true);
-		console.log(body)
-		console.log(orderId)
+		//console.log(body)
+		//console.log(orderId)
 		try {
 			let priceProductOrder =
 				body.isPromo == 1 ? body.marketPrice : body.priceSale;
@@ -85,11 +85,11 @@ export default function ProductList({
 					idOrderB: res.data.data[0],
 					priceProductOrder: body.marketPrice
 				  })
-				  console.log(res2)
+				  //console.log(res2)
 			}
 
 			/* /api/v2/order/product/setweightmayor/priceorder*/
-			console.log(res.data.data[0])
+			//console.log(res.data.data[0])
 			
 			message.success('Producto agregado');
 		} catch (error) {
@@ -100,10 +100,10 @@ export default function ProductList({
 	};
 
 	const handleAddProduct = async (record) => {
-		console.log(record)
+		//console.log(record)
 		if (record.stock <= 0) {
 			alert('No hay stock disponible para este producto');
-			console.log(record.maxProducVenta)
+			//console.log(record.maxProducVenta)
 			return;
 		}
 	
@@ -112,8 +112,8 @@ export default function ProductList({
 			if (found) {
 				let productList = [...orderProducts];
 				productList[index].weight += 1;
-				console.log(productList);
-				console.log(record);
+				//console.log(productList);
+				//console.log(record);
 				if (productList[index].weight > record) {
 					alert('No puedes agregar más de este producto, no hay suficiente stock');
 					return;
@@ -122,13 +122,13 @@ export default function ProductList({
 					idOrderB: productList[index].idOrderB,
 					weight: productList[index].weight,
 				});
-				console.log(res)
+				//console.log(res)
 				if(productList[index].isPromo == 1){
 					const res2=await requestHandler.post('/api/v2/order/product/setnewprice',{
 						idOrderB: productList[index].idOrderB,
 						priceProductOrder: productList[index].marketPrice
 					  })
-					  console.log(res2)
+					  //console.log(res2)
 				}
 				return;
 			}

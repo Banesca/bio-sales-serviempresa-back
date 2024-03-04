@@ -90,7 +90,7 @@ export default function EditClient() {
 			const res = await requestHandler.get(`/api/v2/client/get/${id}`);
 			const value = res.value.getValue();
 			setClient(value.data);
-			console.log(value.data)
+			//console.log(value.data)
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
@@ -103,7 +103,7 @@ export default function EditClient() {
 			const res = await requestHandler.get(`/api/v2/client/address/byclient/${id}`);
 			const value = res.value.getValue().response;
 			setAddress(value)
-			console.log(value)
+			//console.log(value)
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
@@ -152,23 +152,23 @@ export default function EditClient() {
 
 	useEffect(() =>{
 		
-		console.log(clients)
+		//console.log(clients)
 	},[])
 
 	useEffect(() =>{
 
-		console.log(clients)
+		//console.log(clients)
 	},[])
 
 	useEffect(() =>{
 
-		console.log(clients)
+		//console.log(clients)
 	},[client])
 
 
 	useEffect(() =>{
-		console.log(clients)
-		console.log(address)
+		//console.log(clients)
+		//console.log(address)
 	},[address])
 
 
@@ -177,7 +177,7 @@ export default function EditClient() {
 			val: Object.values(
 				clients.map((cliente) => {
 					if (cliente.phone == data.phoneClient && client.phone != data.phoneClient) {
-						console.log('entro aqui')
+						//console.log('entro aqui')
 						return true;
 					}
 				})
@@ -186,7 +186,7 @@ export default function EditClient() {
 				let calc = Object.values(
 					clients.map((cliente) => {
 						if (cliente.phone == data.phoneClient && client.phone != data.phoneClient) {
-							console.log('entro aqui-2')
+							//console.log('entro aqui-2')
 							return 2;
 						}
 					})
@@ -198,7 +198,7 @@ export default function EditClient() {
 			val2: Object.values(
 				clients.map((cliente) => {
 					if (cliente.numberDocument == data.rif && client.numberDocument != data.rif) {
-						console.log('entro aqui')
+						//console.log('entro aqui')
 						return true;
 					}
 				})
@@ -207,7 +207,7 @@ export default function EditClient() {
 				let calc = Object.values(
 					clients.map((cliente) => {
 						if (cliente.numberDocument == data.rif && client.numberDocument != data.rif) {
-							console.log('entro aqui-2')
+							//console.log('entro aqui-2')
 							return 2;
 						}
 					})
@@ -254,7 +254,7 @@ export default function EditClient() {
 					isigtf: isIgtf,
 					expirationDay:data.expirationDay	
 				});
-				console.log(res)
+				//console.log(res)
 				message.success('Cliente actualizado');
 				router.push('/dashboard/clients');
 			} else {

@@ -143,7 +143,7 @@ export default function Products() {
 		try {
 			await getProductsInv(businessId);
 		} catch (error) {
-			console.log(error)
+			//console.log(error)
 			message.error('Error al cargar productos');
 		} finally {
 			setLoading(false);
@@ -153,7 +153,7 @@ export default function Products() {
 	const openEditModal = (value) => {
 		setIsEditModalOpen(true);
 		setObject(value);
-		console.log()
+		//console.log()
 	};
 
 	const handleUpdateStock = async () => {
@@ -167,7 +167,7 @@ export default function Products() {
 				idProductionCenter: 1,
 				wareHouse: ''
 			});
-			console.log(res)
+			//console.log(res)
 			message.success('Stock actualizado');
 			window.location.reload();
 		} catch (error) {

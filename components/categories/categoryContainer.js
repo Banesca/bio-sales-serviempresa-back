@@ -163,7 +163,7 @@ export default function CategoryContainer() {
 		try {
 			setLoading(true);
 			setIsEditModalOpen(false);
-			console.log(lineBody)
+			//console.log(lineBody)
 			await editCategories(
 				lineBody.name,
 				lineBody.idStatusFk,
@@ -230,8 +230,7 @@ export default function CategoryContainer() {
 	// End Search
 
 	const handleForceupdateMethod = useForceUpdate();
-	useEffect(()=>{console.log(categories)})
-
+	
 	return (
 		<>
 			<Title title="Categorías">

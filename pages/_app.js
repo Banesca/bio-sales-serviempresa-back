@@ -25,7 +25,9 @@ function MyApp({ Component, pageProps }) {
 	const { clients, listClients, deleteClient } = useClients();
 	const router = useRouter();
 	const { requestHandler } = useRequest();
-	/* async function setBusiness(business = 'serviempresa') {
+
+
+	async function setBusiness(business = 'serviempresa') {
 		try {
 			const response = await axios.get(
 				`${ipBackOffice}/customer/byname/${business}`
@@ -38,8 +40,9 @@ function MyApp({ Component, pageProps }) {
 		} catch (error) {
 			error;
 		}
-	} */
+	} 
  
+	/*
 	async function setBusiness(business = 'demo') {
 		try {
 			const response = await axios.get(
@@ -55,28 +58,28 @@ function MyApp({ Component, pageProps }) {
 			error;
 		}
 	}
-
+*/
 	useEffect(() => {
 		setBusiness();
 		setLoading(false);
-		console.log(generalData)
+		//console.log(generalData)
 
 	}, []);
 
 	useEffect(() => {
-	console.log(generalData)
+	//console.log(generalData)
 		//getSucursales()
 	}, [generalData]);
 
 	/*const getSucursales = async () => {
 		const res = await requestHandler.get(`/api/v2/reportvisit/list/1/:100`);
-		console.log(res);
+		//console.log(res);
 	};*/
 
 	/*useEffect(() => {
 		setBusiness();
 		setLoading(false);
-		console.log('hola mundo')
+		//console.log('hola mundo')
 	}, []);
 
 */

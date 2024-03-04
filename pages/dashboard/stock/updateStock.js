@@ -251,7 +251,7 @@ const ImportStock = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData);
+		//console.log(formatData);
 		setLoading(true);
 		const productos = [];
 		for (let product of formatData) {

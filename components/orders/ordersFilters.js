@@ -26,8 +26,8 @@ export default function OrdersFilters({ setQuery, getOrdersRequest }) {
 	};
 
 	const handleSearch = async (values) => {
-		console.log(values.fullname);
-		console.log(fullname);
+		//console.log(values.fullname);
+		//console.log(fullname);
 		setQuery({
 			idStatusOrder: values.idStatusOrder || 0,
 			startDate: values.date ? values.date[0]?.$d : null,

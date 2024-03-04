@@ -57,7 +57,7 @@ const UserForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [click]);
 
-	console.log(userData);
+	//console.log(userData);
 
 	const handleAsigne = async (userId, businessId) => {
 		const res = await requestHandler.post('/api/v2/user/branch/add', {
@@ -85,7 +85,7 @@ const UserForm = ({
 				...e,
 				file: fileList[0] ? fileList[0].originFileObj : null,
 			});
-			console.log(info);
+			//console.log(info);
 			if (
 				!update &&
 				(userData.idProfileFk == PROFILES.SELLER ||
@@ -139,7 +139,7 @@ const UserForm = ({
 		const reader = new FileReader();
 		reader.addEventListener('load', () => callback(reader.result));
 		reader.readAsDataURL(img);
-		console.log(img);
+		//console.log(img);
 	};
 
 	const beforeUpload = (file) => {

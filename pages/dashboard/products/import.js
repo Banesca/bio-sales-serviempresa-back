@@ -237,9 +237,9 @@ const ImportProducts = () => {
 			const worksheetName = workbox.SheetNames[0];
 			const workSheet = workbox.Sheets[worksheetName];
 			let data = XLSX.utils.sheet_to_json(workSheet);
-			console.log(data);
+			//console.log(data);
 			const uploadData =  convertExcelDataToAPI(data);
-			console.log(uploadData);
+			//console.log(uploadData);
 			addKeys(uploadData);
 			setData(uploadData);
 		};
@@ -313,7 +313,7 @@ const ImportProducts = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData);
+		//console.log(formatData);
 					setLoading(true);
 					const res = await requestHandler.post(
 						'/api/v2/product/add/masive/sales',
@@ -321,7 +321,7 @@ const ImportProducts = () => {
 							lista: formatData,
 						}
 					);
-					console.log(res);
+					//console.log(res);
 					if (res.isLeft()) {
 						return message.error('Ha ocurrido un error');
 					}

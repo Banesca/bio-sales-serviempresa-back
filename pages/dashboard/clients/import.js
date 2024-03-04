@@ -181,7 +181,7 @@ const ImportClients = () => {
 
 	const convertExcelDataToAPI = (rows) => {
 		let uploadData = [];
-		console.log(rows)
+		//console.log(rows)
 		for (const row of rows) {
 			const obj = {
 				nameClient: row.razon_social,
@@ -225,7 +225,7 @@ const ImportClients = () => {
 			let data = XLSX.utils.sheet_to_json(workSheet);
 			const uploadData = await convertExcelDataToAPI(data);
 			addKeys(uploadData);
-			console.log(uploadData);
+			//console.log(uploadData);
 			setData(uploadData);
 		};
 	};
@@ -300,7 +300,7 @@ const ImportClients = () => {
 
 	const handleSendData = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData);
+		//console.log(formatData);
 		for (let product in data) {
 			for (let c in code) {
 				if (product.barCode == c.barCode) {
@@ -314,7 +314,7 @@ const ImportClients = () => {
 							lista: formatData,
 						}
 					);
-					console.log(res);
+					//console.log(res);
 					if (res.isLeft()) {
 						return message.error('Ha ocurrido un error');
 					}
@@ -331,7 +331,7 @@ const ImportClients = () => {
 
 	const handleSend = async () => {
 		const formatData = removeKeys(data);
-		console.log(formatData)
+		//console.log(formatData)
 		setLoading(true);
 		const res = await requestHandler.post('/api/v2/client//add/masive', {
 			data: formatData,

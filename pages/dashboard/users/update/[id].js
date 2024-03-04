@@ -102,13 +102,13 @@ const UpdateUser = () => {
 	];
 
 	const getAccountsReceivable = async () => {
-		console.log(selectedBusiness.idSucursal);
+		//console.log(selectedBusiness.idSucursal);
 		let id = selectedBusiness.idSucursal;
 		try {
 			const response = await requestHandler.get(
 				`/api/v2/wallet/list/client/deuda/${id}`
 			);
-			console.log(response.value);
+			//console.log(response.value);
 
 			if (
 				response.value._value &&
@@ -123,7 +123,7 @@ const UpdateUser = () => {
 					idClientFk: obj.data.idClientFk,
 				}));
 
-				console.log(arrayForTable);
+				//console.log(arrayForTable);
 				setAccountsReceivable(arrayForTable);
 			} else {
 				console.error('Unexpected response from API:', response.value);
@@ -178,7 +178,7 @@ const UpdateUser = () => {
 			}
 			const value = res.value.getValue().data;
 			setsellerClientsAdd(value);
-			console.log(sellerClientsAdd);
+			//console.log(sellerClientsAdd);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
 			setLoading(false);
@@ -190,7 +190,7 @@ const UpdateUser = () => {
 		
 		try {
 			const res = await requestHandler.get(`/api/v2/userjournal/list/${id}`);
-			console.log('Response from API:', res);  // Agrega esta línea
+			//console.log('Response from API:', res);  // Agrega esta línea
 			setJornadas(res.value._value.response);
 		} catch (error) {
 			message.error('Ha ocurrido un error');
@@ -200,7 +200,7 @@ const UpdateUser = () => {
 	
 
 	useEffect(() => {
-		console.log(jornadas);
+		//console.log(jornadas);
 	}, [jornadas]);
 
 	
@@ -308,9 +308,9 @@ const UpdateUser = () => {
 		let month = startDate.getMonth() + 1;
 		let year = startDate.getFullYear();
 		var fecha2 = day + '-' + month + '-' + year;
-		console.log(fecha2.toString());
+		//console.log(fecha2.toString());
 
-		console.log(clientsToAssign);
+		//console.log(clientsToAssign);
 
 		const res = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
@@ -380,15 +380,15 @@ const UpdateUser = () => {
 			`/api/v2/user/delete/client/${edit.idSellersClient}`
 		);
 
-		console.log(edit.idSellersClient);
-		console.log(edit.idClientFk);
+		//console.log(edit.idSellersClient);
+		//console.log(edit.idClientFk);
 		const res2 = await requestHandler.post('/api/v2/user/assign/client', {
 			idUserFk: user.idUser,
 			idClientFk: edit.idClientFk,
 			fecha: fecha2,
 		});
 
-		console.log(res2);
+		//console.log(res2);
 		await getSellerClients(id);
 		setLoading(false);
 		message.success('Cliente Actualizado');

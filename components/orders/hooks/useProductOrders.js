@@ -24,7 +24,7 @@ export function useProductOrders() {
 			priceProductOrder,
 			quantityProduct: 1,
 		});
-		console.log(res)
+		//console.log(res)
 
 		const body = {
 			data:res.value._value,

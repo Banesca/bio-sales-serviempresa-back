@@ -109,7 +109,7 @@ export function useProducts() {
 		}
 		const value = response.value.getValue().data;
 		setProductsInv(value);
-		console.log(value)
+		//console.log(value)
 	};
 
 	const validateBarCode = async (barCode, idSucursalFk) => {

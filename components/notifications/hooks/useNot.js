@@ -18,7 +18,7 @@ export function useProducts() {
 			throw response.value.getErrorValue();
 		}
 		const value = response.value.getValue().data;
-		console.log(value);
+		//console.log(value);
 	};
 
 	const getNotification = async (businessId) => {
@@ -29,7 +29,7 @@ export function useProducts() {
 			throw response.value.getErrorValue();
 		}
 		const value = response.value.getValue().data;
-		console.log(value);
+		//console.log(value);
 		setNotification(value);
 	};
 

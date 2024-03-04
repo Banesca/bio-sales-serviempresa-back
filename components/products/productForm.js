@@ -194,7 +194,7 @@ const ProductForm = (props) => {
 		}
 		const value = response.value.getValue().data;
 		setProducts(value);
-		console.log(products)
+		//console.log(products)
 		if (props.update) {
 			for (let i = 0; i < value?.length; i++) {
 				if (product.barCode !== value[i].barCode) {
@@ -216,12 +216,12 @@ const ProductForm = (props) => {
 
 		
 		const value = response.value.getValue().response;
-		console.log(value)
+		//console.log(value)
 		setUnits(value)
 	}
 
 	const handleOpenDeleteModal=(id)=>{
-		console.log(id)
+		//console.log(id)
 		let filteredArray = deleteListRegalos ? deleteListRegalos.filter(item => item.productPromo !== id )  : listRegalos.filter(item => item.productPromo !== id);
 		let filteredArray3 = deleteListRegalos ? deleteListRegalos.filter(item => item.productPromo !== id )  : listRegalos3.filter(item => item.productPromo !== id);
 		let filteredArray2 = deleteadicional ? deleteadicional.filter(item => item.idProduct !== id) : product.adicionals.filter(item => item.idProduct !== id);
@@ -229,11 +229,11 @@ const ProductForm = (props) => {
 		setListRegalos3(filteredArray3)
 		setDeleteList(filteredArray2)
 		
-		/*console.log(filteredArray2)
-		console.log(filteredArray.length)
-		console.log(filteredArray2.length)
-		console.log(filteredArray)
-		console.log(product?.adicionals)*/
+		/*//console.log(filteredArray2)
+		//console.log(filteredArray.length)
+		//console.log(filteredArray2.length)
+		//console.log(filteredArray)
+		//console.log(product?.adicionals)*/
 	}
 
 	
@@ -270,14 +270,14 @@ const ProductForm = (props) => {
 					return false;
 				}
 				const isLt2M = file.size / 1024 / 1024 < 2;
-				console.log(`El tamaño del archivo es: ${file.size / 1024 / 1024} MB`);
+				//console.log(`El tamaño del archivo es: ${file.size / 1024 / 1024} MB`);
 				if (!isLt2M) {
 					message.error('El tamaño máximo es 2MB!');
 					return false;
 				}
 				let isValid = isJpgOrPng && isLt2M;
 				if (isValid) {
-					console.log(file);
+					//console.log(file);
 					setFile(file);
 					setIsFileSelected(true);
 					return true;
@@ -356,26 +356,26 @@ const ProductForm = (props) => {
 
 		
 
-		console.log(deleteListRegalos)
-		console.log(listRegalos)
-		//console.log(CurrentpercentageOfProfit2)
-		//console.log(currentIs5050)
-		//console.log(words2)
-		//console.log(words2.length)
+		//console.log(deleteListRegalos)
+		//console.log(listRegalos)
+		////console.log(CurrentpercentageOfProfit2)
+		////console.log(currentIs5050)
+		////console.log(words2)
+		////console.log(words2.length)
 		//CurrentpercentageOfProfit.push(words2)
 
 
-	  //console.log(ObsequioLista);
+	  ////console.log(ObsequioLista);
 
 		
 		if(listRegalos2.length> 1){
 			productObsequio = JSON.stringify(listRegalos);
 			ObsequioLista = adicionales ?  JSON.stringify(product.adicionals.concat(Arreglo)) : JSON.stringify(product.adicionals);	
-			console.log('aqui 1')
+			//console.log('aqui 1')
 		} else {
 			productObsequio = JSON.stringify(listRegalos3);
 			ObsequioLista = adicionales ?  JSON.stringify(product.adicionals.concat(Arreglo)) : JSON.stringify(product.adicionals);	
-			console.log('aqui 2')
+			//console.log('aqui 2')
 		}
 
 		
@@ -383,9 +383,9 @@ const ProductForm = (props) => {
 	    
 	  
 
-	  console.log(productObsequio)
-	  console.log(ObsequioLista)
-	 // console.log(productObsequio);
+	  //console.log(productObsequio)
+	  //console.log(ObsequioLista)
+	 // //console.log(productObsequio);
 		const updatedProduct = {
 		  ...product,
 		  adicionals: ObsequioLista,
@@ -423,7 +423,7 @@ const ProductForm = (props) => {
 		if(arregloObsequios.id!=='' && arregloObsequios.productPromo!==null && arregloObsequios.cantidad!=='' && arregloObsequios.condicion!==''  && arregloObsequios.cantidadAregalar!=='' && arregloObsequios.Paymode!=='' && listRegalos2.length<1){
 			setListRegalos3(listRegalos3.concat(arregloObsequios))
 		}
-		console.log(listRegalos3)
+		//console.log(listRegalos3)
 	},[arregloObsequios])
 
 	const addProms= () =>{
@@ -431,17 +431,17 @@ const ProductForm = (props) => {
 			setListRegalos(listRegalos?.concat(arregloObsequios))
 			setListRegalos2(listRegalos?.concat(arregloObsequios))
 		//let arr=prelistAdicional?.concat(listRegalos)
-		console.log(prelistAdicional)
-		//console.log(arr)
+		//console.log(prelistAdicional)
+		////console.log(arr)
 	} else {
-		console.log('no')
+		//console.log('no')
 	}}
 
 	useEffect(()=>{		
 		setArregloObsequios({
 		...arregloObsequios,
 	})
-	//console.log(currentProduct)
+	////console.log(currentProduct)
 	
 },[products])
 
@@ -452,12 +452,12 @@ useEffect(()=>{
 		const productos=products?.find(product=>product.idProduct===arregloObsequios?.productPromo)
 		arregloObsequios.id=productos?.nameProduct
 
-		console.log(currentProduct)
+		//console.log(currentProduct)
 		/*
-		console.log(arregloObsequios);
-		console.log(typeof(product.listpromo)) 
-		console.log(listRegalos) 
-		console.log(chips2)*/
+		//console.log(arregloObsequios);
+		//console.log(typeof(product.listpromo)) 
+		//console.log(listRegalos) 
+		//console.log(chips2)*/
 },[arregloObsequios])
 
 
@@ -467,15 +467,15 @@ useEffect(()=>{
 useEffect(()=>{
 	//product.listpromo==='' ? null :  setListRegalos(JSON?.parse(product?.listpromo)) 
 	//product.adicionals==='' ? null :  setDeleteList(JSON?.parse(product?.adicionals)) 
-	/*console.log(product.listpromo)
-	console.log(product.adicionals)
-	console.log(listRegalos)
-	console.log(deleteList)*/
+	/*//console.log(product.listpromo)
+	//console.log(product.adicionals)
+	//console.log(listRegalos)
+	//console.log(deleteList)*/
 
-		console.log(listRegalos)
-		//console.log(arr)
+		//console.log(listRegalos)
+		////console.log(arr)
 
-		console.log(deleteListRegalos)
+		//console.log(deleteListRegalos)
 		
 },[listRegalos])
 
@@ -511,7 +511,7 @@ useEffect(() => {
 	};
 
 	const handleSwitchChange2 = (value) => {
-		console.log(value);
+		//console.log(value);
 		setObsequio(value ? '1' : '0');
 
 	};

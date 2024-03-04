@@ -11,7 +11,7 @@ export default function UserClientsTable2({
 	useEffect(() => {
 		setLog(localStorage.getItem('userProfile'));
 	}, []);
-	console.log(clients)
+	//console.log(clients)
 	const clientColumns = [
 		{
 			title: 'Clientes',

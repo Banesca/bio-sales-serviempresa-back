@@ -73,7 +73,7 @@ export default function ProductsInOrder({
 
                     key: 3,
                     render: (record) => (
-                        !isCreditOrder && (
+                         (
                             <Space>
                                 <Button
                                     onClick={() => openDeleteModal(record)}
@@ -115,7 +115,7 @@ export default function ProductsInOrder({
     const { loading } = useLoadingContext();
 
     useEffect(() =>{
-        console.log(order?.body)
+        //console.log(order?.body)
     },[])
 
     return (

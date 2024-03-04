@@ -30,7 +30,7 @@ export default function AddClient() {
 	];
 
 	const handleSelectChange = (event) => {
-		console.log(event);
+		//console.log(event);
 	};
 
 	const onReset = () => {
@@ -64,7 +64,7 @@ export default function AddClient() {
 			val2: Object.values(
 				clients.map((client) => {
 					if (client.numberDocument == data.rif) {
-						console.log('entro aqui')
+						//console.log('entro aqui')
 						return true;
 					}
 				})
@@ -73,7 +73,7 @@ export default function AddClient() {
 				let calc = Object.values(
 					clients.map((client) => {
 						if (client.numberDocument == data.rif) {
-							console.log('entro aqui-2')
+							//console.log('entro aqui-2')
 							return 2;
 						}
 					})
@@ -140,7 +140,7 @@ export default function AddClient() {
 					expirationDay:data.expirationDay,
 
 				});
-				console.log(res)
+				//console.log(res)
 				message.success('Cliente agregado');
 				router.push('/dashboard/clients');
 			} else {

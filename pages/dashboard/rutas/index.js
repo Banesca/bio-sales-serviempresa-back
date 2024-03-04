@@ -155,7 +155,7 @@ const handleOnChang = async (productos) => {
   const res = await requestHandler.get(
     `/api/v2/ordersbypassingh/list/${productos.idOrdersbypassing}`
   );
-  console.log(res);
+  //console.log(res);
   if (res.value && res.value._value && res.value._value.data) {
     const products = res.value._value.data.map(item => {
       if (item.ordenes && item.ordenes[0]) {
@@ -165,15 +165,15 @@ const handleOnChang = async (productos) => {
       }
     }).flat();
     setDetailsRutas(products);
-    console.log(detailsRutas);
+    //console.log(detailsRutas);
 
     // Mapea res.value._value.data para obtener las órdenes
     const orders = res.value._value.data.map(item => item.ordenes).flat();
     // Establece el estado con las órdenes obtenidas
     setOrders(orders);
-    console.log(orders);
+    //console.log(orders);
   } else {
-    console.log('res.value._value.data is undefined');
+    //console.log('res.value._value.data is undefined');
   }
 };
 
@@ -184,21 +184,21 @@ const handleOnChang = async (productos) => {
 			value = value.data.filter((b) => b.idProfileFk == 3);
 			setUsers(value);
 		}
-		console.log(res);
+		//console.log(res);
 	};
 
 	const handleOnChange = async (value) => {
 		const res = await requestHandler.get(
 			`/api/v2/ordersbypassingh/list/byuser/${value}`
 		);
-		console.log(res);
+		//console.log(res);
 		if (!res.isLeft()) {
 			let value = res.value.getValue();
 			value = value.response;
 			setReportProduct(value);
 		}
 	};
-	console.log(productsDetail);
+	//console.log(productsDetail);
 	const handleCancel = () => {
 		setOpen2(false);
 	};
