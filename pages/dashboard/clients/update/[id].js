@@ -440,7 +440,7 @@ export default function EditClient() {
 						<Row>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
 								<Form.Item
-									label="Dirección Adicional"
+									label="Sucursales"
 									style={{ marginRight: 6 }}
 									name="Dirección Adicional"
 								>

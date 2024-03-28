@@ -281,7 +281,7 @@ export default function AddClient() {
 								</Form.Item>
 							</Col>
 							<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }}>
-								<Form.Item label="Fecha De Expiracion" style={{ marginLeft: 6}}   name='expirationDay'>
+								<Form.Item label="Días de crédito" style={{ marginLeft: 6}}   name='expirationDay'>
 								<Input type="number" />
 								</Form.Item>
 							</Col>

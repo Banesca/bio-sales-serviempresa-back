@@ -753,8 +753,8 @@ useEffect(()=>{
 				const res = await requestHandler.put(
 					'/api/v2/order/close/' + id,
 					(data = {
-						comments: 'PAGO',
-						mpCash: await validateMP('Efectivo'),
+						comments: '',
+						mpCash: await validateMP('Efectivo $'),
 						mpCreditCard: await validateMP('Credito'),
 						mpDebitCard: await validateMP('Debito'),
 						mpTranferBack: await validateMP('Transferencia'),

@@ -79,8 +79,11 @@ export default function Login() {
 		localStorage.setItem('accessToken', value.token);
 		console.log(value.idProfileFk);
 		console.log(value);
+		const businessByUser = await getUserBusiness(value.idUser);
+			console.log(businessByUser)
 		if (value.idProfileFk !== 1 && value.idProfileFk !==6) {
 			const businessByUser = await getUserBusiness(value.idUser);
+			console.log(businessByUser)
 			if (businessByUser.length < 1 || value.idProfileFk !== 1 || value.idProfileFk !== 6) {
 				handleLoginError('Acceso denegado');
 				setLoading(false);
@@ -98,11 +101,19 @@ export default function Login() {
 			setLoading(false);
 			return;
 		} else {
-			localStorage.setItem('selectedBusiness', JSON.stringify(value.branch[0]));
+			
+			if(value.idProfileFk===6){
+				const sucursal=value.branch.filter((el)=>el.idSucursal==businessByUser[0].idSucursalFk)
+				console.log(sucursal)
+				localStorage.setItem('selectedBusiness', JSON.stringify( sucursal));
+			}else{
+				localStorage.setItem('selectedBusiness', JSON.stringify( value.branch[0]));
+			}
 		}
 		localStorage.setItem('userId', value.idUser);
 		localStorage.setItem('userProfile', value.idProfileFk);
 		localStorage.setItem('business', JSON.stringify(value.branch));
+
 		businessContext.handleSetBusiness(value.branch);
 		businessContext.handleSetSelectedBusiness(value.branch);
 		setLoading(false);
@@ -278,7 +289,7 @@ export default function Login() {
 											className="text-center"
 											style={{ color: 'white', marginTop: '20px' }}
 										>
-											Versión 3.0.0
+											Versión 3.0.1
 										</h5>
 
 										<Modal

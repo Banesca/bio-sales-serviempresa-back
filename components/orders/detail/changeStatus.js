@@ -20,6 +20,7 @@ export const statusNames = {
 	Despachado: 4,
 	Anulado: 5,
 	Eliminado: 6,
+	'Por facturar': 7,
 };
 
 export default function ChangeOrderStatus({
@@ -57,7 +58,8 @@ export default function ChangeOrderStatus({
 	}
 
 	const actions = {
-		1:  () => {
+		1: async () => {
+			const res2 =  await requestHandler.get('/api/v2/order/reverse/masive/' + orderId);
 			setModal((prev) => ({
 				...prev,
 				visible: true,
@@ -106,6 +108,14 @@ export default function ChangeOrderStatus({
 				status: statusNames.Eliminado,
 			}));
 		},
+		7: () => {
+			setModal((prev) => ({
+				...prev,
+				visible: true,
+				action: orderStatusToUse[statusNames['Por facturar']].state,
+				status: statusNames['Por facturar'],
+			}));
+		},
 	};
 
 	const handleOpenModal = (status) => {
@@ -135,6 +145,12 @@ export default function ChangeOrderStatus({
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Por pagar'])}
+									danger
+								>
+									<CloseCircleOutlined /> Devolución parcial
+								</Button>
 								
 							</>
 						)}
@@ -145,6 +161,12 @@ export default function ChangeOrderStatus({
 									danger
 								>
 									<CloseCircleOutlined /> Anular pedido
+								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Por pagar'])}
+									danger
+								>
+									<CloseCircleOutlined /> Devolución parcial
 								</Button>
 
 							</>
@@ -163,6 +185,12 @@ export default function ChangeOrderStatus({
 								>
 									<CreditCardOutlined /> Cobrar
 								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Por pagar'])}
+									danger
+								>
+									<CloseCircleOutlined /> Devolución parcial
+								</Button>
 							</>
 						)}
 						{status == 4 && (
@@ -179,6 +207,12 @@ export default function ChangeOrderStatus({
 								>
 									<CreditCardOutlined /> Cobrar
 								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Por pagar'])}
+									danger
+								>
+									<CloseCircleOutlined /> Devolución parcial
+								</Button>
 							</>
 						)}
 						{status == 5 && (
@@ -189,10 +223,17 @@ export default function ChangeOrderStatus({
 								>
 									<CloseCircleOutlined /> Anular pedido
 								</Button>
+								<Button
+									onClick={() => handleOpenModal(statusNames['Por pagar'])}
+									danger
+								>
+									<CloseCircleOutlined /> Devolución parcial
+								</Button>
 								
 							</>
 						)}
 						{status == 6 && <></>}
+						{status == 7 && <></>}
 					</Space>
 				</List.Item>
 			)}

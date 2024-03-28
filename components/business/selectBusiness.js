@@ -8,17 +8,16 @@ const SelectBusiness = () => {
 		useBusinessProvider();
 
 	const [messageApi, contextHolder] = message.useMessage();
+	const [userRol, setUserRol] = useState('')
 
-	const handleMessage = (name) => {
-		messageApi.info(`Almacen ${name} seleccionado`);
-	};
+	
 
 	const onChange = (key) => {
+		
 		const filterBusiness = business.find((b) => b.idSucursal === key);
 		handleSetSelectedBusiness(filterBusiness);
 		localStorage.setItem('selectedBusiness', JSON.stringify(filterBusiness));
 		localStorage.setItem('bs', filterBusiness.nombre);
-		handleMessage(filterBusiness.nombre);
 	};
 
 	const [form] = Form.useForm();
@@ -27,12 +26,21 @@ const SelectBusiness = () => {
 			form.setFieldValue('business', selectedBusiness.nombre);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+		
 	}, [selectedBusiness]);
+
+	useEffect(()=>{
+		const user=localStorage.getItem('userProfile');
+		setUserRol(user)
+		console.log(user)
+		console.log(userRol)
+
+	},[])
 
 	return (
 		<Form form={form}>
 			<Form.Item name="business">
-				<Select
+				{userRol==='6' ? null :<Select
 					onChange={onChange}
 					style={{
 						minWidth: '200px',
@@ -43,13 +51,13 @@ const SelectBusiness = () => {
 						boxShadow: '4px 3px 8px 2px #9c9c9c5d',
 					}}
 				>
-					{business &&
+					{  business &&
 						business.map((b) => (
 							<Select.Option key={b.idSucursal} value={b.idSucursal}>
 								{b.nombre}
 							</Select.Option>
 						))}
-				</Select>
+				</Select>}
 			</Form.Item>
 		</Form>
 	);

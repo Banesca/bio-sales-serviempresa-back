@@ -37,6 +37,8 @@ const OrderDetail = () => {
 	const router = useRouter();
 	const [openModal2, setOpenModal2] = useState(false);
 	const [openModal3, setOpenModal3] = useState(false);
+	const [openModal4, setOpenModal4] = useState(false);
+	const [openModal5, setOpenModal5] = useState(false);
 	const { id } = router?.query;
 	const [log, setLog] = useState();
 	const { actualTdc, updateTdc } = useTdc();
@@ -54,6 +56,10 @@ const OrderDetail = () => {
 	const [model2, setModel2] = useState('');
 	const [sourceImage, setSourceImage] = useState('');
 	const [model3, setModel3] = useState('');
+	const [model4, setModel4] = useState({
+		mora:0,
+		comentario:''
+	});
 	const getOrderRequest = async (id) => {
 		setLoading(true);
 		try {
@@ -260,7 +266,7 @@ const OrderDetail = () => {
 			link.download = 'image.png';
 			link.click();
 
-			element.removeChild(img);
+			element.removeChild(imgData);
 		} else {
 			console.error(`Element with id "${elementId}" not found`);
 		}
@@ -318,6 +324,19 @@ const OrderDetail = () => {
 	const handleInputChange2 = (e) => {
 		setModel2(e.target.value);
 	};
+
+	const handleInputChange3 = (e) => {
+		console.log(model4)
+		const target=e.target.name;
+		const value=e.target.value;
+
+		console.log(target);
+		console.log(value);
+
+		setModel4({...model4,[target]:value});
+		console.log(model4)
+	};
+
 
 	const actualizaciónFactura = (idOrderH) => {
 
@@ -404,6 +423,10 @@ const OrderDetail = () => {
 		setOpenModal3(false);
 	};
 
+	const closeModals3 = () => {
+		setOpenModal4(false);
+	};
+
 
 	const handleButtonClick = () => {
 		router.push(`/dashboard/orders/update/${id}`);
@@ -413,7 +436,9 @@ const OrderDetail = () => {
 		setOpenModal3(true);
 	};
 
-
+	const handleEditNote2 = () => {
+		setOpenModal4(true);
+	};
 
 
 	/*POST 
@@ -462,6 +487,39 @@ idOrderH
 	
 	};
 
+	const actualizaciónNota2 = async (idOrderH) => {
+
+		const regex = /^[0-9]+$/;
+
+		if (regex.test(model4.mora)){
+			try{
+			const body = {
+				totalBot:currentOrder.totalBot + parseFloat(model4.mora)
+		      };
+		  const body2 = {
+			fullNameClient: currentOrder.fullNameClient,
+			phoneClient: currentOrder.phoneClient,
+			address: currentOrder.address,
+			nameClient: currentOrder.nameClient,
+			comments:currentOrder.comments + ' ' + model4.comentario,
+			documento: currentOrder.documento,
+	  
+	      };
+	
+			const res=await requestHandler.post(`/api/v2/order/update/total/${idOrderH}`,body)
+			const res2=await requestHandler.post(`/api/v2/order/update/header/${idOrderH}`,body2)
+	  }catch(error){
+		message.error('Error en la creacion');
+	  }finally{
+		router.push(`/dashboard/orders`)
+	  }} 
+	  else{
+			message.error('el monto de mora es incorrecto')
+		}
+		
+	};
+
+
 
 	const commonData = {
 		'Numero del pedido': currentOrder.numberOrden,
@@ -507,7 +565,9 @@ idOrderH
 						path="/dashboard/orders"
 						goBack={1}
 					/>
-					<div style={{ display: 'flex' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap:'1rem'}}>
+						<div style={{ display: 'flex', justifyContent:'center' }}>
+							<div style={{ display: 'flex' }}>
 						<Button
 							htmlType="submit"
 							type="success"
@@ -517,8 +577,8 @@ idOrderH
 						>
 							<ExportOutlined /> Imprimir recibo
 						</Button>
-					</div>
-					<div style={{ display: 'flex', marginLeft: '10px' }}>
+							</div>
+							<div style={{ display: 'flex', marginLeft: '10px' }}>
 						<Button
 							htmlType="submit"
 							type="success"
@@ -529,8 +589,8 @@ idOrderH
 						>
 							Agregar factura
 						</Button>
-					</div>
-					<div style={{ display: 'flex', width: '12%', marginLeft: '10px' }}>
+							</div>
+							<div style={{ display: 'flex', width: 'fit-content', marginLeft: '10px' }}>
 						<Button
 							htmlType="submit"
 							type="success"
@@ -548,8 +608,11 @@ idOrderH
 						>
 							Pagar
 						</Button>
-					</div>
-					<div style={{ display: 'flex', width: 'fit-content', marginLeft: '10px' }}>
+							</div>
+						</div>
+						<div style={{ display: 'flex' }}>
+
+							<div style={{ display: 'flex', width: 'fit-content', marginLeft: '10px' }}>
 						<Button
 							htmlType="submit"
 							type="success"
@@ -559,6 +622,18 @@ idOrderH
 						>
 							Agregar Nota de Credito
 						</Button>
+							</div>
+							<div style={{ display: 'flex', width: 'fit-content', marginLeft: '10px' }}>
+						<Button
+							htmlType="submit"
+							type="success"
+							block
+							onClick={handleEditNote2}
+						>
+							Agregar Nota de debito
+						</Button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div
@@ -714,6 +789,24 @@ idOrderH
 				</div>
 			</Modal>
 
+			<Modal open={openModal4} onCancel={closeModals3} footer={false}>
+				<div className="flex flex-col justify-between h-full gap-5">
+					<h1>Agregar Nota de debito</h1>
+					<Form layout="vertical">
+						<Form.Item label="Monto de mora" name="mora">
+							<Input onChange={handleInputChange3} name="mora" />
+						</Form.Item>
+						<Form.Item label="Motivo" name="comentario">
+							<Input onChange={handleInputChange3} name="comentario" />
+						</Form.Item>
+					</Form>
+					<div className="flex justify-end gap-5">
+						<Button className="bg-blue-500" type="primary" onClick={() => actualizaciónNota2(currentOrder.idOrderH)}>
+							Guardar
+						</Button>
+					</div>
+				</div>
+			</Modal>
 			<Modal
 				open={modalIsOpen}
 				footer={false}

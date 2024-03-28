@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }) {
 	const router = useRouter();
 	const { requestHandler } = useRequest();
 
-
+/*
 	async function setBusiness(business = 'serviempresa') {
 		try {
 			const response = await axios.get(
@@ -42,7 +42,8 @@ function MyApp({ Component, pageProps }) {
 		}
 	} 
  
-	/*
+	*/
+	
 	async function setBusiness(business = 'demo') {
 		try {
 			const response = await axios.get(
@@ -58,7 +59,7 @@ function MyApp({ Component, pageProps }) {
 			error;
 		}
 	}
-*/
+
 	useEffect(() => {
 		setBusiness();
 		setLoading(false);

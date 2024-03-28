@@ -26,6 +26,7 @@ export const orderStatusToUse = {
 	4: { state: 'Despachado', color: 'yellow' },
 	5: { state: 'Anulado', color: 'red' },
 	6: { state: 'Eliminado', color: 'red' },
+	7: { state: 'Por facturar', color: 'red' },
 };
 
 export default function OrdersPage() {
@@ -57,6 +58,7 @@ export default function OrdersPage() {
 
 	const getOrdersRequest = async (data) => {
 		setLoading(true);
+		console.log(data)
 		try {
 			await getOrders(data);
 		} catch (error) {
@@ -80,7 +82,9 @@ export default function OrdersPage() {
 	}, [generalContext, selectedBusiness]);
 
 const handleChange=(e)=>{
+	console.log(e)
 	setStateOrder2(saveOrders.filter(o=>o.idStatusOrder==e))
+	console.log(saveOrders)
 }
 
 
@@ -92,7 +96,7 @@ useEffect(()=>{
 
 useEffect(()=>{
 		setTimeout(()=>{
-			const result = orders?.filter(o=>o.idStatusOrder===stateOrder)
+			const result = orders?.filter(o=>o.idStatusOrder==stateOrder)
 		setSaveOrders(orders)
 		setInitOrders(result);
 		let list = result;
@@ -116,7 +120,7 @@ useEffect(()=>{
 				list = list.filter((o) => o.numberOrden == query.numberOrden);
 			}
 		}
-		//console.log(list)
+		console.log(list)
 	},2000)
 		//console.log(userProfile)
 		//setInitOrders(list)
@@ -126,7 +130,7 @@ useEffect(()=>{
 	useEffect(()=>{
 		
 		const result = orders
-	//console.log(saveOrders)
+	console.log(saveOrders)
 		let list = result;
 		if (query.idStatusOrder) {
 			if (list) {
@@ -192,7 +196,7 @@ useEffect(()=>{
 					getOrdersRequest={getOrdersRequest}
 				/>
 
-				<OrdersTable orders={stateOrder2.length>1 ? stateOrder2 : initOrders} />
+				<OrdersTable orders={stateOrder2.length>0 ? stateOrder2 : initOrders} />
 			</div>
 			<Modal
 				title={'Detail'}

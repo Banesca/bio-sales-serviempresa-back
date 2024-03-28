@@ -185,7 +185,8 @@ export default function OrdersTable({ orders }) {
 						order.idStatusOrder == 2 ||
 						order.idStatusOrder == 3 ||
 						order.idStatusOrder == 6 ||
-						order.idStatusOrder == 4 ? (
+						order.idStatusOrder == 4 ||
+						order.idStatusOrder == 7 ? (
 							<Button
 								type="primary"
 								className="bg-blue-500"
@@ -202,7 +203,8 @@ export default function OrdersTable({ orders }) {
 					  order.idStatusOrder == 2 ||
 					  order.idStatusOrder == 6 ||
 					  order.idStatusOrder == 3 ||
-					  order.idStatusOrder == 4 ? (
+					  order.idStatusOrder == 4 ||
+					  order.idStatusOrder == 7 ? (
 						<Button type="primary" onClick={() => handleSeeDetail(order)}>
 							<EyeTwoTone />
 						</Button>
